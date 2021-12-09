@@ -70,6 +70,19 @@
       <version>1.18.6</version>
     </dependency>
 
+    <!--reflections 反射-->
+    <dependency>
+      <groupId>org.reflections</groupId>
+      <artifactId>reflections</artifactId>
+      <version>0.9.12</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-log4j12</artifactId>
+      <version>1.7.12</version>
+    </dependency>
+
 
     <dependency>
       <groupId>junit</groupId>

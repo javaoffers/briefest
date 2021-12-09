@@ -1,10 +1,8 @@
 package com.javaoffers.base.batis.aggent;
 
-import com.mh.others.mybatis.model.annotation.BaseModel;
-import com.mh.others.tool.log.LOGUtils;
+import com.javaoffers.base.batis.anno.BaseModel;
 import org.apache.commons.lang3.tuple.Pair;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;

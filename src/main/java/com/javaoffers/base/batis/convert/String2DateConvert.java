@@ -12,15 +12,29 @@ import java.util.Date;
  */
 public class String2DateConvert extends AbstractConver<String, Date> {
 
+    public static final String DATE_FORMAT_yyyyMMddHHmmss = "yyyyMMddHHmmss";
+    public static final String DATE_FORMAT_yyyyMMddHHmmss2 = "yyyy/MM/dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyyMMddHHmmss3 = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_FORMAT_yyyyMMddHHmmss4 = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String DATE_FORMAT_yyyyMMddHHmmss5 = "yyyyMMddHHmmssSSS";
+    public static final String DATE_FORMAT_yyyyMMddHHmmss6 = "yyyy/MM/dd HH:mm:ss.SSS";
+    public static final String DATE_FORMAT_yyyy_MM_dd = "yyyy-MM-dd";
+    public static final String DATE_FORMAT_yyyy_MM_dd2 = "yyyyMMdd";
+    public static final String DATE_FORMAT_yyyy_MM_dd3 = "yyyy/MM/dd";
+    public static final String DATE_FORMAT_yyyy_MM_dd4 = "yyyy_MM_dd";
+    public static final String DATE_FORMAT_yyyy_MM_dd5 = "yyyyMMddHHmm";
+    public static final String DATE_FORMAT_yyyy_MM_dd6 = "yyyy年MM月dd日";
+    public static final String DATE_FORMAT_dd_MMM_yyyy1 = "dd MMM yyyy";
+    public static final String DATE_FORMAT_dd_MMM_yyyy2 = "dd-MM-yyyy";
+    public static final String DATE_FORMAT_dd_MMM_yyyy3 = "dd/MM/yyyy";
+    public static final String DATE_FORMAT_dd_MM_yyyy_HHmmss1 = "dd-MM-yyyy HH:mm:ss";
+    public static final String DATE_FORMAT_MM_dd_yyyy = "MM/dd/yyyy";
+    public static final String DATE_FORMAT_HH_mm_ss = "HHmmss";
+    public static final String DATE_FORMAT_HH_mm_ss_SSS = "HHmmssSSS";
+    public static final String DATE_FORMAT_MM_dd = "MMdd";
+
     /**
-     *    private static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-     * 	   private static final String DATETIME_PATTERN_TIME = "yyyyMMddHHmmssSS";
-     * 	     //2018-01-17 15:17:14.0  （用el表达式在jsp页面中取date值时会出现这种格式）
-     * 	    private static final String DATETIME_PATTERN_ENGLISH = "yyyy-MM-dd HH:mm:ss.s";
-     *
-     * 	     private static final String DATE_PATTERN = "yyyy-MM-dd";
-     *
-     * 	     private static final String MONTH_PATTERN = "yyyy-MM";
+     *  format date
      */
     static String[] fs = new String[]{
              "yyyy-MM-dd HH:mm:ss"
@@ -36,6 +50,27 @@ public class String2DateConvert extends AbstractConver<String, Date> {
             ,"yyyy年MM月dd日 HH:mm:ss"
             ,"yyyy年MM月dd日HH:mm:ss"
             ,"yyyy年MM月dd日"
+            ,DATE_FORMAT_yyyyMMddHHmmss
+            ,DATE_FORMAT_yyyyMMddHHmmss2
+            ,DATE_FORMAT_yyyyMMddHHmmss3
+            ,DATE_FORMAT_yyyyMMddHHmmss4
+            ,DATE_FORMAT_yyyyMMddHHmmss5
+            ,DATE_FORMAT_yyyyMMddHHmmss6
+            ,DATE_FORMAT_yyyy_MM_dd
+            ,DATE_FORMAT_yyyy_MM_dd2
+            ,DATE_FORMAT_yyyy_MM_dd3
+            ,DATE_FORMAT_yyyy_MM_dd4
+            ,DATE_FORMAT_yyyy_MM_dd5
+            ,DATE_FORMAT_yyyy_MM_dd6
+            ,DATE_FORMAT_dd_MMM_yyyy1
+            ,DATE_FORMAT_dd_MMM_yyyy2
+            ,DATE_FORMAT_dd_MMM_yyyy3
+            ,DATE_FORMAT_dd_MM_yyyy_HHmmss1
+            ,DATE_FORMAT_MM_dd_yyyy
+            ,DATE_FORMAT_HH_mm_ss
+            ,DATE_FORMAT_HH_mm_ss_SSS
+            ,DATE_FORMAT_MM_dd
+
     };
 
     @Override

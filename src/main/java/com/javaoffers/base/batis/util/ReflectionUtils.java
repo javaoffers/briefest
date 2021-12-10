@@ -8,6 +8,7 @@ import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -28,7 +29,7 @@ public class ReflectionUtils {
 
     public static Set<Class<? extends Convert>> getChildOfConvert(){
         Set<Class<? extends Convert>> subTypesOf = reflections.getSubTypesOf(Convert.class);
-        return subTypesOf;
+        return new HashSet<>(subTypesOf);
     }
 
 

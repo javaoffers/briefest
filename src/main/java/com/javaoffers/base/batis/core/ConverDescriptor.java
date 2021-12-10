@@ -1,6 +1,6 @@
 package com.javaoffers.base.batis.core;
 
-import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
  * @Auther: create by cmj on 2021/12/8 13:00
  */
 @Data
-@Builder
-@NoArgsConstructor
 public class ConverDescriptor implements Descriptor{
 
     private Class src;

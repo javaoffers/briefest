@@ -1,7 +1,7 @@
 package com.javaoffers.base.batis.parse;
 
 import com.javaoffers.base.batis.anno.BaseModel;
-import com.javaoffers.base.batis.core.ConvertSelectorDelegate;
+import com.javaoffers.base.batis.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.base.batis.exception.BaseException;
 import com.javaoffers.base.batis.util.Model;
 import org.apache.commons.lang3.StringUtils;
@@ -18,7 +18,7 @@ import static com.javaoffers.base.batis.util.Utils.*;
  */
 public class SmartModelParse implements ModelParse {
 
-    private final static  ConvertSelectorDelegate convert = new ConvertSelectorDelegate();
+    private final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
 
     private final static ThreadLocal<Map<String,String>> tl = new ThreadLocal<Map<String,String>>();
 

@@ -5,49 +5,35 @@ import com.javaoffers.base.batis.convert.Convert;
 import com.javaoffers.base.batis.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.Set;
 
 /**
  * @Description: Selector represents and selector uses entry
  * @Auther: create by cmj on 2021/12/9 10:52
  */
-public class ConvertSelectorDelegate {
+public class ConvertRegisterSelectorDelegate {
 
-    ConvertSelector convertSelector = new GenericConvertSelector();
+    SelectorRegister applicationContext = new ModelApplicationContext();
 
     {
         Set<Class<? extends Convert>> converts = ReflectionUtils.getChildOfConvert();
-        for(Class c : converts){
-            if(AbstractConver.class!=c && AbstractConver.class.isAssignableFrom(c)){
-                Type genericSuperclass = c.getGenericSuperclass();
-                if(genericSuperclass instanceof ParameterizedType){
-                    ParameterizedType pt = (ParameterizedType) genericSuperclass;
-                    Type[] types = pt.getActualTypeArguments();
-                    if(types==null||types.length!=2) {continue;}
-                    try {
-                        Class src = (Class)types[0];
-                        Class des = (Class)types[1];
-                        Constructor constructor = c.getConstructor();
-                        constructor.setAccessible(true);
-                        registerConvert(src,des,(Convert)constructor.newInstance());
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
+        for (Class c : converts) {
+            try {
+                Constructor constructor = c.getConstructor();
+                constructor.setAccessible(true);
+                registerConvert( (AbstractConver) constructor.newInstance());
+            }catch (Exception e){
+                e.printStackTrace();
             }
         }
     }
 
     /**
      * registerConvert
-     * @param src
-     * @param des
      * @param convert
      */
-    public void registerConvert(Class src,Class des, Convert convert) {
-        convertSelector.registerConvert(new ConverDescriptor(src,des),convert);
+    public void registerConvert( AbstractConver convert) {
+        convert.register(applicationContext);
     }
 
     /**
@@ -55,7 +41,7 @@ public class ConvertSelectorDelegate {
      * @return
      */
     public Convert selector(Class src,Class des) {
-         return convertSelector.selector(new ConverDescriptor(src,des));
+         return applicationContext.selector(new ConverDescriptor(src,des));
     }
 
     /**
@@ -81,7 +67,7 @@ public class ConvertSelectorDelegate {
         }
         T convert = null;
         try {
-            convert = (T) selector.convert(srcValue);
+            convert = (T) selector.convert(src.cast(srcValue));
         }catch (Exception e){
             e.printStackTrace();
         }

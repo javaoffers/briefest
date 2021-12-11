@@ -7,10 +7,10 @@
         <groupId>com.javaoffers</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>model-helper</artifactId>
-
+    <version>1.0.0</version>
     <dependencies>
         <!-- mybatis -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->

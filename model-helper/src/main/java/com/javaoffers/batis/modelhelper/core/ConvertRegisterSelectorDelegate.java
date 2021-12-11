@@ -5,6 +5,9 @@ import com.javaoffers.batis.modelhelper.convert.Convert;
 import com.javaoffers.batis.modelhelper.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.Set;
 
 /**
@@ -13,11 +16,14 @@ import java.util.Set;
  */
 public class ConvertRegisterSelectorDelegate {
 
-    SelectorRegister applicationContext = new ModelApplicationContext();
+    private SelectorRegister applicationContext = new ModelApplicationContext();
 
     {
         Set<Class<? extends Convert>> converts = ReflectionUtils.getChildOfConvert();
         for (Class c : converts) {
+            if(Modifier.isAbstract(c.getModifiers())){
+                continue;
+            }
             try {
                 Constructor constructor = c.getConstructor();
                 constructor.setAccessible(true);
@@ -41,8 +47,38 @@ public class ConvertRegisterSelectorDelegate {
      * @return
      */
     private Convert selector(Class src,Class des) {
-         return applicationContext.selector(new ConverDescriptor(src,des));
+        Convert convert = applicationContext.selector(new ConverDescriptor(src, des));
+        if(convert==null){
+            LinkedList<Class> srcSupers = getSupers(src);
+
+            //src 升级
+            for(Class srcc : srcSupers){
+                return selector(srcc, des);
+            }
+            //dec 降级
+            Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
+            for(Class dess : desSupers){
+                return selector(src,dess);
+            }
+        }
+        return convert;
     }
+
+    private LinkedList<Class> getSupers(Class c) {
+        Class superclass = c.getSuperclass();
+        Class[] interfaces = c.getInterfaces();
+        LinkedList<Class> srcs = new LinkedList<>();
+        if(superclass != Object.class){
+            Collections.addAll(srcs, superclass);
+        }
+        for(Class srcInter : interfaces){
+            Collections.addAll(srcs,srcInter);
+        }
+        return srcs;
+
+    }
+
+
 
     /**
      * 类型转换
@@ -87,7 +123,7 @@ public class ConvertRegisterSelectorDelegate {
      * @param baseClass
      * @return
      */
-    public Class baseClassUpgrade(Class baseClass){
+    private Class baseClassUpgrade(Class baseClass){
         if(baseClass.isPrimitive()){
             if(boolean.class == baseClass){
                 return Boolean.class;

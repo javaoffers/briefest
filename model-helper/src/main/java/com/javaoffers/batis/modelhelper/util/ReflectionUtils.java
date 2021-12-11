@@ -32,5 +32,10 @@ public class ReflectionUtils {
         return new HashSet<>(subTypesOf);
     }
 
+    public static Set<Class<?>> getChilds(Class c){
+        Set<Class<?>> subTypesOf = reflections.getSubTypesOf(c);
+        return new HashSet<Class<?>>(subTypesOf);
+    }
+
 
 }

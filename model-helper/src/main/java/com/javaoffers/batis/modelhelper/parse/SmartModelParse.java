@@ -158,9 +158,26 @@ public class SmartModelParse implements ModelParse {
                 for(Field fd: list_) {
                     Class<?> type = fd.getType();
                     if(type.isInterface()) {
-                        List ls = buildModel(Utils.getModelClass(fd), list);
+                        List ls = Collections.EMPTY_LIST;
+                        if(Utils.isBaseModel(fd)){
+                            ls = buildModel(Utils.getModelClass(fd), list);
+                        }else{
+                            ls = new LinkedList();
+                            List finalLs = ls;
+                            list.forEach(map->{
+                               finalLs.add(map.get(fd.getName()));
+                           });
+                        }
+
                         if(ls!=null&&ls.size()>0) {
-                            fd.set(model.getModelAndSetStatusIsTrue(), ls);
+                            Object o = fd.get(model.getModelAndSetStatusIsTrue());
+                            if(o!=null && o instanceof  List){
+                                List metaLs = (List) o;
+                                metaLs.addAll(ls);
+                            }else {
+                                fd.set(model.getModelAndSetStatusIsTrue(), ls);
+                            }
+
                         }
                     }else {
                         List newInstance = (List)type.newInstance();
@@ -175,11 +192,27 @@ public class SmartModelParse implements ModelParse {
                 for(Field fd: set_) {
                     Class<?> type = fd.getType();
                     if(type.isInterface()) {
-                        HashSet<E> hashSet = new HashSet<E>();
-                        List ls = buildModel(Utils.getModelClass(fd), list);
-                        hashSet.addAll(ls);
-                        if(hashSet!=null&&hashSet.size()>0) {
-                            fd.set(model.getModelAndSetStatusIsTrue(), hashSet);
+
+                        List ls = null;
+                        if(Utils.isBaseModel(fd)){
+                            ls = buildModel(Utils.getModelClass(fd), list);
+                        }else {
+                            ls = new LinkedList();
+                            List finalLs = ls;
+                            list.forEach(map->{
+                                finalLs.add(map.get(fd.getName()));
+                            });
+                        }
+
+                        if(ls!=null&&ls.size()>0) {
+                            Object o = fd.get(model.getModelAndSetStatusIsTrue());
+                            if(o!=null && o instanceof  Set){
+                                Set metaSet = (Set) o;
+                                metaSet.addAll(ls);
+                            }else{
+                                fd.set(model.getModelAndSetStatusIsTrue(), new HashSet<>(ls));
+                            }
+
                         }
                     }else {
                         Set newInstance = (Set)type.newInstance();

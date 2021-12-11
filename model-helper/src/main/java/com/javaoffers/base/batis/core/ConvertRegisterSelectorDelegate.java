@@ -32,7 +32,7 @@ public class ConvertRegisterSelectorDelegate {
      * registerConvert
      * @param convert
      */
-    public void registerConvert( AbstractConver convert) {
+    private void registerConvert( AbstractConver convert) {
         convert.register(applicationContext);
     }
 
@@ -40,7 +40,7 @@ public class ConvertRegisterSelectorDelegate {
      * selector
      * @return
      */
-    public Convert selector(Class src,Class des) {
+    private Convert selector(Class src,Class des) {
          return applicationContext.selector(new ConverDescriptor(src,des));
     }
 
@@ -52,7 +52,7 @@ public class ConvertRegisterSelectorDelegate {
      * @return
      */
     public <T> T converterObject(Class<T> des, Object srcValue) throws Exception{
-
+        //基础类型转换为包装类型，如果存在基础类型
         des = baseClassUpgrade(des);
         Class src = baseClassUpgrade(srcValue.getClass());
 

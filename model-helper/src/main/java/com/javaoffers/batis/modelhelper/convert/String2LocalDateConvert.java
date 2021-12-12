@@ -12,7 +12,7 @@ public class String2LocalDateConvert extends AbstractConver<String, LocalDate> {
     @Override
     public LocalDate convert(String s) {
         Date date = String2DateConvert.convert2(s);
-        return LocalDate.of(date.getYear(),date.getMonth()+1,date.getDate());
+        return LocalDate.of(date.getYear()+1900,date.getMonth()+1,date.getDate());
     }
 
 }

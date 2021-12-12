@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 /**
  *
- * NumberOne2NumberTwo
+ * PrimitiveType 2 :
  *             Byte.class,
  *             Short.class,
  *             Integer.class,
@@ -32,8 +32,12 @@ public class PrimitiveOne2PrimitiveTwoConvert extends AbstractConver<Number,Numb
 
     @Override
     public Number convert(Number number) {
-        double src = Double.parseDouble(number.toString());
-        return (Number) descriptor.getDes().cast(src);
+        try {
+           return (Number)convertMethod.invoke(number);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+       return null;
     }
 
     @Override

@@ -87,7 +87,7 @@ public class ConvertRegisterSelectorDelegate {
      * @param <T>
      * @return
      */
-    public <T> T converterObject(Class<T> des, Object srcValue) throws Exception{
+    public <T> T converterObject(Class<T> des, Object srcValue) {
         //基础类型转换为包装类型，如果存在基础类型
         des = baseClassUpgrade(des);
         Class src = baseClassUpgrade(srcValue.getClass());
@@ -99,7 +99,7 @@ public class ConvertRegisterSelectorDelegate {
         Convert selector = selector(srcValue.getClass(), des);
         //开始转换
         if(selector ==null){
-            throw new ClassCastException("primitive type:" +srcValue.getClass().getName()+" target type: "+des.getName()+" nonexistent");
+            throw new ClassCastException("Origin type:" +srcValue.getClass().getName()+" target type: "+des.getName()+" Cast Exception");
         }
         T convert = null;
         try {

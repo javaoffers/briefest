@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  *             double.class
  *
  */
-public class PrimitiveOne2PrimitiveTwoConvert extends AbstractConver<Number,Number> {
+public class PrimitiveNumber2PrimitiveNumberConvert extends AbstractConver<Number,Number> {
 
     ConverDescriptor descriptor;
 
@@ -47,7 +47,7 @@ public class PrimitiveOne2PrimitiveTwoConvert extends AbstractConver<Number,Numb
             for (Class des : basePrimitiveClass) {
                 try {
                     ConverDescriptor descriptor = new ConverDescriptor(ModelConsistants.numberPrimitivesMapping.get(src), ModelConsistants.numberPrimitivesMapping.get(des));
-                    final PrimitiveOne2PrimitiveTwoConvert n2n = new PrimitiveOne2PrimitiveTwoConvert();
+                    final PrimitiveNumber2PrimitiveNumberConvert n2n = new PrimitiveNumber2PrimitiveNumberConvert();
                     n2n.setDescriptor(descriptor);
                     Method method = Number.class.getDeclaredMethod(des.getSimpleName() + "Value");
                     n2n.setConvertMethod(method);

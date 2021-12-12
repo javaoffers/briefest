@@ -47,7 +47,8 @@ public class MapperProxyAggent<T> implements InvocationHandler, Serializable {
                 ArrayList models = ModelParseUtils.converterMap2Model(isModel.getRight(), new LinkedList<>(result));
                 Pair<Boolean, Collection> collection = MapperProxyAggentProcess.isCollection(method);
                 if(collection.getLeft()){
-                   return collection.getRight().addAll(models);
+                    Collection right = collection.getRight();right.addAll(models);
+                    return right;
                 }
                 if(models.size()>0){
                     return models.get(0);

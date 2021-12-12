@@ -56,6 +56,7 @@ public class MapperProxyAggentProcess {
     }
 
     public static Pair<Boolean,Collection> isCollection(Method method){
+
         Class retrunClass = getRetrunClass(method);
         boolean status = Collection.class.isAssignableFrom(retrunClass) || retrunClass ==Collection.class;
         if(status ){
@@ -78,7 +79,6 @@ public class MapperProxyAggentProcess {
                 }
             }
         }
-
         return Pair.of(false,null);
     }
 

@@ -7,10 +7,11 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <modules>
         <module>model-helper</module>
       <module>model-sample</module>
+        <module>model-spring-suport</module>
     </modules>
 
     <name>mybatis-modelhelper</name>

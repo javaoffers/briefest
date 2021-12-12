@@ -2,10 +2,10 @@
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.mh.others.mybatis.reform.mapper.ReformMapper">
+<mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
 	
-	<select id="queryTestData" resultType="model">
-		select * from model
+	<select id="queryUserData" resultType="model">
+		select * from user
 	</select>
 
 </mapper>

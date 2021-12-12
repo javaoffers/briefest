@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.convert.Convert;
 import com.javaoffers.batis.modelhelper.util.ReflectionUtils;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -53,12 +54,12 @@ public class ConvertRegisterSelectorDelegate {
 
             //src 升级
             for(Class srcc : srcSupers){
-                return selector(srcc, des);
+                convert =  selector(srcc, des);
             }
             //dec 降级
             Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
             for(Class dess : desSupers){
-                return selector(src,dess);
+                convert = selector(src,dess);
             }
         }
         return convert;
@@ -68,17 +69,33 @@ public class ConvertRegisterSelectorDelegate {
         Class superclass = c.getSuperclass();
         Class[] interfaces = c.getInterfaces();
         LinkedList<Class> srcs = new LinkedList<>();
-        if(superclass != Object.class){
+        if(superclass != Object.class && superclass != null){
             Collections.addAll(srcs, superclass);
         }
         for(Class srcInter : interfaces){
-            Collections.addAll(srcs,srcInter);
+            if(srcInter!=null){
+                Collections.addAll(srcs,srcInter);
+            }
         }
         return srcs;
 
     }
 
+    /**
+     * 类型转换
+     * @param des 要转换的目标类型
+     * @param srcValue 原始值类型
+     * @param <T>
+     * @return
+     */
+    public <T> T converterObject(Class<T> des, Object srcValue, Field field)  {
+        try {
+           return converterObject( des, srcValue);
+        }catch (ClassCastException e){
 
+           throw new ClassCastException(e.getMessage()+" the field name is "+field.getName());
+        }
+    }
 
     /**
      * 类型转换
@@ -99,7 +116,7 @@ public class ConvertRegisterSelectorDelegate {
         Convert selector = selector(srcValue.getClass(), des);
         //开始转换
         if(selector ==null){
-            throw new ClassCastException("Origin type:" +srcValue.getClass().getName()+" target type: "+des.getName()+" Cast Exception");
+            throw new ClassCastException("Origin type:" +srcValue.getClass().getName()+" dont convert to  Target type: "+des.getName());
         }
         T convert = null;
         try {

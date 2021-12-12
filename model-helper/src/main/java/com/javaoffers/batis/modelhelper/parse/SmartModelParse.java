@@ -115,7 +115,7 @@ public class SmartModelParse implements ModelParse {
                     String name = fd.getName();
                     if(mp.get(name)!=null) {
                         Class<?> type = fd.getType();
-                        Object object2 = convert.converterObject(type, mp.get(name));
+                        Object object2 = convert.converterObject(type, mp.get(name),fd);
                         fd.set(model.getModelAndSetStatusIsTrue(), object2);
                     }
 
@@ -148,7 +148,7 @@ public class SmartModelParse implements ModelParse {
                         Object object = Array.newInstance(class1, arrayData.size());
                         if(arrayData!=null&&arrayData.size()>0) {
                             for(int i=0;i<arrayData.size();i++) {
-                                Object object2 = convert.converterObject(object.getClass(), arrayData.get(i));
+                                Object object2 = convert.converterObject(object.getClass(), arrayData.get(i),fd);
                                 Array.set(object, i, object2);
                             }
                             fd.set(model.getModelAndSetStatusIsTrue(),object );

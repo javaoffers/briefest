@@ -18,7 +18,7 @@ import java.util.Set;
 public class ReflectionUtils {
 
     static  Reflections reflections =  new Reflections(
-            "com", //指定被扫描的包名
+            "com.javaoffers.batis.modelhelper", //指定被扫描的包名
             Arrays.asList(
                     new SubTypesScanner(false)//允许getAllTypes获取所有Object的子类, 不设置为false则 getAllTypes 会报错.默认为true.
                     ,new MethodParameterNamesScanner()//设置方法参数名称 扫描器,否则调用getConstructorParamNames 会报错

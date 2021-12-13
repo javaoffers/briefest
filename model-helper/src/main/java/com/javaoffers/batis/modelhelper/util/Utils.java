@@ -87,7 +87,7 @@ public class Utils {
      * @return
      * @throws ClassNotFoundException
      */
-    private static Class getGenericityClassOfCollect(Field fd) throws ClassNotFoundException {
+    public static Class getGenericityClassOfCollect(Field fd) throws ClassNotFoundException {
         try {
             ParameterizedType listGenericType = (ParameterizedType) fd.getGenericType();
             Type listActualTypeArguments = listGenericType.getActualTypeArguments()[0];

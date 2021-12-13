@@ -144,11 +144,11 @@ public class SmartModelParse implements ModelParse {
                             }
                         }
                         String typeName = fd.getGenericType().getTypeName();
-                        Class<?> class1 = Class.forName(typeName.substring(0, typeName.length()-2));
-                        Object object = Array.newInstance(class1, arrayData.size());
+                        Class<?> originClass = Class.forName(typeName.substring(0, typeName.length()-2));
+                        Object object = Array.newInstance(originClass, arrayData.size());
                         if(arrayData!=null&&arrayData.size()>0) {
                             for(int i=0;i<arrayData.size();i++) {
-                                Object object2 = convert.converterObject(object.getClass(), arrayData.get(i),fd);
+                                Object object2 = convert.converterObject(originClass.getClass(), arrayData.get(i),fd);
                                 Array.set(object, i, object2);
                             }
                             fd.set(model.getModelAndSetStatusIsTrue(),object );
@@ -157,70 +157,59 @@ public class SmartModelParse implements ModelParse {
                 }
                 for(Field fd: list_) {
                     Class<?> type = fd.getType();
+                    List ls = Collections.EMPTY_LIST;
                     if(type.isInterface()) {
-                        List ls = Collections.EMPTY_LIST;
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else{
-                            ls = new LinkedList();
-                            List finalLs = ls;
-                            list.forEach(map->{
-                               finalLs.add(map.get(fd.getName()));
-                           });
-                        }
-
-                        if(ls!=null&&ls.size()>0) {
-                            Object o = fd.get(model.getModelAndSetStatusIsTrue());
-                            if(o!=null && o instanceof  List){
-                                List metaLs = (List) o;
-                                metaLs.addAll(ls);
-                            }else {
-                                fd.set(model.getModelAndSetStatusIsTrue(), ls);
-                            }
-
+                            ls = getList(list, fd);
                         }
                     }else {
-                        List newInstance = (List)type.newInstance();
-                        List ls = buildModel(Utils.getModelClass(fd), list);
-                        newInstance.addAll(ls);
-                        if(newInstance!=null&&newInstance.size()>0) {
-                            fd.set(model.getModelAndSetStatusIsTrue(), newInstance);
+                        if(Utils.isBaseModel(fd)){
+                            ls = buildModel(Utils.getModelClass(fd), list);
+                        }else{
+                            ls = getList(list, fd);
                         }
+                        List newInstance = (List)fd.get(model.getModelAndSetStatusIsTrue());
+                        if(newInstance==null){
+                            newInstance = (List)type.newInstance();
+                        }
+                        newInstance.addAll(ls);
+                        ls = newInstance;
+                    }
+
+                    if(ls!=null&&ls.size()>0) {
+                       fd.set(model.getModelAndSetStatusIsTrue(), ls);
                     }
 
                 }
                 for(Field fd: set_) {
                     Class<?> type = fd.getType();
+                    List ls = Collections.EMPTY_LIST;
+                    Set newInstance = Collections.EMPTY_SET;
                     if(type.isInterface()) {
 
-                        List ls = null;
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else {
-                            ls = new LinkedList();
-                            List finalLs = ls;
-                            list.forEach(map->{
-                                finalLs.add(map.get(fd.getName()));
-                            });
+                            ls = getList(list, fd);
                         }
-
-                        if(ls!=null&&ls.size()>0) {
-                            Object o = fd.get(model.getModelAndSetStatusIsTrue());
-                            if(o!=null && o instanceof  Set){
-                                Set metaSet = (Set) o;
-                                metaSet.addAll(ls);
-                            }else{
-                                fd.set(model.getModelAndSetStatusIsTrue(), new HashSet<>(ls));
-                            }
-
-                        }
-                    }else {
-                        Set newInstance = (Set)type.newInstance();
-                        List ls = buildModel(Utils.getModelClass(fd), list);
+                        newInstance = new HashSet();
                         newInstance.addAll(ls);
-                        if(newInstance!=null&&newInstance.size()>0) {
-                            fd.set(model.getModelAndSetStatusIsTrue(), newInstance);
+                    }else {
+                        if(Utils.isBaseModel(fd)){
+                            ls = buildModel(Utils.getModelClass(fd), list);
+                        }else {
+                            ls = getList(list, fd);
                         }
+                        newInstance = (Set)fd.get(model.getModelAndSetStatusIsTrue());
+                        if(newInstance == null){
+                            newInstance = (Set)type.newInstance();
+                        }
+                        newInstance.addAll(ls);
+                    }
+                    if(newInstance != null && newInstance.size() > 0) {
+                        fd.set(model.getModelAndSetStatusIsTrue(), newInstance);
                     }
                 }
                 if(model.isStatus()) {
@@ -233,6 +222,17 @@ public class SmartModelParse implements ModelParse {
             throw ex;
         }
         return linkedList;
+    }
+
+    private static List getList(List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
+        List ls;
+        Class gClass = Utils.getGenericityClassOfCollect(fd);//泛型类型
+        ls = new LinkedList();
+        List finalLs = ls;
+        list.forEach(map->{
+           finalLs.add(convert.converterObject(gClass,map.get(fd.getName()),fd));
+       });
+        return ls;
     }
 
     /**

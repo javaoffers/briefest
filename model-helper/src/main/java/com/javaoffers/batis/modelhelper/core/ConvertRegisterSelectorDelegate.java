@@ -55,11 +55,17 @@ public class ConvertRegisterSelectorDelegate {
             //src 升级
             for(Class srcc : srcSupers){
                 convert =  selector(srcc, des);
+                if(convert!=null){
+                    return convert;
+                }
             }
             //dec 降级
             Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
             for(Class dess : desSupers){
                 convert = selector(src,dess);
+                if(convert!=null){
+                    return convert;
+                }
             }
         }
         return convert;

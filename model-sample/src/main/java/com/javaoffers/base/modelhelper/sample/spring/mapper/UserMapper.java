@@ -8,4 +8,6 @@ public interface UserMapper  {
 
    List<User>  queryUserData();
 
+   List<User> queryUserAndOrder();
+
 }

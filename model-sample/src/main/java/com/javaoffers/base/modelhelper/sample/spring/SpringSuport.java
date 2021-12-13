@@ -1,5 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.spring;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
@@ -28,8 +29,17 @@ public class SpringSuport implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+
         List<User> users = userMapper.queryUserData();
         LOGUtils.printLog(users.size());
+        User user = users.get(0);
+        LOGUtils.printLog(objectMapper.writeValueAsString(user));
+
+        List<User> userAndOrder = userMapper.queryUserAndOrder();
+        User userO = userAndOrder.get(0);
+        LOGUtils.printLog(objectMapper.writeValueAsString(userO));
+
         System.exit(0);
     }
 }

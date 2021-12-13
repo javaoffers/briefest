@@ -7,5 +7,8 @@
 	<select id="queryUserData" resultType="model">
 		select * from user
 	</select>
+	<select id="queryUserAndOrder" resultType="model">
+		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id ;
+	</select>
 
 </mapper>

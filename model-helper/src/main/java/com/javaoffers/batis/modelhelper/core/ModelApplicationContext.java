@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Description:
  * @Auther: create by cmj on 2021/12/7 20:12
  */
-public class ModelApplicationContext implements SelectorRegister {
+public class  ModelApplicationContext implements SelectorRegister {
 
 
     Map<String, Convert> registers = new ConcurrentHashMap<>();

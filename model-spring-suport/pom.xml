@@ -12,8 +12,8 @@
     <version>1.0.0</version>
     <dependencies>
         <dependency>
-            <artifactId>model-helper</artifactId>
             <groupId>com.javaoffers</groupId>
+            <artifactId>model-helper</artifactId>
             <version>1.0.0</version>
         </dependency>
 

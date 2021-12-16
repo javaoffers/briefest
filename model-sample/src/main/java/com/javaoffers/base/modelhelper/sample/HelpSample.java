@@ -17,6 +17,8 @@ import org.junit.Test;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -88,5 +90,17 @@ public class HelpSample {
 
         long l = delegate.converterObject(long.class, new BigDecimal(11));
         LOGUtils.printLog(integer2);
+
+        Time time = delegate.converterObject(Time.class, new Date());
+        LOGUtils.printLog(time.toString());
+
+        Timestamp timestamp = delegate.converterObject(Timestamp.class, new Date());
+        LOGUtils.printLog(timestamp.toString());
+
+        Date date1 = delegate.converterObject(Date.class, new Timestamp(new Date().getTime()));
+        LOGUtils.printLog(date1.toString());
+
+        Timestamp timestamp1 = delegate.converterObject(Timestamp.class, new Date().getTime());
+        LOGUtils.printLog(timestamp1.toString());
     }
 }

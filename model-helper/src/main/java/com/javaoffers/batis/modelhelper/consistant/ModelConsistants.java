@@ -1,5 +1,9 @@
 package com.javaoffers.batis.modelhelper.consistant;
 
+import java.sql.JDBCType;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,6 +26,13 @@ public class ModelConsistants {
             Long.class,
             Float.class,
             Double.class
+    };
+
+    public static final Class[] UTIL_DATE= new Class[]{
+            Date.class,
+            java.sql.Date.class,
+            Time.class,
+            Timestamp.class,
     };
 
     public static final Map<Class,Class> numberPrimitivesMapping = new HashMap<Class,Class>();

@@ -119,18 +119,18 @@ public class ConvertRegisterSelectorDelegate {
             return (T) srcValue;
         }
         //选取 convert
-        Convert selector = selector(srcValue.getClass(), des);
+        Convert convert = selector(srcValue.getClass(), des);
         //开始转换
-        if(selector ==null){
+        if(convert ==null){
             throw new ClassCastException("Origin type:" +srcValue.getClass().getName()+" dont convert to  Target type: "+des.getName());
         }
-        T convert = null;
+        T desObject = null;
         try {
-            convert = (T) selector.convert(src.cast(srcValue));
+            desObject = (T) convert.convert(src.cast(srcValue));
         }catch (Exception e){
             e.printStackTrace();
         }
-        return convert;
+        return desObject;
     }
 
     /**

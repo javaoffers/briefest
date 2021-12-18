@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.install;
 
+import com.javaoffers.batis.modelhelper.aggent.InstallModelHelper;
 import com.javaoffers.batis.modelhelper.aggent.MapperProxyAggent;
 import com.javaoffers.batis.modelhelper.aggent.TypeAliasRegistryAggent;
 import net.bytebuddy.ByteBuddy;
@@ -21,20 +22,6 @@ import org.springframework.context.annotation.Configuration;
 public class InstallAgent implements BeanFactoryPostProcessor {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        ByteBuddyAgent.install();
-
-        new ByteBuddy()
-                .redefine(MapperProxyAggent.class) //这种方式要保证   Bar 和 Foo 的schame相同
-                .name(MapperProxy.class.getName())
-                .make()
-                .load(MapperProxy.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
-
-        String name = MapperProxy.class.getName();
-
-        new ByteBuddy()
-                .redefine(TypeAliasRegistryAggent.class) //这种方式要保证   Bar 和 Foo 的schame相同
-                .name(TypeAliasRegistry.class.getName())
-                .make()
-                .load(TypeAliasRegistry.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
+        InstallModelHelper.install();
     }
 }

@@ -226,8 +226,8 @@
         }
     }
     
-    List<User> userAndOrder = userMapper.queryUserAndOrder();
-    LOGUtils.printLog(objectMapper.writeValueAsString(userAndOrder));
+     User user2 = userMapper.queryUserAndOrderOne();
+     LOGUtils.printLog(objectMapper.writeValueAsString(user2));
     
     [{
     	"id": "1",
@@ -243,4 +243,47 @@
     		"orderMoney": "120"
     	}]
     }]    
-    ```      
+    ```
+- 使用方法
+  - 注解使用
+    ```
+    该插件主要给予注解进行使用，注解只有两个分别为@BaseModel和@BaseUnique。 @BaseModel 表示此类是一model类，那么该插件才进行解析。
+    @BaseUnique 表示数据的唯一属性，比如主键，唯一索引等，并且在sql中要体现出来即可。在使用时只需要有一个能确认唯一性字段的即可，例如
+    在model类中存在主键和唯一索引，那么只需要在其中的一个属性上使用即可，并不需要主键和唯一索引都标记@BaseUnique。（当然如果你都进行
+    标识也没有问题注意model类一定要有@BaseUnique）映射场景：一对一：通常为model 类中存在另一model类并作为属性。通常称为子model。例如：
+    @BaseModel
+    public class User{
+        @BaseUnique
+        String userId;//用户id
+        Card card; //身份证， 一对一
+        
+    }
+    
+    @BaseModel
+    public class Card{
+        @BaseUnique
+        String cardId;//身份证id
+        String cardNum; //省份证号
+    }
+    
+    以上就是一对一映射。
+    一对多和多对多场景用java标识则为类与集合的关系，所以代码如下：
+     @BaseModel
+     public class User{
+        @BaseUnique
+        String userId;//用户id
+        List<Order> orders;// 类与集合（一对多，多对多）。
+     }
+    
+    @BaseModel
+    public class Order{
+        @BaseUnique
+        String orderId;//订单id
+        String cardName; //订单名称
+    }    
+    ```         
+  - 注解使用注意点
+    ```
+    主model和子model中的 @BaseUnique 对应的属性名称一定要不同。
+    ``` 
+      

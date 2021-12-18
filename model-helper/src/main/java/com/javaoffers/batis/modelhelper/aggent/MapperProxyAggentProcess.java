@@ -17,6 +17,22 @@ import java.util.*;
  */
 public class MapperProxyAggentProcess {
 
+    private static final InheritableThreadLocal<Boolean> ISMODEL = new InheritableThreadLocal<Boolean>(){
+        @Override
+        protected Boolean initialValue() {
+            return false;
+        }
+    };
+
+    public static void markModel(){
+        ISMODEL.set(true);
+    }
+    public static boolean isModel(){
+        return ISMODEL.get();
+    }
+    public static void resetModel(){
+        ISMODEL.set(false);
+    }
     /**
      * 检查是否属于Model
      * @param method

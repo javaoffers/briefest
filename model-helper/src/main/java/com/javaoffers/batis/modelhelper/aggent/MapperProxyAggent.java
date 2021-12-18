@@ -39,9 +39,17 @@ public class MapperProxyAggent<T> implements InvocationHandler, Serializable {
             }
         }
         final MapperMethod mapperMethod = cachedMapperMethod(method);
-        Object execute = mapperMethod.execute(sqlSession, args);
         Pair<Boolean, Class> isModel = MapperProxyAggentProcess.checkIsModel(method);
+        Object execute = null;
         if(isModel.getLeft()){
+            try {
+                MapperProxyAggentProcess.markModel();
+                execute = mapperMethod.execute(sqlSession, args);
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                MapperProxyAggentProcess.resetModel();
+            }
             if(execute instanceof Collection || execute instanceof Map){//resultType : model
                 Collection result = Collections.EMPTY_LIST;
                 if(execute instanceof Collection){
@@ -63,6 +71,8 @@ public class MapperProxyAggent<T> implements InvocationHandler, Serializable {
                 constructor.setAccessible(true);
                 return constructor.newInstance();
             }
+        }else {
+            execute = mapperMethod.execute(sqlSession, args);
         }
 
         return execute;

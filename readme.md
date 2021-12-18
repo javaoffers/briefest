@@ -36,9 +36,9 @@
     mapper:
     <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
     	
-    	<select id="queryUserData" resultType="model">
-    		select * from user
-    	</select>
+    	<select id="queryUserDataLimitOne" resultType="model">
+        		select * from user limit 1
+        </select>
     
     </mapper>
     
@@ -320,4 +320,369 @@
         String2BigDecimalConvert (com.javaoffers.batis.modelhelper.convert)
         String2BigIntegerConvert (com.javaoffers.batis.modelhelper.convert)
         Number2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-    ```    
+    ```
+
+- English description
+## mybatis model helper
+
+-Summary
+
+```
+
+This plug-in mainly solves the problem of mybatis entity mapping configuration. We know that entity mapping through mybatis requires a lot of XML tag configuration, although some plug-ins help survive
+
+However, it is still a chicken rib. Each addition or modification requires a new home XML Mapping tag. Although mybatis comes with its own annotations, it is still troublesome to use. Then the plug-in master
+
+To solve these problems.
+
+```
+
+-Usage environment MVN
+
+```
+
+
+```
+
+-Use case
+
+- sql
+
+```
+
+CREATE TABLE `user` (
+
+`id` int(11) DEFAULT NULL,
+
+`name` varchar(255) COLLATE utf8_ bin DEFAULT NULL,
+
+`birthday` datetime DEFAULT NULL
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_ bin;
+
+
+INSERT INTO `base`.` user`(`id`, `name`, `birthday`) VALUES (1, 'cmj', '2021-12-13 12:22:28');
+
+
+CREATE TABLE `user_ order` (
+
+`id` int(11) DEFAULT NULL,
+
+`order_ name` varchar(255) COLLATE utf8_ bin DEFAULT NULL,
+
+`order_ money` int(255) DEFAULT NULL,
+
+`user_ id` int(11) DEFAULT NULL
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_ bin;
+
+
+INSERT INTO `base`.` user_ Order ` (` ID `, ` order_name `, ` order_money `, ` user_id `) values (1, 'computer', 100, 1);
+
+INSERT INTO `base`.` user_ Order ` (` ID `, ` order_name `, ` order_money `, ` user_id `) values (2, 'mobile', 120, 1);
+
+
+```
+
+- one model mapping
+
+```
+
+mapper:
+
+<mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+
+
+<select id="queryUserDataLimitOne" resultType="model">
+
+select * from user limit 1
+
+</select>
+
+
+</mapper>
+
+
+model:
+
+@BaseModel
+
+public class User {
+
+
+@BaseUnique
+
+private String id;
+
+
+private String name;
+
+
+private String birthday;
+
+
+public String getId() {
+
+return id;
+
+}
+
+
+public void setId(String id) {
+
+this. id = id;
+
+}
+
+
+public String getName() {
+
+return name;
+
+}
+
+
+public void setName(String name) {
+
+this. name = name;
+
+}
+
+
+public String getBirthday() {
+
+return birthday;
+
+}
+
+
+public void setBirthday(String birthday) {
+
+this. birthday = birthday;
+
+}
+
+
+}
+
+
+use:
+
+User user1 = userMapper. queryUserDataLimitOne();
+
+LOGUtils. printLog(objectMapper.writeValueAsString(user1));
+
+//{"id":"1","name":"cmj","birthday":"2021-12-13 12:22:28"}
+
+
+```
+
+- all model mapping
+
+```
+
+<mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+
+
+<select id="queryUserData" resultType="model">
+
+select * from user
+
+</select>
+
+
+</mapper>
+
+
+@BaseModel
+
+public class User {
+
+
+@BaseUnique
+
+private String id;
+
+
+private String name;
+
+
+private String birthday;
+
+
+public String getId() {
+
+return id;
+
+}
+
+
+public void setId(String id) {
+
+this. id = id;
+
+}
+
+
+public String getName() {
+
+return name;
+
+}
+
+
+public void setName(String name) {
+
+this. name = name;
+
+}
+
+
+public String getBirthday() {
+
+return birthday;
+
+}
+
+
+public void setBirthday(String birthday) {
+
+this. birthday = birthday;
+
+}
+
+
+}
+
+
+List<User> users = userMapper. queryUserData();
+
+LOGUtils. printLog(objectMapper.writeValueAsString(users));
+
+//[{"id":"1","name":"cmj","birthday":"2021-12-13 12:22:28","orders":null}]
+
+
+```
+
+- one 2 many and many 2 many
+
+```
+
+<mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+
+
+<select id="queryUserAndOrder" resultType="model">
+
+select a.* , b.id as orderId, b.* from user a left join user_ order b on a.id = b.user_ id ;
+
+</select>
+
+
+</mapper>
+
+
+
+@BaseModel
+
+public class User {
+
+
+@BaseUnique
+
+private String id;
+
+
+private String name;
+
+
+private String birthday;
+
+
+private List<UserOrder> orders;
+
+
+public String getId() {
+
+return id;
+
+}
+
+
+public void setId(String id) {
+
+this. id = id;
+
+}
+
+
+public String getName() {
+
+return name;
+
+}
+
+
+public void setName(String name) {
+
+this. name = name;
+
+}
+
+
+public String getBirthday() {
+
+return birthday;
+
+}
+
+
+public void setBirthday(String birthday) {
+
+this. birthday = birthday;
+
+}
+
+
+public List<UserOrder> getOrders() {
+
+return orders;
+
+}
+
+
+public void setOrders(List<UserOrder> orders) {
+
+this. orders = orders;
+
+}
+
+}
+
+
+@BaseModel
+
+public class UserOrder {
+
+
+@BaseUnique
+
+private int orderId;
+
+
+private String orderName;
+
+private String orderMoney;
+
+
+public int getOrderId() {
+
+return orderId;
+
+}
+
+
+public void setOrderId(int orderId) {
+
+this. orderId = orderId;
+
+}        

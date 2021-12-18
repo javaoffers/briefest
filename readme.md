@@ -10,6 +10,17 @@
   ```
 - Use the environment MVN
   ```
+    <dependency>
+      <groupId>com.javaoffers</groupId>
+      <artifactId>model-helper</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+  
+    <dependency>
+      <groupId>com.javaoffers</groupId>
+      <artifactId>model-spring-suport</artifactId>
+      <version>1.0.1</version>
+    </dependency>
   
   ```    
 - Use Cases

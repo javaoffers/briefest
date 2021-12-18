@@ -6,7 +6,6 @@ import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import java.util.List;
 
 @BaseModel
-
 public class User {
 
     @BaseUnique

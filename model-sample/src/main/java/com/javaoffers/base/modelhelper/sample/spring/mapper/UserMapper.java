@@ -6,8 +6,11 @@ import java.util.List;
 
 public interface UserMapper  {
 
+   User queryUserDataLimitOne();
+
    List<User>  queryUserData();
 
    List<User> queryUserAndOrder();
 
+   User queryUserAndOrderOne();
 }

@@ -24,6 +24,12 @@ public class MapperProxyAggentProcess {
      */
     public static Pair<Boolean,Class> checkIsModel(Method method){
         Type genericReturnType = method.getGenericReturnType();
+        Pair<Boolean, Class> md = checkIsModel(genericReturnType);
+        if (md != null) return md;
+        return Pair.of(false,null);
+    }
+
+    private static Pair<Boolean, Class> checkIsModel(Type genericReturnType) {
         if(genericReturnType instanceof ParameterizedTypeImpl){
             ParameterizedTypeImpl ptz = (ParameterizedTypeImpl) genericReturnType;
             Type[] actualTypeArguments = ptz.getActualTypeArguments();
@@ -42,7 +48,7 @@ public class MapperProxyAggentProcess {
                 return  Pair.of(true,(Class) genericReturnType);
             }
         }
-        return Pair.of(false,null);
+        return null;
     }
 
     /**

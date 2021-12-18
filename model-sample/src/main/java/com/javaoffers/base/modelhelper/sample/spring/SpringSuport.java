@@ -31,14 +31,23 @@ public class SpringSuport implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
 
+        User user1 = userMapper.queryUserDataLimitOne();
+        LOGUtils.printLog(objectMapper.writeValueAsString(user1));
+
         List<User> users = userMapper.queryUserData();
         LOGUtils.printLog(users.size());
         User user = users.get(0);
         LOGUtils.printLog(objectMapper.writeValueAsString(user));
+        LOGUtils.printLog(objectMapper.writeValueAsString(users));
 
         List<User> userAndOrder = userMapper.queryUserAndOrder();
         User userO = userAndOrder.get(0);
         LOGUtils.printLog(objectMapper.writeValueAsString(userO));
+        LOGUtils.printLog(objectMapper.writeValueAsString(userAndOrder));
+
+        User user2 = userMapper.queryUserAndOrderOne();
+        LOGUtils.printLog(objectMapper.writeValueAsString(user2));
+
 
         System.exit(0);
     }

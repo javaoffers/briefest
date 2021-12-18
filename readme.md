@@ -250,27 +250,26 @@
 - Usage
 
 - Annotation usage
-
 ```
-The plugin is mainly used with annotations, only two of which are @basemodel and @baseUnique.
- @basemodel indicates that this class is a Model class, which is then parsed by the plug-in.
+The plugin is mainly used with annotations, only two of which are @BaseModel and @BaseUnique.
+ @BaseModel indicates that this class is a Model class, which is then parsed by the plug-in.
 
-@baseUnique indicates the unique attribute of the data, such as primary key, unique index, and 
+@BaseUnique indicates the unique attribute of the data, such as primary key, unique index, and 
 so on, and must be reflected in SQL. You only need to have a unique field, for example
 
 If there are primary keys and unique indexes in the Model class, you only need to use them on 
-one of the attributes. You don't need the @baseUnique tag for both primary keys and unique indexes.
-(If you do it all, of course Note that the model class must have @baseUnique) mapping scenario: 
+one of the attributes. You don't need the @BaseUnique tag for both primary keys and unique indexes.
+(If you do it all, of course Note that the model class must have @BaseUnique) mapping scenario: 
 One-to-one: Usually, another Model class exists in the Model class as an attribute. Often referred
 to as a child model. Such as:
 
 @BaseModel
 public class User{
 
-@BaseUnique
-String userId; // user id
-
-Card card; // Id card, one to one
+    @BaseUnique
+    String userId; // user id
+    
+    Card card; // Id card, one to one
 
 }
 

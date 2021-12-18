@@ -290,7 +290,7 @@
   
   - 类型转换
     ```
-    该插件存在大量的类型转换器。比如： Date类型转换为String类型，默认格式化为yyyy-MM-dd HH:mm:ss ,数字类型也可转换成Date类型。
+    该插件存在丰富的类型转换器。比如： Date类型转换为String类型，默认格式化为yyyy-MM-dd HH:mm:ss ,数字类型也可转换成Date类型。
     类型转换支持如下：
         String2DoubleConvert (com.javaoffers.batis.modelhelper.convert)
         DateOne2DateTwoConvert (com.javaoffers.batis.modelhelper.convert)

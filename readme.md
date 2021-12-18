@@ -1,3 +1,4 @@
+中文版： https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/readme2.md
 ## mybatis model helper
 
 - Summary

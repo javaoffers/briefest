@@ -5,7 +5,7 @@
   ，但是仍然很鸡肋，每次增加或修改都需要新家xml映射标签。虽然mybatis自带一下注解但是使用起来依然很麻烦。那么该插件主
   要就是解决这些问题的。
   ```
-- 使用化境mvn
+- 使用环境mvn
   ```
   
   ```  
@@ -286,4 +286,38 @@
     ```
     主model和子model中的 @BaseUnique 对应的属性名称一定要不同。
     ``` 
-      
+  
+  - 类型转换
+    ```
+    该插件存在大量的类型转换器。比如： Date类型转换为String类型，默认格式化为yyyy-MM-dd HH:mm:ss ,数字类型也可转换成Date类型。
+    类型转换支持如下：
+        String2DoubleConvert (com.javaoffers.batis.modelhelper.convert)
+        DateOne2DateTwoConvert (com.javaoffers.batis.modelhelper.convert)
+        String2DateConvert (com.javaoffers.batis.modelhelper.convert)
+        Boolean2StringConvert (com.javaoffers.batis.modelhelper.convert)
+        Date2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+        Date2LongConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
+        String2ByteConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2DateConvert (com.javaoffers.batis.modelhelper.convert)
+        Date2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+        String2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+        String2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2StringConvert (com.javaoffers.batis.modelhelper.convert)
+        String2FloatConvert (com.javaoffers.batis.modelhelper.convert)
+        Date2StringConvert (com.javaoffers.batis.modelhelper.convert)
+        String2ShortConvert (com.javaoffers.batis.modelhelper.convert)
+        PrimitiveNumber2PrimitiveNumberConvert (com.javaoffers.batis.modelhelper.convert)
+        String2LongConvert (com.javaoffers.batis.modelhelper.convert)
+        String2CharConvert (com.javaoffers.batis.modelhelper.convert)
+        Character2StringConvert (com.javaoffers.batis.modelhelper.convert)
+        String2IntegerConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2PrimitiveConvert (com.javaoffers.batis.modelhelper.convert)
+        String2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+        Date2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+        String2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
+        String2BigDecimalConvert (com.javaoffers.batis.modelhelper.convert)
+        String2BigIntegerConvert (com.javaoffers.batis.modelhelper.convert)
+        Number2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+    ```    

@@ -327,7 +327,7 @@ public class Order{
 - Notes use note points
 
 ```
-The attribute name for @BaseUnique in the primary model and child model must be different.
+The attribute name for @BaseUnique in the primary model and child model must be different.The resulttype in mapper must be model
 ```
 
 

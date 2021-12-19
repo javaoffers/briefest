@@ -285,7 +285,7 @@
     ```         
   - 注解使用注意点
     ```
-    主model和子model中的 @BaseUnique 对应的属性名称一定要不同。
+    主model和子model中的 @BaseUnique 对应的属性名称一定要不同。 在mapper中的resultType一定要为model
     ``` 
   
   - 类型转换

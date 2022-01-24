@@ -1,6 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.mapper;
 
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -13,4 +14,7 @@ public interface UserMapper  {
    List<User> queryUserAndOrder();
 
    User queryUserAndOrderOne();
+
+   @Select("select * from user limit 1")
+   User queryUserLimitOne();
 }

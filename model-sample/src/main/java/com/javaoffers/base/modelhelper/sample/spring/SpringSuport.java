@@ -48,6 +48,9 @@ public class SpringSuport implements InitializingBean {
         User user2 = userMapper.queryUserAndOrderOne();
         LOGUtils.printLog(objectMapper.writeValueAsString(user2));
 
+        User user3 = userMapper.queryUserLimitOne();
+        LOGUtils.printLog(objectMapper.writeValueAsString(user3));
+
 
         System.exit(0);
     }

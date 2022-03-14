@@ -1,23 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
-    <packaging>pom</packaging>
-    <version>1.0.0</version>
-    <modules>
-        <module>model-helper</module>
-      <module>model-sample</module>
-        <module>model-spring-suport</module>
-    </modules>
+  <packaging>pom</packaging>
+  <version>1.0.0</version>
+  <modules>
+    <module>model-helper</module>
+    <module>model-sample</module>
+    <module>model-spring-suport</module>
+  </modules>
 
-    <name>mybatis-modelhelper</name>
+  <name>mybatis-modelhelper</name>
   <!-- FIXME change it to the project's website -->
-  <url>http://www.example.com</url>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -25,9 +23,6 @@
   </properties>
 
   <dependencies>
-
-
-
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -35,5 +30,140 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <!-- FIXME change it to the project's website -->
+  <url>https://github.com/caomingjie-code/mh-open</url>
+  <description>javaoffers is opened project</description>
+
+  <!--licenses 默认用这个就可以-->
+  <licenses>
+    <license>
+      <name>Server Side Public License</name>
+      <url>https://www.mongodb.com/licensing/server-side-public-license</url>
+      <distribution>repo</distribution>
+      <comments>A not business-friendly OSS license</comments>
+    </license>
+  </licenses>
+  <!--配置你github信息-->
+  <scm>
+    <url>https://github.com/caomingjie-code/mh-open</url>
+    <connection>https://github.com/caomingjie-code/mh-open.git</connection>
+  </scm>
+
+
+
+  <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->
+  <developers>
+    <developer>
+      <name>caomingjie</name>
+      <id>caomingjie</id>
+      <email>caomingjiecode@outlook.com</email>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>+8</timezone>
+    </developer>
+  </developers>
+
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!--source 打包-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!--javadoc打包-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <!--防止生成 javadoc 报错-->
+            <configuration>
+              <!-- jdk1.8要加上，1.7要去掉，否则会报错 -->
+              <additionalJOptions>
+                <additionalJOption>-Xdoclint:none</additionalJOption>
+              </additionalJOptions>
+            </configuration>
+          </plugin>
+          <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+
+      <!--配置你创建issue时，解决人员给你最后发的，通常都一样可以不改-->
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+          <compilerArguments>
+            <extdirs>libs</extdirs>
+            <!--  rt包没有打到项目中去 -->
+            <verbose/>
+            <!-- C:/Program Files/Java/jdk1.8.0_201 是我本地安装的jdk家目录，rt.jar等jar 我在 jdk家目录下的 /jre/lib/ 目录中有发现存在，你们需要注意确认自己的实际情况,Windows分隔符英文分号,linux分隔符英文冒号  -->
+            <!-- 这个配置很特殊：windows下使用分号（;）分隔，linux/mac下使用冒号（:）分隔 -->
+            <bootclasspath>
+              /home/cmj/soft/jdk8/jre/lib/rt.jar:/home/cmj/soft/jdk8/jre/lib/jce.jar:/home/cmj/soft/jdk8/jre/lib/jsse.jar
+            </bootclasspath>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+
 
 </project>

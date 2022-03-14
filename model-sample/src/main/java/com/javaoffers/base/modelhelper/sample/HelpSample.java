@@ -102,5 +102,9 @@ public class HelpSample {
 
         Timestamp timestamp1 = delegate.converterObject(Timestamp.class, new Date().getTime());
         LOGUtils.printLog(timestamp1.toString());
+
+        byte[] bs = "hello".getBytes();
+        String s4 = delegate.converterObject(String.class, bs);
+        LOGUtils.printLog(s4);
     }
 }

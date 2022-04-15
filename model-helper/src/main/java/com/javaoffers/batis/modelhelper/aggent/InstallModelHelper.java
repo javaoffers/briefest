@@ -6,6 +6,8 @@ import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.binding.MapperMethodAggent;
 import org.apache.ibatis.binding.MapperProxy;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
+import org.apache.ibatis.builder.annotation.MapperAnnotationBuilderAggent;
 import org.apache.ibatis.type.TypeAliasRegistry;
 
 /**
@@ -34,6 +36,11 @@ public class InstallModelHelper {
                 .load(TypeAliasRegistry.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
 
 
+        new ByteBuddy()
+                .redefine(MapperAnnotationBuilderAggent.class)
+                .name(MapperAnnotationBuilder.class.getName())
+                .make()
+                .load(MapperAnnotationBuilder.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
     }
 
 }

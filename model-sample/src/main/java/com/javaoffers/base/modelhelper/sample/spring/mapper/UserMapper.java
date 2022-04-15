@@ -4,6 +4,7 @@ import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserMapper  {
 
@@ -17,4 +18,7 @@ public interface UserMapper  {
 
    @Select("select * from user limit 1")
    User queryUserLimitOne();
+
+   @Select("select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id")
+   List<User> queryUserLimitOneAndOrder();
 }

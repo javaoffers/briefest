@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootApplication
 @MapperScan("com.javaoffers.base.modelhelper.sample.spring.mapper")
@@ -50,6 +51,9 @@ public class SpringSuport implements InitializingBean {
 
         User user3 = userMapper.queryUserLimitOne();
         LOGUtils.printLog(objectMapper.writeValueAsString(user3));
+
+        List<User> user4 = userMapper.queryUserLimitOneAndOrder();
+        LOGUtils.printLog(objectMapper.writeValueAsString(user4));
 
 
         System.exit(0);

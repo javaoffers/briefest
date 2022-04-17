@@ -1,16 +1,29 @@
-
+中文版： https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/readme2.md
 ## mybatis model helper
-- 概要
+
+- Summary
   ```
-  该插件主要解决mybatis实体映射配置，我们知道通过mybatis进行实体映射时需要大量的xml标签配置，虽有有一些插件帮助生存
-  ，但是仍然很鸡肋，每次增加或修改都需要新家xml映射标签。虽然mybatis自带一下注解但是使用起来依然很麻烦。那么该插件主
-  要就是解决这些问题的。
+  This plugin mainly addresses mybatis entity mapping configuration, we know that entity mapping through MyBatis 
+  requires a lot of XML tag configuration, although there are some plugins to help survive, but it's still a no-no, 
+  requiring new XML mapping tags every time you add or modify. Mybatis comes with annotations, but it's still a 
+  hassle to use. Then the plug-in master To solve these problems.
   ```
-- 使用环境mvn
+- Use the environment MVN
   ```
+    <dependency>
+      <groupId>com.javaoffers</groupId>
+      <artifactId>model-helper</artifactId>
+      <version>1.0.1</version>
+    </dependency>
   
-  ```  
-- 使用案例
+    <dependency>
+      <groupId>com.javaoffers</groupId>
+      <artifactId>model-spring-suport</artifactId>
+      <version>1.0.1</version>
+    </dependency>
+  
+  ```    
+- Use Cases
   - sql
     ```
      CREATE TABLE `user` (
@@ -245,53 +258,85 @@
     	}]
     }]    
     ```
-- 使用方法
-  - 注解使用
-    ```
-    该插件主要给予注解进行使用，注解只有两个分别为@BaseModel和@BaseUnique。 @BaseModel 表示此类是一model类，那么该插件才进行解析。
-    @BaseUnique 表示数据的唯一属性，比如主键，唯一索引等，并且在sql中要体现出来即可。在使用时只需要有一个能确认唯一性字段的即可，例如
-    在model类中存在主键和唯一索引，那么只需要在其中的一个属性上使用即可，并不需要主键和唯一索引都标记@BaseUnique。（当然如果你都进行
-    标识也没有问题注意model类一定要有@BaseUnique）映射场景：一对一：通常为model 类中存在另一model类并作为属性。通常称为子model。例如：
-    @BaseModel
-    public class User{
-        @BaseUnique
-        String userId;//用户id
-        Card card; //身份证， 一对一
-        
-    }
     
-    @BaseModel
-    public class Card{
-        @BaseUnique
-        String cardId;//身份证id
-        String cardNum; //省份证号
-    }
+- Usage
+
+- Annotation usage
+```
+The plugin is mainly used with annotations, only two of which are @BaseModel and @BaseUnique.
+ @BaseModel indicates that this class is a Model class, which is then parsed by the plug-in.
+
+@BaseUnique indicates the unique attribute of the data, such as primary key, unique index, and 
+so on, and must be reflected in SQL. You only need to have a unique field, for example
+
+If there are primary keys and unique indexes in the Model class, you only need to use them on 
+one of the attributes. You don't need the @BaseUnique tag for both primary keys and unique indexes.
+(If you do it all, of course Note that the model class must have @BaseUnique) mapping scenario: 
+One-to-one: Usually, another Model class exists in the Model class as an attribute. Often referred
+to as a child model. Such as:
+
+@BaseModel
+public class User{
+
+    @BaseUnique
+    String userId; // user id
     
-    以上就是一对一映射。
-    一对多和多对多场景用java标识则为类与集合的关系，所以代码如下：
-     @BaseModel
-     public class User{
-        @BaseUnique
-        String userId;//用户id
-        List<Order> orders;// 类与集合（一对多，多对多）。
-     }
+    Card card; // Id card, one to one
+
+}
+
+
+@BaseModel
+public class Card{
+
+    @BaseUnique
+    String cardId; // Id id
     
-    @BaseModel
-    public class Order{
-        @BaseUnique
-        String orderId;//订单id
-        String cardName; //订单名称
-    }    
-    ```         
-  - 注解使用注意点
-    ```
-    主model和子model中的 @BaseUnique 对应的属性名称一定要不同。 在mapper中的resultType一定要为model
-    ``` 
-  
-  - 类型转换
-    ```
-    该插件存在丰富的类型转换器。比如： Date类型转换为String类型，默认格式化为yyyy-MM-dd HH:mm:ss ,数字类型也可转换成Date类型。
-    类型转换支持如下：
+    String cardNum; // Province certificate number
+
+}
+
+
+So that's the one-to-one mapping.
+One-to-many and many-to-many scenarios are class-collection relationships identified by Java, 
+so the code is as follows:
+
+@BaseModel
+public class User{
+
+    @BaseUnique
+    String userId; // user id
+    
+    List orders; // Classes and sets (one-to-many, many-to-many).
+
+}
+
+
+@BaseModel
+public class Order{
+
+    @BaseUnique
+    String orderId; // order id
+    
+    String cardName; // Order name
+
+}
+
+```
+
+- Notes use note points
+
+```
+The attribute name for @BaseUnique in the primary model and child model must be different.The resulttype in mapper must be model
+```
+
+
+- Type conversion
+```
+The plug-in has a large number of type converters. For example, the Date type is converted 
+to String, and the default format is YYYY-MM-DD HH: MM :ss. The number type can also be converted to Date.
+
+Type conversion is supported as follows:
 
     String2DoubleConvert (com.javaoffers.batis.modelhelper.convert)
     DateOne2DateTwoConvert (com.javaoffers.batis.modelhelper.convert)
@@ -325,5 +370,7 @@
     String2BigIntegerConvert (com.javaoffers.batis.modelhelper.convert)
     Number2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
 
-    ```
+
+```    
+    
     

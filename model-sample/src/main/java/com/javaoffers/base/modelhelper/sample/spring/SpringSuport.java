@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @SpringBootApplication
-@MapperScan("com.javaoffers.base.modelhelper.sample.spring.mapper")
+@MapperScan("com.javaoffers.base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper")
 @RequestMapping
 public class SpringSuport implements InitializingBean {
 

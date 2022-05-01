@@ -34,14 +34,14 @@
     ```
   -  one model mapping
     ```
-    mapper:
-    <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+    com.javaoffers.batis.modelhelper.mapper:
+    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
     	
     	<select id="queryUserDataLimitOne" resultType="model">
         		select * from user limit 1
         </select>
     
-    </mapper>
+    </com.javaoffers.batis.modelhelper.mapper>
     
     model:
     @BaseModel
@@ -88,13 +88,13 @@
     ```
   -  all model mapping
     ```
-     <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+     <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
      
      	<select id="queryUserData" resultType="model">
      		select * from user
      	</select>
      
-     </mapper>
+     </com.javaoffers.batis.modelhelper.mapper>
   
      @BaseModel
      public class User {
@@ -139,13 +139,13 @@
     ```
   - one 2 many and many 2 many 
     ```
-    <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
     
     	<select id="queryUserAndOrder" resultType="model">
     		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id ;
     	</select>
     
-    </mapper>
+    </com.javaoffers.batis.modelhelper.mapper>
     
  
     @BaseModel

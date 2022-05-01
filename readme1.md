@@ -47,14 +47,15 @@
     ```
   -  one model mapping
     ```
-    mapper:
-    <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+    com.javaoffers.batis.modelhelper.mapper:
+    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base.modelhelper.
+                sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
     	
     	<select id="queryUserDataLimitOne" resultType="model">
         		select * from user limit 1
         </select>
     
-    </mapper>
+    </com.javaoffers.batis.modelhelper.mapper>
     
     model:
     @BaseModel
@@ -101,13 +102,14 @@
     ```
   -  all model mapping
     ```
-     <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+     <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base
+                .modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
      
      	<select id="queryUserData" resultType="model">
      		select * from user
      	</select>
      
-     </mapper>
+     </com.javaoffers.batis.modelhelper.mapper>
   
      @BaseModel
      public class User {
@@ -152,13 +154,14 @@
     ```
   - one 2 many and many 2 many 
     ```
-    <mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">
+    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers
+            .base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
     
     	<select id="queryUserAndOrder" resultType="model">
     		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id ;
     	</select>
     
-    </mapper>
+    </com.javaoffers.batis.modelhelper.mapper>
     
  
     @BaseModel
@@ -327,14 +330,16 @@ public class Order{
 - Notes use note points
 
 ```
-The attribute name for @BaseUnique in the primary model and child model must be different.The resulttype in mapper must be model
+The attribute name for @BaseUnique in the primary model and child model 
+must be different.The resulttype in com.javaoffers.batis.modelhelper.mapper must be model
 ```
 
 
 - Type conversion
 ```
 The plug-in has a large number of type converters. For example, the Date type is converted 
-to String, and the default format is YYYY-MM-DD HH: MM :ss. The number type can also be converted to Date.
+to String, and the default format is YYYY-MM-DD HH: MM :ss. The number type can also be 
+converted to Date.
 
 Type conversion is supported as follows:
 

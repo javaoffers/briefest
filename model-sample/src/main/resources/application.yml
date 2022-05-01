@@ -11,7 +11,7 @@ spring:
 #配置mybatis
 mybatis:
   #扫描mapper 文件路径
-  #mapper-locations : classpath*:com/mh/others/spring_/**/*.xml
+  #com.javaoffers.batis.modelhelper.mapper-locations : classpath*:com/mh/others/spring_/**/*.xml
   mapper-locations : classpath*:static/**/**.xml
   configuration:
     #sql打印

@@ -17,9 +17,9 @@
 		</environment>
 	</environments>
 	
-	<!-- 加载映射文件 mapper -->
+	<!-- 加载映射文件 com.javaoffers.batis.modelhelper.mapper -->
 	<mappers>
-		<mapper resource="static/model/ReformMapper.xml"/>
+		<com.javaoffers.batis.modelhelper.mapper resource="static/model/ReformMapper.xml"/>
 
 	</mappers>
     

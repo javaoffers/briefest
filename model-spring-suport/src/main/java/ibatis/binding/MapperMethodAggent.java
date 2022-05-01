@@ -3,7 +3,7 @@
 // (powered by Fernflower decompiler)
 //
 
-package org.apache.ibatis.binding;
+package ibatis.binding;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -16,6 +16,8 @@ import java.util.Map;
 import com.javaoffers.batis.modelhelper.aggent.MapperProxyAggentProcess;
 import org.apache.ibatis.annotations.Flush;
 import org.apache.ibatis.annotations.MapKey;
+import org.apache.ibatis.binding.BindingException;
+import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.ResultMap;

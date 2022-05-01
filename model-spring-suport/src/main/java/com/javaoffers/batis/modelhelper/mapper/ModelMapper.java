@@ -13,47 +13,47 @@ public interface ModelMapper<T> extends BaseMapper<T> {
      * @param model 类
      * @return 主键id
      */
-    public int saveBaseModel(T model);
+    public int saveMModel(T model);
 
     /**
      * 保存主model包括子model
      * @param model 类
      * @return 主键id
      */
-    public int saveBaseModelAndSubModel(T model);
+    public int saveMModelAndSModel(T model);
 
     /**
      * 删除主model
      * @param model
      */
-    public void deleteBaseModel(T model);
+    public void deleteMModel(T model);
 
     /**
      * 删除model包括子model
      * @param model
      */
-    public void deleteBaseModelAndSubModel(T model);
+    public void delMModelAndSModel(T model);
 
     /**
      * 更新主model
      * @param model
      * @return
      */
-    public int updateBaseModel(T model);
+    public int updateMModel(T model);
 
     /**
      * 更新主model和子model
      * @param model
      * @return
      */
-    public int updateBaseModelAndSubModel(T model);
+    public int updateMModelAndSModel(T model);
 
     /**
      * 查询主model,注意不包含子model
      * @param model
      * @return 返回查询结果
      */
-    public List<T> queryBaseModel(T model);
+    public List<T> queryMModel(T model);
 
 
 }

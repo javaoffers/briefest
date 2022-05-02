@@ -6,7 +6,7 @@ import jdk.nashorn.internal.objects.annotations.Where;
  * @Description: sql where 语句
  * @Auther: create by cmj on 2022/5/2 00:08
  */
-public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>> {
+public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>  extends ExecutFun<M> {
 
     /**
      * 拼接Or, 否者默认都是 and
@@ -88,7 +88,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>> {
     public R in(C col, V... values);
 
 
-
+    public R exists(String existsSql);
 
 
 }

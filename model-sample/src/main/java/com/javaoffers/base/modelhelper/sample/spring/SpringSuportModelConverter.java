@@ -12,25 +12,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootApplication
 @MapperScan("com.javaoffers.base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper")
 @RequestMapping
-public class SpringSuport implements InitializingBean {
+public class SpringSuportModelConverter implements InitializingBean {
+
+    ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
     UserMapper userMapper;
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringSuport.class, args);
+        SpringApplication.run(SpringSuportModelConverter.class, args);
 
     }
 
-
     @Override
     public void afterPropertiesSet() throws Exception {
-        ObjectMapper objectMapper = new ObjectMapper();
 
         User user1 = userMapper.queryUserDataLimitOne();
         LOGUtils.printLog(objectMapper.writeValueAsString(user1));
@@ -54,8 +53,6 @@ public class SpringSuport implements InitializingBean {
 
         List<User> user4 = userMapper.queryUserLimitOneAndOrder();
         LOGUtils.printLog(objectMapper.writeValueAsString(user4));
-
-
         System.exit(0);
     }
 }

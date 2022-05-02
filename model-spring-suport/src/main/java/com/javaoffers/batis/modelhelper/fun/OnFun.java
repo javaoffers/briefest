@@ -5,7 +5,7 @@ package com.javaoffers.batis.modelhelper.fun;
  * @Auther: create by cmj on 2022/5/2 00:56
  * sql: selct xx from a left join b on a.col = b.col
  */
-public interface OnFun<M1,M2, C, V> extends WhereFun<M2, C, V,  OnFun<M1 , M2 , C,V>> {
+public interface OnFun<M1,M2, C, V> extends WhereFun<M2, C, V,  OnFun<M1 , M2 , C,V>>{
     /**
      * 添加等值关系 =
      * @param col

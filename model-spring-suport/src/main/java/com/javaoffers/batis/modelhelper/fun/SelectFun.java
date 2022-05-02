@@ -1,22 +1,31 @@
 package com.javaoffers.batis.modelhelper.fun;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.function.Function;
 
 /**
  * @Description: 查询
  * @Auther: create by cmj on 2022/5/1 23:58
  * M: model 类
- * C: 字段
+ * C: 字段,
  * V: 字段值
  */
-public interface SelectFun<M, C, V> {
+public interface SelectFun<M, C , V> {
 
     /**
      * 添加查询字段
      * @param col
      * @return
      */
-    public SelectFun<M, C, V> col(C col);
+    public SelectFun<M, C, V> col(C... col);
+
+    /**
+     * 添加查询字段 或则 子查询sql
+     * @param colSql
+     * @return
+     */
+    public SelectFun<M, C, V> col(String... colSql);
 
     /**
      * 添加所有查询字段
@@ -33,12 +42,8 @@ public interface SelectFun<M, C, V> {
 
     /**
      * sql 语句： where
-     * @param col 字段
-     * @param value  字段值
      * @return
      */
-    public WhereFun<M, C, V, ? > where(C col, V value );
-
-
+    public WhereFun<M, C, V, ? > where();
 
 }

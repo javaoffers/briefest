@@ -1,3 +1,4 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.javaoffers.batis.modelhelper.install.InstallAgent
+com.javaoffers.batis.modelhelper.install.InstallAgent\
+  

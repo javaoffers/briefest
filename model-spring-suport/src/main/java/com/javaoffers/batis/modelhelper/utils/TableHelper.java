@@ -83,18 +83,8 @@ public class TableHelper {
         BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
         String tableName = table.value();
         if(StringUtils.isBlank(tableName)){
-            String[] split = modelClazz.getSimpleName().split("");
-            StringBuilder builder = new StringBuilder();
-            for(String s : split){
-                if(StringUtils.isAllUpperCase(s)){
-                    s = s.toLowerCase();
-                   if(builder.length()!=0){
-                       s="_"+s;
-                   }
-                }
-                builder.append(s);
-            }
-            tableName = builder.toString();
+            String simpleName = modelClazz.getSimpleName();
+            tableName = conLine(simpleName);
         }
         try {
 
@@ -108,6 +98,7 @@ public class TableHelper {
                     String columnName = columnResultSet.getString("COLUMN_NAME");
                     // 数据类型
                     String columnType = columnResultSet.getString("TYPE_NAME");
+                    ColumnInfo columnInfo = new ColumnInfo(columnName, columnType);
 
                 }
             }
@@ -117,5 +108,22 @@ public class TableHelper {
         }
 
 
+    }
+
+    private static String conLine(String info) {
+
+        String[] split = info.split("");
+        StringBuilder builder = new StringBuilder();
+        for(String s : split){
+            if(StringUtils.isAllUpperCase(s)){
+                s = s.toLowerCase();
+               if(builder.length()!=0){
+                   s="_"+s;
+               }
+            }
+            builder.append(s);
+        }
+        info = builder.toString();
+        return info;
     }
 }

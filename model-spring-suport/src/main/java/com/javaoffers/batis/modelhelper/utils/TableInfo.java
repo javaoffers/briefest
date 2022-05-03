@@ -15,7 +15,7 @@ public class TableInfo {
     private String tableName;
 
     /**
-     * K: getter方法名称
+     * K: 属性名称
      * V: 对应的表字段
      */
     private Map<String,ColumnInfo> colName = new HashMap<>();

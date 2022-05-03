@@ -24,7 +24,7 @@ public class TableHelper {
      */
     private static DataSource dataSource;
 
-    private static Map<Class, TableInfo> tableInfo = new ConcurrentHashMap<>();
+    private static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
     private static Map<String, Class> modelClass = new ConcurrentHashMap<>();
 
@@ -87,7 +87,7 @@ public class TableHelper {
             tableName = conLine(simpleName);
         }
         try {
-
+            TableInfo tableInfo = new TableInfo(tableName);
             DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
             ResultSet tableResultSet = metaData.getTables(null,null,tableName,null);
             while (tableResultSet.next()) {
@@ -99,10 +99,10 @@ public class TableHelper {
                     // 数据类型
                     String columnType = columnResultSet.getString("TYPE_NAME");
                     ColumnInfo columnInfo = new ColumnInfo(columnName, columnType);
-
+                    tableInfo.getColumnInfos().add(columnInfo);
                 }
             }
-
+            tableInfoMap.put(modelClazz,tableInfo);
         }catch (Exception e){
             e.printStackTrace();
         }

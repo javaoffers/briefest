@@ -1,12 +1,11 @@
-package com.javaoffers.batis.modelhelper.fun.impl;
+package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
-import com.javaoffers.batis.modelhelper.fun.JoinFun;
-import com.javaoffers.batis.modelhelper.fun.OnFun;
+import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -16,13 +15,13 @@ import java.util.stream.Stream;
 public class JoinFunStringImpl<M1,M2,V> implements JoinFun<M1,M2,String,V> {
 
     private LinkedList<Condition> conditions;
-    private M1 m;
-    private M2 m2;
+    private Class<M1> m1Class;
+    private Class<M2> m2Class;
     private String table2Name;
 
-    public JoinFunStringImpl(M1 m, M2 m2, LinkedList<Condition> conditions) {
-        this.m = m;
-        this.m2 = m2;
+    public JoinFunStringImpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions) {
+        this.m1Class = mc;
+        this.m2Class = m2c;
         this.conditions = conditions;
     }
 

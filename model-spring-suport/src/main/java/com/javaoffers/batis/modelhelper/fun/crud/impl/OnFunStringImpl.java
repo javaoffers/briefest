@@ -1,9 +1,9 @@
-package com.javaoffers.batis.modelhelper.fun.impl;
+package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
-import com.javaoffers.batis.modelhelper.fun.OnFun;
-import com.javaoffers.batis.modelhelper.fun.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import java.util.LinkedList;
 import java.util.List;
 

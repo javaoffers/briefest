@@ -1,12 +1,10 @@
-package com.javaoffers.batis.modelhelper.fun.impl;
+package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
-import com.javaoffers.batis.modelhelper.fun.Condition;
-import com.javaoffers.batis.modelhelper.fun.ConditionTag;
-import com.javaoffers.batis.modelhelper.fun.JoinFun;
-import com.javaoffers.batis.modelhelper.fun.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.*;
 import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.LinkedList;
@@ -18,7 +16,7 @@ import java.util.stream.Stream;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:14
  */
-public class WhereFunStringImpl<M,V> implements WhereFun<M,String,V,WhereFunStringImpl<M,V>> {
+public class WhereFunStringImpl<M,V> implements WhereFun<M, GetterFun,V,WhereFunStringImpl<M,V>> {
 
 
     /**静态**/
@@ -45,55 +43,55 @@ public class WhereFunStringImpl<M,V> implements WhereFun<M,String,V,WhereFunStri
     }
 
     @Override
-    public WhereFunStringImpl<M, V> eq(String col, V value) {
+    public WhereFunStringImpl<M, V> eq(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> ueq(String col, V value) {
+    public WhereFunStringImpl<M, V> ueq(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> gt(String col, V value) {
+    public WhereFunStringImpl<M, V> gt(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.GT));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> lt(String col, V value) {
+    public WhereFunStringImpl<M, V> lt(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LT));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> gtEq(String col, V value) {
+    public WhereFunStringImpl<M, V> gtEq(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> ltEq(String col, V value) {
+    public WhereFunStringImpl<M, V> ltEq(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> between(String col, V start, V end) {
+    public WhereFunStringImpl<M, V> between(GetterFun col, V start, V end) {
         conditions.add(new BetweenCondition(col,start, end, ConditionTag.BETWEEN));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> like(String col, V value) {
+    public WhereFunStringImpl<M, V> like(GetterFun col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LIKE));
         return this;
     }
 
     @Override
-    public WhereFunStringImpl<M, V> in(String col, V... values) {
+    public WhereFunStringImpl<M, V> in(GetterFun col, V... values) {
         Stream.of(values).forEach(value -> {
             conditions.add(new WhereOnCondition(col,value,ConditionTag.IN));
         } );

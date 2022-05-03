@@ -10,7 +10,7 @@ import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 @BaseModel
 public class UserOrder {
 
-    @BaseUnique
+    @BaseUnique("id")
     private int orderId;
 
     private String orderName;

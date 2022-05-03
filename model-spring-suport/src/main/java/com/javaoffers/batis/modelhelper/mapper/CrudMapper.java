@@ -1,10 +1,9 @@
 package com.javaoffers.batis.modelhelper.mapper;
 
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.SelectFun;
+import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 
 import java.io.Serializable;
-import java.util.function.Function;
 
 /**
  * create by cmj

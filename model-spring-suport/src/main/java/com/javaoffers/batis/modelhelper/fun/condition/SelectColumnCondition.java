@@ -2,6 +2,8 @@ package com.javaoffers.batis.modelhelper.fun.condition;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 /**
  * @Description: select 语句：查询字段
@@ -18,5 +20,9 @@ public class SelectColumnCondition implements Condition  {
 
     public SelectColumnCondition(String colName) {
         this.colName = colName;
+    }
+
+    public SelectColumnCondition(GetterFun colName) {
+        this.colName = TableHelper.getColName(colName);
     }
 }

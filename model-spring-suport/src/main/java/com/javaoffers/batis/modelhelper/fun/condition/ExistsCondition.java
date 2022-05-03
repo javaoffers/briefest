@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.condition;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
 
 /**
  * @Description: exists sql 语句
@@ -10,7 +11,7 @@ public class ExistsCondition<V> extends WhereOnCondition<V> {
 
     private String existsSql;
 
-    public ExistsCondition(String colName, V value, ConditionTag tag) {
+    public ExistsCondition(GetterFun colName, V value, ConditionTag tag) {
         super(colName, value, tag);
     }
 

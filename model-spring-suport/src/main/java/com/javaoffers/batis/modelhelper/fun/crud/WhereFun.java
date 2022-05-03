@@ -1,6 +1,6 @@
-package com.javaoffers.batis.modelhelper.fun;
+package com.javaoffers.batis.modelhelper.fun.crud;
 
-import jdk.nashorn.internal.objects.annotations.Where;
+import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 
 /**
  * @Description: sql where 语句

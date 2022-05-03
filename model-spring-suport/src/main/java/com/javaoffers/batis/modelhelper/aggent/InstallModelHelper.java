@@ -3,9 +3,7 @@ package com.javaoffers.batis.modelhelper.aggent;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.agent.ByteBuddyAgent;
 import net.bytebuddy.dynamic.loading.ClassReloadingStrategy;
-import org.apache.ibatis.binding.MapperMethod;
-import org.apache.ibatis.binding.MapperMethodAggent;
-import org.apache.ibatis.binding.MapperProxy;
+import org.apache.ibatis.binding.*;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilder;
 import org.apache.ibatis.builder.annotation.MapperAnnotationBuilderAggent;
 import org.apache.ibatis.type.TypeAliasRegistry;
@@ -41,6 +39,12 @@ public class InstallModelHelper {
                 .name(MapperAnnotationBuilder.class.getName())
                 .make()
                 .load(MapperAnnotationBuilder.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
+
+        new ByteBuddy()
+                .redefine(MapperProxyFactoryAggent.class)
+                .name(MapperProxyFactory.class.getName())
+                .make()
+                .load(MapperProxyFactory.class.getClassLoader(), ClassReloadingStrategy.fromInstalledAgent());
     }
 
 }

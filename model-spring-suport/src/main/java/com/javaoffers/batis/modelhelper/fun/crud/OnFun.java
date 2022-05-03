@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun;
+package com.javaoffers.batis.modelhelper.fun.crud;
 
 /**
  * @Description: on 拼接sql 条件

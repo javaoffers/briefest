@@ -1,8 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.function.Function;
+package com.javaoffers.batis.modelhelper.fun.crud;
 
 /**
  * @Description: 查询

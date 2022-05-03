@@ -3,6 +3,8 @@ package com.javaoffers.batis.modelhelper.fun.condition;
 import com.javaoffers.batis.modelhelper.fun.CategoryTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.util.Assert;
 
 /**
@@ -41,9 +43,9 @@ public  class WhereOnCondition<V> implements Condition {
         return tag;
     }
 
-    public WhereOnCondition(String colName, V value, ConditionTag tag) {
+    public WhereOnCondition(GetterFun colName, V value, ConditionTag tag) {
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
-        this.colName = colName;
+        this.colName = TableHelper.getColName(colName);
         this.value = value;
         this.tag = tag;
     }

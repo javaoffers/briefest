@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun;
+package com.javaoffers.batis.modelhelper.fun.crud;
 
 /**
  * @Description: join 语句

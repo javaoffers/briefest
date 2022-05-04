@@ -8,7 +8,9 @@ import java.util.List;
  */
 public interface ExecutFun<M> {
     /**
-     * 执行sql 返回 M
+     * 执行sql 返回 M.
+     * insert : 返回 插入Model
+     * delete :
      * @return
      */
     public M ex();
@@ -18,4 +20,5 @@ public interface ExecutFun<M> {
      * @return
      */
     public List<M> exs();
+
 }

@@ -6,7 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.ExecutFun;
  * @Description: sql where 语句
  * @Auther: create by cmj on 2022/5/2 00:08
  */
-public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>  extends ExecutFun<M> {
+public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
 
     /**
      * 拼接Or, 否者默认都是 and

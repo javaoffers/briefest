@@ -16,14 +16,14 @@ import java.util.stream.Stream;
  * @Description: join 功能实现,以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:11
  */
-public class JoinFunStringImpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,V> {
+public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,V> {
 
     private LinkedList<Condition> conditions;
     private Class<M1> m1Class;
     private Class<M2> m2Class;
     private String table2Name;
 
-    public JoinFunStringImpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions) {
+    public JoinFunmpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions) {
         this.m1Class = mc;
         this.m2Class = m2c;
         this.conditions = conditions;
@@ -59,7 +59,7 @@ public class JoinFunStringImpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,O
 
     @Override
     public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, C1, GetterFun<M2, Object>, V> on() {
-        return  new OnFunStringImpl(conditions);
+        return  new OnFunImpl(conditions);
     }
 
 }

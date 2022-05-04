@@ -1,15 +1,11 @@
 package com.javaoffers.batis.modelhelper.core;
 
-import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunStringImpl;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereFunStringImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.binding.MapperProxy;
-import org.springframework.jdbc.core.JdbcTemplate;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
-import javax.annotation.Resource;
-import javax.sql.DataSource;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.HashMap;
@@ -50,7 +46,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 Type[] types = mc.getGenericInterfaces();
                 ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
                 Type pclass = parameterizedTypes.getActualTypeArguments()[0];
-                return new SelectFunStringImpl<T>((Class) pclass);
+                return new SelectFunImpl<T>((Class) pclass);
             }
             throw new NoSuchMethodException(method.getName());
         }else{

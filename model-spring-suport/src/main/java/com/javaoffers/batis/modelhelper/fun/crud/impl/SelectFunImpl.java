@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  * @Description:  以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 01:55
  */
-public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object> {
+public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object> {
 
     private Class<M> mClass;
     /**
@@ -24,7 +24,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun<M,Object>,O
      */
     private LinkedList<Condition> conditions = new LinkedList<>();
 
-    public SelectFunStringImpl(Class<M> mClass) {
+    public SelectFunImpl(Class<M> mClass) {
         conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass)));
         this.mClass = mClass;
     }
@@ -69,7 +69,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun<M,Object>,O
      */
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> leftJoin(ConstructorFun<M2> m2) {
-        return new JoinFunStringImpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions);
+        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions);
     }
 
     /**
@@ -78,7 +78,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun<M,Object>,O
      */
     @Override
     public WhereFun<M, GetterFun<M,Object>, Object, ?> where() {
-        return new WhereFunStringImpl(conditions);
+        return new WhereFunImpl(conditions);
     }
 
 }

@@ -3,11 +3,11 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.OnColumnFunCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -16,11 +16,11 @@ import java.util.List;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:13
  */
-public  class OnFunStringImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, GetterFun<M2,Object>, V>
+public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, GetterFun<M2,Object>, V>, ExecutFun<M1>
 {
     private LinkedList<Condition> conditions;
 
-    private WhereFunStringImpl<M2,V> whereFunString;
+    private WhereFunImpl<M1,V> whereFunString;
     /**
      * K: table1 的字段名称
      * V: table2 的子度名称
@@ -30,20 +30,20 @@ public  class OnFunStringImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Obj
     private String table1Name;
     private String table2Name;
 
-    public OnFunStringImpl(LinkedList<Condition> conditions) {
+    public OnFunImpl(LinkedList<Condition> conditions) {
        this.conditions = conditions;
-       this.whereFunString = new WhereFunStringImpl<>(conditions);
+       this.whereFunString = new WhereFunImpl<>(conditions);
     }
 
 
 
     @Override
-    public M2 ex() {
+    public M1 ex() {
         return whereFunString.ex();
     }
 
     @Override
-    public List<M2> exs() {
+    public List<M1> exs() {
         return whereFunString.exs();
     }
 
@@ -86,7 +86,7 @@ public  class OnFunStringImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Obj
 
     @Override
     public WhereFun<M1, GetterFun<M1, Object>, V, ?> where() {
-        return new WhereFunStringImpl(conditions);
+        return new WhereFunImpl(conditions);
     }
 
     @Override

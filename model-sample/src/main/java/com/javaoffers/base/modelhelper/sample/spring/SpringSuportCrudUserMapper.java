@@ -54,10 +54,16 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
         System.out.println("-------------------------------");
 
+        /**
+         * 查询所有字段
+         */
         crudUserMapper.select().colAll().where().ex();
 
         System.out.println("-------------------------------");
 
+        /**
+         * left join 查询。 只支持 两张表 left join
+         */
         User ex = crudUserMapper.select()
                 .colAll()
                 .leftJoin(UserOrder::new)

@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 import com.javaoffers.batis.modelhelper.fun.*;
 import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +39,7 @@ public class WhereFunStringImpl<M,V> implements WhereFun<M, GetterFun,V,WhereFun
 
     @Override
     public WhereFunStringImpl<M, V> or() {
-        conditions.add(()-> ConditionTag.OR);
+        conditions.add(new OrCondition());
         return this;
     }
 

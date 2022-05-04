@@ -66,6 +66,8 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
                 .eq(User::getId, 1)
+                .or()
+                .eq(User::getId,2)
                 .ex();
 
 

@@ -4,11 +4,11 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereFunImpl;
-import org.apache.commons.lang3.ArrayUtils;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,19 +17,19 @@ import java.util.List;
  * @Description: 更新条件
  * @Auther: create by cmj on 2022/5/4 20:42
  */
-public class WhereModifyFunImpl<M,V>  implements WhereFun<M, GetterFun,V, WhereModifyFunImpl<M,V>> , ExecutFun<Integer> {
+public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
 
     private LinkedList<Condition> conditions;
 
 
-    private WhereFunImpl whereFun;
+    private WhereSelectFunImpl whereFun;
 
     /**静态**/
     private static JdbcTemplate jdbcTemplate;
 
     public WhereModifyFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-        this.whereFun = new WhereFunImpl(this.conditions);
+        this.whereFun = new WhereSelectFunImpl(this.conditions);
     }
 
     /**
@@ -53,58 +53,59 @@ public class WhereModifyFunImpl<M,V>  implements WhereFun<M, GetterFun,V, WhereM
         return Arrays.asList(ex());
     }
 
+
     @Override
-    public WhereModifyFunImpl<M, V> or() {
+    public WhereModifyFun<M, V> or() {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> eq(GetterFun col, V value) {
+    public WhereModifyFun<M, V> eq(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> ueq(GetterFun col, V value) {
+    public WhereModifyFun<M, V> ueq(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> gt(GetterFun col, V value) {
+    public WhereModifyFun<M, V> gt(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> lt(GetterFun col, V value) {
+    public WhereModifyFun<M, V> lt(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> gtEq(GetterFun col, V value) {
+    public WhereModifyFun<M, V> gtEq(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> ltEq(GetterFun col, V value) {
+    public WhereModifyFun<M, V> ltEq(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> between(GetterFun col, V start, V end) {
+    public WhereModifyFun<M, V> between(GetterFun<M, V> col, V start, V end) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> like(GetterFun col, V value) {
+    public WhereModifyFun<M, V> like(GetterFun<M, V> col, V value) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> in(GetterFun col, V... values) {
+    public WhereModifyFun<M, V> in(GetterFun<M, V> col, V... values) {
         return null;
     }
 
     @Override
-    public WhereModifyFunImpl<M, V> exists(String existsSql) {
+    public WhereModifyFun<M, V> exists(String existsSql) {
         return null;
     }
 }

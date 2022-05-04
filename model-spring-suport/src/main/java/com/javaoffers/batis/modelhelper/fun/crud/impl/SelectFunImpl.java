@@ -6,6 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import java.util.LinkedList;
 import java.util.Set;
@@ -77,8 +78,8 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public WhereFun<M, GetterFun<M,Object>, Object, ?> where() {
-        return new WhereFunImpl(conditions);
+    public WhereSelectFun<M, Object> where() {
+        return new WhereSelectFunImpl(conditions);
     }
 
 }

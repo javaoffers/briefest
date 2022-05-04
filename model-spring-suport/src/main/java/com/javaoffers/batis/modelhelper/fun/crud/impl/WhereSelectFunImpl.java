@@ -1,13 +1,14 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
-import com.javaoffers.batis.modelhelper.fun.*;
+import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import org.springframework.jdbc.core.JdbcTemplate;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,82 +18,82 @@ import java.util.stream.Stream;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:14
  */
-public class WhereFunImpl<M,V> implements WhereFun<M, GetterFun,V, WhereFunImpl<M,V>> , ExecutFun<M> {
+public class WhereSelectFunImpl<M,V> implements WhereSelectFun<M,V> {
 
 
     /**静态**/
     private static JdbcTemplate jdbcTemplate;
 
-    public WhereFunImpl(JdbcTemplate jdbcTemplate){
-        synchronized (WhereFunImpl.class){
-            if(jdbcTemplate==null){
-                WhereFunImpl.jdbcTemplate = jdbcTemplate;
+    public WhereSelectFunImpl(JdbcTemplate jdbcTemplate){
+        synchronized (WhereSelectFunImpl.class){
+            if(jdbcTemplate == null){
+                WhereSelectFunImpl.jdbcTemplate = jdbcTemplate;
             }
         }
     }
 
     private LinkedList<Condition> conditions;
 
-    public WhereFunImpl(LinkedList<Condition> conditions) {
+    public WhereSelectFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
     }
 
     @Override
-    public WhereFunImpl<M, V> or() {
+    public WhereSelectFunImpl<M, V> or() {
         conditions.add(new OrCondition());
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> eq(GetterFun col, V value) {
+    public WhereSelectFun<M, V> eq(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> ueq(GetterFun col, V value) {
+    public WhereSelectFun<M, V> ueq(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> gt(GetterFun col, V value) {
+    public WhereSelectFun<M, V> gt(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.GT));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> lt(GetterFun col, V value) {
+    public WhereSelectFun<M, V> lt(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LT));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> gtEq(GetterFun col, V value) {
+    public WhereSelectFun<M, V> gtEq(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> ltEq(GetterFun col, V value) {
+    public WhereSelectFun<M, V> ltEq(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> between(GetterFun col, V start, V end) {
+    public WhereSelectFun<M, V> between(GetterFun<M, V> col, V start, V end) {
         conditions.add(new BetweenCondition(col,start, end, ConditionTag.BETWEEN));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> like(GetterFun col, V value) {
+    public WhereSelectFun<M, V> like(GetterFun<M, V> col, V value) {
         conditions.add(new WhereOnCondition(col,value,ConditionTag.LIKE));
         return this;
     }
 
     @Override
-    public WhereFunImpl<M, V> in(GetterFun col, V... values) {
+    public WhereSelectFun<M, V> in(GetterFun<M, V> col, V... values) {
         Stream.of(values).forEach(value -> {
             conditions.add(new WhereOnCondition(col,value,ConditionTag.IN));
         } );
@@ -100,7 +101,7 @@ public class WhereFunImpl<M,V> implements WhereFun<M, GetterFun,V, WhereFunImpl<
     }
 
     @Override
-    public WhereFunImpl<M, V> exists(String existsSql) {
+    public WhereSelectFunImpl<M, V> exists(String existsSql) {
          conditions.add(new ExistsCondition<V>(existsSql));
          return this;
     }

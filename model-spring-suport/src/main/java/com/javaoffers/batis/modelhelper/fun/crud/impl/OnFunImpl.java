@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.OnColumnFunCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +21,7 @@ public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, 
 {
     private LinkedList<Condition> conditions;
 
-    private WhereFunImpl<M1,V> whereFunString;
+    private WhereSelectFunImpl<M1,Object> whereFunString;
     /**
      * K: table1 的字段名称
      * V: table2 的子度名称
@@ -32,7 +33,7 @@ public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, 
 
     public OnFunImpl(LinkedList<Condition> conditions) {
        this.conditions = conditions;
-       this.whereFunString = new WhereFunImpl<>(conditions);
+       this.whereFunString = new WhereSelectFunImpl<>(conditions);
     }
 
 
@@ -85,8 +86,8 @@ public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, 
     }
 
     @Override
-    public WhereFun<M1, GetterFun<M1, Object>, V, ?> where() {
-        return new WhereFunImpl(conditions);
+    public WhereSelectFun<M1, V> where() {
+        return new WhereSelectFunImpl(conditions);
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 
 /**
  * @Description: 查询
@@ -43,6 +44,6 @@ public interface SelectFun<M, C extends GetterFun<M,Object> , V> {
      * sql 语句： where
      * @return
      */
-    public WhereFun<M, C, V, ? > where();
+    public WhereSelectFun<M,V> where();
 
 }

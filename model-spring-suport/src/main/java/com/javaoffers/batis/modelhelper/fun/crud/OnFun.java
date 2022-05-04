@@ -62,7 +62,6 @@ public interface OnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2
      * on 条件结束。返回 Where
      * @return
      */
-    public WhereFun<M1 , C, V, ?> where();
-
+    public WhereSelectFun<M1,V> where();
 
 }

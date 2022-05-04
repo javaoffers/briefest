@@ -14,7 +14,7 @@ public interface CrudMapper<T> extends BaseMapper<T> {
     /**
      * select sql
      */
-    public <C extends  GetterFun <T, Serializable> &  Serializable,V extends Serializable > SelectFun<T, C , V > select();
+    public <C extends  GetterFun <T, Object> ,V extends Serializable > SelectFun<T, C , V > select();
 
 
 

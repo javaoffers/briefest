@@ -16,6 +16,11 @@ public class UserOrder {
     private String orderName;
     private String orderMoney;
 
+    private String userId;
+
+    public UserOrder() {
+    }
+
     public int getOrderId() {
         return orderId;
     }
@@ -38,5 +43,13 @@ public class UserOrder {
 
     public void setOrderMoney(String orderMoney) {
         this.orderMoney = orderMoney;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

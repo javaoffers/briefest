@@ -72,7 +72,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>  extends ExecutFu
     public R between(C col, V start,  V end);
 
     /**
-     * sql 模糊： like
+     * sql 模糊： like ? . V ： “%xxx%”
      * @param col
      * @param value
      * @return
@@ -88,6 +88,11 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>  extends ExecutFu
     public R in(C col, V... values);
 
 
+    /**
+     * where exists（）判断语句
+     * @param existsSql
+     * @return
+     */
     public R exists(String existsSql);
 
 

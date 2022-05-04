@@ -1,5 +1,8 @@
 package com.javaoffers.batis.modelhelper.fun.crud;
 
+import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
+
 /**
  * @Description: 查询
  * @Auther: create by cmj on 2022/5/1 23:58
@@ -7,7 +10,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
  * C: 字段,
  * V: 字段值
  */
-public interface SelectFun<M, C , V> {
+public interface SelectFun<M, C extends GetterFun<M,Object> , V> {
 
     /**
      * 添加查询字段
@@ -34,7 +37,7 @@ public interface SelectFun<M, C , V> {
      * @param m2 model类( left join m2)
      * @return
      */
-    public <M2> JoinFun<M,M2, C, V> leftJoin(M2 m2);
+    public <M2 , C2 extends GetterFun<M2,Object>> JoinFun<M,M2, C2, V> leftJoin(ConstructorFun<M2> m2);
 
     /**
      * sql 语句： where

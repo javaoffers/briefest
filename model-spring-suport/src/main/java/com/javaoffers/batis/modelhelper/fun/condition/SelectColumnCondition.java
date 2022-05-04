@@ -25,4 +25,9 @@ public class SelectColumnCondition implements Condition  {
     public SelectColumnCondition(GetterFun colName) {
         this.colName = TableHelper.getColName(colName);
     }
+
+    @Override
+    public String toString() {
+        return colName+" : "+getConditionTag().toString();
+    }
 }

@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.*;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
@@ -15,7 +16,7 @@ import java.util.stream.Stream;
  * @Description:  以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 01:55
  */
-public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
+public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object> {
 
     private Class<M> mClass;
     /**
@@ -24,6 +25,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
     private LinkedList<Condition> conditions = new LinkedList<>();
 
     public SelectFunStringImpl(Class<M> mClass) {
+        conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass)));
         this.mClass = mClass;
     }
 
@@ -33,7 +35,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
      * @return
      */
     @Override
-    public SelectFun<M, GetterFun, Object> col(GetterFun... cols) {
+    public SelectFun<M, GetterFun<M,Object>, Object> col(GetterFun... cols) {
         Stream.of(cols).forEach(col->{
             conditions.add(new SelectColumnCondition(col));
         });
@@ -41,7 +43,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
     }
 
     @Override
-    public SelectFun<M, GetterFun, Object> col(String... colSql) {
+    public SelectFun<M, GetterFun<M,Object>, Object> col(String... colSql) {
         Stream.of(colSql).forEach(col->{
             conditions.add(new SelectColumnCondition(col));
         });
@@ -53,7 +55,7 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
      * @return
      */
     @Override
-    public SelectFun<M, GetterFun, Object> colAll() {
+    public SelectFun<M, GetterFun<M,Object>, Object> colAll() {
         Set<SelectColumnCondition> cols = TableHelper.getColAll(mClass).stream().map(SelectColumnCondition::new).collect(Collectors.toSet());
         conditions.addAll(cols);
         return this;
@@ -66,8 +68,8 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
      * @return
      */
     @Override
-    public <M2> JoinFun<M, M2, GetterFun, Object> leftJoin(M2 m2) {
-        return new JoinFunStringImpl(mClass,m2.getClass(),conditions);
+    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> leftJoin(ConstructorFun<M2> m2) {
+        return new JoinFunStringImpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions);
     }
 
     /**
@@ -75,8 +77,8 @@ public class SelectFunStringImpl<M> implements SelectFun<M,GetterFun,Object> {
      * @return
      */
     @Override
-    public WhereFun<M, GetterFun, Object, ?> where() {
-        return new WhereFunStringImpl<>(conditions);
+    public WhereFun<M, GetterFun<M,Object>, Object, ?> where() {
+        return new WhereFunStringImpl(conditions);
     }
 
 }

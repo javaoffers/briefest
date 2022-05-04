@@ -17,11 +17,32 @@ public class TableInfo {
     private String tableName;
 
     /**
-     * K: 属性名称
-     * V: 对应的表字段
+     * K: 表字段
+     * V: 对应的表字段信息， 由数据库查询所得
      * 懒加载存放
      */
     private Map<String,ColumnInfo> colName = new HashMap<>();
+
+    /**
+     * K: 属性名称
+     * V: 对应的表字段， 由类属性生成
+     * 懒加载存放
+     */
+    private Map<String,String> colNameOfModel = new HashMap<>();
+
+    /**
+     * K:  对应的表字段， 由类属性生成
+     * V:  属性名称，作为别名在生成sql时
+     * 懒加载存放
+     */
+    private Map<String,String> cloNameAsAlias = new HashMap<>();
+
+    /**
+     * K: lamda获取的方法名称
+     * V: 对应的表字段 由lamda生成
+     * 懒加载存放
+     */
+    private Map<String,String> colNameOfGetter = new HashMap<>();
 
     /**
      * 存放字段信息
@@ -42,5 +63,17 @@ public class TableInfo {
 
     public TableInfo(String tableName) {
         this.tableName = tableName;
+    }
+
+    public Map<String, String> getColNameOfModel() {
+        return colNameOfModel;
+    }
+
+    public Map<String, String> getColNameOfGetter() {
+        return colNameOfGetter;
+    }
+
+    public Map<String, String> getCloNameAsAlias() {
+        return cloNameAsAlias;
     }
 }

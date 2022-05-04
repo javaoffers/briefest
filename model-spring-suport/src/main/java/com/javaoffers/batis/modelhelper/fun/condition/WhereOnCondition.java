@@ -49,4 +49,13 @@ public  class WhereOnCondition<V> implements Condition {
         this.value = value;
         this.tag = tag;
     }
+
+    @Override
+    public String toString() {
+        return "WhereOnCondition{" +
+                "colName='" + colName + '\'' +
+                ", value=" + value +
+                ", tag=" + tag +
+                '}';
+    }
 }

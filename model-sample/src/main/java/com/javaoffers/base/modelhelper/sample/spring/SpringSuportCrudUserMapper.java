@@ -2,8 +2,11 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,18 +38,35 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
         /**
          * 查询指定的字段
          */
-        UserOrder exm = crudUserMapper.select().col(UserOrder::getOrderId).where().ex();
+        User exm = crudUserMapper.select().col(User::getId).where().ex();
+
+        System.out.println("-------------------------------");
 
         /**
          * 带有条件的查询
          */
         exm = crudUserMapper
                 .select()
-                .col(UserOrder::getOrderId) //查询 orderId字段
+                .col(User::getId)
+                .col(User::getBirthday)
                 .where()
-                .eq(UserOrder::getOrderId, "12")
                 .ex();
-        SelectFun<UserOrder, GetterFun<UserOrder, Serializable>, Serializable> select = crudUserMapper.select();
+
+        System.out.println("-------------------------------");
+
+        crudUserMapper.select().colAll().where().ex();
+
+        System.out.println("-------------------------------");
+
+        User ex = crudUserMapper.select()
+                .colAll()
+                .leftJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .eq(User::getId, 1)
+                .ex();
 
 
         System.exit(0);

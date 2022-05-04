@@ -106,6 +106,8 @@ public class WhereFunStringImpl<M,V> implements WhereFun<M, GetterFun,V,WhereFun
 
     @Override
     public M ex() {
+        conditions.stream().forEach(condition -> System.out.println(condition.toString()));
+
         return null;
     }
 

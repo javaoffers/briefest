@@ -5,13 +5,19 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnColumnFunCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OnValueFunCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @Description: 以字符串方式输入为字段名称
@@ -21,31 +27,21 @@ public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, 
 {
     private LinkedList<Condition> conditions;
 
-    private WhereSelectFunImpl<M1,Object> whereFunString;
-    /**
-     * K: table1 的字段名称
-     * V: table2 的子度名称
-     */
-    private M1 m1;
-    private M2 m2;
-    private String table1Name;
-    private String table2Name;
+    private WhereSelectFunImpl<M1,Object> whereFunString1;
 
     public OnFunImpl(LinkedList<Condition> conditions) {
        this.conditions = conditions;
-       this.whereFunString = new WhereSelectFunImpl<>(conditions);
+       this.whereFunString1 = new WhereSelectFunImpl<>(conditions);
     }
-
-
 
     @Override
     public M1 ex() {
-        return whereFunString.ex();
+        return whereFunString1.ex();
     }
 
     @Override
     public List<M1> exs() {
-        return whereFunString.exs();
+        return whereFunString1.exs();
     }
 
 
@@ -92,67 +88,69 @@ public  class OnFunImpl<M1,M2,V>  implements OnFun<M1,M2, GetterFun<M1,Object>, 
 
     @Override
     public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> or() {
-        whereFunString.or();
+        conditions.add(new OrCondition());
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> eq(GetterFun<M1, Object> col, V value) {
-        whereFunString.eq(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> eq(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ueq(GetterFun<M1, Object> col, V value) {
-        whereFunString.ueq(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ueq(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gt(GetterFun<M1, Object> col, V value) {
-        whereFunString.gt(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gt(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.GT));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> lt(GetterFun<M1, Object> col, V value) {
-        whereFunString.lt(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> lt(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.LT));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gtEq(GetterFun<M1, Object> col, V value) {
-        whereFunString.gtEq(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gtEq(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ltEq(GetterFun<M1, Object> col, V value) {
-        whereFunString.ltEq(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ltEq(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> between(GetterFun<M1, Object> col, V start, V end) {
-        whereFunString.between(col,start,end);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> between(GetterFun<M2, Object> col, V start, V end) {
+        conditions.add(new BetweenCondition(col,start, end, ConditionTag.BETWEEN));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> like(GetterFun<M1, Object> col, V value) {
-        whereFunString.like(col,value);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> like(GetterFun<M2, Object> col, V value) {
+        conditions.add(new OnValueFunCondition(col,value,ConditionTag.LIKE));
         return this;
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(GetterFun<M1, Object> col, V... values) {
-        whereFunString.in(col,values);
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(GetterFun<M2, Object> col, V... values) {
+        Stream.of(values).forEach(value -> {
+            conditions.add(new OnValueFunCondition(col,value,ConditionTag.IN));
+        } );
         return this;
     }
 
     @Override
     public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(String existsSql) {
-        whereFunString.exists(existsSql);
+        conditions.add(new ExistsCondition<V>(existsSql));
         return this;
     }
 }

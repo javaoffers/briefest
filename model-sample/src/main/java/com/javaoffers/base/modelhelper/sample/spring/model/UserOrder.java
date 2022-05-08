@@ -18,6 +18,16 @@ public class UserOrder {
 
     private String userId;
 
+    private int isDel;
+
+    public int getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(int isDel) {
+        this.isDel = isDel;
+    }
+
     public UserOrder() {
     }
 

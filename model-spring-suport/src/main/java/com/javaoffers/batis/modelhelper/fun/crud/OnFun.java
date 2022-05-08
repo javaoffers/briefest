@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @Auther: create by cmj on 2022/5/2 00:56
  * sql: selct xx from a left join b on a.col = b.col
  */
-public interface OnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2 extends GetterFun<M2, Object> & Serializable, V> extends WhereFun<M2, C, V,  OnFun<M1 , M2 , C,C2, V>>{
+public interface OnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2 extends GetterFun<M2, Object> & Serializable, V> extends WhereFun<M2, C2, V,  OnFun<M1 , M2 , C,C2, V>>{
     /**
      * 添加等值关系 =
      * @param col

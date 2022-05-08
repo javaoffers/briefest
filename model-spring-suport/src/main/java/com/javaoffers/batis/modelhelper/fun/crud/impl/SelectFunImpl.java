@@ -5,7 +5,6 @@ import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import java.util.LinkedList;

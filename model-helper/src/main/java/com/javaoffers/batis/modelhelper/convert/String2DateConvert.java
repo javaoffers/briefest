@@ -75,6 +75,10 @@ public class String2DateConvert extends AbstractConver<String, Date> {
 
     @Override
     public Date convert(String s) {
+        return convert2(s);
+    }
+
+    protected static Date convert2(String s){
         Date date = null;
         try {
             date = DateUtils.parseDate(s, fs);
@@ -84,16 +88,6 @@ public class String2DateConvert extends AbstractConver<String, Date> {
             }catch (Exception e2){
                 e.printStackTrace();
             }
-        }
-        return date;
-    }
-
-    protected static Date convert2(String s){
-        Date date = null;
-        try {
-            date = DateUtils.parseDate(s, fs);
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
         return date;
     }

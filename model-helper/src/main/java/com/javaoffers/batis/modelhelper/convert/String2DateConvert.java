@@ -4,6 +4,7 @@ import org.apache.commons.lang3.time.DateUtils;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @Description:
@@ -78,7 +79,11 @@ public class String2DateConvert extends AbstractConver<String, Date> {
         try {
             date = DateUtils.parseDate(s, fs);
         } catch (ParseException e) {
-            e.printStackTrace();
+            try {
+                date = DateUtils.parseDate(s, Locale.US,"EEE MMM dd HH:mm:ss zzz yyyy");
+            }catch (Exception e2){
+                e.printStackTrace();
+            }
         }
         return date;
     }

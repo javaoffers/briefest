@@ -5,18 +5,27 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import lombok.Data;
 import org.springframework.util.Assert;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
+@Data
 public  class WhereOnCondition<V> implements Condition {
 
     private String colName;
     private V value;
 
     private ConditionTag tag;
+
+    private Map<String,Object> params = new HashMap<>();
+
+    public WhereOnCondition() {}
 
     /**
      * 获取 字段名称
@@ -41,6 +50,18 @@ public  class WhereOnCondition<V> implements Condition {
      */
     public  ConditionTag getConditionTag(){
         return tag;
+    }
+
+    @Override
+    public String getSql() {
+        long idx = getNextLong();
+        params.put(idx+"", value);
+        return colName +" "+ tag.getTag() + " "+"#{"+idx+"}";
+    }
+
+    @Override
+    public Map<String, Object> getParams() {
+        return params;
     }
 
     public WhereOnCondition(GetterFun colName, V value, ConditionTag tag) {

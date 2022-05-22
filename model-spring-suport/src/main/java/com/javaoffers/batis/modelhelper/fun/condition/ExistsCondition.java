@@ -19,4 +19,9 @@ public class ExistsCondition<V> extends WhereOnCondition<V> {
         super(null, null, ConditionTag.EXISTS);
         this.existsSql = existsSql;
     }
+
+    @Override
+    public String getSql() {
+        return " "+getTag().getTag()+" ( "+ this.existsSql+" ) ";
+    }
 }

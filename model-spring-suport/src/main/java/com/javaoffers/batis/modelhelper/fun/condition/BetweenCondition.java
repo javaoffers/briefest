@@ -20,4 +20,15 @@ public class BetweenCondition<V> extends WhereOnCondition<V> {
         super(colName, start, tag);
         this.end = end;
     }
+
+    @Override
+    public String getSql() {
+        long startIdx = getNextLong();
+        long endIdx = getNextLong();
+        getParams().put(startIdx+"",getValue());
+        getParams().put(endIdx+"",end);
+        return super.getColName() +" "
+                + getTag().getTag()
+                +" #{"+startIdx+"} and  #{"+endIdx+"} ";
+    }
 }

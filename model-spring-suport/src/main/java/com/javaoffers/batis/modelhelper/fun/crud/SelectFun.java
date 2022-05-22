@@ -21,11 +21,27 @@ public interface SelectFun<M, C extends GetterFun<M,Object> , V> {
     public SelectFun<M, C, V> col(C... col);
 
     /**
+     * 添加查询字段
+     * @param condition 如果为true才会有效
+     * @param col
+     * @return
+     */
+    public SelectFun<M, C, V> col(boolean condition, C... col);
+
+    /**
      * 添加查询字段 或则 子查询sql
      * @param colSql
      * @return
      */
     public SelectFun<M, C, V> col(String... colSql);
+
+    /**
+     * 添加查询字段 或则 子查询sql
+     * @param condition 如果为true才会有效
+     * @param colSql
+     * @return
+     */
+    public SelectFun<M, C, V> col(boolean condition,String... colSql);
 
     /**
      * 添加所有查询字段

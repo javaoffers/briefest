@@ -2,6 +2,8 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 
+import java.util.Collection;
+
 /**
  * @Description: sql where 语句
  * @Auther: create by cmj on 2022/5/2 00:08
@@ -23,12 +25,28 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R eq(C col, V value);
 
     /**
+     * 添加等值关系 =
+     * @param col
+     * @param value
+     * @return
+     */
+    public R eq(boolean condition, C col, V value);
+
+    /**
      * 添加不等值关系 !=
      * @param col
      * @param value
      * @return
      */
     public R ueq(C col, V value);
+
+    /**
+     * 添加不等值关系 !=
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ueq(boolean condition, C col, V value);
 
     /**
      * 大于  >
@@ -39,12 +57,28 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gt(C col, V value);
 
     /**
+     * 大于  >
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gt(boolean condition, C col, V value);
+
+    /**
      * 小于 <
      * @param col
      * @param value
      * @return
      */
     public R lt(C col, V value);
+
+    /**
+     * 小于 <
+     * @param col
+     * @param value
+     * @return
+     */
+    public R lt(boolean condition, C col, V value);
 
     /**
      * 大于等于  >=
@@ -55,12 +89,28 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gtEq(C col, V value);
 
     /**
+     * 大于等于  >=
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gtEq(boolean condition, C col, V value);
+
+    /**
      * 小于等于 <=
      * @param col
      * @param value
      * @return
      */
     public R ltEq(C col, V value);
+
+    /**
+     * 小于等于 <=
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ltEq(boolean condition, C col, V value);
 
     /**
      * sql 范围 : between
@@ -72,12 +122,80 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R between(C col, V start,  V end);
 
     /**
+     * sql 范围 : between
+     * @param col
+     * @param start
+     * @Param end
+     * @return
+     */
+    public R between(boolean condition, C col, V start,  V end);
+
+    /**
+     * sql 范围 : between
+     * @param col
+     * @param start
+     * @Param end
+     * @return
+     */
+    public R notBetween(C col, V start,  V end);
+
+    /**
+     * sql 范围 : between
+     * @param col
+     * @param start
+     * @Param end
+     * @return
+     */
+    public R notBetween(boolean condition, C col, V start,  V end);
+
+
+    /**
      * sql 模糊： like ? . V ： “%xxx%”
      * @param col
      * @param value
      * @return
      */
     public R like(C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx%”
+     * @param col
+     * @param value
+     * @return
+     */
+    public R like(boolean condition, C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx”
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeLeft(C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx”
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeLeft(boolean condition, C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “xxx%”
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeRight(C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “xxx%”
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeRight(boolean condition, C col, V value);
 
     /**
      * sql语句  in
@@ -87,6 +205,62 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      */
     public R in(C col, V... values);
 
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in(boolean condition, C col, V... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in(C col, Collection... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in(boolean condition, C col, Collection... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(C col, V... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(boolean condition, C col, V... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(C col, Collection... values);
+
+    /**
+     * sql语句  in
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(boolean condition, C col, Collection... values);
+
 
     /**
      * where exists（）判断语句
@@ -95,5 +269,11 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      */
     public R exists(String existsSql);
 
+    /**
+     * where exists（）判断语句
+     * @param existsSql
+     * @return
+     */
+    public R exists(boolean condition, String existsSql);
 
 }

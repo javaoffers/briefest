@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.Arrays;
@@ -113,13 +114,16 @@ public class TableHelper {
             String simpleName = modelClazz.getSimpleName();
             tableName = conLine(simpleName);
         }
+        Connection connection = null;
         try {
             TableInfo tableInfo = new TableInfo(tableName);
-            DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
-            ResultSet tableResultSet = metaData.getTables(null,null,tableName,null);
+            connection = dataSource.getConnection();
+            DatabaseMetaData metaData = connection.getMetaData();
+
+            ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
             while (tableResultSet.next()) {
                 // 获取表字段结构
-                ResultSet columnResultSet = metaData.getColumns(null, "%", tableName, "%");
+                ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
                 while (columnResultSet.next()) {
                     // 字段名称
                     String columnName = columnResultSet.getString("COLUMN_NAME");
@@ -149,11 +153,22 @@ public class TableHelper {
                 }
                 colName = conLine(colName);
                 String fName = colF.getName();
-                tableInfo.getColNameOfModel().put(fName, colName);
-                tableInfo.getCloNameAsAlias().put(colName,fName);
+                //说明存在与表中的字段名称对应
+                if(tableInfo.getColName().get(colName) != null){
+                    tableInfo.getColNameOfModel().put(fName, colName);
+                    tableInfo.getCloNameAsAlias().put(colName,fName);
+                }
             }
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            if(connection != null){
+                try {
+                    connection.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

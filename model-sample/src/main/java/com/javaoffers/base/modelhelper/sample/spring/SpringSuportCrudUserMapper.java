@@ -1,5 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.spring;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 @SpringBootApplication
 @RequestMapping
@@ -39,26 +43,26 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
          * 查询指定的字段
          */
         User exm = crudUserMapper.select().col(User::getId).where().ex();
-
+        print(exm);
         System.out.println("-------------------------------");
 
         /**
          * 带有条件的查询
          */
-        exm = crudUserMapper
-                .select()
-                .col(User::getId)
-                .col(User::getBirthday)
-                .where()
-                .ex();
+//        exm = crudUserMapper
+//                .select()
+//                .col(User::getId)
+//                .col(User::getBirthday)
+//                .where()
+//                .ex();
 
         System.out.println("-------------------------------");
 
         /**
          * 查询所有字段
          */
-        crudUserMapper.select().colAll().where().ex();
-
+        User ex1 = crudUserMapper.select().colAll().where().ex();
+        print(ex1);
         System.out.println("-------------------------------");
 
         /**
@@ -69,15 +73,32 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .leftJoin(UserOrder::new)
                 .colAll()
                 .on()
-                .oeq(User::getId, UserOrder::getUserId)
-                .eq(UserOrder::getIsDel, 1)
+                .oeq(User::getId, UserOrder::getUserId)// a left join b表关系
+                .eq(UserOrder::getIsDel, 1)// b 表字段值
                 .where()
                 .eq(User::getId, 1)
                 .or()
                 .eq(User::getId,2)
                 .ex();
+        print(ex);
+        System.out.println("-------------------------------");
 
-
+        List<String> ids = Arrays.asList("2", "3", "1");
+        List<User> exs = crudUserMapper.select()
+                .col(User::getId)
+                .colAll()
+                .col(false, User::getName)
+                .where()
+                .in(User::getId, ids)
+                .in(User::getId, ids.toArray())
+                .or()
+                .in(User::getId, 1, 2, 3, 4, 5)
+                .exs();
+        print(exs);
         System.exit(0);
+    }
+
+    public void print(Object user) throws JsonProcessingException {
+        System.out.println(objectMapper.writeValueAsString(user));
     }
 }

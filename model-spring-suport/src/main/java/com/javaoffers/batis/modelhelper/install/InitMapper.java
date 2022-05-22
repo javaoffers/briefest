@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.install;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.modify.WhereModifyFunImpl;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
@@ -18,6 +19,7 @@ public class InitMapper implements BeanPostProcessor {
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if(bean instanceof DataSource){
             JdbcTemplate jdbcTemplate = new JdbcTemplate((DataSource) bean);
+            BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
             new WhereSelectFunImpl(jdbcTemplate);
             new WhereModifyFunImpl(jdbcTemplate);
             new TableHelper((DataSource) bean);

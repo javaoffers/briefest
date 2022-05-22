@@ -25,7 +25,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     private LinkedList<Condition> conditions = new LinkedList<>();
 
     public SelectFunImpl(Class<M> mClass) {
-        conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass)));
+        conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass), mClass));
         this.mClass = mClass;
     }
 
@@ -43,10 +43,26 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     }
 
     @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... col) {
+        if(condition){
+            col(col);
+        }
+        return this;
+    }
+
+    @Override
     public SelectFun<M, GetterFun<M,Object>, Object> col(String... colSql) {
         Stream.of(colSql).forEach(col->{
             conditions.add(new SelectColumnCondition(col));
         });
+        return this;
+    }
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, String... colSql) {
+        if(condition){
+            col(colSql);
+        }
         return this;
     }
 

@@ -6,6 +6,8 @@ package com.javaoffers.batis.modelhelper.fun;
  */
 public enum ConditionTag {
 
+    AND(99," and ",CategoryTag.WHERE_ON),
+
     OR(100," or ",CategoryTag.WHERE_ON),
 
     EQ(101," = ",CategoryTag.WHERE_ON),
@@ -22,18 +24,32 @@ public enum ConditionTag {
 
     BETWEEN(107," between ",CategoryTag.WHERE_ON),
 
+    NOT_BETWEEN(1071," not between ",CategoryTag.WHERE_ON),
+
     LIKE(108," like ",CategoryTag.WHERE_ON),
+
+    LIKE_LEFT(1081," like ",CategoryTag.WHERE_ON),
+
+    LIKE_RIGHT(1082," like ",CategoryTag.WHERE_ON),
 
     IN(109," in ",CategoryTag.WHERE_ON),
 
+    NOT_IN(1091," not in ",CategoryTag.WHERE_ON),
+
     EXISTS(110," exists ", CategoryTag.WHERE_ON),
 
-    /**select **/
+    WHERE(111," where ",CategoryTag.WHERE_ON),
+
+    /**delete select **/
     SELECT(200," select ",CategoryTag.SELECT_COL),
 
-    FROM(201," from ",CategoryTag.FROM),
+    SELECT_FROM(201," from ",CategoryTag.SELECT_FROM),
+
+    DELETE_FROM(201,"delete from ",CategoryTag.DELETE_FROM),
 
     LEFT_JOIN(300," left join ",CategoryTag.LEFT_JOIN),
+
+    ON(301," on ",CategoryTag.LEFT_JOIN),
 
     ;
 

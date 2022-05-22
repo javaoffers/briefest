@@ -2,6 +2,8 @@ package com.javaoffers.batis.modelhelper.utils;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,33 +23,33 @@ public class TableInfo {
      * V: 对应的表字段信息， 由数据库查询所得
      * 懒加载存放
      */
-    private Map<String,ColumnInfo> colName = new HashMap<>();
+    private Map<String,ColumnInfo> colName = new LinkedHashMap<>();
 
     /**
      * K: 属性名称
      * V: 对应的表字段， 由类属性生成
      * 懒加载存放
      */
-    private Map<String,String> colNameOfModel = new HashMap<>();
+    private Map<String,String> colNameOfModel = new LinkedHashMap<>();
 
     /**
      * K:  对应的表字段， 由类属性生成
      * V:  属性名称，作为别名在生成sql时
      * 懒加载存放
      */
-    private Map<String,String> cloNameAsAlias = new HashMap<>();
+    private Map<String,String> cloNameAsAlias = new LinkedHashMap<>();
 
     /**
      * K: lamda获取的方法名称
      * V: 对应的表字段 由lamda生成
      * 懒加载存放
      */
-    private Map<String,String> colNameOfGetter = new HashMap<>();
+    private Map<String,String> colNameOfGetter = new LinkedHashMap<>();
 
     /**
      * 存放字段信息
      */
-    private Set<ColumnInfo> columnInfos = new HashSet<>();
+    private Set<ColumnInfo> columnInfos = new LinkedHashSet<>();
 
     public String getTableName() {
         return tableName;

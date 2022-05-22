@@ -9,8 +9,8 @@ public enum CategoryTag {
     WHERE_ON,
     SELECT_COL,
     LEFT_JOIN,
-    FROM,
-
+    SELECT_FROM,
+    DELETE_FROM,
 
 
 }

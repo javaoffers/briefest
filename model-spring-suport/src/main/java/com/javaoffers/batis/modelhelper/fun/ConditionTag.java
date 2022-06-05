@@ -51,6 +51,14 @@ public enum ConditionTag {
 
     ON(301," on ",CategoryTag.LEFT_JOIN),
 
+    /**group by**/
+
+    GROUP_BY(401, " group by ", CategoryTag.WHERE_ON),
+
+    HAVING(402," having ", CategoryTag.WHERE_ON),
+
+    /***limit**/
+    LIMIT(501," limit ", CategoryTag.WHERE_ON),
     ;
 
     private int code;

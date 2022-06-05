@@ -95,6 +95,20 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .in(User::getId, 1, 2, 3, 4, 5)
                 .exs();
         print(exs);
+
+        System.out.println("-------------------------------");
+
+        //TODO 实现group by
+        List<User> exs1 = crudUserMapper.select()
+                .colAll()
+                .where()
+                .eq(User::getId, 1)
+                .groupBy(User::getBirthday,User::getName)
+                .having()
+                .in(User::getId, 1, 2)
+                .exs();
+
+
         System.exit(0);
     }
 

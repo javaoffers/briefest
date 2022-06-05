@@ -71,6 +71,22 @@ public  class WhereOnCondition<V> implements Condition {
         this.tag = tag;
     }
 
+    public WhereOnCondition(GetterFun[] colNames, V value, ConditionTag tag) {
+        Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
+        StringBuilder cls = new StringBuilder();
+        int i =0;
+        for(GetterFun colName : colNames){
+            if(i != 0){
+                cls.append(",");
+            }
+            i = i+1;
+            cls.append(TableHelper.getColName(colName).split(" ")[0]);
+        }
+        this.colName = cls.toString();
+        this.value = value;
+        this.tag = tag;
+    }
+
     @Override
     public String toString() {
         return "WhereOnCondition{" +

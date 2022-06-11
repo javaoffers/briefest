@@ -3,9 +3,12 @@ package com.javaoffers.batis.modelhelper.utils;
 import com.javaoffers.batis.modelhelper.anno.AliasName;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
+import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+
 import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;
 import java.lang.reflect.Field;
@@ -83,6 +86,35 @@ public class TableHelper {
             e.printStackTrace();
         }
         return colName;
+    }
+
+    public static Pair<String,String> getColNameAndAliasName(GetterFun myFun){
+        String colName = StringUtils.EMPTY;
+        try {
+            // 直接调用writeReplace
+            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
+            writeReplace.setAccessible(true);
+            Object sl = writeReplace.invoke(myFun);
+            SerializedLambda serializedLambda = (SerializedLambda) sl;
+            colName = serializedLambda.getImplMethodName();
+            String implClass = serializedLambda.getImplClass();
+            parseTableInfo(implClass);
+            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
+            Map<String, String> colNameOfGetter = tableInfo.getColNameOfGetter();
+            colNameOfGetter.computeIfAbsent(colName, k->{
+                k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
+                k = k.substring(0,1).toLowerCase()+k.substring(1);
+                k = tableInfo.getColNameOfModel().get(k);
+                return k;
+            });
+            colName = colNameOfGetter.get(colName);
+            String aliasName = tableInfo.getCloNameAsAlias().get(colName);
+            colName = tableInfo.getTableName()+"."+colName;
+            return Pair.of(colName, aliasName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        throw new FindColException("解析sql字段出错 ： "+myFun.toString());
     }
 
     /**

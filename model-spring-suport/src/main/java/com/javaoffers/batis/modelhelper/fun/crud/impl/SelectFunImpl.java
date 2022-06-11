@@ -7,6 +7,9 @@ import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import javafx.scene.control.Tab;
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,9 +46,44 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... col) {
+    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... cols) {
         if(condition){
-            col(col);
+            col(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object>... cols) {
+        Stream.of(cols).forEach(col->{
+            Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
+            String colName = colNameAndAliasName.getLeft();
+            String aliasName = colNameAndAliasName.getRight();
+            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+aliasName));
+        });
+        return this;
+    }
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object>... col) {
+        if(condition){
+            col(aggTag,col);
+        }
+        return this;
+    }
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object> col, String asName) {
+        Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
+        String colName = colNameAndAliasName.getLeft();
+        conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ asName));
+        return this;
+    }
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object> col, String asName) {
+        if(condition){
+            col(aggTag, col, asName);
         }
         return this;
     }

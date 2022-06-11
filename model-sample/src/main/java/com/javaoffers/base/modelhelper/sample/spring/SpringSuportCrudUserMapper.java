@@ -50,12 +50,12 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
         /**
          * 带有条件的查询
          */
-//        exm = crudUserMapper
-//                .select()
-//                .col(User::getId)
-//                .col(User::getBirthday)
-//                .where()
-//                .ex();
+        exm = crudUserMapper
+                .select()
+                .col(User::getId)
+                .col(User::getBirthday)
+                .where()
+                .ex();
 
         System.out.println("-------------------------------");
 
@@ -122,6 +122,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
         exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
+                .col(AggTag.MAX,User::getId)
                 .where()
                 .eq(User::getId, 1)
                 .groupBy(User::getBirthday,User::getName)
@@ -129,6 +130,17 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .eq(AggTag.COUNT,User::getId, 1)
                 .limitPage(1,10)
                 .exs();
+
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .groupBy(User::getName)
+                .exs();
+
 
         System.exit(0);
     }

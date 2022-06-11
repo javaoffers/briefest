@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
+import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.LeftJoinTableCondition;
@@ -7,6 +8,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -45,6 +47,49 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     @Override
     public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(GetterFun<M2, Object>... cols) {
         Stream.of(cols).forEach(col->conditions.add(new SelectColumnCondition(col)));
+        return this;
+    }
+
+    @Override
+    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, GetterFun<M2, Object>... cols) {
+        if(condition){
+            col(cols);
+        }
+        return null;
+    }
+
+    @Override
+    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object>... cols) {
+        Stream.of(cols).forEach(col->{
+            Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
+            String colName = colNameAndAliasName.getLeft();
+            String aliasName = colNameAndAliasName.getRight();
+            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+aliasName));
+        });
+        return this;
+    }
+
+    @Override
+    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, AggTag aggTag, GetterFun<M2, Object>... col) {
+        if(condition){
+            col(aggTag,col);
+        }
+        return this;
+    }
+
+    @Override
+    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object> col, String asName) {
+        Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
+        String colName = colNameAndAliasName.getLeft();
+        conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ asName));
+        return this;
+    }
+
+    @Override
+    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, AggTag aggTag, GetterFun<M2, Object> col, String asName) {
+        if(condition){
+            col(aggTag, col, asName);
+        }
         return this;
     }
 

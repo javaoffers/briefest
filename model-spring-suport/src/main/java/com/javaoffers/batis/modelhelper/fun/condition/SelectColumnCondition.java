@@ -23,7 +23,7 @@ public class SelectColumnCondition implements Condition  {
 
     @Override
     public String getSql() {
-        return " , "+colName+" ";
+        return ", "+colName+" ";
     }
 
     @Override

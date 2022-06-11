@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud;
 
+import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
@@ -15,18 +16,52 @@ public interface SelectFun<M, C extends GetterFun<M,Object> , V> {
 
     /**
      * 添加查询字段
-     * @param col
+     * @param cols
      * @return
      */
-    public SelectFun<M, C, V> col(C... col);
+    public SelectFun<M, C, V> col(C... cols);
 
     /**
      * 添加查询字段
      * @param condition 如果为true才会有效
-     * @param col
+     * @param cols
      * @return
      */
-    public SelectFun<M, C, V> col(boolean condition, C... col);
+    public SelectFun<M, C, V> col(boolean condition, C... cols);
+
+    /**
+     * 添加查询字段
+     * @param aggTag  统计函数标签
+     * @param cols 查询字段
+     * @return
+     */
+    public SelectFun<M, C, V> col(AggTag aggTag, C... cols);
+
+    /**
+     * 添加查询字段
+     * @param condition 如果为true才会有效
+     * @param cols
+     * @return
+     */
+    public SelectFun<M, C, V> col(boolean condition, AggTag aggTag, C... cols);
+
+    /**
+     * 添加查询字段
+     * @param aggTag  统计函数标签
+     * @param col 查询字段
+     * @param asName 别名
+     * @return
+     */
+    public SelectFun<M, C, V>  col(AggTag aggTag, C col, String asName);
+
+    /**
+     * 添加查询字段
+     * @param condition 如果为true才会有效
+     * @param col 查询字段
+     * @param asName 别名
+     * @return
+     */
+    public SelectFun<M, C, V>  col(boolean condition, AggTag aggTag, C col, String asName);
 
     /**
      * 添加查询字段 或则 子查询sql

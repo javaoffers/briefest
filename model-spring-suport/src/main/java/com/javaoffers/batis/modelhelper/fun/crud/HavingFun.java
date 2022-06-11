@@ -9,7 +9,9 @@ import java.util.Collection;
  * @Description:
  * @Auther: create by cmj on 2022/6/5 18:31
  */
-public interface HavingFun<M, C, V, R extends HavingFun> extends WhereFun<M, C, V, HavingFun<M, C, V, ?>>, ExecutFun<M> {
+public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends WhereFun<M, C, V, HavingFun<M, C, V, ?>>,
+        LimitFun<M, R>,
+        ExecutFun<M> {
 
     /**
      * 添加等值关系 =

@@ -1,9 +1,9 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * @Description:
  * @Auther: create by cmj on 2022/6/5 19:42
  */
-public class HavingPendingFunImpl<M,C, V> implements HavingPendingFun<M,C, V, HavingFunImpl<M,C,V>> {
+public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPendingFun<M,C, V, HavingFunImpl<M,C,V>> {
 
     private LinkedList<Condition> conditions;
 

@@ -2,7 +2,10 @@ package com.javaoffers.batis.modelhelper.core;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LeftJoinTableCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
@@ -21,12 +24,12 @@ import java.util.LinkedList;
  */
 public class ConditionParse {
 
-    public static SQLInfo conditionParse(LinkedList<Condition> conditions){
+    public static SQLInfo conditionParse(LinkedList<Condition> conditions) {
 
         //判断类型
         Condition condition = conditions.get(0);
         ConditionTag conditionTag = condition.getConditionTag();
-        switch (conditionTag){
+        switch (conditionTag) {
             case SELECT_FROM:
                 //解析select
                 return parseSelect(conditions);
@@ -41,25 +44,25 @@ public class ConditionParse {
 
         //获取表
         Condition condition = conditions.pollFirst();
-        String fromTable =  condition.getSql();
+        String fromTable = condition.getSql();
 
         //生成select语句
-        StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag()+" 1");
+        StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag() + " 1");
         parseSelectClo(conditions, selectB);
 
         //是否存在left join
-        if(conditions.peekFirst() instanceof LeftJoinTableCondition){
+        if (conditions.peekFirst() instanceof LeftJoinTableCondition) {
             Condition leftJoin = conditions.pollFirst();
             parseSelectClo(conditions, selectB);
-            selectB.append(fromTable +" "+ leftJoin.getSql());// a left join b
+            selectB.append(fromTable + " " + leftJoin.getSql());// a left join b
             //指定on条件
             Condition on = null;
-            if(conditions.peekFirst() instanceof OnConditionMark){//.on()
+            if (conditions.peekFirst() instanceof OnConditionMark) {//.on()
                 selectB.append(conditions.pollFirst().getSql());
                 selectB.append("1=1");
-                for(;!(conditions.peekFirst() instanceof WhereConditionMark);){//如果没有 .where()
+                for (; !(conditions.peekFirst() instanceof WhereConditionMark); ) {//如果没有 .where()
                     on = conditions.pollFirst();
-                    if(on instanceof OrCondition){
+                    if (on instanceof OrCondition) {
                         and = on.getSql();
                         continue;
                     }
@@ -67,33 +70,38 @@ public class ConditionParse {
                     and = ConditionTag.AND.getTag();
                 }
             }
-        }else {
+        } else {
             selectB.append(fromTable);
         }
 
         // where
-        if(conditions.peekFirst() instanceof WhereConditionMark){
+        if (conditions.peekFirst() instanceof WhereConditionMark) {
             selectB.append(conditions.pollFirst().getSql());
             selectB.append(" 1=1 ");
             Condition where = null;
-            for(;(where = conditions.pollFirst()) != null;){
-                if(where instanceof OrCondition){
+            for (; (where = conditions.pollFirst()) != null; ) {
+                if (where instanceof OrCondition) {
                     and = where.getSql();
                     continue;
-                }else{
+                } else {
                     whereAndOn(params, selectB, and, where);
                     and = ConditionTag.AND.getTag();
                 }
             }
         }
-        return SQLInfo.builder().aClass(((SelectTableCondition)condition).getmClass())
+        return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
-                .sql(selectB.toString().replaceAll("  "," "))
+                .sql(selectB.toString().replaceAll("  ", " "))
                 .build();
     }
 
     //拼接and
-    private static void whereAndOn( HashMap<String, Object> params, StringBuilder selectB, String andOr, Condition where) {
+    private static void whereAndOn(HashMap<String, Object> params, StringBuilder selectB, String andOr, Condition where) {
+        if (where instanceof GroupByCondition
+                || where instanceof HavingMarkCondition
+                || where instanceof LimitCondition) {
+            andOr = "";
+        }
         selectB.append(andOr);
         selectB.append(where.getSql());
         params.putAll(where.getParams());
@@ -101,7 +109,7 @@ public class ConditionParse {
 
     private static void parseSelectClo(LinkedList<Condition> conditions, StringBuilder selectB) {
         Condition selectCol;
-        for(; conditions.peekFirst() instanceof SelectColumnCondition;){
+        for (; conditions.peekFirst() instanceof SelectColumnCondition; ) {
             selectCol = conditions.pollFirst();
             selectB.append(selectCol.getSql());
         }

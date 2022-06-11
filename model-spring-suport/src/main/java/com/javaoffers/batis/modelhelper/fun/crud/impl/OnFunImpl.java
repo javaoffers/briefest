@@ -43,6 +43,11 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     }
 
     @Override
+    public LinkedList<Condition> getConditions() {
+        return this.conditions;
+    }
+
+    @Override
     public List<M1> exs() {
         return exs.exs();
     }

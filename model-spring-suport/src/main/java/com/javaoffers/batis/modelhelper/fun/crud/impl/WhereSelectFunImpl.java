@@ -10,11 +10,13 @@ import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
+import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -308,5 +310,11 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public LinkedList<Condition> getConditions() {
         return this.conditions;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> limitPage(int pageNum, int size) {
+        this.conditions.add(new LimitCondition(pageNum, size));
+        return this;
     }
 }

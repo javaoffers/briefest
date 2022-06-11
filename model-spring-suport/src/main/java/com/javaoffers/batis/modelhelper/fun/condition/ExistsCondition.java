@@ -10,18 +10,25 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 public class ExistsCondition<V> extends WhereOnCondition<V> {
 
     private String existsSql;
-
-    public ExistsCondition(GetterFun colName, V value, ConditionTag tag) {
-        super(colName, value, tag);
-    }
+    private ConditionTag tag;
 
     public ExistsCondition(String existsSql) {
-        super(null, null, ConditionTag.EXISTS);
         this.existsSql = existsSql;
+        this.tag = ConditionTag.EXISTS;
+    }
+
+    public ExistsCondition(String existsSql, ConditionTag tag) {
+        this.existsSql = existsSql;
+        this.tag = tag;
     }
 
     @Override
     public String getSql() {
         return " "+getTag().getTag()+" ( "+ this.existsSql+" ) ";
+    }
+
+    @Override
+    public ConditionTag getTag() {
+        return this.getTag();
     }
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
+import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
@@ -100,14 +101,34 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
         //TODO 实现group by
         List<User> exs1 = crudUserMapper.select()
-                .colAll()
+                .col(User::getBirthday)
+                .col(User::getName)
+                .where()
+                .eq(User::getId, 1)
+                .groupBy(User::getBirthday,User::getName)
+                .exs();
+
+        exs1 = crudUserMapper.select()
+                .col(User::getBirthday)
+                .col(User::getName)
                 .where()
                 .eq(User::getId, 1)
                 .groupBy(User::getBirthday,User::getName)
                 .having()
-                .in(User::getId, 1, 2)
+                .gt(AggTag.COUNT,User::getId, 1)
+                .gt(AggTag.COUNT,User::getId,2)
                 .exs();
 
+        exs1 = crudUserMapper.select()
+                .col(User::getBirthday)
+                .col(User::getName)
+                .where()
+                .eq(User::getId, 1)
+                .groupBy(User::getBirthday,User::getName)
+                .having()
+                .eq(AggTag.COUNT,User::getId, 1)
+                .limitPage(1,10)
+                .exs();
 
         System.exit(0);
     }

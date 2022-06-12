@@ -91,7 +91,7 @@ public class ConditionParse {
         }
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
-                .sql(selectB.toString().replaceAll("  ", " "))
+                .sql(selectB.toString().replaceAll(" +", " "))
                 .build();
     }
 

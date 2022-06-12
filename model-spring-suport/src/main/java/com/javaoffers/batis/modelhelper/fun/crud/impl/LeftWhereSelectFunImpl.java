@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LeftGroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
@@ -75,184 +76,251 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
         return exs().get(0);
     }
 
-
-    @Override
-    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GetterFun<M, V>... c) {
-        return null;
-    }
-
-    @Override
-    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GGetterFun<M2, V>... c) {
-        return null;
-    }
-
-    @Override
-    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> limitPage(int pageNum, int size) {
-        return null;
-    }
-
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> or() {
-        return null;
+        conditions.add(new OrCondition());
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> eq(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.EQ));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> eq(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            eq(col,value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> ueq(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.UEQ));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> ueq(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            ueq(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> gt(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.GT));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> gt(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            gt(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> lt(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.LT));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> lt(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            lt(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> gtEq(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.GT_EQ));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> gtEq(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            gtEq(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> ltEq(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.LT_EQ));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> ltEq(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            ltEq(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> between(GetterFun<M, V> col, V start, V end) {
-        return null;
+        conditions.add(new BetweenCondition(col, start, end, ConditionTag.BETWEEN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> between(boolean condition, GetterFun<M, V> col, V start, V end) {
-        return null;
+        if (condition) {
+            between(col, start, end);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notBetween(GetterFun<M, V> col, V start, V end) {
-        return null;
+        conditions.add(new BetweenCondition(col, start, end, ConditionTag.NOT_BETWEEN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notBetween(boolean condition, GetterFun<M, V> col, V start, V end) {
-        return null;
+        if(condition){
+            notBetween(col,start,end);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> like(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> like(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            like(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> likeLeft(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE_LEFT));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> likeLeft(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            likeLeft(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> likeRight(GetterFun<M, V> col, V value) {
-        return null;
+        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE_RIGHT));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> likeRight(boolean condition, GetterFun<M, V> col, V value) {
-        return null;
+        if (condition) {
+            likeRight(col, value);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> in(GetterFun<M, V> col, V... values) {
-        return null;
+        conditions.add(new InCondition(col, values, ConditionTag.IN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> in(boolean condition, GetterFun<M, V> col, V... values) {
-        return null;
+        if (condition) {
+            in(col, values);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> in(GetterFun<M, V> col, Collection... values) {
-        return null;
+        conditions.add(new InCondition(col, values, ConditionTag.IN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> in(boolean condition, GetterFun<M, V> col, Collection... values) {
-        return null;
+        if (condition) {
+            in(col, values);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notIn(GetterFun<M, V> col, V... values) {
-        return null;
+        conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notIn(boolean condition, GetterFun<M, V> col, V... values) {
-        return null;
+        if (condition) {
+            notIn(col, values);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notIn(GetterFun<M, V> col, Collection... values) {
-        return null;
+        conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
-        return null;
+        if (condition) {
+            notIn(col, values);
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> exists(String existsSql) {
-        return null;
+        conditions.add(new ExistsCondition<V>(existsSql));
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> exists(boolean condition, String existsSql) {
-        return null;
+        if (condition) {
+            exists(existsSql);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GetterFun<M, V>... c) {
+        conditions.add(new GroupByCondition(c,ConditionTag.GROUP_BY));
+        return new LeftHavingPendingFunImpl<>(conditions);
+    }
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GGetterFun<M2, V>... c) {
+        conditions.add(new GroupByCondition(c,ConditionTag.GROUP_BY));
+        return new LeftHavingPendingFunImpl<>(conditions);
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> limitPage(int pageNum, int size) {
+        this.conditions.add(new LimitCondition(pageNum, size));
+        return this;
     }
 }

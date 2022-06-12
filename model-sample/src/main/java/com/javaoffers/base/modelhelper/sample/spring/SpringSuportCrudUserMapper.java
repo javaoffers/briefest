@@ -193,7 +193,9 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .groupBy(User::getName, User::getId)//按照主表分组
                 .groupBy(UserOrder::getUserId) //按照子表分分组
                 .having()
+                //主表统计函数
                 .eq(AggTag.COUNT,User::getName,1)
+                //子表统计函数
                 .gt(AggTag.COUNT,UserOrder::getOrderId,1)
                 .limitPage(1,10)
                 .exs();

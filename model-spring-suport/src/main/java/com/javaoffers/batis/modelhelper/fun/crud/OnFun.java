@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.LeftWhereSelectFunImpl;
 
 import java.io.Serializable;
 
@@ -62,6 +63,6 @@ public interface OnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2
      * on 条件结束。返回 Where
      * @return
      */
-    public WhereSelectFun<M1,V> where();
+    public LeftWhereSelectFunImpl<M1, M2,V> where();
 
 }

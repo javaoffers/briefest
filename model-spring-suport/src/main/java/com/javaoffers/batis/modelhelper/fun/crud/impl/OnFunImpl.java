@@ -90,8 +90,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     }
 
     @Override
-    public WhereSelectFun<M1, V> where() {
-        return new WhereSelectFunImpl(conditions);
+    public LeftWhereSelectFunImpl<M1,M2, V> where() {
+        return new LeftWhereSelectFunImpl<>(conditions);
     }
 
     @Override

@@ -88,6 +88,15 @@ public  class WhereOnCondition<V> implements Condition {
         this.tag = tag;
     }
 
+    public WhereOnCondition(String[] colNames, V value, ConditionTag tag) {
+        Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
+        StringBuilder cls = new StringBuilder();
+        cls.append(colNames);
+        this.colName = cls.toString();
+        this.value = value;
+        this.tag = tag;
+    }
+
     @Override
     public String toString() {
         return "WhereOnCondition{" +

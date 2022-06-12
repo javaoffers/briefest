@@ -14,6 +14,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
@@ -21,6 +22,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @SpringBootApplication
 @RequestMapping
@@ -97,9 +99,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .exs();
         print(exs);
 
-        System.out.println("-------------------------------");
-
-        //TODO 实现group by
+        System.out.println("-----------实现group by--------------------");
         List<User> exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -108,6 +108,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .groupBy(User::getBirthday,User::getName)
                 .exs();
 
+        System.out.println("-----------实现group by ,  having --------------------");
         exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -119,6 +120,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .gt(AggTag.COUNT,User::getId,2)
                 .exs();
 
+        System.out.println("-----------实现group by ,  having, limitPage  --------------------");
         exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -131,6 +133,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
+        System.out.println("-----------实现left join , group by  --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -138,9 +141,62 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                .groupBy(User::getName)
+                .groupBy(User::getName, User::getId)//按照主表分组
                 .exs();
 
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .groupBy(UserOrder::getUserId) //可以直接按照子表分分组
+                .exs();
+
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //按照主表分组
+                .groupBy(User::getName, User::getId)
+                //按照子表分分组
+                .groupBy(UserOrder::getUserId)
+                .exs();
+
+        System.out.println("-----------实现left join , group by , limitPage  --------------------");
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //按照主表分组
+                .groupBy(User::getName, User::getId)
+                //按照子表分分组
+                .groupBy(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+
+        System.out.println("-----------实现left join , group by , having limitPage  --------------------");
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .groupBy(User::getName, User::getId)//按照主表分组
+                .groupBy(UserOrder::getUserId) //按照子表分分组
+                .having()
+                .eq(AggTag.COUNT,User::getName,1)
+                .gt(AggTag.COUNT,UserOrder::getOrderId,1)
+                .limitPage(1,10)
+                .exs();
 
         System.exit(0);
     }

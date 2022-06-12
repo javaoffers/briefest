@@ -9,4 +9,6 @@ import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 public interface HavingPendingFun<M,C, V, R extends HavingFun<M,C, V,?>> extends ExecutFun<M> {
     HavingFun<M,C,V,R> having();
 
+
+
 }

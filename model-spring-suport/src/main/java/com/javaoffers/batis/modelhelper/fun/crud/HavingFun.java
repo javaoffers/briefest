@@ -9,8 +9,7 @@ import java.util.Collection;
  * @Description:
  * @Auther: create by cmj on 2022/6/5 18:31
  */
-public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends WhereFun<M, C, V, HavingFun<M, C, V, ?>>,
-        LimitFun<M, R>,
+public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends LimitFun<M, R>,
         ExecutFun<M> {
 
     /**

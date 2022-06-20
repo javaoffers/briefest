@@ -10,20 +10,26 @@ import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.RFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -66,6 +72,22 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public WhereSelectFunImpl<M, V> or() {
         conditions.add(new OrCondition());
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> cond(Consumer<WhereSelectFun<M, V>> r) {
+        conditions.add(new LFCondition( ConditionTag.LK));
+        r.accept(this);
+        conditions.add(new RFCondition( ConditionTag.RK));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> cond(boolean condition, Consumer<WhereSelectFun<M, V>> r) {
+        if(condition){
+            cond(r);
+        }
         return this;
     }
 
@@ -315,6 +337,42 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public WhereSelectFun<M, V> limitPage(int pageNum, int size) {
         this.conditions.add(new LimitCondition(pageNum, size));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> orderA(GetterFun<M, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> orderA(boolean condition, GetterFun<M, V>... getterFuns) {
+        if(condition){
+            orderA(getterFuns);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> orderD(GetterFun<M, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> orderD(boolean condition, GetterFun<M, V>... getterFuns) {
+        if(condition){
+            orderD(getterFuns);
+        }
         return this;
     }
 }

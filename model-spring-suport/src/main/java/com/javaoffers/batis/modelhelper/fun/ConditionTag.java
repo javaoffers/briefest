@@ -59,6 +59,11 @@ public enum ConditionTag {
 
     /***limit**/
     LIMIT(501," limit ", CategoryTag.WHERE_ON),
+    ORDER(502," order by ", CategoryTag.WHERE_ON),
+
+    /**特殊符号**/
+    LK(601," ( ", CategoryTag.WHERE_ON),
+    RK(601," ) ", CategoryTag.WHERE_ON),
     ;
 
     private int code;

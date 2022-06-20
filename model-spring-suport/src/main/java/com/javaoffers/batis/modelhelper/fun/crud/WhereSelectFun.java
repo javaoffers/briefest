@@ -10,6 +10,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 public interface WhereSelectFun<M,V> extends
         WhereFun<M, GetterFun<M,V>,V, WhereSelectFun<M,V>> ,
         GroupFun<M,GetterFun<M,V>,V, HavingPendingFun<M,GetterFun<M,V>,V, ?>>,
+        OrderFun<M, GetterFun<M,V>,V, WhereSelectFun<M,V>>,
         LimitFun<M, WhereSelectFun<M,V>>,
         ExecutFun<M> {
 }

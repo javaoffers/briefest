@@ -14,13 +14,18 @@ import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description: having 后面只允许出现统计函数条件表达式. 若想非统计函数表达式应在where / on 中书写. (设计如此)
@@ -28,7 +33,8 @@ import java.util.List;
  */
 public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2>
         implements HavingFun<M, C, V, LeftHavingFunImpl<M,M2,C, C2,V, V2>>
-        , LimitFun<M, LeftHavingFunImpl<M, M2,C, C2,V , V2>> {
+        , LimitFun<M, LeftHavingFunImpl<M, M2,C, C2,V , V2>>
+        , OrderFun<M,C,V,LeftHavingFunImpl<M,M2,C,C2,V,V2>> {
 
     LinkedList<Condition> conditions;
 
@@ -474,6 +480,74 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> limitPage(int pageNum, int size) {
         conditions.add(new LimitCondition<>(pageNum, size));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2> orderA(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderA(boolean condition, C... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderD(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderD(boolean condition, C... cs) {
+        if(condition){
+            orderD(cs);
+        }
+        return this;
+    }
+
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2> orderA(C2... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderA(boolean condition, C2... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderD(C2... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  orderD(boolean condition, C2... cs) {
+        if(condition){
+            orderD(cs);
+        }
         return this;
     }
 }

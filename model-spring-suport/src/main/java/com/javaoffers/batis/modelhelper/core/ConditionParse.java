@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LeftJoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnCondition;
@@ -97,9 +98,7 @@ public class ConditionParse {
 
     //拼接and
     private static void whereAndOn(HashMap<String, Object> params, StringBuilder selectB, String andOr, Condition where) {
-        if (where instanceof GroupByCondition
-                || where instanceof HavingMarkCondition
-                || where instanceof LimitCondition) {
+        if (where instanceof IgnoreAndOrCondition) {
             andOr = "";
         }
         selectB.append(andOr);

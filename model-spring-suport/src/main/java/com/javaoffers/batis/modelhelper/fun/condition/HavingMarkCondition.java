@@ -18,7 +18,7 @@ import java.util.Map;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-public  class HavingMarkCondition<V> extends WhereOnCondition implements Condition {
+public  class HavingMarkCondition<V> extends WhereOnCondition implements Condition,IgnoreAndOrCondition {
 
     public HavingMarkCondition() {
     }

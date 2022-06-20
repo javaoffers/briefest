@@ -3,6 +3,8 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 
 import java.util.Collection;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @Description: sql where 语句
@@ -15,6 +17,22 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      * @return
      */
     public R or();
+
+    /**
+     * condition 默认为and拼接，生成（a=b and/or b=c ....）
+     * 添加首尾括号
+     * @param r
+     * @return
+     */
+    public R cond(Consumer<R> r);
+
+    /**
+     * condition 默认为and拼接，生成（a=b and/or b=c ....）
+     * 添加首尾括号
+     * @param r
+     * @return
+     */
+    public R cond(boolean condition, Consumer<R> r);
 
     /**
      * 添加等值关系 =

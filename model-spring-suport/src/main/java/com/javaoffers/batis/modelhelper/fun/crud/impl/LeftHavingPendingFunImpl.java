@@ -7,21 +7,27 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LeftGroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.GroupFun;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LeftHavingPendingFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.HavingFunImpl;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
  * @Auther: create by cmj on 2022/6/5 19:42
  */
 public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2> implements
-        LeftHavingPendingFun<M, M2, C, C2, V, LeftHavingFunImpl<M,M2,C,C2,V,V2>> {
+        LeftHavingPendingFun<M, M2, C, C2, V, LeftHavingFunImpl<M,M2,C,C2,V,V2>>,
+        OrderFun<M,C,V,LeftHavingPendingFunImpl<M,M2,C,C2,V,V2>> {
 
     private LinkedList<Condition> conditions;
 
@@ -79,4 +85,72 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
         return mcvHavingFun;
     }
 
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(boolean condition, C... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(boolean condition, C... cs) {
+        if(condition){
+            orderD(cs);
+        }
+        return this;
+    }
+
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C2... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(boolean condition, C2... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C2... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(boolean condition, C2... cs) {
+        if(condition){
+            orderD(cs);
+        }
+        return this;
+    }
 }

@@ -7,7 +7,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
  * @Description: 支持分组
  * @Auther: create by cmj on 2022/6/5 20:02
  */
-public class GroupByCondition extends WhereOnCondition {
+public class GroupByCondition extends WhereOnCondition implements IgnoreAndOrCondition {
 
     GetterFun[] getterFuns;
     private ConditionTag tag;

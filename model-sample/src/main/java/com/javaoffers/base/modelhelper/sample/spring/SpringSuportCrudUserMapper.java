@@ -200,6 +200,61 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
+
+        System.out.println("-----------实现left join , order by , limitPage --------------------");
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                // 根据主表排序
+                .orderA(User::getBirthday)
+                //根据子表排序
+                .orderA(UserOrder::getIsDel)
+                .limitPage(1,10)
+                .exs();
+
+        System.out.println("-----------实现left join , group by  , order by, limitPage --------------------");
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //按照主表分组
+                .groupBy(User::getName, User::getId)
+                //按照子表分分组
+                .groupBy(UserOrder::getUserId)
+                // 根据主表排序
+                .orderA(User::getBirthday)
+                //根据子表排序
+                .orderA(UserOrder::getIsDel)
+                .limitPage(1,10)
+                .exs();
+
+        System.out.println("-----------实现left join , group by  , having , order by, limitPage --------------------");
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //按照主表分组
+                .groupBy(User::getName, User::getId)
+                //按照子表分分组
+                .groupBy(UserOrder::getUserId)
+                .having()
+                // 根据主表排序
+                .orderA(User::getBirthday)
+                //根据子表排序
+                .orderA(UserOrder::getIsDel)
+                .limitPage(1,10)
+                .exs();
+
         System.exit(0);
     }
 

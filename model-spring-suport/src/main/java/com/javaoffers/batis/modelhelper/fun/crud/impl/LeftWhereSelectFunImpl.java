@@ -8,9 +8,12 @@ import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LeftGroupByCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.RFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
@@ -19,15 +22,20 @@ import com.javaoffers.batis.modelhelper.fun.crud.LeftWhereSelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 
 /**
- * @Description: 以字符串方式输入为字段名称
+ * @Description: 以字符串方式输入为字段名称, 在on 条件之后转为where时使用此类。
+ * 换句话说就是 on ... where (LeftWhereSelectFunImpl)
  * @Auther: create by cmj on 2022/5/2 02:14
  * @param <M> 主表
  * @param <M2> 子表： 用于支持子表字段 group by , order by
@@ -79,6 +87,92 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> or() {
         conditions.add(new OrCondition());
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> cond(
+            Consumer<LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V>> r) {
+        conditions.add(new LFCondition( ConditionTag.LK));
+        r.accept(this);
+        conditions.add(new RFCondition( ConditionTag.RK));
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> cond(
+            boolean condition, Consumer<LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V>> r) {
+        if(condition){
+            cond(r);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(GetterFun<M, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(boolean condition, GetterFun<M, V>... getterFuns) {
+        if(condition){
+            orderA(getterFuns);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(GetterFun<M, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(boolean condition, GetterFun<M, V>... getterFuns) {
+        if(condition){
+            orderD(getterFuns);
+        }
+        return this;
+    }
+
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(GGetterFun<M2, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(boolean condition, GGetterFun<M2, V>... getterFuns) {
+        if(condition){
+            orderA(getterFuns);
+        }
+        return this;
+    }
+
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(GGetterFun<M2, V>... getterFuns) {
+        List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(boolean condition, GGetterFun<M2, V>... getterFuns) {
+        if(condition){
+            orderD(getterFuns);
+        }
         return this;
     }
 

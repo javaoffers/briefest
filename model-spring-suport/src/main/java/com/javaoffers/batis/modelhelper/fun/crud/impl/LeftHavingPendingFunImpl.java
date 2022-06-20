@@ -89,7 +89,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     @Override
     public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
@@ -107,7 +107,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     @Override
     public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
@@ -124,7 +124,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
@@ -140,7 +140,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));

@@ -111,7 +111,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
@@ -129,7 +129,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
@@ -146,7 +146,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderA(GGetterFun<M2, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
@@ -162,7 +162,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> orderD(GGetterFun<M2, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));

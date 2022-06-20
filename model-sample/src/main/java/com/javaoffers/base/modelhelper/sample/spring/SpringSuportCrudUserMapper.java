@@ -251,7 +251,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 // 根据主表排序
                 .orderA(User::getBirthday)
                 //根据子表排序
-                .orderA(UserOrder::getIsDel)
+                .orderD(UserOrder::getIsDel)
                 .limitPage(1,10)
                 .exs();
 

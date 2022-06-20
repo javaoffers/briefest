@@ -63,7 +63,9 @@ public enum ConditionTag {
 
     /**特殊符号**/
     LK(601," ( ", CategoryTag.WHERE_ON),
-    RK(601," ) ", CategoryTag.WHERE_ON),
+    RK(602," ) ", CategoryTag.WHERE_ON),
+    BLANK(603,"", CategoryTag.WHERE_ON),
+    COMMA(604,", ", CategoryTag.WHERE_ON),
     ;
 
     private int code;

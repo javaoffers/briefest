@@ -29,11 +29,15 @@ public class OrderCondition extends WhereOnCondition<String> implements IgnoreAn
             order = " desc ";
         }
 
-        return tag + String.join("," , cs) + order;
+        return tag.getTag() + String.join("," , cs) + order;
     }
 
     @Override
     public ConditionTag getTag() {
         return tag;
+    }
+
+    public void asChild(){
+        this.tag = ConditionTag.COMMA;
     }
 }

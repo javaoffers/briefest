@@ -343,7 +343,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public WhereSelectFun<M, V> orderA(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
@@ -361,7 +361,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public WhereSelectFun<M, V> orderD(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
-            String cloName = TableHelper.getColNameAndAliasName(getterFun).getRight();
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));

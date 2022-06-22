@@ -54,7 +54,7 @@ public class MapperProxyFactoryAggent<T> {
     try {
       Field sqlSessionF = mapperProxy.getClass().getDeclaredField("sqlSession");
       sqlSessionF.setAccessible(true);
-      crudMapperProxy  = new CrudMapperProxy<T>(mapperProxy, ByteBuddyUtils.makeObject(mapperInterface));
+      crudMapperProxy  = new CrudMapperProxy<T>(mapperProxy, mapperInterface);
     }catch (Exception e){
       e.printStackTrace();
     }

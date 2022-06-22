@@ -28,14 +28,6 @@
             <version>1.10.6</version>
         </dependency>
 
-        <!--bytebuddy-agent 可以更改已经创建的实例-->
-        <!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy-agent -->
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <version>1.10.6</version>
-        </dependency>
-
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.javaoffers.batis.modelhelper.core.CrudMapperProxy;
+import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
@@ -53,7 +54,7 @@ public class MapperProxyFactoryAggent<T> {
     try {
       Field sqlSessionF = mapperProxy.getClass().getDeclaredField("sqlSession");
       sqlSessionF.setAccessible(true);
-      crudMapperProxy  = new CrudMapperProxy<T>(mapperProxy);
+      crudMapperProxy  = new CrudMapperProxy<T>(mapperProxy, ByteBuddyUtils.makeObject(mapperInterface));
     }catch (Exception e){
       e.printStackTrace();
     }

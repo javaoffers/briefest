@@ -255,6 +255,11 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
+        System.out.println("-----------实现新的方式查询 --------------------");
+        List<User> users = crudUserMapper.queryAll();
+
+
+
         System.exit(0);
     }
 

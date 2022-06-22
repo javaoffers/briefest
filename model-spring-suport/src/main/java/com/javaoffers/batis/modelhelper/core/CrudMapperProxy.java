@@ -21,8 +21,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private static HashMap<Method,String> isMapperMethod = new HashMap<>();
 
-    public CrudMapperProxy( MapperProxy<T> mapperProxy) {
+    private Object defaultObject;
+
+    public CrudMapperProxy( MapperProxy<T> mapperProxy,Object defaultObject) {
         this.mapperProxy = mapperProxy;
+        this.defaultObject = defaultObject;
     }
 
     static {
@@ -49,7 +52,10 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 return new SelectFunImpl<T>((Class) pclass);
             }
             throw new NoSuchMethodException(method.getName());
-        }else{
+        }else if(method.getModifiers() == 1){
+            return
+        }
+        else{
             return mapperProxy.invoke(proxy,method,args);
         }
     }

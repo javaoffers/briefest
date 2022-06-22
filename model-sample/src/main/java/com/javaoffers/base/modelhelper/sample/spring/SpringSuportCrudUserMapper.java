@@ -255,10 +255,21 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现新的方式查询 --------------------");
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryAll-------------------");
         List<User> users = crudUserMapper.queryAll();
+        print(users);
 
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryAllAndOrder------------------");
+        users = crudUserMapper.queryAllAndOrder();
+        print(users);
 
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserById------------------");
+        User user = crudUserMapper.queryUserById(1);
+        print(user);
+
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserAndOrderByUserId------------------");
+        user = crudUserMapper.queryUserAndOrderByUserId(1);
+        print(user);
 
         System.exit(0);
     }

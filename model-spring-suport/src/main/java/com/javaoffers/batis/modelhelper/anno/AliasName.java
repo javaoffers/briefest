@@ -14,7 +14,7 @@ public @interface AliasName {
     /**
      * 表字段名称。 会将属性名 作为别名。
      * select  value as fieldName  from table
-     * @return
+     * @return 别名
      */
     String value() ;
 }

@@ -26,8 +26,8 @@ public interface ExecutMoreFun<M> {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
         SQLInfo sqlInfo = ConditionParse.conditionParse(getConditions());
-        System.out.println(sqlInfo.getSql());
-        System.out.println(sqlInfo.getParams());
+        System.out.println("SQL: "+sqlInfo.getSql());
+        System.out.println("参数： "+sqlInfo.getParams());
         List list = BaseBatisImpl.baseBatis.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
         return list;
     }

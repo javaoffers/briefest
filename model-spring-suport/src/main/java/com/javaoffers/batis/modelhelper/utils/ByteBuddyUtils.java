@@ -1,10 +1,12 @@
 package com.javaoffers.batis.modelhelper.utils;
 
+import com.javaoffers.batis.modelhelper.core.CrudMapperMethodExcutor;
 import lombok.Data;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.FixedValue;
 import net.bytebuddy.implementation.MethodCall;
+import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.implementation.StubMethod;
 import net.bytebuddy.matcher.ElementMatchers;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,7 +17,7 @@ import java.util.List;
 import static net.bytebuddy.matcher.ElementMatchers.named;
 
 /**
- * byteBuddy工具
+ * byteBuddy工具。此只允许给架构设计者使用。
  * @author create by cmj on 2022-06-22 00:24:42
  */
 public class ByteBuddyUtils {
@@ -40,7 +42,7 @@ public class ByteBuddyUtils {
     }
 
     /**
-     * 根据class生成子类，
+     * 根据class生成子类，并执行提供的executor. 此方法只允许给架构设计者使用。
      * @param clazz 可以为接口class
      * @return 子类
      */
@@ -49,9 +51,7 @@ public class ByteBuddyUtils {
             DynamicType.Builder subclass = new ByteBuddy().subclass(clazz);
             for(DefaultClass p : methodDefault){
                 subclass = subclass.method(ElementMatchers.named(p.getMethodName()))
-                        .intercept(MethodCall
-                                .invoke(p.constructor)
-                                .with(p.param));
+                        .intercept(MethodDelegation.to(p.getExecutorClass()));
             }
             Class dynamicType = subclass.make()
                     .load(ByteBuddyUtils.class.getClassLoader())
@@ -66,17 +66,15 @@ public class ByteBuddyUtils {
     @Data
     public static class DefaultClass{
         private String methodName;
-        private Constructor constructor;
-        private Object param;
+        private Class executorClass;
 
-        public DefaultClass(String methodName, Constructor constructor, Object param) {
+        public DefaultClass(String methodName, Class  executorClass) {
             this.methodName = methodName;
-            this.constructor = constructor;
-            this.param = param;
+            this.executorClass = executorClass;
         }
     }
 
-    public static DefaultClass buildDefaultClass(String methodName, Constructor constructor, Object param){
-        return new DefaultClass(methodName, constructor, param);
+    public static DefaultClass buildDefaultClass(String methodName, Class  executorClass){
+        return new DefaultClass(methodName, executorClass);
     }
 }

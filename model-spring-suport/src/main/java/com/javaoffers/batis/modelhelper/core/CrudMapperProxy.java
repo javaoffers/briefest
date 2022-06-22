@@ -29,15 +29,17 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private Object defaultObj;
 
+    private Type modelClass;
+
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
         this.mapperProxy = mapperProxy;
         this.clazz = clazz;
         Type[] types = clazz.getGenericInterfaces();
         ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
-        Type pclass = parameterizedTypes.getActualTypeArguments()[0];
+        Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
+        this.modelClass = modelclass;
         ByteBuddyUtils.DefaultClass select = ByteBuddyUtils.buildDefaultClass(
-                "select"
-                , SelectFunImpl.class.getDeclaredConstructors()[0], pclass);
+                "select",CrudMapperMethodExcutor.class);
         defaultObj = ByteBuddyUtils
                 .makeObject(clazz,
                         Arrays.asList(select));
@@ -55,19 +57,23 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-
-        if(method.getModifiers() == 1){
-            return method.invoke(defaultObj);
-        } else if(StringUtils.isNotBlank(isMapperMethod.get(method))){
-            if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
-                CrudMapper crudMapper = (CrudMapper) defaultObj;
-                return  crudMapper.select();
+        try {
+            CrudMapperMethodExcutor.addExcutorSelect((Class) this.modelClass);
+            if(method.getModifiers() == 1){
+                return method.invoke(defaultObj,args);
+            } else if(StringUtils.isNotBlank(isMapperMethod.get(method))){
+                if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
+                    CrudMapper crudMapper = (CrudMapper) defaultObj;
+                    return  crudMapper.select();
+                }
+                throw new IllegalAccessException("method not found ");
+            }else{
+                //执行batis的mapperProxy 原生
+                return mapperProxy.invoke(proxy,method,args);
             }
-            throw new IllegalAccessException("method not found ");
-        }else{
-            return mapperProxy.invoke(proxy,method,args);
+        }finally {
+            CrudMapperMethodExcutor.delExcutorSelect((Class) this.modelClass);
         }
+
     }
-
-
 }

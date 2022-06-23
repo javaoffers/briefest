@@ -2,17 +2,13 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.*;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import javafx.scene.control.Tab;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -33,8 +29,14 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
             if(before == null){
                 return;
             }else{
-                if(before instanceof OrderCondition && current instanceof OrderCondition){
-                    ((OrderCondition) current).asChild();
+                if(before instanceof OrderWordCondition && current instanceof OrderWordCondition){
+                    ((OrderWordCondition) current).asChild();
+                }
+                if(before instanceof LFCondition){
+                    LFCondition rfWordCondition = (LFCondition) before;
+                    current.andOrWord(word->{
+                        return "";
+                    });
                 }
             }
         });
@@ -136,7 +138,17 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      */
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> leftJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions);
+        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions,ConditionTag.LEFT_JOIN);
+    }
+
+    @Override
+    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> innerJoin(ConstructorFun<M2> m2) {
+        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions, ConditionTag.INNER_JOIN);
+    }
+
+    @Override
+    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> rightJoin(ConstructorFun<M2> m2) {
+        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions, ConditionTag.RIGHT_JOIN);
     }
 
     /**

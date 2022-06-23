@@ -6,7 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
  * @Description: exists sql 语句
  * @Auther: create by cmj on 2022/5/3 02:54
  */
-public class LimitCondition<V> extends WhereOnCondition<V> implements IgnoreAndOrCondition{
+public class LimitWordCondition<V> extends WhereOnCondition<V> implements IgnoreAndOrWordCondition {
 
     private int pageNum;
 
@@ -16,7 +16,7 @@ public class LimitCondition<V> extends WhereOnCondition<V> implements IgnoreAndO
 
     private int len;
 
-    public LimitCondition(int pageNum, int pageSize) {
+    public LimitWordCondition(int pageNum, int pageSize) {
         if(pageNum < 1){
             pageNum = 1;
         }

@@ -5,17 +5,12 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GGetterFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingBetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingGroupCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingInCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
@@ -40,7 +35,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
 
     public LeftHavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-        this.conditions.add(new HavingMarkCondition());
+        this.conditions.add(new HavingMarkWordCondition());
     }
 
     @Override
@@ -479,7 +474,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
 
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> limitPage(int pageNum, int size) {
-        conditions.add(new LimitCondition<>(pageNum, size));
+        conditions.add(new LimitWordCondition<>(pageNum, size));
         return this;
     }
 
@@ -489,7 +484,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
         return this;
     }
 
@@ -507,7 +502,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
         return this;
     }
 
@@ -524,7 +519,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
         return this;
     }
 
@@ -540,7 +535,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
         return this;
     }
 

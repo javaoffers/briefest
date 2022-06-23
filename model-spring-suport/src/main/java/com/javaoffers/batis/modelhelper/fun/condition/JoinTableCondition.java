@@ -10,13 +10,15 @@ import java.util.Map;
  * @Description: left join 语句 table 名称
  * @Auther: create by cmj on 2022/5/4 19:23
  */
-public class LeftJoinTableCondition implements Condition {
+public class JoinTableCondition implements Condition {
 
     private String leftJoinTableName; //表名称
 
+    private ConditionTag tag;
+
     @Override
     public ConditionTag getConditionTag() {
-        return ConditionTag.LEFT_JOIN;
+        return this.tag;
     }
 
     @Override
@@ -29,10 +31,6 @@ public class LeftJoinTableCondition implements Condition {
         return Collections.EMPTY_MAP;
     }
 
-    public LeftJoinTableCondition(String leftJoinTableName) {
-        this.leftJoinTableName = leftJoinTableName;
-    }
-
     public String getLeftJoinTableName() {
         return leftJoinTableName;
     }
@@ -42,5 +40,10 @@ public class LeftJoinTableCondition implements Condition {
         return "LeftJoinTableCondition{" +
                 "leftJoinTableName='" + leftJoinTableName + '\'' +
                 '}';
+    }
+
+    public JoinTableCondition(String leftJoinTableName, ConditionTag tag) {
+        this.leftJoinTableName = leftJoinTableName;
+        this.tag = tag;
     }
 }

@@ -13,21 +13,13 @@ import com.javaoffers.batis.modelhelper.fun.condition.OnColumnFunCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.OnValueFunCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.RFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
-import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @Description: 以字符串方式输入为字段名称
@@ -110,7 +102,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> cond(Consumer<OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
-        conditions.add(new RFCondition( ConditionTag.RK));
+        conditions.add(new RFWordCondition( ConditionTag.RK));
         return this;
     }
 

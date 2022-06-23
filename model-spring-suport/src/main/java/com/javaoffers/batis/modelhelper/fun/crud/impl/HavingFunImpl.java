@@ -4,16 +4,11 @@ import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingBetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingGroupCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.HavingInCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 
@@ -32,7 +27,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     public HavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-        this.conditions.add(new HavingMarkCondition());
+        this.conditions.add(new HavingMarkWordCondition());
     }
 
     @Override
@@ -261,7 +256,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     @Override
     public HavingFunImpl<M, C, V> limitPage(int pageNum, int size) {
-        conditions.add(new LimitCondition<>(pageNum, size));
+        conditions.add(new LimitWordCondition<>(pageNum, size));
         return this;
     }
 }

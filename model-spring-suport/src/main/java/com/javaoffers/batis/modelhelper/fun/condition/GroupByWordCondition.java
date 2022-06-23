@@ -7,27 +7,27 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
  * @Description: 支持分组
  * @Auther: create by cmj on 2022/6/5 20:02
  */
-public class GroupByCondition extends WhereOnCondition implements IgnoreAndOrCondition {
+public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndOrWordCondition {
 
     GetterFun[] getterFuns;
     private ConditionTag tag;
 
-    public GroupByCondition(GetterFun[] colName, ConditionTag tag) {
+    public GroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
         this.getterFuns = getterFuns;
         this.tag = tag;
     }
 
-    public GroupByCondition(String[] colName, ConditionTag tag) {
+    public GroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
         this.getterFuns = getterFuns;
         this.tag = tag;
     }
 
-    public GroupByCondition(String[] colName, Object o, ConditionTag tag) {
+    public GroupByWordCondition(String[] colName, Object o, ConditionTag tag) {
         super(colName,o,tag);
     }
-    public GroupByCondition(GetterFun[] colName, Object o, ConditionTag tag) {
+    public GroupByWordCondition(GetterFun[] colName, Object o, ConditionTag tag) {
         super(colName,o,tag);
     }
 

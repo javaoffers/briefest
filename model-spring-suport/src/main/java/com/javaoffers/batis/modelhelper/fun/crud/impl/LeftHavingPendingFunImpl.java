@@ -4,16 +4,11 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GGetterFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LeftGroupByCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.GroupFun;
-import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
-import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
+import com.javaoffers.batis.modelhelper.fun.condition.LeftGroupByWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.LeftHavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.HavingFunImpl;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;
@@ -55,7 +50,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
      * @return
      */
     public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(GetterFun<M, V>... c) {
-        conditions.add(new LeftGroupByCondition(c, ConditionTag.GROUP_BY));
+        conditions.add(new LeftGroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
     }
 
@@ -65,7 +60,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
      * @return
      */
     public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(GGetterFun<M2, V>... c) {
-        conditions.add(new LeftGroupByCondition(c, ConditionTag.GROUP_BY));
+        conditions.add(new LeftGroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
     }
 
@@ -74,7 +69,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
      * @return
      */
     public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> limitPage(int pageNum, int size) {
-        this.conditions.add(new LimitCondition(pageNum, size));
+        this.conditions.add(new LimitWordCondition(pageNum, size));
         return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
     }
 
@@ -92,7 +87,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
         return this;
     }
 
@@ -110,7 +105,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
         return this;
     }
 
@@ -127,7 +122,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
         return this;
     }
 
@@ -143,7 +138,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
         return this;
     }
 

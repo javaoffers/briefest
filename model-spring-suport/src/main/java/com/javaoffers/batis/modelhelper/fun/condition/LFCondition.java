@@ -3,7 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 
 /**
- * @Description: 左右括号
+ * @Description: 左括号
  * @Auther: create by cmj on 2022/6/19 02:11
  */
 public class LFCondition extends WhereOnCondition<String> {

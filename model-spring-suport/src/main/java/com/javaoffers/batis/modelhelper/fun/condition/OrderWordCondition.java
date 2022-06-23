@@ -8,7 +8,7 @@ import java.util.List;
  * @Description: 左右括号
  * @Auther: create by cmj on 2022/6/19 02:11
  */
-public class OrderCondition extends WhereOnCondition<String> implements IgnoreAndOrCondition {
+public class OrderWordCondition extends WhereOnCondition<String> implements IgnoreAndOrWordCondition {
 
     private ConditionTag tag;
 
@@ -16,7 +16,7 @@ public class OrderCondition extends WhereOnCondition<String> implements IgnoreAn
 
     private boolean ascOrDesc = true;// true asc, false desc
 
-    public OrderCondition(ConditionTag tag, List<String> cs, boolean ascOrDesc) {
+    public OrderWordCondition(ConditionTag tag, List<String> cs, boolean ascOrDesc) {
         this.tag = tag;
         this.cs = cs;
         this.ascOrDesc = ascOrDesc;

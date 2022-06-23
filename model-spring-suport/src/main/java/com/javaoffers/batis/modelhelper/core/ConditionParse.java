@@ -2,12 +2,8 @@ package com.javaoffers.batis.modelhelper.core;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
-import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LeftJoinTableCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
@@ -52,7 +48,7 @@ public class ConditionParse {
         parseSelectClo(conditions, selectB);
 
         //是否存在left join
-        if (conditions.peekFirst() instanceof LeftJoinTableCondition) {
+        if (conditions.peekFirst() instanceof JoinTableCondition) {
             Condition leftJoin = conditions.pollFirst();
             parseSelectClo(conditions, selectB);
             selectB.append(fromTable + " " + leftJoin.getSql());// a left join b
@@ -89,7 +85,9 @@ public class ConditionParse {
                     and = ConditionTag.AND.getTag();
                 }
             }
+
         }
+        condition.clean();
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
                 .sql(selectB.toString().replaceAll(" +", " "))
@@ -98,9 +96,10 @@ public class ConditionParse {
 
     //拼接and
     private static void whereAndOn(HashMap<String, Object> params, StringBuilder selectB, String andOr, Condition where) {
-        if (where instanceof IgnoreAndOrCondition) {
+        if (where instanceof IgnoreAndOrWordCondition) {
             andOr = "";
         }
+        andOr = where.andOrWord(andOr);
         selectB.append(andOr);
         selectB.append(where.getSql());
         params.putAll(where.getParams());

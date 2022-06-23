@@ -1,8 +1,10 @@
 package com.javaoffers.batis.modelhelper.fun;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Function;
 
 /**
  * @Description: 条件借口
@@ -10,20 +12,45 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public interface Condition {
 
-   public ConditionTag getConditionTag();
+    public ConditionTag getConditionTag();
 
-   public String getSql();
+    public String getSql();
 
-   public Map<String,Object> getParams();
+    public Map<String, Object> getParams();
 
-   static AtomicLong idx = new AtomicLong(0);
+    static AtomicLong idx = new AtomicLong(0);
 
-   default long getNextLong(){
-      long idxAndIncrement = idx.getAndIncrement();
-      if(idxAndIncrement == Long.MAX_VALUE-10){
-        for(;!idx.compareAndSet(idx.get(),0);){ }
-      }
-      return idxAndIncrement;
-   }
+    static ThreadLocal<Map<Condition, Function<String, String>>> wordThreadLoacl =
+            new InheritableThreadLocal<Map<Condition, Function<String, String>>>() {
+                @Override
+                protected Map<Condition, Function<String, String>> initialValue() {
+                    return new HashMap<>();
+                }
+            };
+
+    default long getNextLong() {
+        long idxAndIncrement = idx.getAndIncrement();
+        if (idxAndIncrement == Long.MAX_VALUE - 10) {
+            for (; !idx.compareAndSet(idx.get(), 0); ) {
+            }
+        }
+        return idxAndIncrement;
+    }
+
+    default String andOrWord(String word) {
+        Function<String, String> function = wordThreadLoacl.get().get(this);
+        if (function != null) {
+            word = function.apply(word);
+        }
+        return word;
+    }
+
+    default void andOrWord(Function<String, String> word) {
+        wordThreadLoacl.get().put(this, word);
+    }
+
+    default void clean() {
+        wordThreadLoacl.remove();
+    }
 
 }

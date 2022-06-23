@@ -47,9 +47,13 @@ public enum ConditionTag {
 
     DELETE_FROM(201,"delete from ",CategoryTag.DELETE_FROM),
 
-    LEFT_JOIN(300," left join ",CategoryTag.LEFT_JOIN),
+    LEFT_JOIN(300," left join ",CategoryTag.JOIN_TABLE),
 
-    ON(301," on ",CategoryTag.LEFT_JOIN),
+    INNER_JOIN(301," inner join ",CategoryTag.JOIN_TABLE),
+
+    RIGHT_JOIN(302," right join ",CategoryTag.JOIN_TABLE),
+
+    ON(303," on ",CategoryTag.JOIN_TABLE),
 
     /**group by**/
 

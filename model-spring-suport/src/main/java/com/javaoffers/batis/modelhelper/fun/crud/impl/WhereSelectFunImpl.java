@@ -1,25 +1,20 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
-import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.batis.modelhelper.core.ConditionParse;
-import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.GroupByCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.GroupByWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
+import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.RFCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.OrderWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
-import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 /**
@@ -79,7 +73,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public WhereSelectFun<M, V> cond(Consumer<WhereSelectFun<M, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
-        conditions.add(new RFCondition( ConditionTag.RK));
+        conditions.add(new RFWordCondition( ConditionTag.RK));
         return this;
     }
 
@@ -325,7 +319,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
 
     @Override
     public HavingPendingFun<M, GetterFun<M, V>, V, ?> groupBy(GetterFun<M, V>... c) {
-        conditions.add(new GroupByCondition(c,ConditionTag.GROUP_BY));
+        conditions.add(new GroupByWordCondition(c,ConditionTag.GROUP_BY));
         return new HavingPendingFunImpl<M, GetterFun<M, V>, V>(conditions);
     }
 
@@ -336,7 +330,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
 
     @Override
     public WhereSelectFun<M, V> limitPage(int pageNum, int size) {
-        this.conditions.add(new LimitCondition(pageNum, size));
+        this.conditions.add(new LimitWordCondition(pageNum, size));
         return this;
     }
 
@@ -346,7 +340,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
         return this;
     }
 
@@ -364,7 +358,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
         return this;
     }
 

@@ -2,21 +2,15 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl.modify;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
-import com.javaoffers.batis.modelhelper.fun.ExecutFun;
-import com.javaoffers.batis.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.RFCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
+import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -57,7 +51,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     public WhereModifyFun<M, V> cond(Consumer<WhereModifyFun<M, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
-        conditions.add(new RFCondition( ConditionTag.RK));
+        conditions.add(new RFWordCondition( ConditionTag.RK));
         return this;
     }
 

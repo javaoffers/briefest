@@ -2,8 +2,9 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.LeftJoinTableCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
@@ -25,12 +26,12 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     private Class<M2> m2Class;
     private String table2Name;
 
-    public JoinFunmpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions) {
+    public JoinFunmpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions, ConditionTag tag) {
         this.m1Class = mc;
         this.m2Class = m2c;
         this.conditions = conditions;
         this.table2Name = TableHelper.getTableName(m2c);
-        this.conditions.add(new LeftJoinTableCondition(this.table2Name));
+        this.conditions.add(new JoinTableCondition(this.table2Name,tag));
     }
 
     /**

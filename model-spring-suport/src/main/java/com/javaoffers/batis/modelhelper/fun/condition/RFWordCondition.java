@@ -3,14 +3,14 @@ package com.javaoffers.batis.modelhelper.fun.condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 
 /**
- * @Description: 左右括号
+ * @Description: 右括号
  * @Auther: create by cmj on 2022/6/19 02:11
  */
-public class RFCondition extends WhereOnCondition<String> implements IgnoreAndOrCondition {
+public class RFWordCondition extends WhereOnCondition<String> implements IgnoreAndOrWordCondition {
 
     private ConditionTag tag;
 
-    public RFCondition(ConditionTag tag) {
+    public RFWordCondition(ConditionTag tag) {
         this.tag = tag;
     }
 

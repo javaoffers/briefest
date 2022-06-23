@@ -262,12 +262,14 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .col(AggTag.MAX, UserOrder::getOrderName)
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
+                //支持 and (xxx )
                 .cond(cond->{
                         cond.eq(UserOrder::getUserId,1)
                             .or()
                             .eq(UserOrder::getUserId, 2);
                 })
                 .where()
+                //支持 and (xxx )
                 .cond(cond->{
                          cond.eq(User::getId,1)
                             .or()

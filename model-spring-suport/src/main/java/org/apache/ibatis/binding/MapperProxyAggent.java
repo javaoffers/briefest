@@ -1,5 +1,6 @@
-package com.javaoffers.batis.modelhelper.aggent;
+package org.apache.ibatis.binding;
 
+import com.javaoffers.batis.modelhelper.aggent.MapperProxyAggentProcess;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.MapperMethod;

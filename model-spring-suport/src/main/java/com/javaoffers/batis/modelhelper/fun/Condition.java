@@ -18,7 +18,12 @@ public interface Condition {
 
     public Map<String, Object> getParams();
 
-    static AtomicLong idx = new AtomicLong(0);
+    static ThreadLocal<AtomicLong> idxThreadLocal = new InheritableThreadLocal<AtomicLong>(){
+        @Override
+        protected AtomicLong initialValue() {
+            return new AtomicLong(0);
+        }
+    };
 
     static ThreadLocal<Map<Condition, Function<String, String>>> wordThreadLoacl =
             new InheritableThreadLocal<Map<Condition, Function<String, String>>>() {
@@ -29,8 +34,9 @@ public interface Condition {
             };
 
     default long getNextLong() {
+        AtomicLong idx = idxThreadLocal.get();
         long idxAndIncrement = idx.getAndIncrement();
-        if (idxAndIncrement == Long.MAX_VALUE - 10) {
+        if (idxAndIncrement > 99999) {
             for (; !idx.compareAndSet(idx.get(), 0); ) {
             }
         }

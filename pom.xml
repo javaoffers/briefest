@@ -65,103 +65,103 @@
     </developer>
   </developers>
 
-<!--  <profiles>-->
-<!--    <profile>-->
-<!--      <id>default</id>-->
-<!--      <activation>-->
-<!--        <activeByDefault>true</activeByDefault>-->
-<!--      </activation>-->
-<!--      <build>-->
-<!--        <plugins>-->
-<!--          &lt;!&ndash;source 打包&ndash;&gt;-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-source-plugin</artifactId>-->
-<!--            <version>2.2.1</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>package</phase>-->
-<!--                <goals>-->
-<!--                  <goal>jar-no-fork</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--          </plugin>-->
-<!--          &lt;!&ndash;javadoc打包&ndash;&gt;-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--            <version>3.2.0</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>package</phase>-->
-<!--                <goals>-->
-<!--                  <goal>jar</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--            &lt;!&ndash;防止生成 javadoc 报错&ndash;&gt;-->
-<!--            <configuration>-->
-<!--              &lt;!&ndash; jdk1.8要加上，1.7要去掉，否则会报错 &ndash;&gt;-->
-<!--              <additionalJOptions>-->
-<!--                <additionalJOption>-Xdoclint:none</additionalJOption>-->
-<!--              </additionalJOptions>-->
-<!--            </configuration>-->
-<!--          </plugin>-->
-<!--          &lt;!&ndash;gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）&ndash;&gt;-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-gpg-plugin</artifactId>-->
-<!--            <version>1.6</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>verify</phase>-->
-<!--                <goals>-->
-<!--                  <goal>sign</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--          </plugin>-->
-<!--        </plugins>-->
-<!--      </build>-->
+  <profiles>
+    <profile>
+      <id>default</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <!--source 打包-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <!--javadoc打包-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <!--防止生成 javadoc 报错-->
+            <configuration>
+              <!-- jdk1.8要加上，1.7要去掉，否则会报错 -->
+              <additionalJOptions>
+                <additionalJOption>-Xdoclint:none</additionalJOption>
+              </additionalJOptions>
+            </configuration>
+          </plugin>
+          <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
 
-<!--      &lt;!&ndash;配置你创建issue时，解决人员给你最后发的，通常都一样可以不改&ndash;&gt;-->
-<!--      <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--          <id>ossrh</id>-->
-<!--          <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--        </snapshotRepository>-->
-<!--        <repository>-->
-<!--          <id>ossrh</id>-->
-<!--          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
-<!--        </repository>-->
-<!--      </distributionManagement>-->
-<!--    </profile>-->
-<!--  </profiles>-->
+      <!--配置你创建issue时，解决人员给你最后发的，通常都一样可以不改-->
+      <distributionManagement>
+        <snapshotRepository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+          <id>ossrh</id>
+          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
 
 
-<!--  <build>-->
-<!--    <plugins>-->
-<!--      <plugin>-->
-<!--        <artifactId>maven-compiler-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <source>1.8</source>-->
-<!--          <target>1.8</target>-->
-<!--          <encoding>UTF-8</encoding>-->
-<!--          <compilerArguments>-->
-<!--            <extdirs>libs</extdirs>-->
-<!--            &lt;!&ndash;  rt包没有打到项目中去 &ndash;&gt;-->
-<!--            <verbose/>-->
-<!--            &lt;!&ndash; C:/Program Files/Java/jdk1.8.0_201 是我本地安装的jdk家目录，rt.jar等jar 我在 jdk家目录下的 /jre/lib/ 目录中有发现存在，你们需要注意确认自己的实际情况,Windows分隔符英文分号,linux分隔符英文冒号  &ndash;&gt;-->
-<!--            &lt;!&ndash; 这个配置很特殊：windows下使用分号（;）分隔，linux/mac下使用冒号（:）分隔 &ndash;&gt;-->
-<!--            <bootclasspath>-->
-<!--              /home/cmj/soft/jdk8/jre/lib/rt.jar:/home/cmj/soft/jdk8/jre/lib/jce.jar:/home/cmj/soft/jdk8/jre/lib/jsse.jar-->
-<!--            </bootclasspath>-->
-<!--          </compilerArguments>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
-<!--    </plugins>-->
-<!--  </build>-->
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <encoding>UTF-8</encoding>
+          <compilerArguments>
+            <extdirs>libs</extdirs>
+            <!--  rt包没有打到项目中去 -->
+            <verbose/>
+            <!-- C:/Program Files/Java/jdk1.8.0_201 是我本地安装的jdk家目录，rt.jar等jar 我在 jdk家目录下的 /jre/lib/ 目录中有发现存在，你们需要注意确认自己的实际情况,Windows分隔符英文分号,linux分隔符英文冒号  -->
+            <!-- 这个配置很特殊：windows下使用分号（;）分隔，linux/mac下使用冒号（:）分隔 -->
+            <bootclasspath>
+              /home/cmj/soft/jdk8/jre/lib/rt.jar:/home/cmj/soft/jdk8/jre/lib/jce.jar:/home/cmj/soft/jdk8/jre/lib/jsse.jar
+            </bootclasspath>
+          </compilerArguments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
 
 

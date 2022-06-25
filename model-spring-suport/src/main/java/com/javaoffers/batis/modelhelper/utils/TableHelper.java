@@ -1,6 +1,6 @@
 package com.javaoffers.batis.modelhelper.utils;
 
-import com.javaoffers.batis.modelhelper.anno.AliasName;
+import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
@@ -16,7 +16,6 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,6 @@ public class TableHelper {
     private static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
     private static Map<String, Class> modelClass = new ConcurrentHashMap<>();
-
 
     public TableHelper(DataSource dataSource) {
         TableHelper.dataSource = dataSource;
@@ -61,6 +59,7 @@ public class TableHelper {
     }
 
     public static String getColName(GetterFun myFun){
+        String methodName = StringUtils.EMPTY;
         String colName = StringUtils.EMPTY;
         try {
             // 直接调用writeReplace
@@ -68,19 +67,19 @@ public class TableHelper {
             writeReplace.setAccessible(true);
             Object sl = writeReplace.invoke(myFun);
             SerializedLambda serializedLambda = (SerializedLambda) sl;
-            colName = serializedLambda.getImplMethodName();
+            methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
             parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> colNameOfGetter = tableInfo.getColNameOfGetter();
-            colNameOfGetter.computeIfAbsent(colName, k->{
+            Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
+            fieldNameOfGetter.computeIfAbsent(methodName, k->{
                 k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
                 k = k.substring(0,1).toLowerCase()+k.substring(1);
-                k = tableInfo.getColNameOfModel().get(k);
                 return k;
             });
-            colName = colNameOfGetter.get(colName);
-            colName = tableInfo.getTableName()+"."+colName+" as "+tableInfo.getCloNameAsAlias().get(colName);
+            String fieldName = fieldNameOfGetter.get(methodName);
+            colName = tableInfo.getColNameOfModel().get(fieldName);
+            colName = tableInfo.getTableName()+"."+colName+" as "+ fieldName;
             return colName;
         }catch (Exception e){
             e.printStackTrace();
@@ -89,28 +88,26 @@ public class TableHelper {
     }
 
     public static Pair<String,String> getColNameAndAliasName(GetterFun myFun){
-        String colName = StringUtils.EMPTY;
+        String methodName = StringUtils.EMPTY;
         try {
             // 直接调用writeReplace
             Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
             writeReplace.setAccessible(true);
             Object sl = writeReplace.invoke(myFun);
             SerializedLambda serializedLambda = (SerializedLambda) sl;
-            colName = serializedLambda.getImplMethodName();
+            methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
             parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> colNameOfGetter = tableInfo.getColNameOfGetter();
-            colNameOfGetter.computeIfAbsent(colName, k->{
+            Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
+            colNameOfGetter.computeIfAbsent(methodName, k->{
                 k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
                 k = k.substring(0,1).toLowerCase()+k.substring(1);
-                k = tableInfo.getColNameOfModel().get(k);
                 return k;
             });
-            colName = colNameOfGetter.get(colName);
-            String aliasName = tableInfo.getCloNameAsAlias().get(colName);
-            colName = tableInfo.getTableName()+"."+colName;
-            return Pair.of(colName, aliasName);
+            String fieldName = colNameOfGetter.get(methodName);;
+            String colName =  tableInfo.getTableName()+"."+tableInfo.getColNameOfModel().get(fieldName);
+            return Pair.of(colName, fieldName);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -163,7 +160,7 @@ public class TableHelper {
                     String columnType = columnResultSet.getString("TYPE_NAME");
                     ColumnInfo columnInfo = new ColumnInfo(columnName, columnType);
                     tableInfo.getColumnInfos().add(columnInfo);
-                    tableInfo.getColName().put(columnName,columnInfo);
+                    tableInfo.getColNames().put(columnName,columnInfo);
                 }
             }
             tableInfoMap.put(modelClazz,tableInfo);
@@ -177,18 +174,16 @@ public class TableHelper {
                     if(StringUtils.isNotBlank(baseUnique.value())){
                         colName = baseUnique.value();
                     }
-                }else{
-                    AliasName aliasName = colF.getDeclaredAnnotation(AliasName.class);
-                    if(aliasName != null && StringUtils.isNotBlank(aliasName.value())){
-                        colName = aliasName.value();
-                    }
+                }
+                ColName colNameAnno = colF.getDeclaredAnnotation(ColName.class);
+                if(colNameAnno != null && StringUtils.isNotBlank(colNameAnno.value())){
+                    colName = colNameAnno.value();
                 }
                 colName = conLine(colName);
                 String fName = colF.getName();
                 //说明存在与表中的字段名称对应
-                if(tableInfo.getColName().get(colName) != null){
+                if(tableInfo.getColNames().get(colName) != null){
                     tableInfo.getColNameOfModel().put(fName, colName);
-                    tableInfo.getCloNameAsAlias().put(colName,fName);
                 }
             }
         }catch (Exception e){

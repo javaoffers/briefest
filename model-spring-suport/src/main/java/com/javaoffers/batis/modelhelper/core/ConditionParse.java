@@ -44,14 +44,16 @@ public class ConditionParse {
         String fromTable = condition.getSql();
 
         //生成select语句
-        StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag() + " 1");
-        parseSelectClo(conditions, selectB);
+        StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag());
+        parseSelectClo(true, conditions, selectB);
 
         //是否存在left join
         if (conditions.peekFirst() instanceof JoinTableCondition) {
             Condition leftJoin = conditions.pollFirst();
             parseSelectClo(conditions, selectB);
-            selectB.append(fromTable + " " + leftJoin.getSql());// a left join b
+            selectB.append(fromTable);// a left join b
+            selectB.append(" ");
+            selectB.append(leftJoin.getSql());
             //指定on条件
             Condition on = null;
             if (conditions.peekFirst() instanceof OnConditionMark) {//.on()
@@ -110,6 +112,19 @@ public class ConditionParse {
         for (; conditions.peekFirst() instanceof SelectColumnCondition; ) {
             selectCol = conditions.pollFirst();
             selectB.append(selectCol.getSql());
+        }
+    }
+
+    private static void parseSelectClo(boolean status, LinkedList<Condition> conditions, StringBuilder selectB) {
+        Condition selectCol;
+        for (; conditions.peekFirst() instanceof SelectColumnCondition; ) {
+            selectCol = conditions.pollFirst();
+            String sql = selectCol.getSql();
+            if(status && sql.contains(",")){
+                sql = sql.substring(sql.indexOf(",")+1);
+                status = false;
+            }
+            selectB.append(sql);
         }
     }
 }

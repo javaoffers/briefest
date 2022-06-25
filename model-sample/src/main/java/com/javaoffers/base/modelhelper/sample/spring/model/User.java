@@ -2,14 +2,23 @@ package com.javaoffers.base.modelhelper.sample.spring.model;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
+import com.javaoffers.batis.modelhelper.anno.ColName;
+import lombok.Data;
 
 import java.util.List;
 
 @BaseModel
+@Data
 public class User {
 
+    /**
+     * 可以用id 做 count(id). 使用该对象 获取 count后的结果。
+     */
+    @ColName("id")
+    private Long countId;
+
     @BaseUnique
-    private String id;
+    private Long id;
 
     private String name;
 
@@ -17,11 +26,11 @@ public class User {
 
     private List<UserOrder> orders;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

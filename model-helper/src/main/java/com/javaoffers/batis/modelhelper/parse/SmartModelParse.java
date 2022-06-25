@@ -17,7 +17,7 @@ import java.util.*;
  */
 public class SmartModelParse implements ModelParse {
 
-    private final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
+    private final static ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
 
     private final static ThreadLocal<Map<String,String>> tl = new ThreadLocal<Map<String,String>>();
 

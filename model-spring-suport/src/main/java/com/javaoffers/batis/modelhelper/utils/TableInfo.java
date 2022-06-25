@@ -23,21 +23,14 @@ public class TableInfo {
      * V: 对应的表字段信息， 由数据库查询所得
      * 懒加载存放
      */
-    private Map<String,ColumnInfo> colName = new LinkedHashMap<>();
+    private Map<String,ColumnInfo> colNames = new LinkedHashMap<>();
 
     /**
-     * K: 属性名称
+     * K: 属性名称(也是别名)
      * V: 对应的表字段， 由类属性生成
      * 懒加载存放
      */
     private Map<String,String> colNameOfModel = new LinkedHashMap<>();
-
-    /**
-     * K:  对应的表字段， 由类属性生成
-     * V:  属性名称，作为别名在生成sql时
-     * 懒加载存放
-     */
-    private Map<String,String> cloNameAsAlias = new LinkedHashMap<>();
 
     /**
      * K: lamda获取的方法名称
@@ -55,8 +48,8 @@ public class TableInfo {
         return tableName;
     }
 
-    public Map<String, ColumnInfo> getColName() {
-        return colName;
+    public Map<String, ColumnInfo> getColNames() {
+        return colNames;
     }
 
     public Set<ColumnInfo> getColumnInfos() {
@@ -71,11 +64,8 @@ public class TableInfo {
         return colNameOfModel;
     }
 
-    public Map<String, String> getColNameOfGetter() {
+    public Map<String, String> getMethodNameMappingFieldNameOfGetter() {
         return colNameOfGetter;
     }
 
-    public Map<String, String> getCloNameAsAlias() {
-        return cloNameAsAlias;
-    }
 }

@@ -17,7 +17,7 @@ public @interface BaseUnique {
      * 例如： select  value as fieldName  from table.
      * 缺省情况下默认为属性名称下划线格式作为表字段进行sql解析。
      * 注意： 此属性在CrudMapper场景下有用
-     * @return
+     * 注意： 你也可以使用{@link @ColName(colName)}
      */
     String value() default "";
 }

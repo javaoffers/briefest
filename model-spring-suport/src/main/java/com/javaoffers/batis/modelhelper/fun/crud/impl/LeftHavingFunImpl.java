@@ -5,12 +5,7 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GGetterFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingBetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingGroupCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingInCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
@@ -20,6 +15,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -36,6 +32,28 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
     public LeftHavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> or() {
+        conditions.add(new OrCondition());
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> cond(Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
+        conditions.add(new LFCondition( ConditionTag.LK));
+        r.accept(this);
+        conditions.add(new RFWordCondition( ConditionTag.RK));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> cond(boolean condition, Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
+        if(condition){
+            cond(r);
+        }
+        return this;
     }
 
     @Override

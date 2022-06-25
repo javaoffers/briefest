@@ -4,17 +4,14 @@ import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingBetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingGroupCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingInCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.HavingMarkWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @Description: having 后面只允许出现统计函数条件表达式. 若想非统计函数表达式应在where / on 中书写. (设计如此)
@@ -28,6 +25,28 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     public HavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> or() {
+        conditions.add(new OrCondition());
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> cond(Consumer<HavingFunImpl<M, C, V>> r) {
+        conditions.add(new LFCondition( ConditionTag.LK));
+        r.accept(this);
+        conditions.add(new RFWordCondition( ConditionTag.RK));
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> cond(boolean condition, Consumer<HavingFunImpl<M, C, V>> r) {
+        if(condition){
+            cond(r);
+        }
+        return this;
     }
 
     @Override

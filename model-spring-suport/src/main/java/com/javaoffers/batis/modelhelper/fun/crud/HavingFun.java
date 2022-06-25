@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @Description: having 只实现统计函数条件。普通条件建议写在where中
@@ -11,6 +12,28 @@ import java.util.Collection;
  */
 public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends LimitFun<M, R>,
         ExecutFun<M> {
+
+    /**
+     * 拼接Or, 否者默认都是 and
+     * @return
+     */
+    public R or();
+
+    /**
+     * condition 默认为and拼接，生成（a=b and/or b=c ....）
+     * 添加首尾括号
+     * @param r
+     * @return
+     */
+    public R cond(Consumer<R> r);
+
+    /**
+     * condition 默认为and拼接，生成（a=b and/or b=c ....）
+     * 添加首尾括号
+     * @param r
+     * @return
+     */
+    public R cond(boolean condition, Consumer<R> r);
 
     /**
      * 添加等值关系 =

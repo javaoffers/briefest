@@ -53,7 +53,7 @@ public class HelpSample {
 
     @Test
     public void test() throws Exception {
-        ConvertRegisterSelectorDelegate delegate = new ConvertRegisterSelectorDelegate();
+        ConvertRegisterSelectorDelegate delegate =  ConvertRegisterSelectorDelegate.convert;
         String s = delegate.converterObject(String.class, new Short((short) 1));
         LOGUtils.printLog(s);
 

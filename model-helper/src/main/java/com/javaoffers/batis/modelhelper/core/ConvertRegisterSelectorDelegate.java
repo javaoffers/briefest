@@ -19,6 +19,11 @@ public class ConvertRegisterSelectorDelegate {
 
     private SelectorRegister applicationContext = new ModelApplicationContext();
 
+    public final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
+
+
+    private ConvertRegisterSelectorDelegate() { }
+
     {
         Set<Class<? extends Convert>> converts = ReflectionUtils.getChildOfConvert();
         for (Class c : converts) {

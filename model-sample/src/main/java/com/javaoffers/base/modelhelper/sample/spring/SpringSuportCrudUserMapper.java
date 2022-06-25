@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
+import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
+import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
@@ -19,10 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @SpringBootApplication
 @RequestMapping
@@ -195,6 +194,11 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .having()
                 //主表统计函数
                 .eq(AggTag.COUNT,User::getName,1)
+                .or()
+                .cond(cond->{
+                    cond.in(AggTag.COUNT, UserOrder::getUserId,1 )
+                        .in(AggTag.COUNT, UserOrder::getUserId,1);
+                })
                 //子表统计函数
                 .gt(AggTag.COUNT,UserOrder::getOrderId,1)
                 .limitPage(1,10)
@@ -301,6 +305,15 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
         System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserAndOrderByUserId------------------");
         user = crudUserMapper.queryUserAndOrderByUserId(1);
+        print(user);
+
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 countUsers ------------------");
+        long l = crudUserMapper.countUsers();
+        LOGUtils.printLog(l);
+
+        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserAndOrderByUserId------------------");
+        Date birthday = ConvertRegisterSelectorDelegate.convert.converterObject(Date.class, "2021-12-13");
+        user = crudUserMapper.queryUserByBrithday(birthday);
         print(user);
 
         System.exit(0);

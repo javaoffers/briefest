@@ -79,9 +79,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
         Date end = instance.getTime();
 
         return select()
-                .col(User::getId)
-                .col(User::getName)
-                .col(User::getBirthday)
+                .col(User::getId,User::getName,User::getBirthday)
                 .where()
                 .between(User::getBirthday, start, end)
                 .ex();

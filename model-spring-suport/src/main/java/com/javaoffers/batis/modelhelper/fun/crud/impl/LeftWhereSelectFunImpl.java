@@ -4,25 +4,12 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GGetterFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.GroupByWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LimitWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrderWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
-import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.LeftWhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -85,7 +72,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     }
 
     @Override
-    public LeftWhereSelectFunImpl<M, M2, V> cond(
+    public LeftWhereSelectFunImpl<M, M2, V> unite(
             Consumer<LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
@@ -94,10 +81,38 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     }
 
     @Override
-    public LeftWhereSelectFunImpl<M, M2, V> cond(
+    public LeftWhereSelectFunImpl<M, M2, V> unite(
             boolean condition, Consumer<LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V>> r) {
         if(condition){
-            cond(r);
+            unite(r);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFunImpl<M, M2,V> condSQL(String sql) {
+        conditions.add(new CondSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFunImpl<M, M2, V> condSQL(boolean condition, String sql) {
+        if(condition){
+            condSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFunImpl<M, M2, V> condSQL(String sql, Map<String, Object> params) {
+        conditions.add(new CondSQLCondition(sql, params));
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFunImpl<M, M2, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            condSQL(sql, params);
         }
         return this;
     }

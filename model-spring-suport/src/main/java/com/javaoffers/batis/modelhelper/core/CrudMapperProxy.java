@@ -23,6 +23,8 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private MapperProxy<T> mapperProxy;
 
+    private static final Class crudClass = CrudMapper.class;
+
     private static HashMap<Method,String> isMapperMethod = new HashMap<>();
 
     private Class clazz;
@@ -34,7 +36,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
         this.mapperProxy = mapperProxy;
         this.clazz = clazz;
-        if(!clazz.isAssignableFrom(CrudMapper.class)){
+        if(!crudClass.isAssignableFrom(clazz)){
             return;
         }
         Type[] types = clazz.getGenericInterfaces();
@@ -61,7 +63,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
-            CrudMapperMethodExcutor.addExcutorSelect((Class) this.modelClass);
+            CrudMapperMethodThreadLocal.addExcutorSelect((Class) this.modelClass);
             //如果defaultObj 为 null 说明 没有继承CrudMapper接口
             if(defaultObj != null){
                 if(method.getModifiers() == 1){
@@ -81,7 +83,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 return mapperProxy.invoke(proxy,method,args);
             }
         }finally {
-            CrudMapperMethodExcutor.delExcutorSelect((Class) this.modelClass);
+            CrudMapperMethodThreadLocal.delExcutorSelect();
         }
 
     }

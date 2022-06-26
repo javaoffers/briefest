@@ -5,20 +5,13 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.BetweenCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.ExistsCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.InCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OnColumnFunCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
-import com.javaoffers.batis.modelhelper.fun.condition.OnValueFunCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -99,7 +92,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> cond(Consumer<OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> unite(Consumer<OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
         conditions.add(new RFWordCondition( ConditionTag.RK));
@@ -107,9 +100,37 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     }
 
     @Override
-    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> cond(boolean condition, Consumer<OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> unite(boolean condition, Consumer<OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
         if(condition){
-            cond(r);
+            unite(r);
+        }
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(String sql) {
+        conditions.add(new CondSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(boolean condition, String sql) {
+        if(condition){
+            condSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(String sql, Map<String, Object> params) {
+        conditions.add(new CondSQLCondition(sql,params));
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            condSQL(sql, params);
         }
         return this;
     }

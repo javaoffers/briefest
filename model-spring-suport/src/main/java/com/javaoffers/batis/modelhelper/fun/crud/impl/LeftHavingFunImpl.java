@@ -41,7 +41,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
     }
 
     @Override
-    public LeftHavingFunImpl<M, M2, C, C2, V, V2> cond(Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> unite(Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
         conditions.add(new RFWordCondition( ConditionTag.RK));
@@ -49,9 +49,9 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
     }
 
     @Override
-    public LeftHavingFunImpl<M, M2, C, C2, V, V2> cond(boolean condition, Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> unite(boolean condition, Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
         if(condition){
-            cond(r);
+            unite(r);
         }
         return this;
     }

@@ -34,7 +34,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> cond(Consumer<HavingFunImpl<M, C, V>> r) {
+    public HavingFunImpl<M, C, V> unite(Consumer<HavingFunImpl<M, C, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
         conditions.add(new RFWordCondition( ConditionTag.RK));
@@ -42,9 +42,9 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> cond(boolean condition, Consumer<HavingFunImpl<M, C, V>> r) {
+    public HavingFunImpl<M, C, V> unite(boolean condition, Consumer<HavingFunImpl<M, C, V>> r) {
         if(condition){
-            cond(r);
+            unite(r);
         }
         return this;
     }

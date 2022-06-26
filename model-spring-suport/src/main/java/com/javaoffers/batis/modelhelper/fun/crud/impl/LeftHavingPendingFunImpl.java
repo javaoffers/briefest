@@ -47,10 +47,20 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     /**
      * 主表分组
      * @param c 主表分组字段
-     * @return
+     * @return this
      */
     public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(GetterFun<M, V>... c) {
         conditions.add(new LeftGroupByWordCondition(c, ConditionTag.GROUP_BY));
+        return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
+    }
+
+    /**
+     * 分组，支持元SQL。 比如 groupBy( " left(colName, 10) ")
+     * @param sqlCol col
+     * @return this
+     */
+    public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(String sqlCol) {
+        conditions.add(new LeftGroupByWordCondition(new String[]{sqlCol}, ConditionTag.GROUP_BY));
         return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
     }
 

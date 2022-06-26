@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl.modify;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.CondSQLCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
@@ -11,6 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -48,7 +50,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     }
 
     @Override
-    public WhereModifyFun<M, V> cond(Consumer<WhereModifyFun<M, V>> r) {
+    public WhereModifyFun<M, V> unite(Consumer<WhereModifyFun<M, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
         conditions.add(new RFWordCondition( ConditionTag.RK));
@@ -56,9 +58,37 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     }
 
     @Override
-    public WhereModifyFun<M, V> cond(boolean condition, Consumer<WhereModifyFun<M, V>> r) {
+    public WhereModifyFun<M, V> unite(boolean condition, Consumer<WhereModifyFun<M, V>> r) {
         if(condition){
-            cond(r);
+            unite(r);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> condSQL(String sql) {
+        conditions.add(new CondSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> condSQL(boolean condition, String sql) {
+        if(condition){
+            condSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> condSQL(String sql, Map<String, Object> params) {
+        conditions.add(new CondSQLCondition(sql, params));
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            condSQL(sql, params);
         }
         return this;
     }

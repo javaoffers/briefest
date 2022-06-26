@@ -91,7 +91,12 @@ public  class WhereOnCondition<V> implements Condition {
     public WhereOnCondition(String[] colNames, V value, ConditionTag tag) {
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
         StringBuilder cls = new StringBuilder();
-        cls.append(colNames);
+        for(String colName : colNames){
+            if(cls.length() != 0){
+                cls.append(", ");
+            }
+            cls.append(colName);
+        }
         this.colName = cls.toString();
         this.value = value;
         this.tag = tag;

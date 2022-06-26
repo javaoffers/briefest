@@ -195,8 +195,8 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 //主表统计函数
                 .eq(AggTag.COUNT,User::getName,1)
                 .or()
-                .cond(cond->{
-                    cond.in(AggTag.COUNT, UserOrder::getUserId,1 )
+                .unite(unite->{
+                    unite.in(AggTag.COUNT, UserOrder::getUserId,1 )
                         .in(AggTag.COUNT, UserOrder::getUserId,1);
                 })
                 //子表统计函数
@@ -258,8 +258,31 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .orderD(UserOrder::getIsDel)
                 .limitPage(1,10)
                 .exs();
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("ids",Arrays.asList(1,2));
+        exs1 = crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .innerJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .condSQL("1=1")
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .condSQL("1=1")
+                .condSQL("user.id in (#{ids})", params)
+                //按照主表分组
+                .groupBy(User::getName, User::getId)
+                //按照子表分分组
+                .groupBy(UserOrder::getUserId)
+                .having()
+                // 根据主表排序
+                .orderA(User::getBirthday)
+                //根据子表排序
+                .orderD(UserOrder::getIsDel)
+                .limitPage(1,10)
+                .exs();
 
-        System.out.println("-----------实现 inner join on cond, where cond  group by  , having cond, order by, limitPage --------------------");
+        System.out.println("-----------实现 inner join on unite, where unite  group by  , having unite, order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .innerJoin(UserOrder::new)
@@ -267,15 +290,15 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 //支持 and (xxx )
-                .cond(cond->{
-                        cond.eq(UserOrder::getUserId,1)
+                .unite(unite->{
+                        unite.eq(UserOrder::getUserId,1)
                             .or()
                             .eq(UserOrder::getUserId, 2);
                 })
                 .where()
                 //支持 and (xxx )
-                .cond(cond->{
-                         cond.eq(User::getId,1)
+                .unite(unite->{
+                         unite.eq(User::getId,1)
                             .or()
                             .eq(User::getId,2);
                 })
@@ -290,6 +313,23 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .orderD(UserOrder::getIsDel)
                 .limitPage(1,10)
                 .exs();
+
+        ex1 = crudUserMapper.select()
+                .col(User::getBirthday)
+                .where()
+                .condSQL("2=2")
+                .groupBy("left(birthday,10)")
+                .ex();
+        print(ex1);
+
+        ex1 = crudUserMapper.select()
+                .col("birthday")
+                .where()
+                .groupBy("left(birthday,10)")
+                .ex();
+        print(ex1);
+
+
 
         System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryAll-------------------");
         List<User> users = crudUserMapper.queryAll();

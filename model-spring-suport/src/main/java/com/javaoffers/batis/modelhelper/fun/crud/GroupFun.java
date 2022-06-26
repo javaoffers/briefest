@@ -6,4 +6,6 @@ package com.javaoffers.batis.modelhelper.fun.crud;
  */
 public interface GroupFun <M,C, V, R extends HavingPendingFun<M,C, V,?>> {
     R groupBy(C... c);
+
+    R groupBy(String... c);
 }

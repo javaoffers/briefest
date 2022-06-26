@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 import com.javaoffers.batis.modelhelper.fun.ExecutFun;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -24,7 +25,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      * @param r
      * @return
      */
-    public R cond(Consumer<R> r);
+    public R unite(Consumer<R> r);
 
     /**
      * condition 默认为and拼接，生成（a=b and/or b=c ....）
@@ -32,7 +33,40 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      * @param r
      * @return
      */
-    public R cond(boolean condition, Consumer<R> r);
+    public R unite(boolean condition, Consumer<R> r);
+
+    /**
+     * condition 默认为and拼接， 可以写原生的sql语句。
+     *
+     * @param sql sql
+     * @return  r
+     */
+    public R condSQL(String sql);
+
+    /**
+     * condition 默认为and拼接，可以写原生的sql语句。
+     *
+     * @param sql
+     * @return r
+     */
+    public R condSQL(boolean condition, String sql);
+
+
+    /**
+     * condition 默认为and拼接， 可以写原生的sql语句。
+     * sql 语句中的参数只支持 #{colName} 这种表达式
+     * @param sql sql
+     * @return  r
+     */
+    public R condSQL(String sql, Map<String, Object> params);
+
+    /**
+     * condition 默认为and拼接，可以写原生的sql语句。
+     * sql 语句中的参数只支持 #{colName} 这种表达式
+     * @param sql
+     * @return r
+     */
+    public R condSQL(boolean condition, String sql, Map<String, Object> params);
 
     /**
      * 添加等值关系 =

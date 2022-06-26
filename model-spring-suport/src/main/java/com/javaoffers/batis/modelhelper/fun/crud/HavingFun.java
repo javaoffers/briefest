@@ -25,7 +25,7 @@ public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends Limi
      * @param r
      * @return
      */
-    public R cond(Consumer<R> r);
+    public R unite(Consumer<R> r);
 
     /**
      * condition 默认为and拼接，生成（a=b and/or b=c ....）
@@ -33,7 +33,7 @@ public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends Limi
      * @param r
      * @return
      */
-    public R cond(boolean condition, Consumer<R> r);
+    public R unite(boolean condition, Consumer<R> r);
 
     /**
      * 添加等值关系 =

@@ -7,19 +7,13 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
  */
 public class CrudMapperMethodExcutor {
 
-    private final static ThreadLocal<Class> excutorSelect = new InheritableThreadLocal<>();
 
     public static SelectFunImpl select(){
-        return new SelectFunImpl(excutorSelect.get());
+        System.out.println(Thread.currentThread().getId());
+        return new SelectFunImpl(CrudMapperMethodThreadLocal.getExcutorSelect());
     }
 
-    public static void addExcutorSelect(Class clazz){
-        excutorSelect.set(clazz);
-    }
 
-    public static void delExcutorSelect(Class clazz){
-        excutorSelect.remove();
-    }
 
 
 }

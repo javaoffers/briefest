@@ -13,8 +13,8 @@ import java.util.regex.Pattern;
 public class SQLParse {
     private String sql;
     private String param;
-    final static  String p = "(\\#\\{[0-9a-zA-Z-]+\\})";
-    final static  Pattern compile = Pattern.compile(p);
+    public final static  String p = "(\\#\\{[0-9a-zA-Z-]+\\})";
+    public final static  Pattern compile = Pattern.compile(p);
     private  String getParse(){
         return p;
     }

@@ -11,6 +11,7 @@ public enum CategoryTag {
     JOIN_TABLE,
     SELECT_FROM,
     DELETE_FROM,
+    INSERT_INTO,
 
 
 }

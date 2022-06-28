@@ -55,6 +55,13 @@ public enum ConditionTag {
 
     ON(303," on ",CategoryTag.JOIN_TABLE),
 
+    /**insert**/
+    INSERT_INTO(2002," insert into ", CategoryTag.INSERT_INTO),
+
+    VALUES(2003," values ", CategoryTag.INSERT_INTO),
+
+    INSERT_COL_VALUE(2004,"", CategoryTag.INSERT_INTO),
+
     /**group by**/
 
     GROUP_BY(401, " group by ", CategoryTag.WHERE_ON),

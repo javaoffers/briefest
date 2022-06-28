@@ -58,6 +58,29 @@ public class TableHelper {
         return colAll;
     }
 
+    public static List<Pair<String, String>> getColAllAndAliasNameOnly(Class<?> modelClss){
+        String name = modelClss.getName();
+        String implClass = name.replaceAll("\\.","/");
+        parseTableInfo(implClass);
+        List<Pair<String, String>> colAll = new LinkedList<>();
+        TableInfo tableInfo = tableInfoMap.get(modelClss);
+        String tableName = tableInfo.getTableName();
+        tableInfo.getColNameOfModel().forEach((colName,fieldName)->{
+            colAll.add(Pair.of(colName,fieldName));
+        });
+        return colAll;
+    }
+
+    public static Map<String, Field> getColAllAndFieldOnly(Class<?> modelClss){
+        String name = modelClss.getName();
+        String implClass = name.replaceAll("\\.","/");
+        parseTableInfo(implClass);
+        List<Pair<String, String>> colAll = new LinkedList<>();
+        TableInfo tableInfo = tableInfoMap.get(modelClss);
+        Map<String, Field> colNameOfModelField = tableInfo.getColNameOfModelField();
+        return colNameOfModelField;
+    }
+
     public static String getColName(GetterFun myFun){
         String methodName = StringUtils.EMPTY;
         String colName = StringUtils.EMPTY;
@@ -108,6 +131,33 @@ public class TableHelper {
             String fieldName = colNameOfGetter.get(methodName);;
             String colName =  tableInfo.getTableName()+"."+tableInfo.getColNameOfModel().get(fieldName);
             return Pair.of(colName, fieldName);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        throw new FindColException("解析sql字段出错 ： "+myFun.toString());
+    }
+
+    public static String getColNameOnly(GetterFun myFun){
+        String methodName = StringUtils.EMPTY;
+        try {
+            // 直接调用writeReplace
+            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
+            writeReplace.setAccessible(true);
+            Object sl = writeReplace.invoke(myFun);
+            SerializedLambda serializedLambda = (SerializedLambda) sl;
+            methodName = serializedLambda.getImplMethodName();
+            String implClass = serializedLambda.getImplClass();
+            parseTableInfo(implClass);
+            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
+            Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
+            colNameOfGetter.computeIfAbsent(methodName, k->{
+                k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
+                k = k.substring(0,1).toLowerCase()+k.substring(1);
+                return k;
+            });
+            String fieldName = colNameOfGetter.get(methodName);;
+            String colName =  tableInfo.getColNameOfModel().get(fieldName);
+            return colName;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -184,6 +234,7 @@ public class TableHelper {
                 //说明存在与表中的字段名称对应
                 if(tableInfo.getColNames().get(colName) != null){
                     tableInfo.getColNameOfModel().put(fName, colName);
+                    tableInfo.getColNameOfModelField().put(colName, colF);
                 }
             }
         }catch (Exception e){
@@ -254,12 +305,14 @@ public class TableHelper {
         TableInfo tableInfo = tableInfoMap.get(m2c);
         if(tableInfo == null){
             synchronized (TableHelper.class){
+                tableInfo = tableInfoMap.get(m2c);
                 if(tableInfo == null){
                     parseModelClass(m2c);
+                    tableInfo = tableInfoMap.get(m2c);
                 }
+
             }
         }
-        tableInfo = tableInfoMap.get(m2c);
         return tableInfo.getTableName();
     }
 }

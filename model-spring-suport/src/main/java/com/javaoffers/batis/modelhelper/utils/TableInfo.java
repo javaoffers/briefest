@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.utils;
 
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -31,6 +32,13 @@ public class TableInfo {
      * 懒加载存放
      */
     private Map<String,String> colNameOfModel = new LinkedHashMap<>();
+
+    /**
+     * K: 属性名称(也是别名)
+     * V: 对应的表字段， 由类属性生成
+     * 懒加载存放
+     */
+    private Map<String, Field> colNameOfModelField = new LinkedHashMap<>();
 
     /**
      * K: lamda获取的方法名称
@@ -68,4 +76,7 @@ public class TableInfo {
         return colNameOfGetter;
     }
 
+    public Map<String, Field> getColNameOfModelField() {
+        return colNameOfModelField;
+    }
 }

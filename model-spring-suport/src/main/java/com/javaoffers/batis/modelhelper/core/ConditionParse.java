@@ -9,6 +9,9 @@ import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
+import com.javaoffers.batis.modelhelper.fun.condition.insert.AllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.insert.ColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,8 +33,28 @@ public class ConditionParse {
             case SELECT_FROM:
                 //解析select
                 return parseSelect(conditions);
+            case INSERT_INTO:
+                return parseInsert(conditions);
 
         }
+        return null;
+    }
+
+    private static SQLInfo parseInsert(LinkedList<Condition> conditions) {
+        Condition insertIntoTableCondition = conditions.pollFirst();
+
+        String insertIntoTableSql = insertIntoTableCondition.getSql();
+
+        String insertColNames = null;
+
+        for(Condition condition : conditions){
+            if(condition instanceof ColValueCondition){
+
+            } else if(condition instanceof AllColValueCondition){
+
+            }
+        }
+
         return null;
     }
 

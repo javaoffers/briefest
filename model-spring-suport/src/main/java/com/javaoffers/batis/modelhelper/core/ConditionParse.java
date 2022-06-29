@@ -9,10 +9,9 @@ import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
-import com.javaoffers.batis.modelhelper.fun.condition.insert.AllColValueCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.insert.ColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -76,9 +75,9 @@ public class ConditionParse {
                 insertValueAppender.append("}");
                 valuesParam.put(key,params.get(key));
 
-            } else if(condition instanceof AllColValueCondition){
+            } else if(condition instanceof InsertAllColValueCondition){
 
-                AllColValueCondition allColValueCondition = (AllColValueCondition) condition;
+                InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
                 if(insertColNamesAppender.length() == 0){
                     insertColNamesAppender.append(insertIntoTableSql);
                     insertColNamesAppender.append(allColValueCondition.getSql());

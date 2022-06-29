@@ -12,7 +12,7 @@ import java.util.Set;
 /**
  * create by cmj
  */
-public class AllColValueCondition implements InsertCondition {
+public class InsertAllColValueCondition implements InsertCondition {
 
     private Object model;
 
@@ -46,7 +46,7 @@ public class AllColValueCondition implements InsertCondition {
         return this.sqlValues;
     }
 
-    public AllColValueCondition(Class modelClass, Object model) {
+    public InsertAllColValueCondition(Class modelClass, Object model) {
         this.model = model;
         this.modelClass = modelClass;
         //left: colName. right: fieldName

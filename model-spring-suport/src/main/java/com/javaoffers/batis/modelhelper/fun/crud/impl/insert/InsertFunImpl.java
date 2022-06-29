@@ -6,8 +6,8 @@ import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.insert.AllColValueCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.insert.ColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
@@ -49,7 +49,7 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M model) {
-        conditions.add(new AllColValueCondition(mClass, model));
+        conditions.add(new InsertAllColValueCondition(mClass, model));
         return this;
     }
 

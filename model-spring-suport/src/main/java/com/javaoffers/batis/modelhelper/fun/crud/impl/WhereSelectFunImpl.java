@@ -20,19 +20,6 @@ import java.util.stream.Collectors;
  */
 public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
 
-    /**
-     * 静态
-     **/
-    private static JdbcTemplate jdbcTemplate;
-
-    public WhereSelectFunImpl(JdbcTemplate jdbcTemplate) {
-        synchronized (WhereSelectFunImpl.class) {
-            if (jdbcTemplate == null) {
-                WhereSelectFunImpl.jdbcTemplate = jdbcTemplate;
-            }
-        }
-    }
-
     private LinkedList<Condition> conditions;
 
     public WhereSelectFunImpl(LinkedList<Condition> conditions) {

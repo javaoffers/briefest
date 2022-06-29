@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.crud.impl.modify;
+package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
@@ -25,22 +25,9 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     
     private WhereSelectFunImpl whereFun;
 
-    /**静态**/
-    private static JdbcTemplate jdbcTemplate;
-
     public WhereModifyFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.whereFun = new WhereSelectFunImpl(this.conditions);
-    }
-
-    /**
-     * 初始化使用 init
-     * @param jdbcTemplate
-     */
-    public WhereModifyFunImpl (JdbcTemplate jdbcTemplate){
-        if(jdbcTemplate != null){
-            WhereModifyFunImpl.jdbcTemplate = jdbcTemplate;
-        }
     }
 
     @Override
@@ -179,12 +166,12 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public WhereModifyFun<M, V> notBetween(GetterFun<M, V> col, V start, V end) {
-        return null;
+        return this;
     }
 
     @Override
     public WhereModifyFun<M, V> notBetween(boolean condition, GetterFun<M, V> col, V start, V end) {
-        return null;
+        return this;
     }
 
     @Override
@@ -249,22 +236,26 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public WhereModifyFun<M, V> notIn(GetterFun<M, V> col, V... values) {
-        return null;
+        whereFun.notIn(col,values);
+        return this;
     }
 
     @Override
     public WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, V... values) {
-        return null;
+        whereFun.notIn(condition, col, values);
+        return this;
     }
 
     @Override
     public WhereModifyFun<M, V> notIn(GetterFun<M, V> col, Collection... values) {
-        return null;
+        whereFun.notIn(col,values);
+        return this;
     }
 
     @Override
     public WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
-        return null;
+        whereFun.notIn(condition, col, values);
+        return this;
     }
 
     @Override
@@ -280,7 +271,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     }
 
     @Override
-    public Integer ex() {
-        return 0;
+    public Long ex() {
+        return 0L;
     }
 }

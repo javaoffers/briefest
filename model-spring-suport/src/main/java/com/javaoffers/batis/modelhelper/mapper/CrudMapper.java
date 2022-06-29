@@ -24,4 +24,7 @@ public interface CrudMapper<T> extends BaseMapper<T> {
     public <C extends  GetterFun <T, Object> ,V extends Serializable > InsertFun<T, C , V > insert();
 
 
+
+
+
 }

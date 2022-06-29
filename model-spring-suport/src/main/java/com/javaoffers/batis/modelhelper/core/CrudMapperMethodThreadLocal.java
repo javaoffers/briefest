@@ -7,15 +7,15 @@ public class CrudMapperMethodThreadLocal {
 
     private final static ThreadLocal<Class> excutorSelect = new InheritableThreadLocal<>();
 
-    public static void addExcutorSelect(Class clazz){
+    public static void addExcutorModel(Class clazz){
         excutorSelect.set(clazz);
     }
 
-    public static void delExcutorSelect(){
+    public static void delExcutorModel(){
         excutorSelect.remove();
     }
 
-    public static Class getExcutorSelect(){
+    public static Class getExcutorModel(){
         return excutorSelect.get();
     }
 }

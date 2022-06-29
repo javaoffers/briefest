@@ -45,9 +45,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
         this.modelClass = modelclass;
         ByteBuddyUtils.DefaultClass select = ByteBuddyUtils.buildDefaultClass(
                 "select",CrudMapperMethodExcutor.class);
+        ByteBuddyUtils.DefaultClass insert = ByteBuddyUtils.buildDefaultClass(
+                "insert",CrudMapperMethodExcutor.class);
         defaultObj = ByteBuddyUtils
                 .makeObject(clazz,
-                        Arrays.asList(select));
+                        Arrays.asList(select,insert));
     }
 
     static {
@@ -63,7 +65,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
-            CrudMapperMethodThreadLocal.addExcutorSelect((Class) this.modelClass);
+            CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);
             //如果defaultObj 为 null 说明 没有继承CrudMapper接口
             if(defaultObj != null){
                 if(method.getModifiers() == 1){
@@ -72,6 +74,9 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                     if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
                         CrudMapper crudMapper = (CrudMapper) defaultObj;
                         return  crudMapper.select();
+                    }else if(method.getName().equals(CrudMapperConstant.INSERT.getMethodName())){
+                        CrudMapper crudMapper = (CrudMapper) defaultObj;
+                        return crudMapper.insert();
                     }
                     throw new IllegalAccessException("method not found ");
                 }else{
@@ -83,7 +88,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 return mapperProxy.invoke(proxy,method,args);
             }
         }finally {
-            CrudMapperMethodThreadLocal.delExcutorSelect();
+            CrudMapperMethodThreadLocal.delExcutorModel();
         }
 
     }

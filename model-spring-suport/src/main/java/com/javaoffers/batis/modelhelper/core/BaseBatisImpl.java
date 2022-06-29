@@ -3,10 +3,17 @@ package com.javaoffers.batis.modelhelper.core;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
+import org.springframework.jdbc.core.InterruptibleBatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ParameterDisposer;
+import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.support.JdbcUtils;
 
+import java.io.Serializable;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -91,6 +98,63 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 		SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
 		int[] is = this.jdbcTemplate.batchUpdate( batchSQL.getSql(), batchSQL);
 		return Integer.valueOf(is.length);
+	}
+
+	@Override
+	public List<Serializable> batchInsert(String sql, List<Map<String, Object>> paramMap) {
+
+		SQL pss = SQLParse.parseSqlParams(sql, paramMap);
+		LinkedList<Serializable> ids = new LinkedList<>();
+		jdbcTemplate.execute(new InsertPreparedStatementCreator(pss.getSql()), (PreparedStatementCallback<List<Serializable>>) ps -> {
+			try {
+				int batchSize = pss.getBatchSize();
+				InterruptibleBatchPreparedStatementSetter ipss =
+						(pss instanceof InterruptibleBatchPreparedStatementSetter ?
+								(InterruptibleBatchPreparedStatementSetter) pss : null);
+				if (JdbcUtils.supportsBatchUpdates(ps.getConnection())) {
+					for (int i = 0; i < batchSize; i++) {
+						pss.setValues(ps, i);
+						if (ipss != null && ipss.isBatchExhausted(i)) {
+							break;
+						}
+						ps.addBatch();
+					}
+					ps.executeBatch();
+
+				}
+				else {
+					List<Integer> rowsAffected = new ArrayList<>();
+					for (int i = 0; i < batchSize; i++) {
+						pss.setValues(ps, i);
+						if (ipss != null && ipss.isBatchExhausted(i)) {
+							break;
+						}
+						rowsAffected.add(ps.executeUpdate());
+					}
+					int[] rowsAffectedArray = new int[rowsAffected.size()];
+					for (int i = 0; i < rowsAffectedArray.length; i++) {
+						rowsAffectedArray[i] = rowsAffected.get(i);
+					}
+
+				}
+
+				int i = 0;
+				ResultSet rs = ps.getGeneratedKeys() ;
+				while(rs.next() && i < batchSize){
+					Object object = rs.getObject(1);
+					ids.add(new IdImpl((Serializable) object)) ;
+					i++ ;
+				}
+				return ids;
+			}
+			finally {
+				if (pss instanceof ParameterDisposer) {
+					((ParameterDisposer) pss).cleanupParameters();
+				}
+			}
+		});
+
+		return ids;
 	}
 
 }

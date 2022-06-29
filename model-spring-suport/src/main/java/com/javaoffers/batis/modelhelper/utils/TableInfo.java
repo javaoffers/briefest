@@ -20,6 +20,11 @@ public class TableInfo {
     private String tableName;
 
     /**
+     * 自赠主键名称
+     */
+    private String aotuIdName;
+
+    /**
      * K: 表字段
      * V: 对应的表字段信息， 由数据库查询所得
      * 懒加载存放
@@ -78,5 +83,9 @@ public class TableInfo {
 
     public Map<String, Field> getColNameOfModelField() {
         return colNameOfModelField;
+    }
+
+    public void setAotuIdName(String aotuIdName) {
+        this.aotuIdName = aotuIdName;
     }
 }

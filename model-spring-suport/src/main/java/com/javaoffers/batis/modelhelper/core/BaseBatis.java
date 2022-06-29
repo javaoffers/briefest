@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +36,9 @@ public interface BaseBatis<T,ID>{
 
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);
+
+	public List<Serializable> batchInsert(String sql, List<Map<String,Object>> paramMap);
+
 	/*****************************************************************************/ 
 
 }

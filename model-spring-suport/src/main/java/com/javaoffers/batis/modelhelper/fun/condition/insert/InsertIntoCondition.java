@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.condition.insert;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
@@ -10,6 +11,8 @@ import java.util.Map;
 public class InsertIntoCondition implements InsertCondition {
 
     String tableName;
+
+    Class modelClass;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -26,8 +29,14 @@ public class InsertIntoCondition implements InsertCondition {
         return Collections.EMPTY_MAP;
     }
 
-    public InsertIntoCondition(String tableName) {
+    public InsertIntoCondition(Class modelClass) {
+        String tableName = TableHelper.getTableName(modelClass);
         this.tableName = tableName;
+        this.modelClass = modelClass;
+    }
+
+    public Class getModelClass() {
+        return modelClass;
     }
 
     @Override

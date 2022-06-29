@@ -2,9 +2,11 @@ package com.javaoffers.base.modelhelper.sample.spring.mapper;
 
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
+import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -83,5 +85,16 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .where()
                 .between(User::getBirthday, start, end)
                 .ex();
+    }
+
+    /**
+     * save user
+     * @param user
+     * @return
+     */
+    default User saveUser(User user){
+        List<Id> ex = insert().colAll(user).ex();
+        user.setId(ex.get(0).toLong());
+        return user;
     }
 }

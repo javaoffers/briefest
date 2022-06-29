@@ -11,11 +11,15 @@ import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.AllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.ColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
+import org.springframework.util.Assert;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
 
 /**
@@ -41,21 +45,61 @@ public class ConditionParse {
     }
 
     private static SQLInfo parseInsert(LinkedList<Condition> conditions) {
-        Condition insertIntoTableCondition = conditions.pollFirst();
+        InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition)conditions.pollFirst();
 
         String insertIntoTableSql = insertIntoTableCondition.getSql();
-
-        String insertColNames = null;
-
+        StringBuilder insertColNamesAppender = new StringBuilder();
+        StringBuilder insertValueAppender = new StringBuilder();
+        LinkedList<Map<String, Object>> paramsList = new LinkedList<>();
+        HashMap<String, Object> valuesParam = new HashMap<>();
+        boolean isColValueCondition = false;
         for(Condition condition : conditions){
             if(condition instanceof ColValueCondition){
+                Map<String, Object> params = condition.getParams();//只有一个值
+                Assert.isTrue(params.size() == 1,"必须存在一个值");
+                if(insertColNamesAppender.length() == 0){
+                    isColValueCondition = true;
+                    insertColNamesAppender.append(insertIntoTableSql);
+                    insertColNamesAppender.append(" ( ");
+                    insertValueAppender.append(ConditionTag.VALUES.getTag());
+                    insertValueAppender.append("( ");
+
+                }else{
+                    insertColNamesAppender.append(",");
+                    insertValueAppender.append(",");
+                }
+                insertColNamesAppender.append(condition.getSql());
+                Set<String> strings = params.keySet();
+                String key = strings.iterator().next();
+                insertValueAppender.append("#{");
+                insertValueAppender.append(key);
+                insertValueAppender.append("}");
+                valuesParam.put(key,params.get(key));
 
             } else if(condition instanceof AllColValueCondition){
 
+                AllColValueCondition allColValueCondition = (AllColValueCondition) condition;
+                if(insertColNamesAppender.length() == 0){
+                    insertColNamesAppender.append(insertIntoTableSql);
+                    insertColNamesAppender.append(allColValueCondition.getSql());
+                    insertValueAppender.append(ConditionTag.VALUES.getTag());
+                    insertValueAppender.append(allColValueCondition.getValuesSql());
+                }
+                paramsList.add(allColValueCondition.getParams());
             }
         }
 
-        return null;
+        if(isColValueCondition){
+            insertColNamesAppender.append(" )");
+            insertValueAppender.append(" ) ");
+            paramsList.add(valuesParam);
+        }
+
+        SQLInfo sqlInfo = SQLInfo.builder().aClass(insertIntoTableCondition.getModelClass())
+                .params(paramsList)
+                .sql(insertColNamesAppender.append(insertValueAppender.toString()).toString())
+                .build();
+        return sqlInfo;
     }
 
     private static SQLInfo parseSelect(LinkedList<Condition> conditions) {

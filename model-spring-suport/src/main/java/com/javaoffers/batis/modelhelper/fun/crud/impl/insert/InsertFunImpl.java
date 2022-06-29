@@ -1,15 +1,18 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
+import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.AllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
+import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
-import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.List;
 
@@ -27,7 +30,7 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
 
     public InsertFunImpl(Class<M> mClass) {
         this.mClass = mClass;
-        conditions.add(new InsertIntoCondition(TableHelper.getTableName(mClass)));
+        conditions.add(new InsertIntoCondition(mClass));
     }
 
     @Override
@@ -59,6 +62,22 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
     }
 
     @Override
+    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
+        for(M m: models){
+            colAll(m);
+        }
+        return this;
+    }
+
+    @Override
+    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
+        if(condition){
+            colAll(models);
+        }
+        return this;
+    }
+
+    @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(List<M> models) {
         if(models!=null && models.size() > 0){
             models.forEach(model->{
@@ -76,8 +95,18 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
         return this;
     }
 
+    /**
+     * 返回成功后的主键id, 多个id和插入model顺序保持一致
+     * @return ids
+     */
     @Override
-    public Long ex() {
-        return 0L;
+    public List<Id> ex() {
+        //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
+        //解析SQL select 并执行。
+        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
+        System.out.println("SQL: "+sqlInfo.getSql());
+        System.out.println("参数： "+sqlInfo.getParams());
+        List<Id> list = BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
+        return list;
     }
 }

@@ -36,11 +36,8 @@ public class SQL implements BatchPreparedStatementSetter{
 				Object[] objects = argsParam.get(i);
 				if(objects!=null&&objects.length>0) {
 					for(int l=0;l<objects.length;l++) {
-						Object param = objects[l];
-						if(param==null) {
-							throw new NullPointerException("当前的批次参数中存在null 空指针");
-						}
-						ps.setObject(l+1, param);
+						Object object = objects[l];
+						ps.setObject(l+1, object);
 					}
 				}
 		}

@@ -19,7 +19,7 @@ public class ColValueCondition implements Condition {
 
     @Override
     public ConditionTag getConditionTag() {
-        return ConditionTag.INSERT_VALUE;
+        return ConditionTag.INSERT_COL_VALUE;
     }
 
     @Override
@@ -30,15 +30,14 @@ public class ColValueCondition implements Condition {
     @Override
     public Map<String, Object> getParams() {
         HashMap<String, Object> param = new HashMap<>();
-        param.put(getNextLong()+"", value);
+        param.put(colName, value);
         return param;
     }
 
     public ColValueCondition(GetterFun colNameGetterFun, Object value) {
-        String colName = TableHelper.getColNameAndAliasName(colNameGetterFun).getLeft();
+        String colName = TableHelper.getColNameOnly(colNameGetterFun);
         this.colName = colName;
         this.value = value;
     }
-
 
 }

@@ -6,6 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.MoreUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.OneUpdateFun;
@@ -26,17 +27,17 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
 
     /**
-     * 是否忽略null值，如果是null则不进行更新. true: ignore null.
+     * 是否忽略null值，如果是null则不进行更新. true: update null.
      */
     private boolean isUpdateNull = true;
 
     /**
-     * true : value must be not null
+     * true : update null
      * @param value
      * @return
      */
     private boolean isUpdateNull(V value){
-        if(isUpdateNull){
+        if(!isUpdateNull){
             return value != null;
         }
         return true;
@@ -47,10 +48,16 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.isUpdateNull = isIgnoreNull;
     }
 
+    public SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isIgnoreNull) {
+        this.mClass = mClass;
+        this.isUpdateNull = isIgnoreNull;
+        this.conditions = conditions;
+    }
+
     @Override
     public OneUpdateFun<M, C, V> col(C col, V value) {
         if(isUpdateNull(value)){
-            this.conditions.add(new ColValueCondition(col,value));
+            this.conditions.add(new UpdateColValueCondition(col,value));
         }
         return this;
     }
@@ -65,7 +72,7 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
 
     @Override
     public WhereModifyFun<M, V> where() {
-        return new WhereModifyFunImpl<M, V>(conditions);
+        return new WhereModifyFunImpl<M, V>(conditions, mClass);
     }
 
     @Override
@@ -76,26 +83,9 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
 
     @Override
     public MoreUpdateFun<M, C, V> colAll(boolean condition, M model) {
-        return this;
-    }
-
-    @Override
-    public MoreUpdateFun<M, C, V> colAll(M... models) {
-        return this;
-    }
-
-    @Override
-    public MoreUpdateFun<M, C, V> colAll(boolean condition, M... models) {
-        return this;
-    }
-
-    @Override
-    public MoreUpdateFun<M, C, V> colAll(Collection<M> models) {
-        return this;
-    }
-
-    @Override
-    public MoreUpdateFun<M, C, V> colAll(boolean condition, Collection<M> models) {
+        if(condition){
+            colAll(model);
+        }
         return this;
     }
 }

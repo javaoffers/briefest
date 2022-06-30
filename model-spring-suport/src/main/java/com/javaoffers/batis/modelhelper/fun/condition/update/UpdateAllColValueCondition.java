@@ -1,7 +1,11 @@
 package com.javaoffers.batis.modelhelper.fun.condition.update;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,15 +22,22 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     Object model;
 
+    private String tableName;
+
+    //all Col
+    private StringBuilder updateSqlNull = new StringBuilder(ConditionTag.UPDATE.getTag());
+
+    // col not null only
+    private StringBuilder updateSql = new StringBuilder(ConditionTag.UPDATE.getTag());
 
     @Override
     public ConditionTag getConditionTag() {
-        return null;
+        return ConditionTag.UPDATE;
     }
 
     @Override
     public String getSql() {
-        return null;
+        return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
     }
 
     @Override
@@ -38,5 +49,31 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         this.isUpdateNull = isUpdateNull;
         this.modelClass = modelClass;
         this.model = model;
+        this.tableName = TableHelper.getTableName(modelClass);
+        Map<String, Field> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(modelClass);
+        HashMap<String, Object> params = new HashMap<>();
+        updateSqlNull.append(tableName);
+        updateSql.append(tableName);
+
+        colAllAndFieldOnly.forEach((cloName, field) -> {
+            try {
+                updateSqlNull.append(ConditionTag.SET.getTag());
+                updateSqlNull.append(cloName);
+                updateSqlNull.append(" = #{");
+                updateSqlNull.append(cloName);
+                updateSqlNull.append("}");
+                Object oValue = field.get(model);
+                params.put(cloName, oValue);
+                if(oValue!=null){
+                    updateSql.append(ConditionTag.SET.getTag());
+                    updateSql.append(cloName);
+                    updateSql.append(" = #{");
+                    updateSql.append(cloName);
+                    updateSql.append("}");
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

@@ -1,13 +1,16 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
+import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.CondSQLCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.AddPatchMarkCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Collection;
@@ -21,13 +24,18 @@ import java.util.function.Consumer;
  */
 public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
-    private LinkedList<Condition> conditions;
+    private LinkedConditions<Condition> conditions;
     
     private WhereSelectFunImpl whereFun;
 
-    public WhereModifyFunImpl(LinkedList<Condition> conditions) {
+    private Class modelClass;
+
+    private boolean isUpdateNull;
+
+    public WhereModifyFunImpl(LinkedConditions<Condition> conditions,Class modelClass) {
         this.conditions = conditions;
         this.whereFun = new WhereSelectFunImpl(this.conditions);
+        this.modelClass = modelClass;
     }
 
     @Override
@@ -273,5 +281,11 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     @Override
     public Long ex() {
         return 0L;
+    }
+
+    @Override
+    public SmartUpdateFun<M, GetterFun<M, Object>, V> addBatch() {
+         conditions.add(new AddPatchMarkCondition());
+         return new SmartUpdateFunImpl(modelClass, conditions,isUpdateNull);
     }
 }

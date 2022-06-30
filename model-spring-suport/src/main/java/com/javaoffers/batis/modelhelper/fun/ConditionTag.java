@@ -62,6 +62,11 @@ public enum ConditionTag {
 
     INSERT_COL_VALUE(2004,"", CategoryTag.INSERT_INTO),
 
+    /**update**/
+    UPDATE(2100, " update ", CategoryTag.UPDATE_SET),
+
+    SET(2101, " set ", CategoryTag.UPDATE_SET),
+
     /**group by**/
 
     GROUP_BY(401, " group by ", CategoryTag.WHERE_ON),

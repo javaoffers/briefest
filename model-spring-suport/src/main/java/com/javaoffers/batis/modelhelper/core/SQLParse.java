@@ -42,7 +42,11 @@ public class SQLParse {
             while(matcher.find()){
                 String result = matcher.group(1);
                 String paramKey = result.substring(2, result.length() - 1);
-                params.add(pm.get(paramKey));
+                Object o = pm.get(paramKey);
+                if(o instanceof Id){
+                    o = ((Id) o).value();
+                }
+                params.add(o);
             }
             objects.add(params.toArray());
         }

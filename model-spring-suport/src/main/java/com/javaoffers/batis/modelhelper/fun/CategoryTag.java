@@ -12,6 +12,7 @@ public enum CategoryTag {
     SELECT_FROM,
     DELETE_FROM,
     INSERT_INTO,
+    UPDATE_SET,
 
 
 }

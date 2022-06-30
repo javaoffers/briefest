@@ -12,6 +12,8 @@ import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -38,6 +40,17 @@ public class ConditionParse {
                 return parseSelect(conditions);
             case INSERT_INTO:
                 return parseInsert(conditions);
+            case UPDATE:
+                return parseUpdate(conditions);
+        }
+        return null;
+    }
+
+    private static SQLInfo parseUpdate(LinkedList<Condition> conditions) {
+        Condition condition = conditions.pollFirst();
+        if(condition instanceof UpdateColValueCondition){
+
+        }else if(condition instanceof UpdateAllColValueCondition){
 
         }
         return null;

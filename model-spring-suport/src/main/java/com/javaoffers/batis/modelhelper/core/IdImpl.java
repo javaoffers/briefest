@@ -55,4 +55,9 @@ public class IdImpl implements Id {
     public Serializable getSrcValue() {
         return srcValue;
     }
+
+    @Override
+    public String toString() {
+        return String.valueOf(srcValue);
+    }
 }

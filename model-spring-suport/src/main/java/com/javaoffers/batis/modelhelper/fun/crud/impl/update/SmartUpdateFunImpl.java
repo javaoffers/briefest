@@ -7,11 +7,13 @@ import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.MoreUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.OneUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.UpdateFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Collection;
 
@@ -21,6 +23,8 @@ import java.util.Collection;
 public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements SmartUpdateFun<M,C,V> {
 
     private Class<M> mClass;
+
+    private String tableName;
     /**
      * 存放 查询字段
      */
@@ -43,15 +47,19 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         return true;
     }
 
-    public SmartUpdateFunImpl(Class<M> mClass, boolean isIgnoreNull) {
+    public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull) {
         this.mClass = mClass;
-        this.isUpdateNull = isIgnoreNull;
+        this.isUpdateNull = isUpdateNull;
+        this.tableName = TableHelper.getTableName(mClass);
+        this.conditions.add(new UpdateCondtionMark(mClass));
     }
 
-    public SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isIgnoreNull) {
+    public SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isUpdateNull) {
         this.mClass = mClass;
-        this.isUpdateNull = isIgnoreNull;
+        this.isUpdateNull = isUpdateNull;
         this.conditions = conditions;
+        this.tableName = TableHelper.getTableName(mClass);
+        this.conditions.add(new UpdateCondtionMark(mClass));
     }
 
     @Override

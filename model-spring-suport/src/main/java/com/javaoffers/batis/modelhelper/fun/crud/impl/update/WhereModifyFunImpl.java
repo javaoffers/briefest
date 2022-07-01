@@ -1,6 +1,9 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
+import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -280,7 +283,11 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public Long ex() {
-        return 0L;
+        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
+        System.out.println("SQL: "+sqlInfo.getSql());
+        System.out.println("参数： "+sqlInfo.getParams());
+        Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
+        return integer.longValue();
     }
 
     @Override

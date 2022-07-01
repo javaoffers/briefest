@@ -47,9 +47,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 "select",CrudMapperMethodExcutor.class);
         ByteBuddyUtils.DefaultClass insert = ByteBuddyUtils.buildDefaultClass(
                 "insert",CrudMapperMethodExcutor.class);
+        ByteBuddyUtils.DefaultClass update = ByteBuddyUtils.buildDefaultClass(
+                "update",CrudMapperMethodExcutor.class);
         defaultObj = ByteBuddyUtils
                 .makeObject(clazz,
-                        Arrays.asList(select,insert));
+                        Arrays.asList(select,insert,update));
     }
 
     static {
@@ -77,6 +79,9 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                     }else if(method.getName().equals(CrudMapperConstant.INSERT.getMethodName())){
                         CrudMapper crudMapper = (CrudMapper) defaultObj;
                         return crudMapper.insert();
+                    }else if(method.getName().equals(CrudMapperConstant.UPDATE.getMethodName())){
+                        CrudMapper crudMapper = (CrudMapper) defaultObj;
+                        return crudMapper.update();
                     }
                     throw new IllegalAccessException("method not found ");
                 }else{

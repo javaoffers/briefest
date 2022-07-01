@@ -15,11 +15,11 @@ public class UpdateFunImpl <M, C extends GetterFun<M, Object>, V> implements Upd
 
     @Override
     public SmartUpdateFun<M, C, V> updateNull() {
-        return new SmartUpdateFunImpl<>(modelClass, false);
+        return new SmartUpdateFunImpl<>(modelClass, true);
     }
 
     @Override
     public SmartUpdateFun<M, C, V> npdateNull() {
-        return new SmartUpdateFunImpl<>(modelClass, true);
+        return new SmartUpdateFunImpl<>(modelClass, false);
     }
 }

@@ -1,7 +1,9 @@
 package com.javaoffers.batis.modelhelper.fun.condition.update;
 
+import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 public class UpdateColValueCondition extends ColValueCondition {
 
@@ -13,4 +15,5 @@ public class UpdateColValueCondition extends ColValueCondition {
     public String getSql() {
         return getColName() + " = #{" + getColName() +"} ";
     }
+
 }

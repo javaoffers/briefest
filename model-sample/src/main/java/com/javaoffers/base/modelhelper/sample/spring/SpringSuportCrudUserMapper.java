@@ -13,6 +13,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
+import com.javaoffers.batis.modelhelper.fun.crud.update.UpdateFun;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -43,6 +44,49 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        Long id = 109L;
+
+        crudUserMapper.update()
+                .npdateNull()
+                .col(User::getName,"ling")
+                .where()
+                .eq(User::getId,id)
+                .ex();
+
+        UpdateFun<User, GetterFun<User, Object>, Serializable> update = crudUserMapper.update();
+
+        crudUserMapper.update().npdateNull()
+                .col(User::getBirthday, new Date())
+                //name not will update . because its null
+                .col(User::getName,null)
+                .where()
+                .eq(User::getId, id)
+                .ex();
+        User user = crudUserMapper.queryUserById(id);
+        print(user);
+
+        crudUserMapper.update()
+                .updateNull()
+                .col(User::getBirthday, new Date())
+                .col(User::getId, id)
+                .where()
+                .eq(User::getId,id)
+                .ex();
+
+        user = crudUserMapper.select()
+                .colAll()
+                .where()
+                .eq(User::getId, id)
+                .ex();
+
+
+        print(user);
+
+        System.exit(0);
+
+    }
+
+    public void testInsert() throws JsonProcessingException {
         //查询col
         List<Id> ex = crudUserMapper.insert()
                 .col(User::getBirthday, new Date())
@@ -71,11 +115,7 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
         h1.setName("saveUser");
         crudUserMapper.saveUser(h1);
         print(h1);
-
-        System.exit(0);
-
     }
-
     public void testSelect() throws Exception {
 
         /**

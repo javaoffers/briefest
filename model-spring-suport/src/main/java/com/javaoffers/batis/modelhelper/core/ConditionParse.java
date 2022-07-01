@@ -14,6 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -33,22 +34,65 @@ public class ConditionParse {
 
         //判断类型
         Condition condition = conditions.get(0);
-        ConditionTag conditionTag = condition.getConditionTag();
-        switch (conditionTag) {
-            case SELECT_FROM:
-                //解析select
-                return parseSelect(conditions);
-            case INSERT_INTO:
-                return parseInsert(conditions);
-            case UPDATE:
-                return parseUpdate(conditions);
+        try {
+            ConditionTag conditionTag = condition.getConditionTag();
+            switch (conditionTag) {
+                case SELECT_FROM:
+                    //解析select
+                    return parseSelect(conditions);
+                case INSERT_INTO:
+                    return parseInsert(conditions);
+                case UPDATE:
+                    return parseUpdate(conditions);
+            }
+        }finally {
+            condition.clean();
         }
         return null;
     }
 
     private static SQLInfo parseUpdate(LinkedList<Condition> conditions) {
         Condition condition = conditions.pollFirst();
+        String updateTableSql = null;
+        Class modelClass = null;
+        if(condition instanceof UpdateCondtionMark){
+            UpdateCondtionMark updateCondtionMark = (UpdateCondtionMark) condition;
+            updateTableSql = updateCondtionMark.getSql();
+            modelClass = updateCondtionMark.getModelCalss();
+        }
+        Assert.isTrue(updateTableSql != null, "update sql 解析出新问题");
+        condition = conditions.pollFirst();
+        if(condition == null || (!(condition instanceof UpdateColValueCondition)
+                && !(condition instanceof UpdateAllColValueCondition))){
+            //没有要更新的字段
+            return null;
+        }
         if(condition instanceof UpdateColValueCondition){
+            UpdateColValueCondition updateColValueCondition = (UpdateColValueCondition) condition;
+            StringBuilder updateAppender = new StringBuilder();
+            HashMap<String, Object> upateParam = new HashMap<>();
+            String colNameSql = updateColValueCondition.getSql();
+            updateAppender.append(updateTableSql);
+            updateAppender.append(ConditionTag.SET.getTag());
+            updateAppender.append(colNameSql);
+            upateParam.putAll(updateColValueCondition.getParams());
+            while ((condition = conditions.pollFirst()) != null){
+                if(condition instanceof UpdateColValueCondition){
+                    updateColValueCondition = (UpdateColValueCondition) condition;
+                    colNameSql = updateColValueCondition.getSql();
+                    updateAppender.append(",");
+                    updateAppender.append(colNameSql);
+                    upateParam.putAll(updateColValueCondition.getParams());
+                }else if(condition instanceof WhereConditionMark){
+                    conditions.addFirst(condition);
+                    parseWhereCondition(conditions, upateParam, updateAppender);
+                }
+            }
+            return SQLInfo.builder().sql(updateAppender.toString())
+                    .params(Arrays.asList(upateParam))
+                    .aClass(modelClass)
+                    .build();
+
 
         }else if(condition instanceof UpdateAllColValueCondition){
 
@@ -124,6 +168,10 @@ public class ConditionParse {
 
         //生成select语句
         StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag());
+        if(conditions.peekFirst() == null || !(conditions.peekFirst() instanceof SelectColumnCondition)){
+            //没有要查询的字段
+            return null;
+        }
         parseSelectClo(true, conditions, selectB);
 
         //是否存在left join
@@ -153,26 +201,33 @@ public class ConditionParse {
         }
 
         // where
+        parseWhereCondition(conditions, params, selectB);
+
+        condition.clean();
+        return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
+                .params(Arrays.asList(params))
+                .sql(selectB.toString().replaceAll(" +", " "))
+                .build();
+    }
+
+    //解析Where 语句
+    private static void parseWhereCondition(LinkedList<Condition> conditions, HashMap<String, Object> params,  StringBuilder sql) {
+        String and = ConditionTag.AND.getTag();
         if (conditions.peekFirst() instanceof WhereConditionMark) {
-            selectB.append(conditions.pollFirst().getSql());
-            selectB.append(" 1=1 ");
+            sql.append(conditions.pollFirst().getSql());
+            sql.append(" 1=1 ");
             Condition where = null;
             for (; (where = conditions.pollFirst()) != null; ) {
                 if (where instanceof OrCondition) {
                     and = where.getSql();
                     continue;
                 } else {
-                    whereAndOn(params, selectB, and, where);
+                    whereAndOn(params, sql, and, where);
                     and = ConditionTag.AND.getTag();
                 }
             }
 
         }
-        condition.clean();
-        return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
-                .params(Arrays.asList(params))
-                .sql(selectB.toString().replaceAll(" +", " "))
-                .build();
     }
 
     //拼接and

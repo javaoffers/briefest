@@ -57,6 +57,7 @@ public interface Condition {
 
     default void clean() {
         wordThreadLoacl.remove();
+        idxThreadLocal.get().set(0);
     }
 
 }

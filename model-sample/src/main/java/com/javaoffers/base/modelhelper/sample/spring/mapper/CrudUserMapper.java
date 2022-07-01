@@ -32,7 +32,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .exs();
     }
 
-    default User queryUserById(Integer id){
+    default User queryUserById(Number id){
         return select()
                 .colAll()
                 .where()
@@ -40,7 +40,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .ex();
     }
 
-    default User queryUserAndOrderByUserId(Integer id){
+    default User queryUserAndOrderByUserId(Number id){
         return select()
                 .colAll()
                 .leftJoin(UserOrder::new)

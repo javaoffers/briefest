@@ -396,6 +396,16 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     }
 
     @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNull(GetterFun<M, V>... cols) {
+        return null;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNull(boolean condition, GetterFun<M, V>... cols) {
+        return null;
+    }
+
+    @Override
     public LeftWhereSelectFunImpl<M, M2, V> exists(String existsSql) {
         conditions.add(new ExistsCondition<V>(existsSql));
         return this;

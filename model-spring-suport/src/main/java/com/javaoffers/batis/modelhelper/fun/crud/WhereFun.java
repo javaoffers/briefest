@@ -313,6 +313,20 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      */
     public R notIn(boolean condition, C col, Collection... values);
 
+    /**
+     * is null
+     * @return this
+     */
+    public R isNull(C... cols);
+
+    /**
+     * is null
+     * @param condition
+     * @param cols
+     * @return
+     */
+    public R isNull(boolean condition, C... cols);
+
 
     /**
      * where exists（）判断语句

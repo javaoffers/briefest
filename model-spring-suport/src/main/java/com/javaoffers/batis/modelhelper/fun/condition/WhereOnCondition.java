@@ -9,7 +9,9 @@ import lombok.Data;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Description: 以字符串方式输入为字段名称
@@ -17,6 +19,8 @@ import java.util.Map;
  */
 @Data
 public  class WhereOnCondition<V> implements Condition {
+
+    private Set<String> colNames = new HashSet<>();
 
     private String colName;
 
@@ -70,6 +74,7 @@ public  class WhereOnCondition<V> implements Condition {
         this.colName = TableHelper.getColName(colName).split(" ")[0];
         this.value = value;
         this.tag = tag;
+        colNames.add(this.colName);
     }
 
     public WhereOnCondition(GetterFun[] colNames, V value, ConditionTag tag) {
@@ -81,7 +86,9 @@ public  class WhereOnCondition<V> implements Condition {
                 cls.append(", ");
             }
             i = i+1;
-            cls.append(TableHelper.getColName(colName).split(" ")[0]);
+            String colNameOnly = TableHelper.getColNameOnly(colName);
+            this.colNames.add(colNameOnly);
+            cls.append(colNameOnly);
         }
         this.colName = cls.toString();
         this.value = value;
@@ -96,6 +103,7 @@ public  class WhereOnCondition<V> implements Condition {
                 cls.append(", ");
             }
             cls.append(colName);
+            this.colNames.add(colName);
         }
         this.colName = cls.toString();
         this.value = value;

@@ -38,7 +38,11 @@ public enum ConditionTag {
 
     EXISTS(110," exists ", CategoryTag.WHERE_ON),
 
-    WHERE(111," where ",CategoryTag.WHERE_ON),
+    IS_NULL(112, " is null ",CategoryTag.WHERE_ON),
+
+    IS_NOT_NULL(113," is not null ", CategoryTag.WHERE_ON),
+
+    WHERE(199," where ",CategoryTag.WHERE_ON),
 
     /**delete select **/
     SELECT(200," select ",CategoryTag.SELECT_COL),

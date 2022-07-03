@@ -47,6 +47,13 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
         this.mClass = mClass;
     }
 
+
+    @Override
+    public SelectFun<M, GetterFun<M, Object>, Object> distinct() {
+         conditions.add(new KeyWordCondition(ConditionTag.DISTINCT.getTag()));
+        return this;
+    }
+
     /**
      *  添加查询字段
      * @param cols
@@ -54,7 +61,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      */
     @Override
     public SelectFun<M, GetterFun<M,Object>, Object> col(GetterFun... cols) {
-        Stream.of(cols).forEach(col->{
+        Stream.of(cols).forEach(col -> {
             conditions.add(new SelectColumnCondition(col));
         });
         return this;

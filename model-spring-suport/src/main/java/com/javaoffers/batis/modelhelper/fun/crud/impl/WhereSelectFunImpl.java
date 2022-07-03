@@ -295,6 +295,38 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     }
 
     @Override
+    public WhereSelectFun<M, V> isNull(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> isNull(boolean condition, GetterFun<M, V>... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> isNotNull(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> isNotNull(boolean condition, GetterFun<M, V>... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
     public WhereSelectFunImpl<M, V> exists(String existsSql) {
         conditions.add(new ExistsCondition<V>(existsSql));
         return this;

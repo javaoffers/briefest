@@ -397,12 +397,34 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNull(GetterFun<M, V>... cols) {
-        return null;
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
     }
 
     @Override
     public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNull(boolean condition, GetterFun<M, V>... cols) {
-        return null;
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNotNull(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public LeftWhereSelectFun<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V> isNotNull(boolean condition, GetterFun<M, V>... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
     }
 
     @Override

@@ -40,6 +40,9 @@ public class ColValueCondition implements Condition {
         this.value = value;
     }
 
+    public ColValueCondition() {
+    }
+
     public String getColName() {
         return colName;
     }

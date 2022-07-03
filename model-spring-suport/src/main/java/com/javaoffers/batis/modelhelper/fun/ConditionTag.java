@@ -86,6 +86,10 @@ public enum ConditionTag {
     RK(602," ) ", CategoryTag.WHERE_ON),
     BLANK(603,"", CategoryTag.WHERE_ON),
     COMMA(604,", ", CategoryTag.WHERE_ON),
+
+    /**key word**/
+    DISTINCT(700,"distinct",CategoryTag.SELECT_COL)
+
     ;
 
     private int code;

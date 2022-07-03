@@ -44,6 +44,15 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        //testUpdate();
+
+        testSelect();
+
+        System.exit(0);
+
+    }
+
+    private void testUpdate() throws JsonProcessingException {
         Long id = 109L;
 
         crudUserMapper.update()
@@ -81,9 +90,6 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
 
 
         print(user);
-
-        System.exit(0);
-
     }
 
     public void testInsert() throws JsonProcessingException {
@@ -124,6 +130,14 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
         User exm = crudUserMapper.select().col(User::getId).where().ex();
         print(exm);
         System.out.println("-------------------------------");
+
+        exm = crudUserMapper.select()
+                .distinct()
+                .colAll()
+                .where()
+                .isNotNull(User::getId)
+                .ex();
+        print(exm);
 
         /**
          * 带有条件的查询

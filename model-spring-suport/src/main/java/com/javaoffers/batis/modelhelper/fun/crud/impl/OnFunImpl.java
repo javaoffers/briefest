@@ -346,6 +346,38 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     }
 
     @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNull(GetterFun<M2, Object>... cols) {
+        for(GetterFun<M2,Object> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNull(boolean condition, GetterFun<M2, Object>... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNotNull(GetterFun<M2, Object>... cols) {
+        for(GetterFun<M2,Object> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNotNull(boolean condition, GetterFun<M2, Object>... cols) {
+        if(condition){
+            isNotNull(cols);
+        }
+        return this;
+    }
+
+    @Override
     public OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(String existsSql) {
         conditions.add(new ExistsCondition<V>(existsSql));
         return this;

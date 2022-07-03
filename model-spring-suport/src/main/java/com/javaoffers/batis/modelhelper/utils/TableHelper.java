@@ -110,6 +110,36 @@ public class TableHelper {
         return colName;
     }
 
+    public static String getColNameNotAs(GetterFun myFun){
+        String methodName = StringUtils.EMPTY;
+        String colName = StringUtils.EMPTY;
+        try {
+            // 直接调用writeReplace
+            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
+            writeReplace.setAccessible(true);
+            Object sl = writeReplace.invoke(myFun);
+            SerializedLambda serializedLambda = (SerializedLambda) sl;
+            methodName = serializedLambda.getImplMethodName();
+            String implClass = serializedLambda.getImplClass();
+            parseTableInfo(implClass);
+            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
+            Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
+            fieldNameOfGetter.computeIfAbsent(methodName, k->{
+                k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
+                k = k.substring(0,1).toLowerCase()+k.substring(1);
+                return k;
+            });
+            String fieldName = fieldNameOfGetter.get(methodName);
+            colName = tableInfo.getColNameOfModel().get(fieldName);
+            colName = tableInfo.getTableName()+"."+colName;
+            return colName;
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return colName;
+    }
+
+
     public static Pair<String,String> getColNameAndAliasName(GetterFun myFun){
         String methodName = StringUtils.EMPTY;
         try {

@@ -15,6 +15,12 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 public interface SelectFun<M, C extends GetterFun<M,Object> , V> {
 
     /**
+     * 去重复关键字 distinct
+     * @return this
+     */
+    public SelectFun<M,C,V> distinct();
+
+    /**
      * 添加查询字段
      * @param cols
      * @return

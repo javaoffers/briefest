@@ -327,6 +327,20 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      */
     public R isNull(boolean condition, C... cols);
 
+    /**
+     * is null
+     * @return this
+     */
+    public R isNotNull(C... cols);
+
+    /**
+     * is null
+     * @param condition
+     * @param cols
+     * @return
+     */
+    public R isNotNull(boolean condition, C... cols);
+
 
     /**
      * where exists（）判断语句

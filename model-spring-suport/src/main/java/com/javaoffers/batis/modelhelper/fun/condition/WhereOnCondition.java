@@ -86,9 +86,9 @@ public  class WhereOnCondition<V> implements Condition {
                 cls.append(", ");
             }
             i = i+1;
-            String colNameOnly = TableHelper.getColNameOnly(colName);
-            this.colNames.add(colNameOnly);
-            cls.append(colNameOnly);
+            String colNameStr = TableHelper.getColNameNotAs(colName);
+            this.colNames.add(colNameStr);
+            cls.append(colNameStr);
         }
         this.colName = cls.toString();
         this.value = value;

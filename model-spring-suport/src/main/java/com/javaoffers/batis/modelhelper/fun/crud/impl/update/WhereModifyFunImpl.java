@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.CondSQLCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.IsNullOrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.AddPatchMarkCondition;
@@ -266,6 +267,38 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     @Override
     public WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
         whereFun.notIn(condition, col, values);
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> isNull(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> isNull(boolean condition, GetterFun<M, V>... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> isNotNull(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public WhereModifyFun<M, V> isNotNull(boolean condition, GetterFun<M, V>... cols) {
+        if(condition){
+            isNotNull(cols);
+        }
         return this;
     }
 

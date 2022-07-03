@@ -12,6 +12,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.AddPatchMarkCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
@@ -86,15 +87,18 @@ public class ConditionParse {
                 }else if(condition instanceof WhereConditionMark){
                     conditions.addFirst(condition);
                     parseWhereCondition(conditions, upateParam, updateAppender);
+                }else if(condition instanceof AddPatchMarkCondition){
+                    conditions.addFirst(condition);
+                    break;
                 }
             }
             return SQLInfo.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
                     .build();
-
-
         }else if(condition instanceof UpdateAllColValueCondition){
+            UpdateAllColValueCondition ua = (UpdateAllColValueCondition) condition;
+            String sql = ua.getSql();
 
         }
         return null;

@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
 import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.delete.DeleteFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 
@@ -20,6 +21,10 @@ public class CrudMapperMethodExcutor {
 
     public static UpdateFunImpl update(){
         return new UpdateFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
+    }
+
+    public static DeleteFunImpl delete(){
+        return new DeleteFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
 }

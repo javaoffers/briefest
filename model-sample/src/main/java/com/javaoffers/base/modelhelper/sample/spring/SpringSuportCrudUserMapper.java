@@ -62,8 +62,6 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .eq(User::getId,id)
                 .ex();
 
-        UpdateFun<User, GetterFun<User, Object>, Serializable> update = crudUserMapper.update();
-
         crudUserMapper.update().npdateNull()
                 .col(User::getBirthday, new Date())
                 //name not will update . because its null
@@ -88,6 +86,24 @@ public class SpringSuportCrudUserMapper implements InitializingBean {
                 .eq(User::getId, id)
                 .ex();
 
+        crudUserMapper.update()
+                .npdateNull()
+                .colAll(user)
+                .colAll(user)
+                .where()
+                .eq(User::getId,1)
+                .ex();
+
+        crudUserMapper.update()
+                .npdateNull()
+                .col(User::getName,"zhou")
+                .where()
+                .eq(User::getId,1)
+                .addBatch()
+                .colAll(user)
+                .where()
+                .eq(User::getId,2)
+                .ex();
 
         print(user);
     }

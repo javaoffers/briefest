@@ -53,6 +53,19 @@ public class ConditionParse {
     }
 
     private static SQLInfo parseUpdate(LinkedList<Condition> conditions) {
+        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+        SQLInfo sqlInfo = parseUpdate2(conditions);
+        moreSQLInfo.addSqlInfo(sqlInfo);
+        Condition condition = null;
+        while((condition = conditions.peek()) != null){
+            condition.clean();
+            sqlInfo = parseUpdate2(conditions);
+            moreSQLInfo.addSqlInfo(sqlInfo);
+        }
+        return moreSQLInfo;
+    }
+
+    private static SQLInfo parseUpdate2(LinkedList<Condition> conditions) {
         Condition condition = conditions.pollFirst();
         String updateTableSql = null;
         Class modelClass = null;
@@ -99,8 +112,23 @@ public class ConditionParse {
         }else if(condition instanceof UpdateAllColValueCondition){
             UpdateAllColValueCondition ua = (UpdateAllColValueCondition) condition;
             String sql = ua.getSql();
-
+            StringBuilder updateAppender = new StringBuilder(sql);
+            HashMap<String, Object> upateParam = new HashMap<>(ua.getParams());
+            while ((condition = conditions.pollFirst()) != null){
+                if(condition instanceof WhereConditionMark){
+                    conditions.addFirst(condition);
+                    parseWhereCondition(conditions, upateParam, updateAppender);
+                }else if(condition instanceof AddPatchMarkCondition){
+                    conditions.addFirst(condition);
+                    break;
+                }
+            }
+            return SQLInfo.builder().sql(updateAppender.toString())
+                    .params(Arrays.asList(upateParam))
+                    .aClass(modelClass)
+                    .build();
         }
+        Assert.isTrue(false,"sql 表达式出现错误");
         return null;
     }
 

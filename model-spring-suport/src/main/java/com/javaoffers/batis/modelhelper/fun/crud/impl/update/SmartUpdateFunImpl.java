@@ -9,10 +9,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCo
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
-import com.javaoffers.batis.modelhelper.fun.crud.update.MoreUpdateFun;
-import com.javaoffers.batis.modelhelper.fun.crud.update.OneUpdateFun;
-import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
-import com.javaoffers.batis.modelhelper.fun.crud.update.UpdateFun;
+import com.javaoffers.batis.modelhelper.fun.crud.update.*;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Collection;
@@ -84,16 +81,16 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
     }
 
     @Override
-    public MoreUpdateFun<M, C, V> colAll(M model) {
+    public PrepareWhereModifyFun<M, C, V> colAll(M model) {
         this.conditions.add(new UpdateAllColValueCondition(isUpdateNull, mClass, model));
-        return this;
+        return new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
     }
 
     @Override
-    public MoreUpdateFun<M, C, V> colAll(boolean condition, M model) {
+    public PrepareWhereModifyFun<M, C, V> colAll(boolean condition, M model) {
         if(condition){
             colAll(model);
         }
-        return this;
+        return new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
     }
 }

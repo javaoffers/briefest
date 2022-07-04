@@ -18,4 +18,12 @@ public class SQLInfo {
     String sql;
     List<Map<String,Object>> params = new LinkedList<>();
 
+    public SQLInfo() {
+    }
+
+    public SQLInfo(Class aClass, String sql, List<Map<String, Object>> params) {
+        this.aClass = aClass;
+        this.sql = sql;
+        this.params = params;
+    }
 }

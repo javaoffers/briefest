@@ -1,9 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
-import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.batis.modelhelper.core.ConditionParse;
-import com.javaoffers.batis.modelhelper.core.LinkedConditions;
-import com.javaoffers.batis.modelhelper.core.SQLInfo;
+import com.javaoffers.batis.modelhelper.core.*;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -17,9 +14,8 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
 /**
@@ -27,10 +23,10 @@ import java.util.function.Consumer;
  * @Auther: create by cmj on 2022/5/4 20:42
  */
 public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
-
-    private LinkedConditions<Condition> conditions;
     
     private WhereSelectFunImpl whereFun;
+
+    private LinkedConditions<Condition> conditions;
 
     private Class modelClass;
 
@@ -316,11 +312,28 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public Long ex() {
-        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("参数： "+sqlInfo.getParams());
-        Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
-        return integer.longValue();
+        MoreSQLInfo moreSqlInfo = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
+        List<SQLInfo> sqlInfos = moreSqlInfo.getSqlInfos();
+        HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
+        for(SQLInfo sqlInfo : sqlInfos){
+            String sql = sqlInfo.getSql();
+            List<Map<String, Object>> params = sqlInfo.getParams();
+            List<Map<String, Object>> paramBatch = sqlbatch.get(sql);
+            if(paramBatch == null){
+                paramBatch = new LinkedList<Map<String, Object>>();
+                sqlbatch.put(sql, paramBatch);
+            }
+            paramBatch.addAll(params);
+            System.out.println("SQL: "+sql);
+            System.out.println("参数： "+params);
+        }
+        AtomicLong count = new AtomicLong();
+        sqlbatch.forEach((sql, params) ->{
+            Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sql, params);
+            count.addAndGet(integer);
+        });
+
+        return count.longValue();
     }
 
     @Override

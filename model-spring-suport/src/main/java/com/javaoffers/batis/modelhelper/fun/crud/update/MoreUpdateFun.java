@@ -18,7 +18,7 @@ public interface MoreUpdateFun <M, C extends GetterFun<M, Object>, V>  {
      * @param model
      * @return
      */
-    MoreUpdateFun<M,C,V> colAll(M model);
+    PrepareWhereModifyFun<M,C,V> colAll(M model);
 
     /**
      * update all Col . include null value
@@ -26,11 +26,7 @@ public interface MoreUpdateFun <M, C extends GetterFun<M, Object>, V>  {
      * @param model allCol
      * @return
      */
-    MoreUpdateFun<M,C,V> colAll(boolean condition , M model);
+    PrepareWhereModifyFun<M,C,V> colAll(boolean condition , M model);
 
-    /**
-     * where
-     * @return
-     */
-    WhereModifyFun<M,V> where();
+
 }

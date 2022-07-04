@@ -8,9 +8,13 @@ public class MoreSQLInfo extends SQLInfo {
 
     private List<SQLInfo> sqlInfos = new LinkedList<>();
 
-    MoreSQLInfo(Class aClass, String sql, List<Map<String, Object>> params) {
+    private MoreSQLInfo(Class aClass, String sql, List<Map<String, Object>> params) {
         super(aClass, sql, params);
         sqlInfos.add(new SQLInfo(aClass,sql,params));
+    }
+
+    public MoreSQLInfo() {
+        super();
     }
 
     public void addSqlInfo(SQLInfo sqlInfo){

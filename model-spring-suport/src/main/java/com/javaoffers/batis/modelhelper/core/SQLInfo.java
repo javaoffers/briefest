@@ -14,6 +14,7 @@ import java.util.Map;
 @Data
 @Builder
 public class SQLInfo {
+    boolean status;
     Class aClass;
     String sql;
     List<Map<String,Object>> params = new LinkedList<>();
@@ -21,7 +22,8 @@ public class SQLInfo {
     public SQLInfo() {
     }
 
-    public SQLInfo(Class aClass, String sql, List<Map<String, Object>> params) {
+    public SQLInfo(boolean status, Class aClass, String sql, List<Map<String, Object>> params) {
+        this.status = status;
         this.aClass = aClass;
         this.sql = sql;
         this.params = params;

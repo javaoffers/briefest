@@ -90,7 +90,14 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
                 .npdateNull()
                 .colAll(user)
                 .where()
-                .eq(User::getId,1)
+                .eq(User::getId,id)
+                .ex();
+
+        crudUserMapper.update()
+                .npdateNull()
+                .colAll(new User())
+                .where()
+                .eq(User::getId,id)
                 .ex();
 
         crudUserMapper.update()

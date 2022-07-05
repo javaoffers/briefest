@@ -1,5 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -8,17 +10,14 @@ public class MoreSQLInfo extends SQLInfo {
 
     private List<SQLInfo> sqlInfos = new LinkedList<>();
 
-    private MoreSQLInfo(Class aClass, String sql, List<Map<String, Object>> params) {
-        super(aClass, sql, params);
-        sqlInfos.add(new SQLInfo(aClass,sql,params));
-    }
-
     public MoreSQLInfo() {
         super();
     }
 
     public void addSqlInfo(SQLInfo sqlInfo){
-        sqlInfos.add(sqlInfo);
+        if(sqlInfo!=null && sqlInfo.isStatus()){
+            sqlInfos.add(sqlInfo);
+        }
     }
 
     public List<SQLInfo> getSqlInfos(){

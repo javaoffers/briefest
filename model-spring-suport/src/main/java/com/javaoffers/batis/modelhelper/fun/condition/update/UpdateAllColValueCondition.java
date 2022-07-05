@@ -19,6 +19,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     boolean isUpdateNull;
 
+    boolean isExistsNoneNullValue;
+
     Class modelClass;
 
     Map<String,Object> params = new HashMap<>();
@@ -40,6 +42,9 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     @Override
     public String getSql() {
+        if(!isUpdateNull && !isExistsNoneNullValue){
+            return "";
+        }
         return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
     }
 
@@ -76,6 +81,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 Object oValue = field.get(model);
                 params.put(cloName, oValue);
                 if(oValue!=null){
+                    isExistsNoneNullValue = true;
                     if(status.get() == 0){
                         updateSql.append(ConditionTag.SET.getTag());
                         status.incrementAndGet();

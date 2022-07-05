@@ -9,6 +9,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.SelectTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereConditionMark;
+import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
@@ -16,6 +17,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.update.AddPatchMarkConditi
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import java.util.Arrays;
@@ -81,6 +83,7 @@ public class ConditionParse {
             //没有要更新的字段
             return null;
         }
+        boolean status = false;
         if(condition instanceof UpdateColValueCondition){
             UpdateColValueCondition updateColValueCondition = (UpdateColValueCondition) condition;
             StringBuilder updateAppender = new StringBuilder();
@@ -101,7 +104,6 @@ public class ConditionParse {
                     conditions.addFirst(condition);
                     parseWhereCondition(conditions, upateParam, updateAppender);
                 }else if(condition instanceof AddPatchMarkCondition){
-                    conditions.addFirst(condition);
                     break;
                 }
             }
@@ -112,6 +114,9 @@ public class ConditionParse {
         }else if(condition instanceof UpdateAllColValueCondition){
             UpdateAllColValueCondition ua = (UpdateAllColValueCondition) condition;
             String sql = ua.getSql();
+            if(StringUtils.isBlank(sql)){
+                status = false;
+            }
             StringBuilder updateAppender = new StringBuilder(sql);
             HashMap<String, Object> upateParam = new HashMap<>(ua.getParams());
             while ((condition = conditions.pollFirst()) != null){
@@ -119,13 +124,13 @@ public class ConditionParse {
                     conditions.addFirst(condition);
                     parseWhereCondition(conditions, upateParam, updateAppender);
                 }else if(condition instanceof AddPatchMarkCondition){
-                    conditions.addFirst(condition);
                     break;
                 }
             }
             return SQLInfo.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
+                    .status(status)
                     .build();
         }
         Assert.isTrue(false,"sql 表达式出现错误");
@@ -249,7 +254,7 @@ public class ConditionParse {
             sql.append(conditions.pollFirst().getSql());
             sql.append(" 1=1 ");
             Condition where = null;
-            for (; (where = conditions.pollFirst()) != null; ) {
+            for (; (where = conditions.pollFirst()) != null && where instanceof WhereOnCondition; ) {
                 if (where instanceof OrCondition) {
                     and = where.getSql();
                     continue;
@@ -258,7 +263,9 @@ public class ConditionParse {
                     and = ConditionTag.AND.getTag();
                 }
             }
-
+            if(where != null){
+                conditions.addFirst(where);
+            }
         }
     }
 

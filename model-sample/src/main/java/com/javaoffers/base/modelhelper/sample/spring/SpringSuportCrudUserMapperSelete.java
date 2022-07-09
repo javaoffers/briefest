@@ -247,9 +247,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 //按照子表分分组
                 .groupBy(UserOrder::getUserId)
                 // 根据主表排序
-                .orderA(User::getBirthday)
+                .orderA(User::getName)
                 //根据子表排序
-                .orderA(UserOrder::getIsDel)
+                .orderA(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
@@ -267,9 +267,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(UserOrder::getUserId)
                 .having()
                 // 根据主表排序
-                .orderA(User::getBirthday)
+                .orderA(User::getId)
                 //根据子表排序
-                .orderD(UserOrder::getIsDel)
+                .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
         HashMap<String, Object> params = new HashMap<>();
@@ -290,9 +290,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(UserOrder::getUserId)
                 .having()
                 // 根据主表排序
-                .orderA(User::getBirthday)
+                .orderA(User::getName)
                 //根据子表排序
-                .orderD(UserOrder::getIsDel)
+                .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
@@ -322,14 +322,14 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(UserOrder::getUserId)
                 .having()
                 // 根据主表排序
-                .orderA(User::getBirthday)
+                .orderA(User::getName)
                 //根据子表排序
-                .orderD(UserOrder::getIsDel)
+                .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
         ex1 = crudUserMapper.select()
-                .col(User::getBirthday)
+                .col(AggTag.MAX,User::getBirthday)
                 .where()
                 .condSQL("2=2")
                 .groupBy("left(birthday,10)")
@@ -337,7 +337,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         print(ex1);
 
         ex1 = crudUserMapper.select()
-                .col("birthday")
+                .col("max(birthday)")
                 .where()
                 .groupBy("left(birthday,10)")
                 .ex();

@@ -171,9 +171,9 @@ public class ConditionParse {
                 if(insertColNamesAppender.length() == 0){
                     isColValueCondition = true;
                     insertColNamesAppender.append(insertIntoTableSql);
-                    insertColNamesAppender.append(" ( ");
+                    insertColNamesAppender.append("(");
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append("( ");
+                    insertValueAppender.append("(");
 
                 }else{
                     insertColNamesAppender.append(",");
@@ -201,8 +201,8 @@ public class ConditionParse {
         }
 
         if(isColValueCondition){
-            insertColNamesAppender.append(" )");
-            insertValueAppender.append(" ) ");
+            insertColNamesAppender.append(")");
+            insertValueAppender.append(")");
             paramsList.add(valuesParam);
         }
 
@@ -234,7 +234,6 @@ public class ConditionParse {
             Condition leftJoin = conditions.pollFirst();
             parseSelectClo(conditions, selectB);
             selectB.append(fromTable);// a left join b
-            selectB.append(" ");
             selectB.append(leftJoin.getSql());
             //指定on条件
             Condition on = null;
@@ -261,7 +260,7 @@ public class ConditionParse {
         condition.clean();
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
-                .sql(selectB.toString().replaceAll(" +", " "))
+                .sql(selectB.toString())
                 .build();
     }
 

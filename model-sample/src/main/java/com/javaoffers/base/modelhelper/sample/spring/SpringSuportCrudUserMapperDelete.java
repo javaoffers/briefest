@@ -34,6 +34,8 @@ public class SpringSuportCrudUserMapperDelete implements InitializingBean {
         crudUserMapper.delete()
                 .where()
                 .eq(User::getId, 2)
+                //.isNotNull(User::getId)
+                .isNull(User::getId)
                 .ex();
 
         System.exit(0);

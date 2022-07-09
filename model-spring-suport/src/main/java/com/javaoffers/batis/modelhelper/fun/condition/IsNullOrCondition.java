@@ -14,7 +14,7 @@ public class IsNullOrCondition<V> extends WhereOnCondition<V> {
 
     @Override
     public String getSql() {
-        return getColName() +" "+ getTag().getTag();
+        return getColName() + getTag().getTag();
     }
 
     @Override

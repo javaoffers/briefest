@@ -15,6 +15,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
@@ -311,7 +312,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
     }
 
     @Override
-    public Long ex() {
+    public Integer ex() {
         MoreSQLInfo moreSqlInfo = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfos = moreSqlInfo.getSqlInfos();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
@@ -327,13 +328,13 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
             System.out.println("SQL: "+sql);
             System.out.println("参数： "+params);
         }
-        AtomicLong count = new AtomicLong();
+        AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{
             Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sql, params);
             count.addAndGet(integer);
         });
 
-        return count.longValue();
+        return count.get();
     }
 
     @Override

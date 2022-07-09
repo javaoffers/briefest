@@ -25,6 +25,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     Map<String,Object> params = new HashMap<>();
 
+    Map<String,Object> npdateNullParams = new HashMap<>();
+
     Object model;
 
     private String tableName;
@@ -50,7 +52,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     @Override
     public Map<String, Object> getParams() {
-        return this.params;
+        return isUpdateNull ? params : npdateNullParams;
     }
 
     public UpdateAllColValueCondition(boolean isUpdateNull, Class modelClass, Object model) {
@@ -81,6 +83,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 Object oValue = field.get(model);
                 params.put(cloName, oValue);
                 if(oValue!=null){
+                    npdateNullParams.put(cloName, oValue);
                     isExistsNoneNullValue = true;
                     if(status.get() == 0){
                         updateSql.append(ConditionTag.SET.getTag());

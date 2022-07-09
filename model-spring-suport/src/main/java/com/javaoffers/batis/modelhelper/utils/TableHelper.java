@@ -340,7 +340,6 @@ public class TableHelper {
                     parseModelClass(m2c);
                     tableInfo = tableInfoMap.get(m2c);
                 }
-
             }
         }
         return tableInfo.getTableName();

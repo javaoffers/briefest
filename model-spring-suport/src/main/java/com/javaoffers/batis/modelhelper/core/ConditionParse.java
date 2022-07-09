@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.core;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.DeleteFromCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.OnConditionMark;
@@ -47,11 +48,25 @@ public class ConditionParse {
                     return parseInsert(conditions);
                 case UPDATE:
                     return parseUpdate(conditions);
+                case DELETE_FROM:
+                    return parseDelete(conditions);
             }
         }finally {
             condition.clean();
         }
         return null;
+    }
+
+    private static SQLInfo parseDelete(LinkedList<Condition> conditions) {
+        DeleteFromCondition condition = (DeleteFromCondition)conditions.pollFirst();
+        StringBuilder deleteAppender = new StringBuilder(condition.getSql());
+        HashMap<String, Object> deleteParams = new HashMap<>();
+        parseWhereCondition(conditions, deleteParams, deleteAppender);
+        return SQLInfo.builder().sql(deleteAppender.toString())
+                .params(Arrays.asList(deleteParams))
+                .aClass(condition.getModelClass())
+                .status(true)
+                .build();
     }
 
     private static SQLInfo parseUpdate(LinkedList<Condition> conditions) {
@@ -85,6 +100,7 @@ public class ConditionParse {
         }
         boolean status = false;
         if(condition instanceof UpdateColValueCondition){
+            status = true;
             UpdateColValueCondition updateColValueCondition = (UpdateColValueCondition) condition;
             StringBuilder updateAppender = new StringBuilder();
             HashMap<String, Object> upateParam = new HashMap<>();
@@ -95,6 +111,7 @@ public class ConditionParse {
             upateParam.putAll(updateColValueCondition.getParams());
             while ((condition = conditions.pollFirst()) != null){
                 if(condition instanceof UpdateColValueCondition){
+
                     updateColValueCondition = (UpdateColValueCondition) condition;
                     colNameSql = updateColValueCondition.getSql();
                     updateAppender.append(",");
@@ -110,12 +127,13 @@ public class ConditionParse {
             return SQLInfo.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
+                    .status(status)
                     .build();
         }else if(condition instanceof UpdateAllColValueCondition){
             UpdateAllColValueCondition ua = (UpdateAllColValueCondition) condition;
             String sql = ua.getSql();
-            if(StringUtils.isBlank(sql)){
-                status = false;
+            if(!StringUtils.isBlank(sql)){
+                status = true;
             }
             StringBuilder updateAppender = new StringBuilder(sql);
             HashMap<String, Object> upateParam = new HashMap<>(ua.getParams());

@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>model-spring-suport</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <dependencies>
 
         <dependency>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>model-helper</artifactId>
-            <version>1.0.3</version>
+            <version>1.0.4</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->

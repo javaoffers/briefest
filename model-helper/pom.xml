@@ -10,7 +10,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>model-helper</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <dependencies>
         <!-- mybatis -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->

@@ -18,7 +18,8 @@ public class InitMapper {
     private DataSource bean;
     public InitMapper(DataSource bean) {
         this.bean = bean;
-        JdbcTemplate jdbcTemplate = new JdbcTemplate((DataSource) bean);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate( bean);
         BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
+        new TableHelper( bean);
     }
 }

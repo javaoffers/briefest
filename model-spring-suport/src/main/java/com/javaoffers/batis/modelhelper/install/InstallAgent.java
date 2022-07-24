@@ -5,6 +5,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +21,8 @@ import javax.sql.DataSource;
 public class InstallAgent implements BeanFactoryPostProcessor {
 
     @Bean
-    public InitMapper setDataSource(){
-        return new InitMapper();
+    public InitMapper setDataSource(DataSource dataSource){
+        return new InitMapper(dataSource);
     }
 
     @Override

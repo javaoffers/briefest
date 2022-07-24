@@ -14,14 +14,11 @@ import javax.sql.DataSource;
  * @Description:
  * @Auther: create by cmj on 2022/5/3 17:27
  */
-public class InitMapper implements BeanPostProcessor {
-    @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-        if(bean instanceof DataSource){
-            JdbcTemplate jdbcTemplate = new JdbcTemplate((DataSource) bean);
-            BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
-            new TableHelper((DataSource) bean);
-        }
-        return bean;
+public class InitMapper {
+    private DataSource bean;
+    public InitMapper(DataSource bean) {
+        this.bean = bean;
+        JdbcTemplate jdbcTemplate = new JdbcTemplate((DataSource) bean);
+        BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
     }
 }

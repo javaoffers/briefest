@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;
@@ -218,6 +219,7 @@ public class TableHelper {
      */
     private static void parseModelClass(Class<?> modelClazz) {
         BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
+        Assert.isTrue(table != null, " base model is null. please use @BaseModel on class");
         String tableName = table.value();
         if(StringUtils.isBlank(tableName)){
             String simpleName = modelClazz.getSimpleName();

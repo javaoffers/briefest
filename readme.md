@@ -21,10 +21,6 @@ Currently under development, welcome to participate in this project.
   <p>
 
  
-- 使用环境mvn
-  ```
-  
-  ```  
-- demo案例
+- demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     

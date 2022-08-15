@@ -55,7 +55,7 @@ public class SmartModelParse implements ModelParse {
         if(clazz==null||list_map==null||list_map.size()==0) {
             return linkedList;
         }
-        Map<String, List<Map<String, Object>>> map_ = new HashMap<String, List<Map<String, Object>>>();//存放切分后的数据（根据唯一字段的值分组）
+        Map<String, List<Map<String, Object>>> map_ = new LinkedHashMap<>();//存放切分后的数据（根据唯一字段的值分组）
         Set<Field> fields = Utils.getFields(clazz);
         checkIsExistsSameSuperModel(clazz);
         ArrayList<Field> ones = new ArrayList<Field>();//非数组或集合model,一对一

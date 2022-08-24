@@ -4,10 +4,7 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * create by cmj
@@ -23,7 +20,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private String sqlValues;
 
-    private HashMap<String, Object> param = new HashMap<>();
+    private HashMap<String, Object> param = new LinkedHashMap<>();
 
 
     @Override
@@ -65,8 +62,8 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.sqlColNames = "( "+ String.join(", ", colNamesSet)+" )";
         StringBuilder valuesAppender = new StringBuilder("(");
         LinkedList<String> colNames = new LinkedList<>();
-        for(String colName : param.keySet()){
-            colNames.addFirst("#{"+colName+"}");
+        for(String colName : colNamesSet){
+            colNames.add("#{"+colName+"}");
         }
         valuesAppender.append(String.join(",", colNames));
         valuesAppender.append(")");

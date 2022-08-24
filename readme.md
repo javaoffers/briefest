@@ -8,11 +8,51 @@ SQL statement. This makes writing SQL like writing java code. Here we call it JQ
 The SQL error rate is reduced. JQL aims to decompose complex SQL into simple SQL Therefore, JQL supports at most two table Association queries during design. We do not recommend more than 2 tables
 join。 This will reduce the readability and maintainability of SQL. Don't think that complex nested SQL is a bull's SQL It's of no value except to pretend. And in the modelhelper
 New writing formats are supported in. The default method can be written in the java interface and the JQL API can be directly operated internally (provided that it inherits crudmapper).
-Currently under development, welcome to participate in this project.
-
+Currently under development, welcome to participate in this project. Let me write JQL in Java stream to improve development efficiency. Less code and more fluent writing form. I'm sure you'll love her 
   <p>
+    
+- Tutorial 
+ <p>
+    a normal query
+ </p>
 
+ ```java
+ List users = crudUserMapper 
+    .select() 
+    .colAll() 
+    .where() 
+    .exs(); 
+ ```
  
+  <p>
+This JQL will eventually be translated as select * from user. Here, colall means to query all table   fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: 
+ </p>
+ 
+ ```java
+ List users = crudusermapper
+     .select()
+     .col (user:: getbirthday)
+     .col (user:: getname)
+     .where()
+    .exs();
+ ```
+ 
+ <p>
+ You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: 
+ </p>
+ 
+ ```java
+ user user = crudusermapper
+ .select() 
+ .col(User::getBirthday) 
+ .col(User::getName) 
+ .where() 
+ .eq(User::getId, 1) 
+ .ex();
+ ```
+ <p>In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
+  </p>  
+  
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     

@@ -13,12 +13,40 @@ Currently under development, welcome to participate in this project. Let me writ
     
 - Tutorial 
   - a normal query
+    ```java
+    List users = crudUserMapper 
+    .select() 
+    .colAll() 
+    .where() 
+    .exs(); 
+    ```
   <p>
- List users = = crudUserMapper .select() .colAll() .where() .exs(); This JQL will eventually be translated as select * from user. Here, colall means to query all table fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: List users = crudusermapper. select(). col (user:: getbirthday). col (user:: getname). where(). exs(); You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: user user = crudusermapper select() .col(User::getBirthday) .col(User::getName) .where() .eq(User::getId, 1) .ex(); In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL的触发必须要经过where 和 ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
+ This JQL will eventually be translated as select * from user. Here, colall means to query all table fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: 
+  </p>
+    ```java
+    List users = crudusermapper
+     .select()
+     .col (user:: getbirthday)
+     .col (user:: getname)
+     .where()
+     .exs();
+    ```
+ 
+ <p>
+ You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: </p>
+ ```
+ user user = crudusermapper
+ .select() 
+ .col(User::getBirthday) 
+ .col(User::getName) 
+ .where() 
+ .eq(User::getId, 1) 
+ .ex();
+ ```
+ <p>In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL的触发必须要经过where 和 ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
   </p>  
 
-    
- 
+  
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     

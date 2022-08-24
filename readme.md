@@ -12,14 +12,17 @@ Currently under development, welcome to participate in this project. Let me writ
   <p>
     
 - Tutorial 
-  - a normal query
-    ```java
-    List users = crudUserMapper 
+ <p>
+    a normal query
+ </p>
+
+ ```java
+ List users = crudUserMapper 
     .select() 
     .colAll() 
     .where() 
     .exs(); 
-    ```
+ ```
  
   <p>
 This JQL will eventually be translated as select * from user. Here, colall means to query all table   fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: 

@@ -52,7 +52,9 @@ public class InsertAllColValueCondition implements InsertCondition {
             try {
                 Object oValue = field.get(model);
                 //value 可以为null
-                param.putIfAbsent(colName, oValue);
+                if(oValue != null){
+                    param.putIfAbsent(colName, oValue);
+                }
 
             }catch (Exception e){
                 e.printStackTrace();

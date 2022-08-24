@@ -52,13 +52,13 @@ public class InsertAllColValueCondition implements InsertCondition {
             try {
                 Object oValue = field.get(model);
                 //value 可以为null
-                param.put(colName, oValue);
+                param.putIfAbsent(colName, oValue);
 
             }catch (Exception e){
                 e.printStackTrace();
             }
         });
-        Set<String> colNamesSet = colAllAndFieldOnly.keySet();
+        Set<String> colNamesSet = param.keySet();
         this.sqlColNames = "( "+ String.join(", ", colNamesSet)+" )";
         StringBuilder valuesAppender = new StringBuilder("(");
         LinkedList<String> colNames = new LinkedList<>();

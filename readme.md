@@ -11,27 +11,9 @@ New writing formats are supported in. The default method can be written in the j
 Currently under development, welcome to participate in this project. Let me write JQL in Java stream to improve development efficiency. Less code and more fluent writing form. I'm sure you'll love her 
   <p>
 - 教程
-  - 一个普通的查询   
+ - 一个普通的查询   
   <p>
-    List<User> users =  = crudUserMapper
-                .select()
-                .colAll()
-                .where()
-                .exs(); 这个JQL 最终会翻译为 select * from user . 这里的colAll 表示查询所有表字段。如果你想查询指定的字段，比如查询name和 birthday字段，则可以这样：
-    List<User> users = crudUserMapper
-                .select()
-                .col(User::getBirthday)
-                .col(User::getName)
-                .where()
-                .exs(); 可以通过col() 指定具体想查询的字段，这里的where()和 sql中的关键字where一样，比如查询id值为1的用户，则可以这样写:
-    User user = crudUserMapper.select()
-                .col(User::getBirthday)
-                .col(User::getName)
-                .where()
-                .eq(User::getId, 1)
-                .ex(); 在这三个案例中你会发现有两个特殊函数 exs(), ex(). 这两个函数表示触发执行。exs() 通常用于查询的数据较多，返回的结果为List<T>,而ex() 用于只返回一个结果 T.
-    
-    
+ List users = = crudUserMapper .select() .colAll() .where() .exs(); This JQL will eventually be translated as select * from user. Here, colall means to query all table fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: List users = crudusermapper. Select(). Col (user:: getbirthday). Col (user:: getname). Where(). Exs(); You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: user user = crudusermapper select() .col(User::getBirthday) .col(User::getName) .where() .eq(User::getId, 1) .ex(); In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. Exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result t
   </p>  
 
     

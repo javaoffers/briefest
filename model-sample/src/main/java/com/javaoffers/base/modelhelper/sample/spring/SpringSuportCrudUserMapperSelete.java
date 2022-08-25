@@ -48,7 +48,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     public void testSelect() throws Exception {
 
         /**
-         * 查询指定的字段
+         * Queries the specified field
          */
         User exm = crudUserMapper.select().col(User::getId).where().ex();
         print(exm);
@@ -63,7 +63,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         print(exm);
 
         /**
-         * 带有条件的查询
+         * Queries with conditions
          */
         exm = crudUserMapper
                 .select()
@@ -75,22 +75,22 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         System.out.println("-------------------------------");
 
         /**
-         * 查询所有字段
+         * Query all fields
          */
         User ex1 = crudUserMapper.select().colAll().where().ex();
         print(ex1);
         System.out.println("-------------------------------");
 
         /**
-         * left join 查询。 只支持 两张表 left join
+         * The query supports only two tables left join
          */
         User ex = crudUserMapper.select()
                 .colAll()
                 .leftJoin(UserOrder::new)
                 .colAll()
                 .on()
-                .oeq(User::getId, UserOrder::getUserId)// a left join b表关系
-                .eq(UserOrder::getIsDel, 1)// b 表字段值
+                .oeq(User::getId, UserOrder::getUserId)// a left join b table relationships
+                .eq(UserOrder::getIsDel, 1)// b Table field values
                 .where()
                 .eq(User::getId, 1)
                 .or()
@@ -112,7 +112,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .exs();
         print(exs);
 
-        System.out.println("-----------实现group by--------------------");
+        System.out.println("-----------group by--------------------");
         List<User> exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -121,7 +121,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(User::getBirthday,User::getName)
                 .exs();
 
-        System.out.println("-----------实现group by ,  having --------------------");
+        System.out.println("-----------group by ,  having --------------------");
         exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -133,7 +133,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .gt(AggTag.COUNT,User::getId,2)
                 .exs();
 
-        System.out.println("-----------实现group by ,  having, limitPage  --------------------");
+        System.out.println("-----------group by ,  having, limitPage  --------------------");
         exs1 = crudUserMapper.select()
                 .col(User::getBirthday)
                 .col(User::getName)
@@ -146,7 +146,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现left join , group by  --------------------");
+        System.out.println("-----------left join , group by  --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -154,7 +154,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                .groupBy(User::getName, User::getId)//按照主表分组
+                .groupBy(User::getName, User::getId)//According to the main group
                 .exs();
 
         exs1 = crudUserMapper.select()
@@ -164,7 +164,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                .groupBy(UserOrder::getUserId) //可以直接按照子表分分组
+                .groupBy(UserOrder::getUserId) //It can be grouped directly by subtable
                 .exs();
 
         exs1 = crudUserMapper.select()
@@ -174,13 +174,13 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                //按照主表分组
+                //Group by main table
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .exs();
 
-        System.out.println("-----------实现left join , group by , limitPage  --------------------");
+        System.out.println("-----------left join , group by , limitPage  --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -188,14 +188,14 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                //按照主表分组
+                //Group by main table
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现left join , group by , having limitPage  --------------------");
+        System.out.println("-----------left join , group by , having limitPage  --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -203,23 +203,23 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                .groupBy(User::getName, User::getId)//按照主表分组
-                .groupBy(UserOrder::getUserId) //按照子表分分组
+                .groupBy(User::getName, User::getId)//Group by main table
+                .groupBy(UserOrder::getUserId) //Group according to sub-table
                 .having()
-                //主表统计函数
+                //Main table statistics function
                 .eq(AggTag.COUNT,User::getName,1)
                 .or()
                 .unite(unite->{
                     unite.in(AggTag.COUNT, UserOrder::getUserId,1 )
                         .in(AggTag.COUNT, UserOrder::getUserId,1);
                 })
-                //子表统计函数
+                //Subtable statistics function
                 .gt(AggTag.COUNT,UserOrder::getOrderId,1)
                 .limitPage(1,10)
                 .exs();
 
 
-        System.out.println("-----------实现left join , order by , limitPage --------------------");
+        System.out.println("-----------left join , order by , limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -227,14 +227,14 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                // 根据主表排序
+                // Sort by primary table
                 .orderA(User::getBirthday)
-                //根据子表排序
+                //Sort by subtable
                 .orderA(UserOrder::getIsDel)
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现left join , group by  , order by, limitPage --------------------");
+        System.out.println("-----------left join , group by  , order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)
@@ -242,18 +242,18 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                //按照主表分组
+                //Group by main table
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
-                // 根据主表排序
+                // Sort by primary table
                 .orderA(User::getName)
-                //根据子表排序
+                //Sort by subtable
                 .orderA(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现 inner join , group by  , having , order by, limitPage --------------------");
+        System.out.println("----------- inner join , group by  , having , order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .innerJoin(UserOrder::new)
@@ -261,14 +261,14 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
-                //按照主表分组
+                //Group by main table
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .having()
-                // 根据主表排序
+                // Sort by primary table
                 .orderA(User::getId)
-                //根据子表排序
+                //Sort by subtable
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
@@ -284,46 +284,46 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .condSQL("1=1")
                 .condSQL("user.id in (#{ids})", params)
-                //按照主表分组
+                //Group by main table
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .having()
-                // 根据主表排序
+                // Sort by primary table
                 .orderA(User::getName)
-                //根据子表排序
+                //Sort by subtable
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------实现 inner join on unite, where unite  group by  , having unite, order by, limitPage --------------------");
+        System.out.println("----------- inner join on unite, where unite  group by  , having unite, order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .innerJoin(UserOrder::new)
                 .col(AggTag.MAX, UserOrder::getOrderName)
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)
-                //支持 and (xxx )
+                //support and (xxx )
                 .unite(unite->{
                         unite.eq(UserOrder::getUserId,1)
                             .or()
                             .eq(UserOrder::getUserId, 2);
                 })
                 .where()
-                //支持 and (xxx )
+                //support and (xxx )
                 .unite(unite->{
                          unite.eq(User::getId,1)
                             .or()
                             .eq(User::getId,2);
                 })
-                //按照主表分组
+                //According to the main group
                 .groupBy(User::getName, User::getId)
-                //按照子表分分组
+                //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .having()
-                // 根据主表排序
+                // Sort by primary table
                 .orderA(User::getName)
-                //根据子表排序
+                //Sort by subtable
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
@@ -345,27 +345,27 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
 
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryAll-------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method queryAll-------------------");
         List<User> users = crudUserMapper.queryAll();
         print(users);
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryAllAndOrder------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method queryAllAndOrder------------------");
         users = crudUserMapper.queryAllAndOrder();
         print(users);
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserById------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method queryUserById------------------");
         User user = crudUserMapper.queryUserById(1);
         print(user);
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserAndOrderByUserId------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method queryUserAndOrderByUserId------------------");
         user = crudUserMapper.queryUserAndOrderByUserId(1);
         print(user);
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 countUsers ------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method countUsers ------------------");
         long l = crudUserMapper.countUsers();
         LOGUtils.printLog(l);
 
-        System.out.println("-----------实现新的方式查询 ,在接口中书写 default 方法 queryUserAndOrderByUserId------------------");
+        System.out.println("-----------Implement a new way to query, written in the interface default method queryUserAndOrderByUserId------------------");
         Date birthday = ConvertRegisterSelectorDelegate.convert.converterObject(Date.class, "2021-12-13");
         user = crudUserMapper.queryUserByBrithday(birthday);
         print(user);

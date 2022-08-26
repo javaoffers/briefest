@@ -53,9 +53,13 @@ This JQL will eventually be translated as select * from user. Here, colall means
  <p>In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
   </p>  
   <p>
-    更多的查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+    More query cases：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
   </p>
-  
+
+<p>
+  Query Operation
+</p>  
+
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     

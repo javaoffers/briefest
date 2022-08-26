@@ -15,9 +15,31 @@ Currently under development, welcome to participate in this project. Let me writ
  <p>
     A Normal Query
  </p>
+ <p>
+    Before looking at the operation, let's take a look at the data structure: there are two key annotations here.
+     @BaseModel is used to indicate that the class belongs to the model class (the class name is the same as the table name,
+      ModelHelp will eventually convert the camel case class name into an underscore table name, and the attributes are the same), 
+      @BaseUnique indicates the only attribute in the class (corresponding to A unique attribute in a table, which can be multiple 
+      when a federated primary key is used in the table). We will explain the use of annotations in detail at the end. Here is the basic use
+ </p>
+ 
+ ```java
+@BaseModel
+public class User {
+
+    @BaseUnique
+    private Long id;
+
+    private String name;
+
+    private String birthday;
+    // .... getter setter
+}
+```
 
  ```java
- List users = crudUserMapper 
+
+ List<User>  users = crudUserMapper 
     .select() 
     .colAll() 
     .where() 
@@ -29,7 +51,7 @@ This JQL will eventually be translated as select * from user. Here, colall means
  </p>
  
  ```java
- List users = crudusermapper
+ List<User> users = crudusermapper
      .select()
      .col (user:: getbirthday)
      .col (user:: getname)
@@ -42,7 +64,7 @@ This JQL will eventually be translated as select * from user. Here, colall means
  </p>
  
  ```java
- user user = crudusermapper
+ User user = crudusermapper
  .select() 
  .col(User::getBirthday) 
  .col(User::getName) 
@@ -89,6 +111,10 @@ String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 <p>
   We can insert the entire model object, indicating that all fields are to be queried, and the stratum is batched. Performance is very good.
   For more cases, please refer to：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+</p>
+
+<p>
+    一种新的编码方式。我们可以在Mapper 接口中编写default方法。
 </p>
 
 - demo crud:

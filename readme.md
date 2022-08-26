@@ -1,6 +1,6 @@
 
 ## mybatis model helper
-- summary
+- Summary
   <p>
 Modelhelper is designed with Batis as the core. The main idea is to simplify the mapping between data and avoid writing SQL The model mapping we provide is very powerful. Only
 Two annotations are required to implement the model class mapping between one-to-one and one to many to many. At the same time, we also provide crudmapper basic interface. Avoid mixing in java interface
@@ -13,7 +13,7 @@ Currently under development, welcome to participate in this project. Let me writ
     
 - Tutorial 
  <p>
-    a normal query
+    A Normal Query
  </p>
 
  ```java
@@ -57,8 +57,11 @@ This JQL will eventually be translated as select * from user. Here, colall means
   </p>
 
 <p>
-  Query Operation
-</p>  
+  A Normal Insert Operation
+</p> 
+```java
+
+````
 
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring

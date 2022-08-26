@@ -4,7 +4,7 @@
   <p>
 Modelhelper 是以 Batis 为核心设计的。主要思想是简化数据之间的映射，避免编写 SQL 我们提供的模型映射非常强大。只需要两个注解就可以实现一对一和一对多对多的模型类映射。同时，我们还提供 crudmapper 基础接口。避免在java接口SQL语句中混用。这使得编写 SQL 就像编写 java 代码一样。这里我们称之为 JQL。并形成一套 JQL API 流程规范。它不会像 SQL 那样复杂。而 JQL API 将使 SQL 错误率降低。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 在设计时最多支持两个表关联查询。我们不建议加入超过 2 个表。这样会降低 SQL 的可读性和可维护性。不要以为复杂的嵌套 SQL 是牛的 SQL，除了增加维护难度，没有任何价值。并且在modelhelper中支持了新的编写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。目前正在开发中，欢迎参与本项目。让我在 Java 流中编写 JQL 以提高开发效率。更少的代码和更流畅的书写形式。我相信你会喜欢它 <p>
     
-- 教程
+- 基础使用教程
  <p>
    普通查询案例
  </p>
@@ -159,6 +159,25 @@ crudUserMapper
 <p>
     一种新的编码方式。我们可以在Mapper 接口中编写default方法。
 </p>
+
+```java
+public interface CrudUserMapper extends CrudMapper<User> {
+
+    default User queryUserById(Number id){
+        return select()
+                .colAll()
+                .where()
+                .eq(User::getId, id)
+                .ex();
+    }
+}
+```
+
+<p>
+
+当我的接口继承了 CrudMapper 接口时，我们可以默认编写我们的 JQL 逻辑。这避免了在 Mapper 接口上编写本机 SQL 语句的传统方法。 .更多案例请看：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper /CrudUserMapper.java
+</p>
+
 
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring

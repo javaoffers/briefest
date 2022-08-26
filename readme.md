@@ -12,7 +12,7 @@ New writing formats are supported in. The default method can be written in the j
 Currently under development, welcome to participate in this project. Let me write JQL in Java stream to improve development efficiency. Less code and more fluent writing form. I'm sure you'll love her 
   <p>
     
-- Tutorial 
+- Basic Usage Tutorial 
  <p>
     A Normal Query
  </p>

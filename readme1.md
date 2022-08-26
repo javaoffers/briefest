@@ -175,7 +175,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
 <p>
 
-当我的接口继承了 CrudMapper 接口时，我们可以默认编写我们的 JQL 逻辑。这避免了在 Mapper 接口上编写本机 SQL 语句的传统方法。 .更多案例请看：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper /CrudUserMapper.java
+当我的接口继承了 CrudMapper 接口时，我们可以默认编写我们的 JQL 逻辑。这避免了在 Mapper 接口上编写原生 SQL 语句的传统方法。 .更多案例请看：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper /CrudUserMapper.java
 </p>
 
 

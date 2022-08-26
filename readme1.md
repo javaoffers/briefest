@@ -1,381 +1,109 @@
-中文版： https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/readme2.md
+
 ## mybatis model helper
-
 - Summary
-  ```
-  This plugin mainly addresses mybatis entity mapping configuration, we know that entity mapping through MyBatis 
-  requires a lot of XML tag configuration, although there are some plugins to help survive, but it's still a no-no, 
-  requiring new XML mapping tags every time you add or modify. Mybatis comes with annotations, but it's still a 
-  hassle to use. Then the plug-in master To solve these problems.
-  ```
-- Use the environment MVN
-  ```
-    <dependency>
-      <groupId>com.javaoffers</groupId>
-      <artifactId>model-helper</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-  
-    <dependency>
-      <groupId>com.javaoffers</groupId>
-      <artifactId>model-spring-suport</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-  
-  ```    
-- Use Cases
-  - sql
-    ```
-     CREATE TABLE `user` (
-       `id` int(11) DEFAULT NULL,
-       `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-       `birthday` datetime DEFAULT NULL
-     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-     
-     INSERT INTO `base`.`user`(`id`, `name`, `birthday`) VALUES (1, 'cmj', '2021-12-13 12:22:28');
-     
-     CREATE TABLE `user_order` (
-       `id` int(11) DEFAULT NULL,
-       `order_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-       `order_money` int(255) DEFAULT NULL,
-       `user_id` int(11) DEFAULT NULL
-     ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-     
-     INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`) VALUES (1, '电脑', 100, 1);
-     INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`) VALUES (2, '手机', 120, 1);
-        
-    ```
-  -  one model mapping
-    ```
-    com.javaoffers.batis.modelhelper.mapper:
-    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base.modelhelper.
-                sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
-    	
-    	<select id="queryUserDataLimitOne" resultType="model">
-        		select * from user limit 1
-        </select>
+  <p>
+Modelhelper 是以 Batis 为核心设计的。主要思想是简化数据之间的映射，避免编写 SQL 我们提供的模型映射非常强大。只需要两个注解就可以实现一对一和一对多对多的模型类映射。同时，我们还提供 crudmapper 基础接口。避免在java接口SQL语句中混用。这使得编写 SQL 就像编写 java 代码一样。这里我们称之为 JQL。并形成一套 JQL API 流程规范。它不会像 SQL 那样复杂。而 JQL API 将使 SQL 错误率降低。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 在设计时最多支持两个表关联查询。我们不建议加入超过 2 个表。这样会降低 SQL 的可读性和可维护性。不要以为复杂的嵌套 SQL 是牛的 SQL，除了伪装，没有任何价值。并且在modelhelper中支持了新的编写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。目前正在开发中，欢迎参与本项目。让我在 Java 流中编写 JQL 以提高开发效率。更少的代码和更流畅的书写形式。我相信你会爱上她的 <p>
     
-    </com.javaoffers.batis.modelhelper.mapper>
-    
-    model:
-    @BaseModel
-    public class User {
-    
-        @BaseUnique
-        private String id;
-    
-        private String name;
-    
-        private String birthday;
-    
-        public String getId() {
-            return id;
-        }
-    
-        public void setId(String id) {
-            this.id = id;
-        }
-    
-        public String getName() {
-            return name;
-        }
-    
-        public void setName(String name) {
-            this.name = name;
-        }
-    
-        public String getBirthday() {
-            return birthday;
-        }
-    
-        public void setBirthday(String birthday) {
-            this.birthday = birthday;
-        }
-   
-    }
-    
-    use:
-      User user1 = userMapper.queryUserDataLimitOne();
-      LOGUtils.printLog(objectMapper.writeValueAsString(user1));
-      //{"id":"1","name":"cmj","birthday":"2021-12-13 12:22:28"}
-    
-    ```
-  -  all model mapping
-    ```
-     <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers.base
-                .modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
-     
-     	<select id="queryUserData" resultType="model">
-     		select * from user
-     	</select>
-     
-     </com.javaoffers.batis.modelhelper.mapper>
-  
-     @BaseModel
-     public class User {
-     
-         @BaseUnique
-         private String id;
-     
-         private String name;
-     
-         private String birthday;
-     
-         public String getId() {
-             return id;
-         }
-     
-         public void setId(String id) {
-             this.id = id;
-         }
-     
-         public String getName() {
-             return name;
-         }
-     
-         public void setName(String name) {
-             this.name = name;
-         }
-     
-         public String getBirthday() {
-             return birthday;
-         }
-     
-         public void setBirthday(String birthday) {
-             this.birthday = birthday;
-         }
-     
-     }
-  
-      List<User> users = userMapper.queryUserData();
-      LOGUtils.printLog(objectMapper.writeValueAsString(users));
-      //[{"id":"1","name":"cmj","birthday":"2021-12-13 12:22:28","orders":null}]
-  
-    ```
-  - one 2 many and many 2 many 
-    ```
-    <com.javaoffers.batis.modelhelper.mapper namespace="com.javaoffers
-            .base.modelhelper.sample.spring.com.javaoffers.batis.modelhelper.mapper.UserMapper">
-    
-    	<select id="queryUserAndOrder" resultType="model">
-    		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id ;
-    	</select>
-    
-    </com.javaoffers.batis.modelhelper.mapper>
-    
+- 教程
+ <p>
+   普通查询案例
+ </p>
+ <p>
+在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel 用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰类名转换为下划线表名，属性相同），@ BaseUnique 表示类中唯一的属性（对应表中的唯一属性，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。这里是基本用法
+ </p>
  
-    @BaseModel
-    public class User {
-    
-        @BaseUnique
-        private String id;
-    
-        private String name;
-    
-        private String birthday;
-    
-        private List<UserOrder> orders;
-    
-        public String getId() {
-            return id;
-        }
-    
-        public void setId(String id) {
-            this.id = id;
-        }
-    
-        public String getName() {
-            return name;
-        }
-    
-        public void setName(String name) {
-            this.name = name;
-        }
-    
-        public String getBirthday() {
-            return birthday;
-        }
-    
-        public void setBirthday(String birthday) {
-            this.birthday = birthday;
-        }
-    
-        public List<UserOrder> getOrders() {
-            return orders;
-        }
-    
-        public void setOrders(List<UserOrder> orders) {
-            this.orders = orders;
-        }
-    }
-
-    @BaseModel
-    public class UserOrder {
-    
-        @BaseUnique
-        private int orderId;
-    
-        private String orderName;
-        private String orderMoney;
-    
-        public int getOrderId() {
-            return orderId;
-        }
-    
-        public void setOrderId(int orderId) {
-            this.orderId = orderId;
-        }
-    
-        public String getOrderName() {
-            return orderName;
-        }
-    
-        public void setOrderName(String orderName) {
-            this.orderName = orderName;
-        }
-    
-        public String getOrderMoney() {
-            return orderMoney;
-        }
-    
-        public void setOrderMoney(String orderMoney) {
-            this.orderMoney = orderMoney;
-        }
-    }
-    
-     User user2 = userMapper.queryUserAndOrderOne();
-     LOGUtils.printLog(objectMapper.writeValueAsString(user2));
-    
-    [{
-    	"id": "1",
-    	"name": "cmj",
-    	"birthday": "2021-12-13 12:22:28",
-    	"orders": [{
-    		"orderId": 1,
-    		"orderName": "电脑",
-    		"orderMoney": "100"
-    	}, {
-    		"orderId": 2,
-    		"orderName": "手机",
-    		"orderMoney": "120"
-    	}]
-    }]    
-    ```
-    
-- Usage
-
-- Annotation usage
-```
-The plugin is mainly used with annotations, only two of which are @BaseModel and @BaseUnique.
- @BaseModel indicates that this class is a Model class, which is then parsed by the plug-in.
-
-@BaseUnique indicates the unique attribute of the data, such as primary key, unique index, and 
-so on, and must be reflected in SQL. You only need to have a unique field, for example
-
-If there are primary keys and unique indexes in the Model class, you only need to use them on 
-one of the attributes. You don't need the @BaseUnique tag for both primary keys and unique indexes.
-(If you do it all, of course Note that the model class must have @BaseUnique) mapping scenario: 
-One-to-one: Usually, another Model class exists in the Model class as an attribute. Often referred
-to as a child model. Such as:
-
+ ```java
 @BaseModel
-public class User{
+public class User {
 
     @BaseUnique
-    String userId; // user id
-    
-    Card card; // Id card, one to one
+    private Long id;
 
+    private String name;
+
+    private String birthday;
+    // .... getter setter
 }
-
-
-@BaseModel
-public class Card{
-
-    @BaseUnique
-    String cardId; // Id id
-    
-    String cardNum; // Province certificate number
-
-}
-
-
-So that's the one-to-one mapping.
-One-to-many and many-to-many scenarios are class-collection relationships identified by Java, 
-so the code is as follows:
-
-@BaseModel
-public class User{
-
-    @BaseUnique
-    String userId; // user id
-    
-    List orders; // Classes and sets (one-to-many, many-to-many).
-
-}
-
-
-@BaseModel
-public class Order{
-
-    @BaseUnique
-    String orderId; // order id
-    
-    String cardName; // Order name
-
-}
-
 ```
 
-- Notes use note points
+ ```java
 
+ List<User>  users = crudUserMapper 
+    .select() 
+    .colAll() 
+    .where() 
+    .exs(); 
+ ```
+ 
+  <p>
+这个 JQL 最终会被翻译为 select * from user。这里的 colall 表示查询所有表字段。如果要查询指定的字段，例如姓名、生日等字段，可以这样做：
+ </p>
+ 
+ ```java
+ List<User> users = crudusermapper
+     .select()
+     .col (user:: getbirthday)
+     .col (user:: getname)
+     .where()
+    .exs();
+ ```
+ 
+ <p>
+您可以通过 col() 指定要查询的字段。这里的 where() 与 SQL 中的关键字 where 相同。比如要查询一个ID值为1的用户，可以这样写：
+ </p>
+ 
+ ```java
+ User user = crudusermapper
+ .select() 
+ .col(User::getBirthday) 
+ .col(User::getName) 
+ .where() 
+ .eq(User::getId, 1) 
+ .ex();
+ ```
+ <p>
+在这三种情况下，你会发现有两个特殊的函数 exs(), ex() 这两个函数代表触发器执行。 exs()通常用于查询更多数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。在大多数工作场景中，过滤条件都会在WHERE之后添加，除了特殊的count all table data之外，这个设计也是一个很好的提醒，记得填写WHERE条件，当然如果你不需要添加任何WHERE条件为了查询所有表数据，可以使用where().ex(), where().exs()
+ </p>  
+ <p>
+更多查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+ </p>
+
+<p>
+正常的插入操作
+</p> 
+
+```java
+Id exOne = crudUserMapper
+                .insert()
+                .col(User::getBirthday, new Date())
+                .col(User::getName, "Jom")
+                .ex();
 ```
-The attribute name for @BaseUnique in the primary model and child model 
-must be different.The resulttype in com.javaoffers.batis.modelhelper.mapper must be model
+<p>
+    一个简单的插入语句，它返回一个包装类 ID，它通常是新插入数据的主键。插入操作就是这么简单。还有一种更简单的插入数据的方法。插入对象。并支持多个。形成逻辑针对批处理进行了优化。例如下面的案例
+</p>
+
+```java
+String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        User h1 = User.builder().name("Jom1").birthday(date).build();
+        User h2 = User.builder().name("Jom2").birthday(date).build();
+        User h3 = User.builder().name("Jom3").birthday(date).build();
+        List<Id> ex = crudUserMapper.insert()
+                .colAll(h1, h2)
+                .colAll(h3)
+                .ex();
+        print(ex);
 ```
 
+<p>
 
-- Type conversion
-```
-The plug-in has a large number of type converters. For example, the Date type is converted 
-to String, and the default format is YYYY-MM-DD HH: MM :ss. The number type can also be 
-converted to Date.
+我们可以插入整个模型对象，表示要查询所有字段，分批分层。性能非常好。更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/ SpringSuportCrudUserMapperInsert.java
+</p>
 
-Type conversion is supported as follows:
+<p>
+    一种新的编码方式。我们可以在Mapper 接口中编写default方法。
+</p>
 
-    String2DoubleConvert (com.javaoffers.batis.modelhelper.convert)
-    DateOne2DateTwoConvert (com.javaoffers.batis.modelhelper.convert)
-    String2DateConvert (com.javaoffers.batis.modelhelper.convert)
-    Boolean2StringConvert (com.javaoffers.batis.modelhelper.convert)
-    Date2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-    Date2LongConvert (com.javaoffers.batis.modelhelper.convert)
-    Number2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
-    String2ByteConvert (com.javaoffers.batis.modelhelper.convert)
-    ByteArray2StringConvert2 (com.javaoffers.batis.modelhelper.convert)
-    Number2DateConvert (com.javaoffers.batis.modelhelper.convert)
-    Date2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-    String2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
-    String2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-    Number2StringConvert (com.javaoffers.batis.modelhelper.convert)
-    String2FloatConvert (com.javaoffers.batis.modelhelper.convert)
-    Date2StringConvert (com.javaoffers.batis.modelhelper.convert)
-    String2ShortConvert (com.javaoffers.batis.modelhelper.convert)
-    PrimitiveNumber2PrimitiveNumberConvert (com.javaoffers.batis.modelhelper.convert)
-    String2LongConvert (com.javaoffers.batis.modelhelper.convert)
-    String2CharConvert (com.javaoffers.batis.modelhelper.convert)
-    Character2StringConvert (com.javaoffers.batis.modelhelper.convert)
-    String2IntegerConvert (com.javaoffers.batis.modelhelper.convert)
-    Number2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
-    Number2PrimitiveConvert (com.javaoffers.batis.modelhelper.convert)
-    String2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-    Date2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
-    String2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
-    ByteArray2StringConvert (com.javaoffers.batis.modelhelper.convert)
-    String2BigDecimalConvert (com.javaoffers.batis.modelhelper.convert)
-    String2BigIntegerConvert (com.javaoffers.batis.modelhelper.convert)
-    Number2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
-
-
-```    
-    
+- demo crud:
+  - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     

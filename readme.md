@@ -171,7 +171,9 @@ crudUserMapper
 
 
 <p>
-A new way of encoding. We can write default method in Mapper interface. For example the following case</p>
+A new way of encoding. We can write default method in Mapper interface. For example the following case
+We recommend using this style
+</p>
 
 ```java
 public interface CrudUserMapper extends CrudMapper<User> {

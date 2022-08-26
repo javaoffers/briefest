@@ -157,7 +157,7 @@ crudUserMapper
 
 
 <p>
-    一种新的编码方式。我们可以在Mapper 接口中编写default方法。
+    一种新的编码方式。我们可以在Mapper 接口中编写default方法。我们比较推荐这种风格在使用ModelHelper时
 </p>
 
 ```java

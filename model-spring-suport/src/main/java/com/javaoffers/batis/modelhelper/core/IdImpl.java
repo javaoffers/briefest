@@ -11,6 +11,8 @@ public class IdImpl implements Id {
 
     private static final ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
 
+    public static final IdImpl EMPTY_ID = new IdImpl(Integer.MIN_VALUE);
+
     Serializable srcValue;
 
     @Override

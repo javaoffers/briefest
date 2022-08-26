@@ -39,18 +39,18 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     public void testInsert() throws JsonProcessingException {
         //查询col
-        List<Id> ex = crudUserMapper.insert()
+        Id exOne = crudUserMapper.insert()
                 .col(User::getBirthday, new Date())
                 .col(User::getName, "xiao hua 1")
                 .ex();
-        print(ex);
+        print(exOne);
 
-        //插入allCol
+        //Insert all Col
         String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
         User h1 = User.builder().name("h1").birthday(date).build();
         User h2 = User.builder().name("h2").birthday(date).build();
         User h3 = User.builder().name("h3").birthday(date).build();
-        ex = crudUserMapper.insert()
+        List<Id> ex = crudUserMapper.insert()
                 .colAll(h1, h2)
                 .colAll(h3)
                 .ex();

@@ -15,11 +15,21 @@ import javax.sql.DataSource;
  * @Auther: create by cmj on 2022/5/3 17:27
  */
 public class InitMapper {
-    private DataSource bean;
+    private static DataSource bean;
+    private static InitMapper initMapper;
     public InitMapper(DataSource bean) {
-        this.bean = bean;
-        JdbcTemplate jdbcTemplate = new JdbcTemplate( bean);
-        BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
-        new TableHelper( bean);
+        synchronized (InitMapper.class){
+            if(!isInited()){
+                this.bean = bean;
+                JdbcTemplate jdbcTemplate = new JdbcTemplate( bean);
+                BaseBatisImpl.baseBatis.setJdbcTemplate(jdbcTemplate);
+                new TableHelper( bean);
+                initMapper = this;
+            }
+        }
+
+    }
+    public static boolean isInited(){
+        return bean != null;
     }
 }

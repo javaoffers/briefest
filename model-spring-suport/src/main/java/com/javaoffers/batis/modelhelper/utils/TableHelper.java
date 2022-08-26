@@ -72,13 +72,13 @@ public class TableHelper {
         return colAll;
     }
 
-    public static Map<String, Field> getColAllAndFieldOnly(Class<?> modelClss){
+    public static Map<String, List<Field>> getColAllAndFieldOnly(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
         parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
-        Map<String, Field> colNameOfModelField = tableInfo.getColNameOfModelField();
+        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameOfModelField();
         return colNameOfModelField;
     }
 
@@ -266,7 +266,7 @@ public class TableHelper {
                 //说明存在与表中的字段名称对应
                 if(tableInfo.getColNames().get(colName) != null){
                     tableInfo.getColNameOfModel().put(fName, colName);
-                    tableInfo.getColNameOfModelField().put(colName, colF);
+                    tableInfo.putColNameOfModelField(colName, colF);
                 }
             }
         }catch (Exception e){

@@ -12,101 +12,81 @@ import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
+import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertCol;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
- * 插入实现
+ * Insert implementation
  * @author create by cmj
  */
 public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object> {
 
     private Class<M> mClass;
     /**
-     * 存放 查询字段
+     * save insert field.
      */
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
+
+    private OneInsertFun oneInsertFun ;
+
+    private MoreInsertFun moreInsertFun ;
 
     public InsertFunImpl(Class<M> mClass) {
         this.mClass = mClass;
         conditions.add(new InsertIntoCondition(mClass));
-    }
-
-    @Override
-    public OneInsertFun<M, GetterFun<M, Object>, Object> col(GetterFun<M, Object> col, Object value) {
-        conditions.add(new ColValueCondition(col,value));
-        return this;
-    }
-
-    @Override
-    public OneInsertFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object> col, Object value) {
-        if(condition){
-            col(col,value);
-        }
-        return this;
+        oneInsertFun = new OneInsertFunImpl(mClass, conditions);
+        moreInsertFun = new MoreInsertFunImpl(mClass, conditions);
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M model) {
-        conditions.add(new InsertAllColValueCondition(mClass, model));
-        return this;
+        moreInsertFun.colAll(model);
+        return moreInsertFun;
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M model) {
-        if(condition){
-            colAll(model);
-        }
-        return this;
+        moreInsertFun.colAll(condition,model);
+        return moreInsertFun;
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
-        for(M m: models){
-            colAll(m);
-        }
-        return this;
+        moreInsertFun.colAll(models);
+        return moreInsertFun;
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
-        if(condition){
-            colAll(models);
-        }
-        return this;
+        moreInsertFun.colAll(condition, models);
+        return moreInsertFun;
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(List<M> models) {
-        if(models!=null && models.size() > 0){
-            models.forEach(model->{
-                colAll(model);
-            });
-        }
-        return this;
+    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(Collection<M> models) {
+        moreInsertFun.colAll(models);
+        return moreInsertFun;
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, List<M> models) {
-        if(condition){
-            colAll(models);
-        }
-        return this;
+    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, Collection<M> models) {
+        moreInsertFun.colAll(condition,models);
+        return moreInsertFun;
     }
 
-    /**
-     * 返回成功后的主键id, 多个id和插入model顺序保持一致
-     * @return ids
-     */
     @Override
-    public List<Id> ex() {
-        //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
-        //解析SQL select 并执行。
-        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("参数： "+sqlInfo.getParams());
-        List<Id> list = BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
-        return list;
+    public OneInsertFun<M, GetterFun<M, Object>, Object> col(GetterFun<M, Object> col, Object value) {
+        oneInsertFun.col(col,value);
+        return oneInsertFun;
     }
+
+    @Override
+    public OneInsertFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object> col, Object value) {
+        oneInsertFun.col(condition,col,value);
+        return oneInsertFun;
+    }
+
 }

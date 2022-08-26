@@ -50,18 +50,46 @@ This JQL will eventually be translated as select * from user. Here, colall means
  .eq(User::getId, 1) 
  .ex();
  ```
- <p>In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
-  </p>  
-  <p>
-    More query cases：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
-  </p>
+ <p>
+ In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
+ </p>  
+ <p>
+   More query cases：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+ </p>
 
 <p>
   A Normal Insert Operation
 </p> 
-```java
 
-````
+```java
+Id exOne = crudUserMapper
+                .insert()
+                .col(User::getBirthday, new Date())
+                .col(User::getName, "Jom")
+                .ex();
+```
+<p>
+    A simple insert statement that returns a wrapper class Id, which is usually the primary key of the newly inserted data. An insert operation is so simple.
+    There is also a simpler way to insert data. Insert object. and supports multiple. Formation logic is optimized for batch processing. 
+    For example the following case
+</p>
+
+```java
+String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
+        User h1 = User.builder().name("Jom1").birthday(date).build();
+        User h2 = User.builder().name("Jom2").birthday(date).build();
+        User h3 = User.builder().name("Jom3").birthday(date).build();
+        List<Id> ex = crudUserMapper.insert()
+                .colAll(h1, h2)
+                .colAll(h3)
+                .ex();
+        print(ex);
+```
+
+<p>
+  We can insert the entire model object, indicating that all fields are to be queried, and the stratum is batched. Performance is very good.
+  For more cases, please refer to：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+</p>
 
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/tree/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring

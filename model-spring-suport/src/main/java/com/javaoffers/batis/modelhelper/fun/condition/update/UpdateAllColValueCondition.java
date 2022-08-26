@@ -6,6 +6,7 @@ import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,18 +57,18 @@ public class UpdateAllColValueCondition implements UpdateCondition {
     }
 
     public UpdateAllColValueCondition(boolean isUpdateNull, Class modelClass, Object model) {
-        Assert.isTrue(model != null , "model 不允许为 null");
+        Assert.isTrue(model != null , "model is not allowed to be null");
         this.isUpdateNull = isUpdateNull;
         this.modelClass = modelClass;
         this.model = model;
         this.tableName = TableHelper.getTableName(modelClass);
-        Map<String, Field> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(modelClass);
+        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(modelClass);
 
         updateSqlNull.append(tableName);
         updateSql.append(tableName);
         AtomicInteger status = new AtomicInteger(0);
         AtomicInteger statusNull = new AtomicInteger(0);
-        colAllAndFieldOnly.forEach((cloName, field) -> {
+        colAllAndFieldOnly.forEach((cloName, fields) -> {
             try {
                 if(statusNull.get() == 0){
                     updateSqlNull.append(ConditionTag.SET.getTag());
@@ -80,7 +81,16 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(cloName);
                 updateSqlNull.append("}");
-                Object oValue = field.get(model);
+                Object oValue = null;
+                for(int i = 0; i < fields.size(); i++){
+                    Field field = fields.get(0);
+                    Object o = field.get(model);
+                    //take the first non-null value
+                    if(o != null){
+                        oValue = o;
+                        break;
+                    }
+                }
                 params.put(cloName, oValue);
                 if(oValue!=null){
                     npdateNullParams.put(cloName, oValue);

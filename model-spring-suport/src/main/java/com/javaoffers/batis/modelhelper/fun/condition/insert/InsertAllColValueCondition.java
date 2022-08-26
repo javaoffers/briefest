@@ -15,7 +15,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private Class modelClass;
 
-    //应该是表的全字段.
+    //Should be the full field of the table.
     private String sqlColNames;
 
     private String sqlValues;
@@ -47,15 +47,22 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.model = model;
         this.modelClass = modelClass;
         //left: colName. right: fieldName
-        Map<String, Field> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(this.modelClass);
-        colAllAndFieldOnly.forEach((colName, field)->{
+        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(this.modelClass);
+        colAllAndFieldOnly.forEach((colName, fields)->{
             try {
-                Object oValue = field.get(model);
-                //value 可以为null
-                if(oValue != null){
-                    param.putIfAbsent(colName, oValue);
+                Object oValue = null;
+                for(int i = 0; i < fields.size(); i++){
+                    Field field = fields.get(0);
+                    Object o = field.get(model);
+                    //take the first non-null value
+                    if(o != null){
+                        oValue = o;
+                        break;
+                    }
                 }
-
+                //value can be null, when batch processing of the same model type,
+                // multiple model instances use the same sql statement for batch Insert
+                param.putIfAbsent(colName, oValue);
             }catch (Exception e){
                 e.printStackTrace();
             }

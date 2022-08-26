@@ -10,6 +10,6 @@ import java.util.List;
  *
  * @author cmj
  */
-public interface InsertFun<M, C extends GetterFun<M, Object>, V> extends OneInsertFun<M,C,V>, MoreInsertFun<M,C,V> {
+public interface InsertFun<M, C extends GetterFun<M, Object>, V> extends OneInsertCol<M,C,V>, MoreInsertColAll<M,C,V> {
 
 }

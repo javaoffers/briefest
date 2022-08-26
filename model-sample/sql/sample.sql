@@ -15,5 +15,5 @@ CREATE TABLE `user_order` (
   `is_del` int(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`) VALUES (1, '电脑', 100, 1, 1);
-INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`) VALUES (2, '手机', 120, 1, 1);
+INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`) VALUES (1, 'computer', 100, 1, 1);
+INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`) VALUES (2, 'phone', 120, 1, 1);

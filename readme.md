@@ -115,7 +115,23 @@ String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 </p>
 
 <p>
-    一种新的编码方式。我们可以在Mapper 接口中编写default方法。
+A new way of encoding. We can write default method in Mapper interface. For example the following case</p>
+
+```java
+public interface CrudUserMapper extends CrudMapper<User> {
+
+    default User queryUserById(Number id){
+        return select()
+                .colAll()
+                .where()
+                .eq(User::getId, id)
+                .ex();
+    }
+}
+```
+
+<p>
+When my interface inherits the CrudMapper interface, we can write our JQL logic in default. This avoids the traditional method of writing native SQL statements on the Mapper interface.
 </p>
 
 - demo crud:

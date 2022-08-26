@@ -55,7 +55,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         System.out.println("-------------------------------");
 
         exm = crudUserMapper.select()
-                .distinct()
                 .colAll()
                 .where()
                 .isNotNull(User::getId)

@@ -23,32 +23,26 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
 
     private String tableName;
     /**
-     * 存放 查询字段
+     * Store the query field
      */
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
 
     /**
-     * 是否忽略null值，如果是null则不进行更新. true: update null.
+     * Whether to ignore null values, if it is null then do not update. true: update null.
      */
     private boolean isUpdateNull = true;
 
-    /**
-     * true : update null
-     * @param value
-     * @return
-     */
-    private boolean isUpdateNull(V value){
-        if(!isUpdateNull){
-            return value != null;
-        }
-        return true;
-    }
+    private PrepareWhereModifyFunImpl<M,C,V> prepareWhereModifyFun ;
+
+    private OneUpdateFunImpl<M,C,V> oneUpdateFun;
 
     public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull) {
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
         this.conditions.add(new UpdateCondtionMark(mClass));
+        this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
+        this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }
 
     public SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isUpdateNull) {
@@ -57,33 +51,26 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.conditions = conditions;
         this.tableName = TableHelper.getTableName(mClass);
         this.conditions.add(new UpdateCondtionMark(mClass));
+        this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
+        this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }
 
     @Override
     public OneUpdateFun<M, C, V> col(C col, V value) {
-        if(isUpdateNull(value)){
-            this.conditions.add(new UpdateColValueCondition(col,value));
-        }
-        return this;
+        this.oneUpdateFun.col(col,value);
+        return this.oneUpdateFun;
     }
 
     @Override
     public OneUpdateFun<M, C, V> col(boolean condition, C col, V value) {
-        if(condition){
-            col(col,value);
-        }
-        return this;
-    }
-
-    @Override
-    public WhereModifyFun<M, V> where() {
-        return new WhereModifyFunImpl<M, V>(conditions, mClass);
+        this.oneUpdateFun.col(condition,col,value);
+        return this.oneUpdateFun;
     }
 
     @Override
     public PrepareWhereModifyFun<M, C, V> colAll(M model) {
         this.conditions.add(new UpdateAllColValueCondition(isUpdateNull, mClass, model));
-        return new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
+        return  this.prepareWhereModifyFun;
     }
 
     @Override
@@ -91,6 +78,6 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         if(condition){
             colAll(model);
         }
-        return new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
+        return this.prepareWhereModifyFun;
     }
 }

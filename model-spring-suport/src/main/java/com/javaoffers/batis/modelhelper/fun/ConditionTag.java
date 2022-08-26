@@ -88,6 +88,7 @@ public enum ConditionTag {
     COMMA(604,", ", CategoryTag.WHERE_ON),
 
     /**key word**/
+    @Deprecated
     DISTINCT(700,"distinct",CategoryTag.SELECT_COL)
 
     ;

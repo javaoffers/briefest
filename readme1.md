@@ -101,6 +101,62 @@ String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 </p>
 
 <p>
+更新操作， 更新操作有两种模式，允许更新空值 updateNull 和不允许更新空值 npdateNull，请看下面的案例
+</p>
+
+```java
+crudUserMapper
+        .update().npdateNull()
+                 .col(User::getBirthday, new Date())
+                 //name not will update . because its npdateNull
+                 .col(User::getName,null)
+                 .where()
+                 .eq(User::getId, id)
+                 .ex();
+
+crudUserMapper
+        .update().updateNull()
+                 .col(User::getBirthday, new Date())
+                 //name  will update . because its updateNull
+                 .col(User::getName,null)
+                 .where()
+                 .eq(User::getId, id)
+                 .ex();
+
+```
+
+<p>
+    这中方式对于model对象实例是非常有用的，比如一个User对象中有些属性存在值（not null ）而另一部分属性无值( null)，那么没有值的属性到底要不要更新呢。
+    可以通过 npdateNull （不进行更新） updateNull（更新属性为null），比如下面的案例
+</p>
+
+```java
+    public void testUpdateUser(){
+        
+        User user = User.builder().name("Jom").birthday(null).build();
+        //npdateNull, birday null 将不被更新到数据库中
+        crudUserMapper.update().npdateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId,1)
+                .ex();
+        
+        //updateNull， birday null 将被更新到数据库中,birday的值将为改为null
+        crudUserMapper.update().updateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId, 1)
+                .ex();
+    }
+
+```
+
+<p>
+    通过上面的案例我们可以在业务中很好的控制字段的更新。 当我门使用model类的时候。
+</p>
+
+
+<p>
     一种新的编码方式。我们可以在Mapper 接口中编写default方法。
 </p>
 

@@ -115,6 +115,62 @@ String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
 </p>
 
 <p>
+Update operation, update operation has two modes, allowing to update null value updateNull and not allowing to update null value npdateNull, please see the following case
+</p>
+
+```java
+crudUserMapper
+        .update().npdateNull()
+                 .col(User::getBirthday, new Date())
+                 //name not will update . because its npdateNull
+                 .col(User::getName,null)
+                 .where()
+                 .eq(User::getId, id)
+                 .ex();
+
+crudUserMapper
+        .update().updateNull()
+                 .col(User::getBirthday, new Date())
+                 //name  will update . because its updateNull
+                 .col(User::getName,null)
+                 .where()
+                 .eq(User::getId, id)
+                 .ex();
+
+```
+
+<p>
+   This method is very useful for model object instances. For example, some properties in a User object have values ​​(not null) and some properties have no value (null), so should the properties without values ​​be updated? You can pass npdateNull (do not update) updateNull (update property is null), such as the following case
+</p>
+
+```java
+    public void testUpdateUser(){
+        
+        User user = User.builder().name("Jom").birthday(null).build();
+        //npdateNull, birday null will not be updated to the database
+        crudUserMapper.update().npdateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId,1)
+                .ex();
+        
+        //updateNull， birday null will be updated to the database, the value of birday will be changed to null
+        crudUserMapper.update().updateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId, 1)
+                .ex();
+    }
+
+```
+
+<p>
+ Through the above case, we can control the update of the field very well in the business. When I use the model class.
+</p>
+
+
+
+<p>
 A new way of encoding. We can write default method in Mapper interface. For example the following case</p>
 
 ```java
@@ -132,6 +188,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
 <p>
 When my interface inherits the CrudMapper interface, we can write our JQL logic in default. This avoids the traditional method of writing native SQL statements on the Mapper interface.
+. For more cases, please see:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
 - demo crud:

@@ -3,15 +3,9 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.*;
 import com.javaoffers.batis.modelhelper.fun.condition.*;
-import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
-import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @Description:  以字符串方式输入为字段名称
@@ -25,7 +19,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      */
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
     {
-        conditions.beforeAdd((before,current)->{
+        this.conditions.beforeAdd((before,current)->{
             if(before == null){
                 return;
             }else{
@@ -42,16 +36,12 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
         });
     }
 
+    private SmartSelectFunImpl<M,GetterFun<M,Object>,Object> smartSelectFun ;
+
     public SelectFunImpl(Class<M> mClass) {
-        conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass), mClass));
+        this.conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass), mClass));
         this.mClass = mClass;
-    }
-
-
-    @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> distinct() {
-         conditions.add(new KeyWordCondition(ConditionTag.DISTINCT.getTag()));
-        return this;
+        this.smartSelectFun = new SmartSelectFunImpl(mClass, conditions);
     }
 
     /**
@@ -60,70 +50,52 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public SelectFun<M, GetterFun<M,Object>, Object> col(GetterFun... cols) {
-        Stream.of(cols).forEach(col -> {
-            conditions.add(new SelectColumnCondition(col));
-        });
-        return this;
+    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(GetterFun... cols) {
+        this.smartSelectFun.col(cols);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... cols) {
-        if(condition){
-            col(cols);
-        }
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... cols) {
+        this.smartSelectFun.col(condition, cols);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object>... cols) {
-        Stream.of(cols).forEach(col->{
-            Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
-            String colName = colNameAndAliasName.getLeft();
-            String aliasName = colNameAndAliasName.getRight();
-            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+aliasName));
-        });
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object>... cols) {
+
+        this.smartSelectFun.col(aggTag,cols);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object>... col) {
-        if(condition){
-            col(aggTag,col);
-        }
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object>... cols) {
+        this. smartSelectFun.col(condition, aggTag, cols);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object> col, String asName) {
-        Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
-        String colName = colNameAndAliasName.getLeft();
-        conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ asName));
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object> col, String asName) {
+        this.smartSelectFun.col(aggTag, col, asName);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object> col, String asName) {
-        if(condition){
-            col(aggTag, col, asName);
-        }
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object> col, String asName) {
+        this.smartSelectFun.col(condition,aggTag,col,asName);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M,Object>, Object> col(String... colSql) {
-        Stream.of(colSql).forEach(col->{
-            conditions.add(new SelectColumnCondition(col));
-        });
-        return this;
+    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(String... colSql) {
+        this.smartSelectFun.col(colSql);
+        return this.smartSelectFun;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, String... colSql) {
-        if(condition){
-            col(colSql);
-        }
-        return this;
+    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, String... colSql) {
+        this.smartSelectFun.col(condition, colSql);
+        return this.smartSelectFun;
     }
 
     /**
@@ -131,40 +103,12 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public SelectFun<M, GetterFun<M,Object>, Object> colAll() {
-        Set<SelectColumnCondition> cols = TableHelper.getColAll(mClass).stream().map(SelectColumnCondition::new).collect(Collectors.toSet());
-        conditions.addAll(cols);
-        return this;
+    public SmartSelectFun<M, GetterFun<M,Object>, Object> colAll() {
+
+        this.smartSelectFun.colAll();
+        return this.smartSelectFun;
     }
 
-    /**
-     * left join 其他表
-     * @param m2 model类( left join m2)
-     * @param <M2>
-     * @return
-     */
-    @Override
-    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> leftJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions,ConditionTag.LEFT_JOIN);
-    }
 
-    @Override
-    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> innerJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions, ConditionTag.INNER_JOIN);
-    }
-
-    @Override
-    public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, Object> rightJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(mClass,TableHelper.getClassFromConstructorFun(m2),conditions, ConditionTag.RIGHT_JOIN);
-    }
-
-    /**
-     * 添加 where 语句
-     * @return
-     */
-    @Override
-    public WhereSelectFun<M, Object> where() {
-        return new WhereSelectFunImpl(conditions);
-    }
 
 }

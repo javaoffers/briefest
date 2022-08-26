@@ -1,9 +1,10 @@
 package com.javaoffers.batis.modelhelper.mapper;
 
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
-import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
+import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.UpdateFun;
 
 import java.io.Serializable;

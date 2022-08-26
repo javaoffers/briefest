@@ -114,6 +114,23 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
         print(user);
     }
 
+    public void testUpdateUser(){
+        User user = User.builder().name("Jom").birthday(null).build();
+        crudUserMapper.update().npdateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId,1)
+                .ex();
+
+        crudUserMapper.update().updateNull()
+                .colAll(user)
+                .where()
+                .eq(User::getId, 1)
+                .ex();
+
+
+    }
+
     public void print(Object user) throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(user));
     }

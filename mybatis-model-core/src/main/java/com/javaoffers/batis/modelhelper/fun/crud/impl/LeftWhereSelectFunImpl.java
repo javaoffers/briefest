@@ -39,9 +39,12 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     private LinkedList<Condition> conditions;
 
+    private WhereSelectFunImpl whereSelectFun;
+
     public LeftWhereSelectFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new WhereConditionMark());
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
     }
 
     public LeftWhereSelectFunImpl(LinkedList<Condition> conditions, boolean isAddMark) {
@@ -49,15 +52,6 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
         if (isAddMark) {
             this.conditions.add(new WhereConditionMark());
         }
-    }
-
-    public LeftWhereSelectFunImpl() {
-    }
-
-
-    @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
     }
 
     @Override
@@ -457,5 +451,10 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
     public LeftWhereSelectFunImpl<M, M2, V> limitPage(int pageNum, int size) {
         this.conditions.add(new LimitWordCondition(pageNum, size));
         return this;
+    }
+
+    @Override
+    public List<M> exs() {
+        return whereSelectFun.exs();
     }
 }

@@ -7,6 +7,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
+import com.javaoffers.batis.modelhelper.fun.crud.insert.SmartMoreInsertFun;
 
 import java.util.Collection;
 
@@ -24,49 +25,45 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
 
     private OneInsertFun oneInsertFun ;
 
-    private MoreInsertFun moreInsertFun ;
+    private SmartMoreInsertFun moreInsertFun ;
 
     public InsertFunImpl(Class<M> mClass) {
         this.mClass = mClass;
         conditions.add(new InsertIntoCondition(mClass));
         oneInsertFun = new OneInsertFunImpl(mClass, conditions);
-        moreInsertFun = new MoreInsertFunImpl(mClass, conditions);
+        moreInsertFun = new SmartMoreInsertFunImpl(mClass, conditions);
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M model) {
+    public SmartMoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M model) {
         moreInsertFun.colAll(model);
         return moreInsertFun;
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M model) {
+    public SmartMoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M model) {
         moreInsertFun.colAll(condition,model);
         return moreInsertFun;
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
-        moreInsertFun.colAll(models);
-        return moreInsertFun;
+       return moreInsertFun.colAll(models);
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
-        moreInsertFun.colAll(condition, models);
-        return moreInsertFun;
+        return moreInsertFun.colAll(condition, models);
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(Collection<M> models) {
-        moreInsertFun.colAll(models);
-        return moreInsertFun;
+        return  moreInsertFun.colAll(models);
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, Collection<M> models) {
-        moreInsertFun.colAll(condition,models);
-        return moreInsertFun;
+        return moreInsertFun.colAll(condition,models);
     }
 
     @Override

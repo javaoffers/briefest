@@ -1,44 +1,38 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 
-import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.batis.modelhelper.core.ConditionParse;
-import com.javaoffers.batis.modelhelper.core.Id;
-import com.javaoffers.batis.modelhelper.core.LinkedConditions;
-import com.javaoffers.batis.modelhelper.core.SQLInfo;
+import com.javaoffers.batis.modelhelper.core.*;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
+import com.javaoffers.batis.modelhelper.fun.crud.insert.SmartMoreInsertFun;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
-public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Object>, Object> {
+public class SmartMoreInsertFunImpl<M> implements SmartMoreInsertFun<M, GetterFun<M, Object>, Object> {
 
     private Class<M> mClass;
 
     private LinkedConditions<Condition> conditions;
+
+    private OneInsertFunImpl oneInsertFun;
+
+    private MoreInsertFun moreInsertFun;
 
     /**
      * Returns the primary key id after success, and the order of multiple ids is consistent with the inserted model
      * @return ids
      */
     @Override
-    public List<Id> exs() {
-        //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
-        //Parse SQL select and execute.
-        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("PAM: "+sqlInfo.getParams());
-        List<Id> list = BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
-        return list;
+    public Id ex() {
+        return oneInsertFun.ex();
     }
 
     @Override
     public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M model) {
         conditions.add(new InsertAllColValueCondition(mClass, model));
-        return this;
+        return moreInsertFun;
     }
 
     @Override
@@ -46,7 +40,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         if(condition){
             colAll(model);
         }
-        return this;
+        return moreInsertFun;
     }
 
     @Override
@@ -54,7 +48,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         for(M m: models){
             colAll(m);
         }
-        return this;
+        return moreInsertFun;
     }
 
     @Override
@@ -62,7 +56,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         if(condition){
             colAll(models);
         }
-        return this;
+        return moreInsertFun;
     }
 
     @Override
@@ -72,7 +66,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
                 colAll(model);
             });
         }
-        return this;
+        return moreInsertFun;
     }
 
     @Override
@@ -80,11 +74,13 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         if(condition){
             colAll(models);
         }
-        return this;
+        return moreInsertFun;
     }
 
-    public MoreInsertFunImpl(Class<M> mClass, LinkedConditions<Condition> conditions) {
+    public SmartMoreInsertFunImpl(Class<M> mClass, LinkedConditions<Condition> conditions) {
         this.mClass = mClass;
         this.conditions = conditions;
+        this.oneInsertFun = new OneInsertFunImpl(this.mClass, this.conditions);
+        this.moreInsertFun = new MoreInsertFunImpl(this.mClass, this.conditions);
     }
 }

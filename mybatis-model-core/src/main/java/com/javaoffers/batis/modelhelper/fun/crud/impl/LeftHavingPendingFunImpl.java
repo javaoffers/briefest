@@ -26,13 +26,11 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     private LinkedList<Condition> conditions;
 
+    private WhereSelectFunImpl whereSelectFun;
+
     public LeftHavingPendingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-    }
-
-    @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
     }
 
     @Override
@@ -157,5 +155,10 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
             orderD(cs);
         }
         return this;
+    }
+
+    @Override
+    public List<M> exs() {
+        return whereSelectFun.exs();
     }
 }

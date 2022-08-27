@@ -53,7 +53,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         List<Id> ex = crudUserMapper.insert()
                 .colAll(h1, h2)
                 .colAll(h3)
-                .ex();
+                .exs();
         print(ex);
 
         //查询最新插入的数据

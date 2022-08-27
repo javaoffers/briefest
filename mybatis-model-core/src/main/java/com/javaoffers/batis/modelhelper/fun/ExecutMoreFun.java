@@ -14,21 +14,8 @@ import java.util.List;
 public interface ExecutMoreFun<M> {
 
     /**
-     * 获取条件.
-     * @return
-     */
-    LinkedList<Condition> getConditions();
-    /**
      * 执行sql 返回 List<M>
      * @return
      */
-    default List<M> exs(){
-        //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
-        //解析SQL select 并执行。
-        SQLInfo sqlInfo = ConditionParse.conditionParse(getConditions());
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("参数： "+sqlInfo.getParams());
-        List list = BaseBatisImpl.baseBatis.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
-        return list;
-    }
+    public List<M> exs();
 }

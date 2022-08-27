@@ -1,5 +1,8 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.batis.modelhelper.core.ConditionParse;
+import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -7,7 +10,6 @@ import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -32,9 +34,6 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         if (isAddMark) {
             this.conditions.add(new WhereConditionMark());
         }
-    }
-
-    public WhereSelectFunImpl() {
     }
 
     @Override
@@ -193,7 +192,10 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
 
     @Override
     public WhereSelectFun<M, V> notBetween(boolean condition, GetterFun<M, V> col, V start, V end) {
-        return null;
+        if(condition){
+            notBetween(col,start,end);
+        }
+        return this;
     }
 
     @Override
@@ -364,11 +366,6 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     }
 
     @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
-    }
-
-    @Override
     public WhereSelectFun<M, V> limitPage(int pageNum, int size) {
         this.conditions.add(new LimitWordCondition(pageNum, size));
         return this;
@@ -408,5 +405,16 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
             orderD(getterFuns);
         }
         return this;
+    }
+
+    @Override
+    public List<M> exs() {
+        //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
+        //解析SQL select 并执行。
+        SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
+        System.out.println("SQL: "+sqlInfo.getSql());
+        System.out.println("参数： "+sqlInfo.getParams());
+        List list = BaseBatisImpl.baseBatis.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
+        return list;
     }
 }

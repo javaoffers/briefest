@@ -56,7 +56,7 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
         if(condition){
             col(cols);
         }
-        return null;
+        return this;
     }
 
     @Override

@@ -92,8 +92,8 @@ public interface CrudUserMapper extends CrudMapper<User> {
      * @return
      */
     default User saveUser(User user){
-        List<Id> ex = insert().colAll(user).ex();
-        user.setId(ex.get(0).toLong());
+        Id ex = insert().colAll(user).ex();
+        user.setId(ex.toLong());
         return user;
     }
 }

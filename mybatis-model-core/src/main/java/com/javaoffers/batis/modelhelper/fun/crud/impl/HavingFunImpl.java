@@ -7,6 +7,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
+import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -22,9 +23,12 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     LinkedList<Condition> conditions;
 
+    WhereSelectFun whereSelectFun;
+
     public HavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
     }
 
     @Override
@@ -260,11 +264,6 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
-    }
-
-    @Override
     public M ex() {
         List<M> exs = this.exs();
         if(exs != null && exs.size() > 0){
@@ -277,5 +276,10 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     public HavingFunImpl<M, C, V> limitPage(int pageNum, int size) {
         conditions.add(new LimitWordCondition<>(pageNum, size));
         return this;
+    }
+
+    @Override
+    public List<M> exs() {
+        return whereSelectFun.exs();
     }
 }

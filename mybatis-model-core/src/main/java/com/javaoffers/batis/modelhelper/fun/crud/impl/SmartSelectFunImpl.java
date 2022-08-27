@@ -63,7 +63,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
         if(condition){
             col(aggTag,cols);
         }
-        return null;
+        return this;
     }
 
     @Override

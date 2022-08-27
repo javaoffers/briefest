@@ -16,14 +16,13 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
 
     private LinkedList<Condition> conditions;
 
+    private WhereSelectFunImpl whereSelectFun;
+
     public HavingPendingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
     }
 
-    @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
-    }
 
     @Override
     public M ex() {
@@ -38,5 +37,10 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     public HavingFun<M, C, V, HavingFunImpl<M, C, V>> having() {
         HavingFunImpl mcvHavingFun = new HavingFunImpl<>(this.conditions);
         return mcvHavingFun;
+    }
+
+    @Override
+    public List<M> exs() {
+        return whereSelectFun.exs();
     }
 }

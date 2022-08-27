@@ -27,11 +27,14 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
         , LimitFun<M, LeftHavingFunImpl<M, M2,C, C2,V , V2>>
         , OrderFun<M,C,V,LeftHavingFunImpl<M,M2,C,C2,V,V2>> {
 
-    LinkedList<Condition> conditions;
+    private LinkedList<Condition> conditions;
+
+    private WhereSelectFunImpl whereSelectFun;
 
     public LeftHavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
     }
 
     @Override
@@ -474,12 +477,6 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
         }
         return this;
     }
-    
-    
-    @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
-    }
 
     @Override
     public M ex() {
@@ -562,5 +559,10 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
             orderD(cs);
         }
         return this;
+    }
+
+    @Override
+    public List<M> exs() {
+        return whereSelectFun.exs();
     }
 }

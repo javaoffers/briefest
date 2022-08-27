@@ -7,6 +7,6 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
  *
  * @author cmj
  */
-public interface InsertFun<M, C extends GetterFun<M, Object>, V> extends OneInsertCol<M,C,V>, MoreInsertColAll<M,C,V> {
+public interface InsertFun<M, C extends GetterFun<M, Object>, V> extends OneInsertCol<M,C,V>, SmartMoreInsertColAll<M,C,V> {
 
 }

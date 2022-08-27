@@ -16,11 +16,11 @@ public class OneUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements O
 
     private Class<M> mClass;
 
-    private LinkedConditions<Condition> conditions = new LinkedConditions<>();
+    private LinkedConditions<Condition> conditions ;
 
     @Override
     public WhereModifyFun<M, V> where() {
-        return null;
+        return new WhereModifyFunImpl<M, V>(conditions, mClass);
     }
 
     @Override

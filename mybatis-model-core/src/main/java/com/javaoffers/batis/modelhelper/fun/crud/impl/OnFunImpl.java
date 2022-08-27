@@ -22,20 +22,16 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>
     private LinkedList<Condition> conditions;
 
     private WhereSelectFunImpl<M1,V> exs ;
+
     public OnFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new OnConditionMark());
-        this.exs = new WhereSelectFunImpl<M1,V>();
+        this.exs = new WhereSelectFunImpl<M1,V>(conditions);
     }
 
     @Override
     public M1 ex() {
         return exs.ex();
-    }
-
-    @Override
-    public LinkedList<Condition> getConditions() {
-        return this.conditions;
     }
 
     @Override

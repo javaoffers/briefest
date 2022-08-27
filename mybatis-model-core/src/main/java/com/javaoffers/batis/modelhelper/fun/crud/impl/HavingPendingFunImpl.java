@@ -20,7 +20,7 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
 
     public HavingPendingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions,false);
     }
 
 

@@ -21,22 +21,22 @@ import java.util.function.Consumer;
 public class OnFunImpl<M1, M2, V> implements OnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>, ExecutFun<M1> {
     private LinkedList<Condition> conditions;
 
-    private WhereSelectFunImpl<M1,V> exs ;
+    private WhereSelectFunImpl<M1,V> whereSelectFun ;
 
     public OnFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new OnConditionMark());
-        this.exs = new WhereSelectFunImpl<M1,V>(conditions);
+        this.whereSelectFun = new WhereSelectFunImpl<M1,V>(conditions,false);
     }
 
     @Override
     public M1 ex() {
-        return exs.ex();
+        return whereSelectFun.ex();
     }
 
     @Override
     public List<M1> exs() {
-        return exs.exs();
+        return whereSelectFun.exs();
     }
 
 

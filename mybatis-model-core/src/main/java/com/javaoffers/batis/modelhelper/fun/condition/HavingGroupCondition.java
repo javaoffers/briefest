@@ -16,8 +16,8 @@ import java.util.Map;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-@Data
-public  class HavingGroupCondition<V> implements Condition {
+
+public  class HavingGroupCondition<V> extends WhereOnCondition {
 
     private String colName;
 

@@ -30,7 +30,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     public LeftHavingPendingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
-        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions,false);
     }
 
     @Override

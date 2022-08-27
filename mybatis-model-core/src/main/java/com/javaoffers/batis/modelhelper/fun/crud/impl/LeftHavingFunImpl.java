@@ -34,7 +34,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGett
     public LeftHavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
-        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions,false);
     }
 
     @Override

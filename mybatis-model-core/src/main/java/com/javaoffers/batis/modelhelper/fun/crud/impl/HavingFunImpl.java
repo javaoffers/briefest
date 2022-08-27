@@ -28,7 +28,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     public HavingFunImpl(LinkedList<Condition> conditions) {
         this.conditions = conditions;
         this.conditions.add(new HavingMarkWordCondition());
-        this.whereSelectFun = new WhereSelectFunImpl(this.conditions);
+        this.whereSelectFun = new WhereSelectFunImpl(this.conditions,false);
     }
 
     @Override

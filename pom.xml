@@ -9,9 +9,10 @@
   <packaging>pom</packaging>
   <version>1.0.0</version>
   <modules>
-    <module>model-helper</module>
-    <module>model-sample</module>
-    <module>model-spring-suport</module>
+    <module>mybatis-model-helper</module>
+    <module>mybatis-model-sample</module>
+    <module>mybatis-model-spring-support</module>
+    <module>mybatis-model-core</module>
   </modules>
 
   <name>mybatis-modelhelper</name>

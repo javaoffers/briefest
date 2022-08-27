@@ -16,7 +16,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-spring-support</artifactId>
-            <version>1.0.5-SHORT</version>
+            <version>3.4.1-SNAPSHOT</version>
         </dependency>
         
         <!-- junit -->

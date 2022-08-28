@@ -8,14 +8,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterDisposer;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.util.Assert;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**@Description: 核心实现类
  * @Auther: create by cmj on 2022/05/22 02:56
@@ -80,7 +78,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 		return result;
 	}
 
-	/*********************************支持Model*********************************/
+	/*********************************Support Model*********************************/
 	public <E> List<E> queryDataForT(String sql, Class<E> clazz) {
 		List<Map<String, Object>> list_map = this.jdbcTemplate.queryForList(sql);
 		ArrayList<E> list = ModelParseUtils.converterMap2Model(clazz, list_map);
@@ -93,11 +91,14 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 		return ModelParseUtils.converterMap2Model(clazz, maps);
 	}
 
-	/*********************************批处理*********************************/
+	/*********************************batch processing*********************************/
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap ) {
 		SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
 		int[] is = this.jdbcTemplate.batchUpdate( batchSQL.getSql(), batchSQL);
-		return Integer.valueOf(is.length);
+		Assert.isTrue(is !=null ," batch update is null ");
+		AtomicInteger countSuccess = new AtomicInteger();
+		Arrays.stream(is).forEach(countSuccess::addAndGet);
+		return Integer.valueOf(countSuccess.get());
 	}
 
 	@Override

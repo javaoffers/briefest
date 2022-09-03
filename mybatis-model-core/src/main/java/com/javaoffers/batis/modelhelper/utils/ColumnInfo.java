@@ -10,8 +10,23 @@ public class ColumnInfo {
 
     private String colType;
 
-    public ColumnInfo(String colNamme, String colType) {
+    private boolean isAutoincrement;
+
+    public ColumnInfo(String colNamme, String colType, boolean isAutoincrement) {
         this.colNamme = colNamme;
         this.colType = colType;
+        this.isAutoincrement = isAutoincrement;
+    }
+
+    public String getColNamme() {
+        return colNamme;
+    }
+
+    public String getColType() {
+        return colType;
+    }
+
+    public boolean isAutoincrement() {
+        return isAutoincrement;
     }
 }

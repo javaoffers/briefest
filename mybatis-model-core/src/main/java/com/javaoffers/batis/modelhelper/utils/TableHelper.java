@@ -37,6 +37,8 @@ public class TableHelper {
 
     private static Map<String, Class> modelClass = new ConcurrentHashMap<>();
 
+    private static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
+
     public TableHelper(DataSource dataSource) {
         TableHelper.dataSource = dataSource;
     }
@@ -96,9 +98,9 @@ public class TableHelper {
             parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
             Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
-            fieldNameOfGetter.computeIfAbsent(methodName, k->{
+            fieldNameOfGetter.computeIfAbsent(methodName, k -> {
                 k = k.startsWith("get")?k.substring(3): k.startsWith("is")?k.substring(2):k;
-                k = k.substring(0,1).toLowerCase()+k.substring(1);
+                k = k.substring(0, 1).toLowerCase()+k.substring(1);
                 return k;
             });
             String fieldName = fieldNameOfGetter.get(methodName);
@@ -218,65 +220,77 @@ public class TableHelper {
      * @param modelClazz
      */
     private static void parseModelClass(Class<?> modelClazz) {
-        BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
-        Assert.isTrue(table != null, " base model is null. please use @BaseModel on class");
-        String tableName = table.value();
-        if(StringUtils.isBlank(tableName)){
-            String simpleName = modelClazz.getSimpleName();
-            tableName = conLine(simpleName);
-        }
-        Connection connection = null;
-        try {
-            TableInfo tableInfo = new TableInfo(tableName);
-            connection = dataSource.getConnection();
-            DatabaseMetaData metaData = connection.getMetaData();
-
-            ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
-            while (tableResultSet.next()) {
-                // 获取表字段结构
-                ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
-                while (columnResultSet.next()) {
-                    // 字段名称
-                    String columnName = columnResultSet.getString("COLUMN_NAME");
-                    // 数据类型
-                    String columnType = columnResultSet.getString("TYPE_NAME");
-                    ColumnInfo columnInfo = new ColumnInfo(columnName, columnType);
-                    tableInfo.getColumnInfos().add(columnInfo);
-                    tableInfo.getColNames().put(columnName,columnInfo);
-                }
-            }
-            tableInfoMap.put(modelClazz,tableInfo);
-
-            Field[] colFs= modelClazz.getDeclaredFields();
-            for(Field colF : colFs){
-                colF.setAccessible(true);
-                String colName = colF.getName();
-                BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
-                if(baseUnique != null ){
-                    if(StringUtils.isNotBlank(baseUnique.value())){
-                        colName = baseUnique.value();
+        Boolean isParse = modelIsParse.getOrDefault(modelClazz, false);
+        if(!isParse){
+            synchronized (modelClazz){
+                isParse = modelIsParse.getOrDefault(modelClazz, false);
+                if(!isParse){
+                    BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
+                    Assert.isTrue(table != null, " base model is null. please use @BaseModel on class");
+                    String tableName = table.value();
+                    if(StringUtils.isBlank(tableName)){
+                        String simpleName = modelClazz.getSimpleName();
+                        tableName = conLine(simpleName);
                     }
-                }
-                ColName colNameAnno = colF.getDeclaredAnnotation(ColName.class);
-                if(colNameAnno != null && StringUtils.isNotBlank(colNameAnno.value())){
-                    colName = colNameAnno.value();
-                }
-                colName = conLine(colName);
-                String fName = colF.getName();
-                //说明存在与表中的字段名称对应
-                if(tableInfo.getColNames().get(colName) != null){
-                    tableInfo.getColNameOfModel().put(fName, colName);
-                    tableInfo.putColNameOfModelField(colName, colF);
-                }
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }finally {
-            if(connection != null){
-                try {
-                    connection.close();
-                }catch (Exception e){
-                    e.printStackTrace();
+                    Connection connection = null;
+                    try {
+                        TableInfo tableInfo = new TableInfo(tableName);
+                        connection = dataSource.getConnection();
+                        DatabaseMetaData metaData = connection.getMetaData();
+
+                        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
+                        while (tableResultSet.next()) {
+                            // 获取表字段结构
+                            ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
+                            while (columnResultSet.next()) {
+                                // 字段名称
+                                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
+                                // 数据类型
+                                String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
+                                //是否为自动递增
+                                boolean isAutoincrement = columnResultSet.getString("IS_AUTOINCREMENT").equalsIgnoreCase("NO");
+                                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement);
+                                tableInfo.getColumnInfos().add(columnInfo);
+                                tableInfo.getColNames().put(columnName,columnInfo);
+
+                            }
+                        }
+                        tableInfoMap.put(modelClazz,tableInfo);
+
+                        Field[] colFs= modelClazz.getDeclaredFields();
+                        for(Field colF : colFs){
+                            colF.setAccessible(true);
+                            String colName = colF.getName();
+                            BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
+                            if(baseUnique != null ){
+                                if(StringUtils.isNotBlank(baseUnique.value())){
+                                    colName = baseUnique.value();
+                                }
+                            }
+                            ColName colNameAnno = colF.getDeclaredAnnotation(ColName.class);
+                            if(colNameAnno != null && StringUtils.isNotBlank(colNameAnno.value())){
+                                colName = colNameAnno.value();
+                            }
+                            colName = conLine(colName);
+                            String fName = colF.getName();
+                            //说明存在与表中的字段名称对应
+                            if(tableInfo.getColNames().get(colName) != null){
+                                tableInfo.getColNameOfModel().put(fName, colName);
+                                tableInfo.putColNameOfModelField(colName, colF);
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }finally {
+                        if(connection != null){
+                            try {
+                                connection.close();
+                            }catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    modelIsParse.put(modelClazz, true);
                 }
             }
         }
@@ -328,15 +342,24 @@ public class TableHelper {
     }
 
     /**
-     * 更加Class 获取 tableName
+     * get tableName by Class
      * @param m2c
      * @param <M2>
      * @return
      */
     public static <M2> String getTableName(Class<M2> m2c) {
+        return getTableInfo(m2c).getTableName();
+    }
+
+    /**
+     * get TableInfo by class
+     * @param m2c
+     * @return
+     */
+    public static TableInfo getTableInfo(Class<?> m2c){
         TableInfo tableInfo = tableInfoMap.get(m2c);
         if(tableInfo == null){
-            synchronized (TableHelper.class){
+            synchronized (m2c){
                 tableInfo = tableInfoMap.get(m2c);
                 if(tableInfo == null){
                     parseModelClass(m2c);
@@ -344,6 +367,6 @@ public class TableHelper {
                 }
             }
         }
-        return tableInfo.getTableName();
+        return tableInfo;
     }
 }

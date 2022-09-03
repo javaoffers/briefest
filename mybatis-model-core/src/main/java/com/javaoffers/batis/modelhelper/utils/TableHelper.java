@@ -248,7 +248,7 @@ public class TableHelper {
                                 // 数据类型
                                 String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
                                 //是否为自动递增
-                                boolean isAutoincrement = columnResultSet.getString("IS_AUTOINCREMENT").equalsIgnoreCase("NO");
+                                boolean isAutoincrement = columnResultSet.getString("IS_AUTOINCREMENT").equalsIgnoreCase("YES");
                                 ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement);
                                 tableInfo.getColumnInfos().add(columnInfo);
                                 tableInfo.getColNames().put(columnName,columnInfo);

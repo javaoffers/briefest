@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.condition.insert;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import com.javaoffers.batis.modelhelper.utils.TableInfo;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -48,6 +49,7 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.modelClass = modelClass;
         //left: colName. right: fieldName
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(this.modelClass);
+        TableInfo tableInfo = TableHelper.getTableInfo(this.modelClass);
         colAllAndFieldOnly.forEach((colName, fields)->{
             try {
                 Object oValue = null;
@@ -60,7 +62,12 @@ public class InsertAllColValueCondition implements InsertCondition {
                         break;
                     }
                 }
-                //value can be null, when batch processing of the same model type,
+                //Auto-increment fields are not allowed to be 0
+                //Usually the default value of the default int type in the model. We set it to null
+                if(tableInfo.isAutoincrement(colName) && oValue != null && oValue.equals(0)){
+                    oValue = null;
+                }
+                // value can be null, when batch processing of the same model type,
                 // multiple model instances use the same sql statement for batch Insert
                 param.putIfAbsent(colName, oValue);
             }catch (Exception e){

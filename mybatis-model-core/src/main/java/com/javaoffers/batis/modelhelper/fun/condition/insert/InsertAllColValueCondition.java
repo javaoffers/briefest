@@ -54,7 +54,7 @@ public class InsertAllColValueCondition implements InsertCondition {
             try {
                 Object oValue = null;
                 for(int i = 0; i < fields.size(); i++){
-                    Field field = fields.get(0);
+                    Field field = fields.get(i);
                     Object o = field.get(model);
                     //take the first non-null value
                     if(o != null){

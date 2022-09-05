@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
+import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.core.Id;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -32,10 +33,21 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testInsert();
+        testInsertModel();
         System.exit(0);
 
     }
+
+    public void testInsertModel(){
+        User m1 = User.builder().name("m1").build();
+        User m2 = User.builder().name("m2").build();
+        User m3 = User.builder().name("m3").birthday(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss")).build();
+        User m4 = User.builder().name("m4").birthday(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss")).build();
+        User m5 = User.builder().name("m5").birthday(DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss")).build();
+        List<Id> exs = crudUserMapper.insert().colAll(m1, m2, m3, m4,m5).exs();
+        LOGUtils.printLog(exs);
+    }
+
 
     public void testInsert() throws JsonProcessingException {
         //查询col

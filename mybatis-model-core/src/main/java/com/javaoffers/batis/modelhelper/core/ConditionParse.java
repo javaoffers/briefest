@@ -160,6 +160,7 @@ public class ConditionParse {
 
         String insertIntoTableSql = insertIntoTableCondition.getSql();
         StringBuilder insertColNamesAppender = new StringBuilder();
+        LinkedList<String> moreSql = new LinkedList<>();
         StringBuilder insertValueAppender = new StringBuilder();
         LinkedList<Map<String, Object>> paramsList = new LinkedList<>();
         HashMap<String, Object> valuesParam = new HashMap<>();
@@ -188,15 +189,17 @@ public class ConditionParse {
                 valuesParam.put(key,params.get(key));
 
             } else if(condition instanceof InsertAllColValueCondition){
-
+                insertValueAppender = new StringBuilder();
+                insertColNamesAppender = new StringBuilder();
                 InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
-                if(insertColNamesAppender.length() == 0){
-                    insertColNamesAppender.append(insertIntoTableSql);
-                    insertColNamesAppender.append(allColValueCondition.getSql());
-                    insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append(allColValueCondition.getValuesSql());
-                }
+
+                insertColNamesAppender.append(insertIntoTableSql);
+                insertColNamesAppender.append(allColValueCondition.getSql());
+                insertValueAppender.append(ConditionTag.VALUES.getTag());
+                insertValueAppender.append(allColValueCondition.getValuesSql());
+
                 paramsList.add(allColValueCondition.getParams());
+                moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
             }
         }
 
@@ -204,13 +207,30 @@ public class ConditionParse {
             insertColNamesAppender.append(")");
             insertValueAppender.append(")");
             paramsList.add(valuesParam);
+            moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
         }
+        Assert.isTrue(moreSql.size() == paramsList.size()," data asymmetry ");
+        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+        HashMap<String, SQLInfo> batch = new HashMap<>();
+        for(int i =0; i < moreSql.size(); i++){
+            String sql = moreSql.get(i);
+            Map<String, Object> sqlParam = paramsList.get(i);
+            SQLInfo sqlInfo = batch.get(sql);
+            if(sqlInfo == null){
+                LinkedList parems = new LinkedList();
+                parems.add(sqlParam);
+                sqlInfo = SQLInfo.builder().aClass(insertIntoTableCondition.getModelClass())
+                        .params(parems)
+                        .sql(sql)
+                        .build();
+                batch.put(sql, sqlInfo);
+            }else{
+                sqlInfo.getParams().add(sqlParam);
+            }
 
-        SQLInfo sqlInfo = SQLInfo.builder().aClass(insertIntoTableCondition.getModelClass())
-                .params(paramsList)
-                .sql(insertColNamesAppender.append(insertValueAppender.toString()).toString())
-                .build();
-        return sqlInfo;
+        }
+        moreSQLInfo.addAllSqlInfo(batch.values());
+        return moreSQLInfo;
     }
 
     private static SQLInfo parseSelect(LinkedList<Condition> conditions) {

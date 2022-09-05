@@ -94,9 +94,17 @@ public class TableInfo {
     }
 
     public boolean isAutoincrement(String colName){
-        ColumnInfo columnInfo = this.getColNames().get(colName);
-        Assert.isTrue(columnInfo != null,"the "+colName+"col name is empty");
+        ColumnInfo columnInfo = getColumnInfo(colName);
         return columnInfo.isAutoincrement();
     }
 
+    public Object getDefaultValue(String colName) {
+        return getColumnInfo(colName).getDefaultValue();
+    }
+
+    private ColumnInfo getColumnInfo(String colName) {
+        ColumnInfo columnInfo = this.getColNames().get(colName);
+        Assert.isTrue(columnInfo != null,"the "+colName+"col name is empty");
+        return columnInfo;
+    }
 }

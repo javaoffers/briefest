@@ -12,11 +12,15 @@ public class ColumnInfo {
 
     private boolean isAutoincrement;
 
-    public ColumnInfo(String colNamme, String colType, boolean isAutoincrement) {
+    public ColumnInfo(String colNamme, String colType, boolean isAutoincrement, Object defaultValue) {
         this.colNamme = colNamme;
         this.colType = colType;
         this.isAutoincrement = isAutoincrement;
+        this.defaultValue = defaultValue;
     }
+
+    private Object defaultValue;
+
 
     public String getColNamme() {
         return colNamme;
@@ -28,5 +32,8 @@ public class ColumnInfo {
 
     public boolean isAutoincrement() {
         return isAutoincrement;
+    }
+    public Object getDefaultValue(){
+        return this.defaultValue;
     }
 }

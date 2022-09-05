@@ -62,14 +62,11 @@ public class InsertAllColValueCondition implements InsertCondition {
                         break;
                     }
                 }
-                //Auto-increment fields are not allowed to be 0
-                //Usually the default value of the default int type in the model. We set it to null
-                if(tableInfo.isAutoincrement(colName) && oValue != null && oValue.equals(0)){
-                    oValue = null;
+
+                if(oValue != null){
+                    param.put(colName, oValue);
                 }
-                // value can be null, when batch processing of the same model type,
-                // multiple model instances use the same sql statement for batch Insert
-                param.putIfAbsent(colName, oValue);
+
             }catch (Exception e){
                 e.printStackTrace();
             }

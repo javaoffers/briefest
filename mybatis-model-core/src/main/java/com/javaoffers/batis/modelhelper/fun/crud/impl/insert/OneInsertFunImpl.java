@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.core.IdImpl;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
+import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -22,7 +23,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
+        SQLInfo sqlInfo = ((MoreSQLInfo)ConditionParse.conditionParse(conditions)).getSqlInfos().get(0);
         System.out.println("SQL: "+sqlInfo.getSql());
         System.out.println("PAM: "+sqlInfo.getParams());
         List<Id> list = BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());

@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Description: 表信息辅助类
@@ -240,16 +242,18 @@ public class TableHelper {
 
                         ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
                         while (tableResultSet.next()) {
-                            // 获取表字段结构
+                            // Get table field structure
                             ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
                             while (columnResultSet.next()) {
-                                // 字段名称
+                                // Field Name
                                 String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
-                                // 数据类型
+                                // type of data
                                 String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
-                                //是否为自动递增
-                                boolean isAutoincrement = columnResultSet.getString("IS_AUTOINCREMENT").equalsIgnoreCase("YES");
-                                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement);
+                                //the default value of the field
+                                Object defaultValue = columnResultSet.getString(ColumnLabel.COLUMN_DEF);
+                                //Whether to auto increment
+                                boolean isAutoincrement = "YES".equalsIgnoreCase(columnResultSet.getString(ColumnLabel.IS_AUTOINCREMENT));
+                                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement,defaultValue);
                                 tableInfo.getColumnInfos().add(columnInfo);
                                 tableInfo.getColNames().put(columnName,columnInfo);
 

@@ -1,0 +1,24 @@
+<!--<?xml version="1.0" encoding="UTF-8"?>-->
+<!--<!DOCTYPE mapper-->
+<!--		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"-->
+<!--		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">-->
+<!--<mapper namespace="com.javaoffers.base.modelhelper.sample.spring.mapper.UserMapper">-->
+
+
+<!--	<select id="queryUserDataLimitOne" resultType="model">-->
+<!--		select * from user limit 1-->
+<!--	</select>-->
+
+<!--	<select id="queryUserData" resultType="model">-->
+<!--		select * from user-->
+<!--	</select>-->
+
+<!--	<select id="queryUserAndOrder" resultType="model">-->
+<!--		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id ;-->
+<!--	</select>-->
+
+<!--	<select id="queryUserAndOrderOne" resultType="model">-->
+<!--		select a.* , b.id as orderId, b.* from user a left join user_order b on a.id = b.user_id and a.id = 1;-->
+<!--	</select>-->
+
+<!--</mapper>-->

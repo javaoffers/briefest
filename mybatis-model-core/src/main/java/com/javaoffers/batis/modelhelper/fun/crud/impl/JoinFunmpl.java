@@ -41,13 +41,13 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
      */
     @Override
     public JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... cols) {
-        Stream.of(cols).forEach(col->{conditions.add(new SelectColumnCondition(col));});
+        Stream.of(cols).forEach(col->{conditions.add(new SelectColumnCondition(this.m2Class, col));});
         return this;
     }
 
     @Override
     public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(GetterFun<M2, Object>... cols) {
-        Stream.of(cols).forEach(col->conditions.add(new SelectColumnCondition(col)));
+        Stream.of(cols).forEach(col->conditions.add(new SelectColumnCondition(this.m2Class, col)));
         return this;
     }
 
@@ -65,7 +65,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
             Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
             String colName = colNameAndAliasName.getLeft();
             String aliasName = colNameAndAliasName.getRight();
-            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+aliasName));
+            conditions.add(new SelectColumnCondition(null, aggTag.name()+"("+colName+") as "
+                    +this.m2Class.getSimpleName() + SelectColumnCondition.modelSeparation + aliasName));
         });
         return this;
     }
@@ -82,7 +83,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object> col, String asName) {
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
         String colName = colNameAndAliasName.getLeft();
-        conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ asName));
+        conditions.add(new SelectColumnCondition(null,aggTag.name()+"("+colName+") as "
+                + this.m2Class.getSimpleName()+ SelectColumnCondition.modelSeparation + asName));
         return this;
     }
 
@@ -98,7 +100,7 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     public JoinFun<M1, M2,  GetterFun<M2,Object>, V> colAll() {
         List<String> colAll = TableHelper.getColAll(m2Class);
         for(String col: colAll){
-            conditions.add(new SelectColumnCondition(col));
+            conditions.add(new SelectColumnCondition(this.m2Class, col));
         }
         return this;
     }

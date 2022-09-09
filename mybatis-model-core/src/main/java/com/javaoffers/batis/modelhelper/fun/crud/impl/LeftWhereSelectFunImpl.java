@@ -48,7 +48,9 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     @Override
     public M ex() {
-        return exs().get(0);
+        List<M> exs = exs();
+        if(exs == null ||exs.size() == 0){return null;}
+        return exs.get(0);
     }
 
     @Override

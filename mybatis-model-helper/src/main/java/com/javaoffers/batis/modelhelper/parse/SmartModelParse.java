@@ -36,7 +36,7 @@ public class SmartModelParse implements ModelParse {
         ArrayList<E> list = new ArrayList<E>();
         if (clazz.getDeclaredAnnotation(BaseModel.class) != null) {// model
             try {
-                list.addAll(buildModel(clazz, Utils.initData(listMap)));
+                list.addAll(buildModel(clazz, listMap));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -57,7 +57,7 @@ public class SmartModelParse implements ModelParse {
         }
         Map<String, List<Map<String, Object>>> map_ = new LinkedHashMap<>();//存放切分后的数据（根据唯一字段的值分组）
         Set<Field> fields = Utils.getFields(clazz);
-        checkIsExistsSameSuperModel(clazz);
+        //checkIsExistsSameSuperModel(clazz);
         ArrayList<Field> ones = new ArrayList<Field>();//非数组或集合model,一对一
         ArrayList<Field> arrays = new ArrayList<Field>();//存放数组model
         ArrayList<Field> list_ = new ArrayList<Field>();//存放list集合model
@@ -74,9 +74,9 @@ public class SmartModelParse implements ModelParse {
                 ones.add(fd);
             }
         }
-        ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//存放能确定一条主表数据（主model）的字段
-        Utils.getUniqueFieldNames(ones, uniqueFieldNameList,list_map.get(0));//获取能确定一条主表数据（主model）的字段
-        Utils.inciseData(list_map, map_, uniqueFieldNameList);//切割数据
+        ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//Stores fields that can determine a piece of main table data (main model)
+        Utils.getUniqueFieldNames(clazz.getSimpleName(), ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
+        Utils.inciseData(list_map, map_, uniqueFieldNameList);//Cutting data
         List<E> list = buildData(clazz,map_,ones,arrays,list_,set_);
         linkedList.addAll(list);
         return linkedList;
@@ -100,7 +100,7 @@ public class SmartModelParse implements ModelParse {
                 if(list==null||list.size()==0) {
                     continue;
                 }
-                Map<String, Object> mp = list.get(0);//获取唯一切割数据，只取0即可，指主model主数据
+                Map<String, Object> mp = list.get(0);//Get the unique cutting data, just take 0, which refers to the main model main data
                 Model<E> model = Model.getModel(clazz.newInstance());
 
                 for(Field fd: ones) {
@@ -236,9 +236,10 @@ public class SmartModelParse implements ModelParse {
     }
 
     /**
-     *  string： mianModel 类名
-     *  String ： 保存当前Model的父类名称，如果存在相同则提示Model存在相同父类。
+     *  string： mianmodel class name
+     *  String ： Save the name of the parent class of the current Model. If the same exists, it will prompt that the Model has the same parent class.
      */
+    @Deprecated
     private static <E> void checkIsExistsSameSuperModel(Class<E> clazz) {
         Map<String, String> map = tl.get();
         final String name = clazz.getSuperclass().getName();
@@ -251,7 +252,7 @@ public class SmartModelParse implements ModelParse {
         }else{
             final String superName = map.get(name);
             if(StringUtils.isNotBlank(superName)){
-                throw new BaseException("Model 模型不能存在相同的父类，防止字段重复！！"+clazz.getName());
+                throw new BaseException("Model models cannot have the same parent class to prevent field duplication! !"+clazz.getName());
             }else{
                 map.put(name,name);
             }

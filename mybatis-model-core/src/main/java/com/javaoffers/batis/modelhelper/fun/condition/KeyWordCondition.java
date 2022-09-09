@@ -7,12 +7,14 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * @Description: select 语句：查询字段
+ * @Description: select statement: query fields
  * @Auther: create by cmj on 2022/5/2 16:31
  */
+@Deprecated
 public class KeyWordCondition extends SelectColumnCondition  {
 
     private String keyWord;
+    private Class mClass;
 
     @Override
     public ConditionTag getConditionTag() {

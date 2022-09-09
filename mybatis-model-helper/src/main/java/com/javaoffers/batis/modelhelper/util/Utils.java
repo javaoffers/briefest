@@ -9,19 +9,23 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
- * @Description:
+ * @Description: Tools
  * @Auther: create by cmj on 2021/12/9 11:23
  */
 public class Utils {
 
+    static final String modelSeparation = "__";
+
     /**
-     * 下划线转换为驼峰
+     * Convert underscore to camel case
      *
      * @param list_map
      * @return
      */
+    @Deprecated
     public static List<Map<String, Object>> initData(List<Map<String, Object>> list_map) {
         ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         if (list_map != null && list_map.size() > 0) {
@@ -62,7 +66,8 @@ public class Utils {
     }
 
     /**
-     * 解析泛型 获取 Model 的 class 对象
+     * Resolve generics Get the class object of Model
+     *
      * @param fd
      * @return
      * @throws Exception
@@ -81,7 +86,7 @@ public class Utils {
     }
 
     /**
-     * 获取集合的泛型类
+     * Get the generic class of the collection
      *
      * @param fd
      * @return
@@ -93,7 +98,7 @@ public class Utils {
             Type listActualTypeArguments = listGenericType.getActualTypeArguments()[0];
             return Class.forName(listActualTypeArguments.getTypeName());
         } catch (Exception e) {
-            new BaseException(e.getMessage() + "\n一对多关系注意引用集合类一定要加上泛型类例如 ：List<Model>,Model不能省去").printStackTrace();
+            new BaseException(e.getMessage() + "\nOne-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted").printStackTrace();
             throw e;
         }
 
@@ -112,17 +117,18 @@ public class Utils {
     }
 
     /**
-     * 获取能确定最外层Model的唯一字段名称
+     * Get the unique field name that can determine the outermost Model
      *
      * @param ones
      * @param uniqueFieldNameList_
      * @throws Exception
      * @throws SecurityException
      */
-    public static void getUniqueFieldNames(ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
-        HashSet<String> hashSet = new HashSet<String>();
-        for (Field fd : ones) {//一对一
-            if (isBaseModel(fd)) {//
+    public static void getUniqueFieldNames(String modelClassName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
+        String prefix = modelClassName + modelSeparation;
+        Set<String> hashSet = new HashSet<String>();
+        for (Field fd : ones) {//
+            if (isBaseModel(fd)) {// one on one
                 Field[] bmFs = fd.getType().getDeclaredFields();//model中field
                 for (int i = 0; bmFs != null && i < bmFs.length; i++) {
                     Field bmf = bmFs[i];
@@ -130,7 +136,7 @@ public class Utils {
                     if (uniques != null && uniques.length > 0) {
                         String uniqueFieldName = bmf.getName();
                         if (standardClumMap.containsKey(uniqueFieldName)) {
-                            hashSet.add(uniqueFieldName);
+                            hashSet.add(prefix + uniqueFieldName);
                         }
                     }
                 }
@@ -142,6 +148,10 @@ public class Utils {
                     hashSet.add(uniqueFieldName);
                 }
             }
+        }
+        //If not, treat all fields as unique
+        if (hashSet.size() == 0) {
+            hashSet = ones.stream().map(field -> prefix + field.getName()).collect(Collectors.toSet());
         }
         uniqueFieldNameList_.addAll(hashSet);
     }

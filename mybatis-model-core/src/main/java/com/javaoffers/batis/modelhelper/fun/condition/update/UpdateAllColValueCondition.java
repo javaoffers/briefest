@@ -1,7 +1,9 @@
 package com.javaoffers.batis.modelhelper.fun.condition.update;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import com.javaoffers.batis.modelhelper.utils.TableInfo;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -60,6 +62,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         this.modelClass = modelClass;
         this.model = model;
         this.tableName = TableHelper.getTableName(modelClass);
+        TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
+        Map<String, ColumnInfo> colNames = tableInfo.getColNames();
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getColAllAndFieldOnly(modelClass);
 
         updateSqlNull.append(tableName);
@@ -68,6 +72,24 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         AtomicInteger statusNull = new AtomicInteger(0);
         colAllAndFieldOnly.forEach((cloName, fields) -> {
             try {
+                ColumnInfo columnInfo = colNames.get(cloName);
+                Object oValue = null;
+                for(int i = 0; i < fields.size(); i++){
+                    Field field = fields.get(0);
+                    Object o = field.get(model);
+                    //take the first non-null value
+                    if(o != null){
+                        oValue = o;
+                        break;
+                    }
+                }
+                //Self-incrementing elements are not allowed to be 0
+                if(     columnInfo.isAutoincrement()
+                        && oValue instanceof Number
+                        && ((Number) oValue).longValue() == 0L
+                ){
+                  return;
+                }
                 if(statusNull.get() == 0){
                     updateSqlNull.append(ConditionTag.SET.getTag());
                     statusNull.incrementAndGet();
@@ -79,16 +101,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(cloName);
                 updateSqlNull.append("}");
-                Object oValue = null;
-                for(int i = 0; i < fields.size(); i++){
-                    Field field = fields.get(0);
-                    Object o = field.get(model);
-                    //take the first non-null value
-                    if(o != null){
-                        oValue = o;
-                        break;
-                    }
-                }
+
                 params.put(cloName, oValue);
                 if(oValue!=null){
                     npdateNullParams.put(cloName, oValue);

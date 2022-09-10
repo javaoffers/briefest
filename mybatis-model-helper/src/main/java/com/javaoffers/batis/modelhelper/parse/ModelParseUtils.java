@@ -12,7 +12,7 @@ public class ModelParseUtils {
 
     static  final ModelParse modelParse = new SmartModelParse();
 
-    public static <E> ArrayList<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
+    public static <E> List<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
         return modelParse.converterMap2Model(clazz,listMap);
     }
 }

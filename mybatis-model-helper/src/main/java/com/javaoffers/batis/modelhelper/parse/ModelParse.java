@@ -17,6 +17,6 @@ public interface ModelParse {
      * @param <E>
      * @return
      */
-    public <E> ArrayList<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap);
+    public <E> List<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap);
 
 }

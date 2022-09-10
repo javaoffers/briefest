@@ -11,6 +11,10 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-helper</artifactId>
     <version>1.0.4</version>
+    <properties>
+        <mybatis-model-common>1.0.4</mybatis-model-common>
+    </properties>
+
     <dependencies>
         <!-- mybatis -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
@@ -18,20 +22,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.4</version>
-        </dependency>
-
-        <!--bytebuddy 字节码生成器-->
-        <!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy</artifactId>
-            <version>1.9.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.bytebuddy</groupId>
-            <artifactId>byte-buddy-agent</artifactId>
-            <version>1.9.10</version>
         </dependency>
 
         <!--lombok-->
@@ -59,6 +49,13 @@
             <artifactId>log4j</artifactId>
             <version>1.2.17</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>mybatis-model-common</artifactId>
+            <version>${mybatis-model-common}</version>
+        </dependency>
+
 
     </dependencies>
 

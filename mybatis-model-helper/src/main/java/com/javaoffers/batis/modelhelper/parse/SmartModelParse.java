@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
 import com.javaoffers.batis.modelhelper.util.Utils;
 import com.javaoffers.batis.modelhelper.util.Model;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
@@ -29,19 +30,18 @@ public class SmartModelParse implements ModelParse {
      * @return
      */
     @Override
-    public <E> ArrayList<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
+    public <E> List<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
         if (listMap == null || listMap.size() == 0) {
             return new ArrayList<E>();
         }
-        ArrayList<E> list = new ArrayList<E>();
         if (clazz.getDeclaredAnnotation(BaseModel.class) != null) {// model
             try {
-                list.addAll(buildModel(clazz, listMap));
+                return buildModel(clazz, listMap);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        return list;
+        return Collections.EMPTY_LIST;
     }
 
     /**用于原始数据集转换Model数据集
@@ -74,16 +74,20 @@ public class SmartModelParse implements ModelParse {
                 ones.add(fd);
             }
         }
+        String tableName = TableHelper.getTableName(clazz);
         ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//Stores fields that can determine a piece of main table data (main model)
-        Utils.getUniqueFieldNames(clazz.getSimpleName(), ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
+        Utils.getUniqueFieldNames(tableName, ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
         Utils.inciseData(list_map, map_, uniqueFieldNameList);//Cutting data
-        List<E> list = buildData(clazz,map_,ones,arrays,list_,set_);
+        List<E> list = buildData(tableName, clazz,map_,ones,arrays,list_,set_);
         linkedList.addAll(list);
         return linkedList;
     }
 
+
+
     @SuppressWarnings("unchecked")
     private static <E> List<E> buildData(
+            String tableName,
             Class<E> clazz,Map<String,
             List<Map<String, Object>>> map_,
             ArrayList<Field> ones,
@@ -96,7 +100,7 @@ public class SmartModelParse implements ModelParse {
             Set<Map.Entry<String,List<Map<String,Object>>>> entrySet = map_.entrySet();
             for(Map.Entry<String,List<Map<String,Object>>> entry : entrySet) {
 
-                List<Map<String,Object>> list = entry.getValue();//获取一切割数据
+                List<Map<String,Object>> list = entry.getValue();//Get a cut data
                 if(list==null||list.size()==0) {
                     continue;
                 }
@@ -112,10 +116,11 @@ public class SmartModelParse implements ModelParse {
                         }
                         continue;
                     }
-                    String name = fd.getName();
-                    if(mp.get(name)!=null) {
+                    String name = Utils.getSpecialColName(tableName,fd.getName());
+                    Object o = null;
+                    if((o = mp.get(name)) !=null || (o = mp.get(fd.getName())) !=  null) {
                         Class<?> type = fd.getType();
-                        Object object2 = convert.converterObject(type, mp.get(name),fd);
+                        Object object2 = convert.converterObject(type,o ,fd);
                         fd.set(model.getModelAndSetStatusIsTrue(), object2);
                     }
 
@@ -135,10 +140,13 @@ public class SmartModelParse implements ModelParse {
                             }
                         }
                     }else {
-                        String name = fd.getName();
+                        String name = Utils.getSpecialColName(tableName,fd.getName());
                         LinkedList<Object> arrayData = new LinkedList<Object>();
                         for(Map<String, Object> map : list) {
                             Object object = map.get(name);
+                            if(object == null){
+                                object = map.get(fd.getName());
+                            }
                             if(object!=null) {
                                 arrayData.add(object);
                             }
@@ -162,13 +170,13 @@ public class SmartModelParse implements ModelParse {
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else{
-                            ls = getList(list, fd);
+                            ls = getList(tableName,list, fd);
                         }
                     }else {
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else{
-                            ls = getList(list, fd);
+                            ls = getList(tableName, list, fd);
                         }
                         List newInstance = (List)fd.get(model.getModelAndSetStatusIsTrue());
                         if(newInstance==null){
@@ -192,7 +200,7 @@ public class SmartModelParse implements ModelParse {
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else {
-                            ls = getList(list, fd);
+                            ls = getList(tableName, list, fd);
                         }
                         newInstance = new HashSet();
                         newInstance.addAll(ls);
@@ -200,7 +208,7 @@ public class SmartModelParse implements ModelParse {
                         if(Utils.isBaseModel(fd)){
                             ls = buildModel(Utils.getModelClass(fd), list);
                         }else {
-                            ls = getList(list, fd);
+                            ls = getList(tableName, list, fd);
                         }
                         newInstance = (Set)fd.get(model.getModelAndSetStatusIsTrue());
                         if(newInstance == null){
@@ -224,13 +232,17 @@ public class SmartModelParse implements ModelParse {
         return linkedList;
     }
 
-    private static List getList(List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
+    private static List getList(String tableName , List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
         List ls;
         Class gClass = Utils.getGenericityClassOfCollect(fd);//泛型类型
         ls = new LinkedList();
         List finalLs = ls;
         list.forEach(map->{
-           finalLs.add(convert.converterObject(gClass,map.get(fd.getName()),fd));
+            Object o = map.get(Utils.getSpecialColName(tableName, fd.getName()));
+            if(o == null){
+                o = map.get(fd.getName());
+            }
+            finalLs.add(convert.converterObject(gClass,o,fd));
        });
         return ls;
     }

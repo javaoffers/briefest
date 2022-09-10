@@ -124,7 +124,7 @@ public class Utils {
      * @throws Exception
      * @throws SecurityException
      */
-    public static void getUniqueFieldNames(String modelClassName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
+    public static void getUniqueFieldNames(String tableName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
         //String prefix = modelClassName + modelSeparation;
         Set<String> hashSet = new HashSet<String>();
         for (Field fd : ones) {//
@@ -134,18 +134,24 @@ public class Utils {
                     Field bmf = bmFs[i];
                     BaseUnique[] uniques = bmf.getAnnotationsByType(BaseUnique.class);
                     if (uniques != null && uniques.length > 0) {
-                        String uniqueFieldName = bmf.getName();
+                        String name = bmf.getName();
+                        String uniqueFieldName = getSpecialColName(tableName, name);
                         if (standardClumMap.containsKey(uniqueFieldName)) {
                             hashSet.add( uniqueFieldName);
+                        }else if(standardClumMap.containsKey(name)){
+                            hashSet.add( name);
                         }
                     }
                 }
 
             }
             if (isBaseUnique(fd)) {
-                String uniqueFieldName = fd.getName();
+                String name = fd.getName();
+                String uniqueFieldName = getSpecialColName(tableName, name);
                 if (standardClumMap.containsKey(uniqueFieldName)) {
                     hashSet.add(uniqueFieldName);
+                }else if(standardClumMap.containsKey(name)){
+                    hashSet.add( name);
                 }
             }
         }
@@ -153,19 +159,43 @@ public class Utils {
         if (hashSet.size() == 0) {
             hashSet = ones.stream()
                     .filter(field -> isInstanceOfCharSequenceOrNumber(field.getType()))
-                    .map(field ->  field.getName()).collect(Collectors.toSet());
+                    .map(field -> {
+                                String name = field.getName();
+                                String uniqueFieldName = getSpecialColName(tableName, name);
+                                if (standardClumMap.containsKey(uniqueFieldName)) {
+                                    return uniqueFieldName;
+                                } else if (standardClumMap.containsKey(name)) {
+                                    return name;
+                                }
+                                return null;
+                            }
+                    ).filter(Objects::nonNull).collect(Collectors.toSet());
         }
 
         //If not, treat all fields  as unique
         if(hashSet.size() == 0){
             hashSet = ones.stream()
-                    .map(field ->  field.getName()).collect(Collectors.toSet());
+                    .map(field -> {
+                                String name = field.getName();
+                                String uniqueFieldName = getSpecialColName(tableName, name);
+                                if (standardClumMap.containsKey(uniqueFieldName)) {
+                                    return uniqueFieldName;
+                                } else if (standardClumMap.containsKey(name)) {
+                                    return name;
+                                }
+                                return null;
+                            }
+                    ).filter(Objects::nonNull).collect(Collectors.toSet());
         }
 
         uniqueFieldNameList_.addAll(hashSet);
     }
 
-    private static boolean isInstanceOfCharSequenceOrNumber(Class c){
+    public static String getSpecialColName(String tableName, String colName){
+        return tableName + "__" + colName;
+    }
+
+    public static boolean isInstanceOfCharSequenceOrNumber(Class c){
        return CharSequence.class.isAssignableFrom(c)
                 || Number.class.isAssignableFrom(c);
     }

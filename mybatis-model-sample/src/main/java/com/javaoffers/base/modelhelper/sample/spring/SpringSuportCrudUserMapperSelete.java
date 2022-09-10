@@ -335,7 +335,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         print(ex1);
 
         ex1 = crudUserMapper.select()
-                .col("max(birthday)")
+                //The alias must be the same as the attribute name of the model class
+                .col("max(birthday) as birthday")
                 .where()
                 .groupBy("left(birthday,10)")
                 .ex();

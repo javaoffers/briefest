@@ -3,12 +3,7 @@ package com.javaoffers.batis.modelhelper.utils;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

@@ -9,9 +9,12 @@ import org.springframework.jdbc.core.ParameterDisposer;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,6 +24,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
 	public static BaseBatisImpl baseBatis = new BaseBatisImpl(null);
+
+	private static final Object[] EMPTY = new Object[0];
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -66,7 +71,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 	}
 
 	public List<Map<String, Object>> queryData(String sql) {
-		List<Map<String, Object>> queryForList = this.jdbcTemplate.queryForList(sql);
+		List<Map<String, Object>> queryForList = queryData(sql, EMPTY);
 		return queryForList;
 	}
 
@@ -74,14 +79,14 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 	public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
 		SQL batchSQL = SQLParse.getSQL(sql, map);
 		 //query(sql, args, getColumnMapRowMapper());
-		List<Map<String, Object>> result = this.jdbcTemplate.query(batchSQL.getSql(), batchSQL.getArgsParam().get(0),new ColumnMapRowMapper());
+		List<Map<String, Object>> result = queryData(batchSQL.getSql(), batchSQL.getArgsParam().get(0));
 		return result;
 	}
 
 	/*********************************Support Model*********************************/
 	public <E> List<E> queryDataForT(String sql, Class<E> clazz) {
-		List<Map<String, Object>> list_map = this.jdbcTemplate.queryForList(sql);
-		ArrayList<E> list = ModelParseUtils.converterMap2Model(clazz, list_map);
+		List<Map<String, Object>> list_map = queryData(sql, EMPTY);
+		List<E> list = ModelParseUtils.converterMap2Model(clazz, list_map);
 		return list;
 	}
 
@@ -156,6 +161,67 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 		});
 
 		return ids;
+	}
+
+	/**
+	 * Basic query implementation
+	 * @param nativeSql sql
+	 * @param param parameter
+	 * @return
+	 */
+	private List<Map<String, Object>> queryData(String nativeSql,Object[] param){
+		return this.jdbcTemplate.query(nativeSql,param,new ColumnMapRowMapper(){
+			@Override
+			public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int columnCount = rsmd.getColumnCount();
+				Map<String, Object> mapOfColumnValues = createColumnMap(columnCount);
+				for (int i = 1; i <= columnCount; i++) {
+					ColumnInfo columnInfo = lookupColumnName(rsmd, i);
+					mapOfColumnValues.putIfAbsent(columnInfo.getTableName() + getColumnKey(columnInfo.getColName()), getColumnValue(rs, i));
+				}
+				return mapOfColumnValues;
+			}
+
+			public  ColumnInfo lookupColumnName(ResultSetMetaData resultSetMetaData, int columnIndex) throws SQLException {
+				String name = resultSetMetaData.getColumnLabel(columnIndex);
+				if (!StringUtils.hasLength(name)) {
+					name = resultSetMetaData.getColumnName(columnIndex);
+				}
+				String tableName = resultSetMetaData.getTableName(columnIndex);
+				return  new ColumnInfo(name, tableName);
+			}
+
+			class ColumnInfo{
+
+				private String colName;
+				private String tableName;
+
+				public ColumnInfo(String colName, String tableName) {
+					this.colName = colName;
+					this.tableName = tableName;
+				}
+
+				public String getColName() {
+					return colName;
+				}
+
+				public void setColName(String colName) {
+					this.colName = colName;
+				}
+
+				public String getTableName() {
+					if(org.apache.commons.lang3.StringUtils.isBlank(this.tableName)){
+						return "";
+					}
+					return tableName + "__";
+				}
+
+				public void setTableName(String tableName) {
+					this.tableName = tableName;
+				}
+			}
+		});
 	}
 
 }

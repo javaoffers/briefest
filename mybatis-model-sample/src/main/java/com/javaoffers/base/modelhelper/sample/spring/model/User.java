@@ -3,6 +3,7 @@ package com.javaoffers.base.modelhelper.sample.spring.model;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,6 +12,7 @@ import java.util.List;
 @BaseModel
 @Data
 @Builder
+@AllArgsConstructor
 public class User {
 
     /**
@@ -25,6 +27,8 @@ public class User {
     private String name;
 
     private String birthday;
+
+    private String createTime;
 
     private List<UserOrder> orders;
 
@@ -63,11 +67,4 @@ public class User {
     public User() {
     }
 
-    public User(Long countId, Long id, String name, String birthday, List<UserOrder> orders) {
-        this.countId = countId;
-        this.id = id;
-        this.name = name;
-        this.birthday = birthday;
-        this.orders = orders;
-    }
 }

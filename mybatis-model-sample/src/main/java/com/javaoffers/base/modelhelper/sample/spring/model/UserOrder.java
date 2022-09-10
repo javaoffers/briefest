@@ -18,6 +18,8 @@ public class UserOrder {
 
     private String userId;
 
+    private String createTime;
+
     private int isDel;
 
     public int getIsDel() {
@@ -61,5 +63,13 @@ public class UserOrder {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

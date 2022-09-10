@@ -1,6 +1,5 @@
 package com.javaoffers.batis.modelhelper.utils;
 
-import lombok.Data;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -55,13 +54,28 @@ public class ByteBuddyUtils {
         return null;
     }
 
-    @Data
     public static class DefaultClass{
         private String methodName;
         private Class executorClass;
 
         public DefaultClass(String methodName, Class  executorClass) {
             this.methodName = methodName;
+            this.executorClass = executorClass;
+        }
+
+        public String getMethodName() {
+            return methodName;
+        }
+
+        public void setMethodName(String methodName) {
+            this.methodName = methodName;
+        }
+
+        public Class getExecutorClass() {
+            return executorClass;
+        }
+
+        public void setExecutorClass(Class executorClass) {
             this.executorClass = executorClass;
         }
     }

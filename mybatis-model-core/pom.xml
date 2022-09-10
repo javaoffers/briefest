@@ -12,6 +12,7 @@
     <version>1.0.0</version>
     <properties>
         <mybatis.version>3.4.1</mybatis.version>
+        <mybatis-model-common>1.0.4</mybatis-model-common>
     </properties>
 
     <dependencies>
@@ -30,6 +31,12 @@
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
             <version>${mybatis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>mybatis-model-common</artifactId>
+            <version>${mybatis-model-common}</version>
         </dependency>
 
     </dependencies>

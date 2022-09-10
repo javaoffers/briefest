@@ -17,7 +17,10 @@ import java.util.List;
 public interface CrudUserMapper extends CrudMapper<User> {
 
     default List<User> queryAll(){
-        return select().colAll().where().exs();
+        return select()
+                .colAll()
+                .where()
+                .exs();
     }
 
     default List<User> queryAllAndOrder(){

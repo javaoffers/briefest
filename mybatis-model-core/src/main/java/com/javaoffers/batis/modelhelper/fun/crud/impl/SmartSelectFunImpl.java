@@ -34,7 +34,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
     @Override
     public SmartSelectFun<M, C, V> col(C... cols) {
         Stream.of(cols).forEach(col -> {
-            this.conditions.add(new SelectColumnCondition(this.mClass, col));
+            this.conditions.add(new SelectColumnCondition(col));
         });
         return this;
     }
@@ -53,8 +53,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
             Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
             String colName = colNameAndAliasName.getLeft();
             String aliasName = colNameAndAliasName.getRight();
-            this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "
-                    +this.mClass.getSimpleName()+ SelectColumnCondition.modelSeparation + aliasName));
+            this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as " + aliasName));
         });
         return this;
     }
@@ -71,8 +70,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
     public SmartSelectFun<M, C, V> col(AggTag aggTag, C col, String asName) {
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
         String colName = colNameAndAliasName.getLeft();
-        this.conditions.add(new SelectColumnCondition( aggTag.name()+"("+colName+") as "+
-                this.mClass.getSimpleName()+ SelectColumnCondition.modelSeparation + asName));
+        this.conditions.add(new SelectColumnCondition( aggTag.name()+"("+colName+") as "+ asName));
         return this;
     }
 
@@ -103,7 +101,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
     @Override
     public SmartSelectFun<M, C, V> colAll() {
         Set<SelectColumnCondition> cols = TableHelper.getColAll(this.mClass).stream().map(colName ->
-                new SelectColumnCondition(this.mClass.getSimpleName()+SelectColumnCondition.modelSeparation+colName)).collect(Collectors.toSet());
+                new SelectColumnCondition(colName)).collect(Collectors.toSet());
         this.conditions.addAll(cols);
         return this;
     }

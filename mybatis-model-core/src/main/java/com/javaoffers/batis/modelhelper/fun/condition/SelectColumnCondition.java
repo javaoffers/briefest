@@ -14,12 +14,8 @@ import java.util.Map;
  */
 public class SelectColumnCondition implements Condition  {
 
-    public static final String modelSeparation = "__";
-
     //It may also be a child-query, or a statistical function
     private String colName;
-
-    private Class mClass;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -40,9 +36,8 @@ public class SelectColumnCondition implements Condition  {
         this.colName = colName;
     }
 
-    public SelectColumnCondition(Class mClass, GetterFun colName) {
-
-        this.colName = TableHelper.getColName(mClass,colName);
+    public SelectColumnCondition( GetterFun colName) {
+        this.colName = TableHelper.getColName(colName);
     }
 
     @Override

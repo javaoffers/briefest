@@ -125,7 +125,7 @@ public class Utils {
      * @throws SecurityException
      */
     public static void getUniqueFieldNames(String modelClassName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
-        String prefix = modelClassName + modelSeparation;
+        //String prefix = modelClassName + modelSeparation;
         Set<String> hashSet = new HashSet<String>();
         for (Field fd : ones) {//
             if (isBaseModel(fd)) {// one on one
@@ -136,7 +136,7 @@ public class Utils {
                     if (uniques != null && uniques.length > 0) {
                         String uniqueFieldName = bmf.getName();
                         if (standardClumMap.containsKey(uniqueFieldName)) {
-                            hashSet.add(prefix + uniqueFieldName);
+                            hashSet.add( uniqueFieldName);
                         }
                     }
                 }
@@ -149,12 +149,27 @@ public class Utils {
                 }
             }
         }
-        //If not, treat all fields as unique
+        //If not, treat all fields of CharSequence / Number as unique
         if (hashSet.size() == 0) {
-            hashSet = ones.stream().map(field -> prefix + field.getName()).collect(Collectors.toSet());
+            hashSet = ones.stream()
+                    .filter(field -> isInstanceOfCharSequenceOrNumber(field.getType()))
+                    .map(field ->  field.getName()).collect(Collectors.toSet());
         }
+
+        //If not, treat all fields  as unique
+        if(hashSet.size() == 0){
+            hashSet = ones.stream()
+                    .map(field ->  field.getName()).collect(Collectors.toSet());
+        }
+
         uniqueFieldNameList_.addAll(hashSet);
     }
+
+    private static boolean isInstanceOfCharSequenceOrNumber(Class c){
+       return CharSequence.class.isAssignableFrom(c)
+                || Number.class.isAssignableFrom(c);
+    }
+
 
     public static boolean isBaseModel(Field fd) throws Exception {
         Class<?> type = fd.getType();

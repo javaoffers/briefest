@@ -155,22 +155,6 @@ public class Utils {
                 }
             }
         }
-        //If not, treat all fields of CharSequence / Number as unique
-        if (hashSet.size() == 0) {
-            hashSet = ones.stream()
-                    .filter(field -> isInstanceOfCharSequenceOrNumber(field.getType()))
-                    .map(field -> {
-                                String name = field.getName();
-                                String uniqueFieldName = getSpecialColName(tableName, name);
-                                if (standardClumMap.containsKey(uniqueFieldName)) {
-                                    return uniqueFieldName;
-                                } else if (standardClumMap.containsKey(name)) {
-                                    return name;
-                                }
-                                return null;
-                            }
-                    ).filter(Objects::nonNull).collect(Collectors.toSet());
-        }
 
         //If not, treat all fields  as unique
         if(hashSet.size() == 0){
@@ -255,11 +239,11 @@ public class Utils {
     }
 
     /**
-     * 切割数据
+     * Cutting data
      *
-     * @param list_map
-     * @param map_
-     * @param uniqueFieldNameList
+     * @param list_map source data
+     * @param map_ cut data of result
+     * @param uniqueFieldNameList Cut according to this key
      */
     public static void inciseData(List<Map<String, Object>> list_map, Map<String, List<Map<String, Object>>> map_,
                                   ArrayList<String> uniqueFieldNameList) {

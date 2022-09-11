@@ -77,6 +77,9 @@ public class SmartModelParse implements ModelParse {
         String tableName = TableHelper.getTableName(clazz);
         ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//Stores fields that can determine a piece of main table data (main model)
         Utils.getUniqueFieldNames(tableName, ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
+        if(uniqueFieldNameList==null || uniqueFieldNameList.size()==0){
+            return linkedList;
+        }
         Utils.inciseData(list_map, map_, uniqueFieldNameList);//Cutting data
         List<E> list = buildData(tableName, clazz,map_,ones,arrays,list_,set_);
         linkedList.addAll(list);

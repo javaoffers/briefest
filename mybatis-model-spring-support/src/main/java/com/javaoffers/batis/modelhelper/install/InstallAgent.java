@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * @author cmj
  * @Description TODO
- * @createTime 2021年12月12日 20:22:00
+ * @createTime December 12, 2021 20:22:00
  */
 @Configuration
 @AutoConfigureAfter(DataSource.class)

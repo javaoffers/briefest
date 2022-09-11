@@ -1,5 +1,8 @@
-package com.javaoffers.batis.modelhelper.core;
+package com.javaoffers.batis.modelhelper.proxy;
 
+import com.javaoffers.batis.modelhelper.core.CrudMapperConstant;
+import com.javaoffers.batis.modelhelper.core.CrudMapperMethodExcutor;
+import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
 import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
@@ -44,7 +47,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
         Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
         this.modelClass = modelclass;
         ByteBuddyUtils.DefaultClass select = ByteBuddyUtils.buildDefaultClass(
-                "select",CrudMapperMethodExcutor.class);
+                "select", CrudMapperMethodExcutor.class);
         ByteBuddyUtils.DefaultClass insert = ByteBuddyUtils.buildDefaultClass(
                 "insert",CrudMapperMethodExcutor.class);
         ByteBuddyUtils.DefaultClass update = ByteBuddyUtils.buildDefaultClass(
@@ -71,7 +74,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);
-            //如果defaultObj 为 null 说明 没有继承CrudMapper接口
+            //If defaultObj is null, it means CrudMapper interface is not inherited
             if(defaultObj != null){
                 if(method.getModifiers() == 1){
                     return method.invoke(defaultObj,args);
@@ -91,11 +94,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                     }
                     throw new IllegalAccessException("method not found ");
                 }else{
-                    //执行batis的mapperProxy 原生
+                    //Execute mapperProxy native of batis
                     return mapperProxy.invoke(proxy,method,args);
                 }
             }else{
-                //执行batis的mapperProxy 原生
+                //Execute mapperProxy native of batis
                 return mapperProxy.invoke(proxy,method,args);
             }
         }finally {

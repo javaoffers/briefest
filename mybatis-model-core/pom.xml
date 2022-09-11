@@ -10,10 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-core</artifactId>
     <version>1.0.0</version>
-    <properties>
-        <mybatis.version>3.4.1</mybatis.version>
-        <mybatis-model-common>1.0.4</mybatis-model-common>
-    </properties>
 
     <dependencies>
         <dependency>
@@ -25,12 +21,6 @@
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-helper</artifactId>
             <version>1.0.4</version>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-            <version>${mybatis.version}</version>
         </dependency>
 
         <dependency>

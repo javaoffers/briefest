@@ -21,12 +21,10 @@ import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.javaoffers.batis.modelhelper.core.CrudMapperProxy;
-import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
+import com.javaoffers.batis.modelhelper.proxy.CrudMapperProxy;
 import org.apache.ibatis.binding.MapperMethod;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
-import org.springframework.aop.framework.ProxyFactory;
 
 /**
  * @author mingjie 修改。支持Mapper接口

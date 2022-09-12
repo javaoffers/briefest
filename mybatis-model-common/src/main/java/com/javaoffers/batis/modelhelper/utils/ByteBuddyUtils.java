@@ -8,19 +8,19 @@ import net.bytebuddy.matcher.ElementMatchers;
 import java.util.List;
 
 /**
- * byteBuddy工具。此只允许给架构设计者使用。
+ * byteBuddy tool. This is only allowed for architects.
  * @author create by cmj on 2022-06-22 00:24:42
  */
 public class ByteBuddyUtils {
 
     /**
-     * 根据class生成子类，
-     * @param clazz 可以为接口class
-     * @return 子类
+     * Generate subclasses based on class，
+     * @param clazz Can be interface class
+     * @return Subclass
      */
     public static Object makeObject(Class clazz){
         Class<?> dynamicType = new ByteBuddy()
-                .subclass(clazz) //定义谁的子类
+                .subclass(clazz) //define whose subclass
                 .make()
                 .load(clazz.getClassLoader())
                 .getLoaded();
@@ -33,9 +33,9 @@ public class ByteBuddyUtils {
     }
 
     /**
-     * 根据class生成子类，并执行提供的executor. 此方法只允许给架构设计者使用。
-     * @param clazz 可以为接口class
-     * @return 子类
+     * Generates subclasses based on class and executes the provided executor. This method is only allowed for architects.
+     * @param clazz Can be interface class
+     * @return Subclass
      */
     public static Object makeObject(Class clazz, List<DefaultClass> methodDefault){
         try {

@@ -1,7 +1,7 @@
 package com.javaoffers.batis.modelhelper.utils;
 
 /**
- * @Description: 字段信息
+ * @Description: Field information
  * @Auther: create by cmj on 2022/5/4 01:48
  */
 public class ColumnInfo {

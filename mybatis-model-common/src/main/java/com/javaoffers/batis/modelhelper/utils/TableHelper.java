@@ -239,6 +239,12 @@ public class TableHelper {
                         DatabaseMetaData metaData = connection.getMetaData();
 
                         ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
+                        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableName);
+                        LinkedList<String> primaryKeyList = new LinkedList<>();
+                        while (primaryKeys.next()){
+                            String primaryColName = primaryKeys.getString(ColumnLabel.COLUMN_NAME);
+                            primaryKeyList.add(primaryColName);
+                        }
                         while (tableResultSet.next()) {
                             // Get table field structure
                             ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
@@ -254,7 +260,9 @@ public class TableHelper {
                                 ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement,defaultValue);
                                 tableInfo.getColumnInfos().add(columnInfo);
                                 tableInfo.getColNames().put(columnName,columnInfo);
-
+                                if(primaryKeyList.contains(columnName)){
+                                    tableInfo.getPrimaryColNames().put(columnName, columnInfo);
+                                }
                             }
                         }
                         tableInfoMap.put(modelClazz,tableInfo);

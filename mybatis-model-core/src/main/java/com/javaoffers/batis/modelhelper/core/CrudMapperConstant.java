@@ -1,7 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
 /**
- * @Description: 关于 CrudMapper 接口方法描述
+ * @Description: About CrudMapper interface method description
  * @Auther: create by cmj on 2022/5/3 13:31
  */
 public enum  CrudMapperConstant {
@@ -13,6 +13,8 @@ public enum  CrudMapperConstant {
     DELETE(3,"delete"),
 
     INSERT(4,"insert"),
+
+    GENERAL(5,"general"),
     ;
 
 

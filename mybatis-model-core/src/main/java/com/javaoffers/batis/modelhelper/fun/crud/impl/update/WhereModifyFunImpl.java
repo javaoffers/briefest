@@ -323,11 +323,11 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
                 sqlbatch.put(sql, paramBatch);
             }
             paramBatch.addAll(params);
-            System.out.println("SQL: "+sql);
-            System.out.println("参数： "+params);
         }
         AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{
+            System.out.println("SQL: "+sql);
+            System.out.println("PAM： "+params);
             Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sql, params);
             count.addAndGet(integer);
         });

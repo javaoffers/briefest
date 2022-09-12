@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.UpdateFun;
+import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
 
 import java.io.Serializable;
 
@@ -36,5 +37,10 @@ public interface CrudMapper<T> extends BaseMapper<T> {
      * insert sql
      */
     public <C extends  GetterFun <T, Object> ,V extends Serializable > DeleteFun<T, C , V > delete();
+
+    /**
+     * general function
+     */
+    public GeneralFun<T> general();
 
 }

@@ -22,6 +22,13 @@ public class TableInfo {
      * V: Corresponding table field information, obtained by database query
      * lazy loading storage
      */
+    private Map<String,ColumnInfo> primaryColNames = new LinkedHashMap<>();
+
+    /**
+     * K: table field
+     * V: Corresponding table field information, obtained by database query
+     * lazy loading storage
+     */
     private Map<String,ColumnInfo> colNames = new LinkedHashMap<>();
 
     /**
@@ -101,5 +108,9 @@ public class TableInfo {
         ColumnInfo columnInfo = this.getColNames().get(colName);
         Assert.isTrue(columnInfo != null,"the "+colName+"col name is empty");
         return columnInfo;
+    }
+
+    public Map<String, ColumnInfo> getPrimaryColNames() {
+        return primaryColNames;
     }
 }

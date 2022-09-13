@@ -135,7 +135,14 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
                 where.addBatch().colAll(model).where();
             }
             i++;
-            parseWhereById(where, status, model);
+            AtomicBoolean status_ = new AtomicBoolean(false);
+            parseWhereById(where, status_, model);
+            if(!status_.get()){
+                //This statement should be ignored and should not execute successfully
+                where.condSQL(" 1 = 2 ");
+            }else{
+                status.set(true);
+            }
         }
         if(status.get()){
             return where.ex().intValue();

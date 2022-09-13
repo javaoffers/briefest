@@ -30,6 +30,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="mybatis-model-common" />
     <orderEntry type="module" module-name="mybatis-model-spring-support" />
     <orderEntry type="module" module-name="mybatis-model-core" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.1.5.RELEASE" level="project" />

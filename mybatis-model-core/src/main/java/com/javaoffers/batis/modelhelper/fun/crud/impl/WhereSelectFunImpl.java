@@ -413,7 +413,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //解析SQL select 并执行。
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
         System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("参数： "+sqlInfo.getParams());
+        System.out.println("PAM: "+sqlInfo.getParams());
         List list = BaseBatisImpl.baseBatis.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
         return list;
     }

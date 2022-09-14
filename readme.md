@@ -1,6 +1,5 @@
 
 ## mybatis model helper
-- 中文：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/readme1.md 
 - Summary
   <p>
 Modelhelper is designed with Batis as the core. The main idea is to simplify the mapping between data and avoid writing SQL The model mapping we provide is very powerful. Only

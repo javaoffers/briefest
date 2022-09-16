@@ -236,5 +236,5 @@ public interface CrudUserMapper extends CrudMapper<User> {
 }
 ```
 <p>
- This JQL is to query the data that user and userOrder satisfy the relationship
+ This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships.
 </p>

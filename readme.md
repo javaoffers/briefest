@@ -1,6 +1,5 @@
 
 ## mybatis model helper
-- 中文：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/readme1.md 
 - Summary
   <p>
 Modelhelper is designed with Batis as the core. The main idea is to simplify the mapping between data and avoid writing SQL The model mapping we provide is very powerful. Only
@@ -195,8 +194,6 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```
 
 <p>
-
-
 When my interface inherits the CrudMapper interface, we can write our JQL logic in default. This avoids the traditional method of writing native SQL statements on the Mapper interface.
 . For more cases, please see:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
@@ -204,3 +201,72 @@ When my interface inherits the CrudMapper interface, we can write our JQL logic 
 - demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
+#### Advanced Advanced
+- This part mainly describes how to use JQL to express some complex query statements
+<p>
+   In the basic part above, we explained some common and most basic uses. Next, 
+   we will introduce some scenarios in real projects. Some slightly more complex use cases. 
+   It mainly includes join query, group query, statistical query, and common general operations.
+</p>
+
+<p>
+    JQL provides a wealth of commonly used APIs. For example >= , <= , in , between, like,  
+    likeLeft, likeRight, exists, etc. There is also a combination unite that mainly combines  
+    multiple conditions into one, such as (xx > xx or xx < xx ) treats two association conditions 
+    as one. At the same time, we let you write the entry of native sql, such as col(sql), 
+    condSQL(sql), although we usually do not recommend using native sql. Because try not to 
+    use sql for complex logic processing , such as the interception of some strings.  
+    Or splicing, etc. It is recommended that these operations be handled at the business layer. 
+    Let's first look at a simple join JQL case: We recommend writing JQL in an interface class
+</p>
+
+```java
+public interface CrudUserMapper extends CrudMapper<User> {
+    
+    default List<User> queryAllAndOrder(){
+        return select()
+                .colAll()
+                .leftJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId,UserOrder::getUserId)
+                .where()
+                .exs();
+    }
+}
+```
+<p>
+ This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships. The structure of the User class is as follows：
+</p>
+
+```java
+ @BaseModel     
+ public class User {
+
+    @BaseUnique
+    private Long id;
+
+    private String name;
+
+    private String birthday;
+
+    private String createTime;
+
+    private List<UserOrder> orders; //It will automatically map the data into it
+      
+    //getter, setter methods 
+  }
+      
+ @BaseModel
+ public class UserOrder {
+
+    @BaseUnique
+    private int id;
+    private String orderName;
+    private String orderMoney;
+      
+    //getter, setter methods  
+ }     
+      
+```      
+      

@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.util;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
+import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,6 +19,8 @@ import java.util.stream.Collectors;
 public class Utils {
 
     static final String modelSeparation = "__";
+
+    private static final ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
 
     /**
      * Convert underscore to camel case
@@ -184,7 +187,6 @@ public class Utils {
                 || Number.class.isAssignableFrom(c);
     }
 
-
     public static boolean isBaseModel(Field fd) throws Exception {
         Class<?> type = fd.getType();
         if (type.isArray()) {
@@ -225,7 +227,9 @@ public class Utils {
                 return true;
             }
         } catch (Exception e2) {
-            new BaseException(e2.getMessage() + "\n一对多关系注意引用集合类一定要加上泛型类例如 ：List<Model>,Model不能省去").printStackTrace();
+            new BaseException(e2.getMessage() + "\nOne-to-many relationship." +
+                    " Note that the reference collection class must be added with a generic class." +
+                    " For example: List<Model>, Model cannot be omitted").printStackTrace();
         }
         return false;
     }
@@ -251,7 +255,7 @@ public class Utils {
             StringBuilder sb = new StringBuilder("_");
             for (int i = 0; uniqueFieldNameList != null && i < uniqueFieldNameList.size(); i++) {
                 String uniqueKey = uniqueFieldNameList.get(i);
-                String uniqueValue = m.get(uniqueKey) == null ? "" : m.get(uniqueKey).toString();
+                String uniqueValue = m.get(uniqueKey) == null ? "" : convert.converterObject(String.class,m.get(uniqueKey));
                 sb.append(uniqueValue);
             }
             List<Map<String, Object>> dataList = map_.get(sb.toString());

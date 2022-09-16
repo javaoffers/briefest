@@ -5,27 +5,27 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 /**
- * @Description: sql where 语句
+ * @Description: sql where Statement
  * @Auther: create by cmj on 2022/5/2 00:08
  */
 public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
 
     /**
-     * 拼接Or, 否者默认都是 and
+     * Splicing Or, otherwise it is and by default
      * @return
      */
     public R or();
 
     /**
-     * condition 默认为and拼接，生成（a=b and/or b=c ....）
-     * 添加首尾括号
+     * condition defaults to and splicing, generating (a=b and/or b=c ....)
+     * Add opening and closing brackets
      * @param r
      * @return
      */
     public R unite(Consumer<R> r);
 
     /**
-     * condition 默认为and拼接，生成（a=b and/or b=c ....）
+     * condition defaults to and splicing, generating (a=b and/or b=c ....）
      * 添加首尾括号
      * @param r
      * @return
@@ -33,7 +33,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R unite(boolean condition, Consumer<R> r);
 
     /**
-     * condition 默认为and拼接， 可以写原生的sql语句。
+     * The condition defaults to and splicing, which can write native SQL statements.
      *
      * @param sql sql
      * @return  r
@@ -41,7 +41,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R condSQL(String sql);
 
     /**
-     * condition 默认为and拼接，可以写原生的sql语句。
+     * The condition defaults to and splicing, which can write native SQL statements.
      *
      * @param sql
      * @return r
@@ -50,23 +50,23 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
 
 
     /**
-     * condition 默认为and拼接， 可以写原生的sql语句。
-     * sql 语句中的参数只支持 #{colName} 这种表达式
+     * The condition defaults to and splicing, which can write native SQL statements.
+     * The parameters in the sql statement only support expressions like #{colName}
      * @param sql sql
      * @return  r
      */
     public R condSQL(String sql, Map<String, Object> params);
 
     /**
-     * condition 默认为and拼接，可以写原生的sql语句。
-     * sql 语句中的参数只支持 #{colName} 这种表达式
+     * The condition defaults to and splicing, which can write native SQL statements.
+     * The parameters in the sql statement only support the expression #{colName}
      * @param sql
      * @return r
      */
     public R condSQL(boolean condition, String sql, Map<String, Object> params);
 
     /**
-     * 添加等值关系 =
+     * add equivalence =
      * @param col
      * @param value
      * @return
@@ -74,7 +74,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R eq(C col, V value);
 
     /**
-     * 添加等值关系 =
+     * add equivalence =
      * @param col
      * @param value
      * @return
@@ -82,7 +82,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R eq(boolean condition, C col, V value);
 
     /**
-     * 添加不等值关系 !=
+     * Add unequal relationship !=
      * @param col
      * @param value
      * @return
@@ -90,7 +90,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R ueq(C col, V value);
 
     /**
-     * 添加不等值关系 !=
+     * Add unequal relationship !=
      * @param col
      * @param value
      * @return
@@ -98,7 +98,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R ueq(boolean condition, C col, V value);
 
     /**
-     * 大于  >
+     * more than the  >
      * @param col
      * @param value
      * @return
@@ -106,7 +106,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gt(C col, V value);
 
     /**
-     * 大于  >
+     * more than the  >
      * @param col
      * @param value
      * @return
@@ -114,7 +114,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gt(boolean condition, C col, V value);
 
     /**
-     * 小于 <
+     * less than <
      * @param col
      * @param value
      * @return
@@ -122,7 +122,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R lt(C col, V value);
 
     /**
-     * 小于 <
+     * less than <
      * @param col
      * @param value
      * @return
@@ -130,7 +130,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R lt(boolean condition, C col, V value);
 
     /**
-     * 大于等于  >=
+     * greater or equal to  >=
      * @param col
      * @param value
      * @return
@@ -138,7 +138,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gtEq(C col, V value);
 
     /**
-     * 大于等于  >=
+     * greater or equal to  >=
      * @param col
      * @param value
      * @return
@@ -146,7 +146,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R gtEq(boolean condition, C col, V value);
 
     /**
-     * 小于等于 <=
+     * less than or equal to <=
      * @param col
      * @param value
      * @return
@@ -154,7 +154,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R ltEq(C col, V value);
 
     /**
-     * 小于等于 <=
+     * less than or equal to <=
      * @param col
      * @param value
      * @return
@@ -162,7 +162,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R ltEq(boolean condition, C col, V value);
 
     /**
-     * sql 范围 : between
+     * sql grammar : between
      * @param col
      * @param start
      * @Param end
@@ -171,7 +171,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R between(C col, V start,  V end);
 
     /**
-     * sql 范围 : between
+     * sql grammar : between
      * @param col
      * @param start
      * @Param end
@@ -180,7 +180,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R between(boolean condition, C col, V start,  V end);
 
     /**
-     * sql 范围 : between
+     * sql grammar : between
      * @param col
      * @param start
      * @Param end
@@ -189,7 +189,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R notBetween(C col, V start,  V end);
 
     /**
-     * sql 范围 : between
+     * sql grammar : between
      * @param col
      * @param start
      * @Param end
@@ -199,7 +199,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
 
 
     /**
-     * sql 模糊： like ? . V ： “%xxx%”
+     * sql grammar： like ? . V ： “%xxx%”
      * @param col
      * @param value
      * @return
@@ -207,7 +207,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R like(C col, V value);
 
     /**
-     * sql 模糊： like ? . V ： “%xxx%”
+     * sql grammar： like ? . V ： “%xxx%”
      * @param col
      * @param value
      * @return
@@ -215,7 +215,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R like(boolean condition, C col, V value);
 
     /**
-     * sql 模糊： like ? . V ： “%xxx”
+     * sql grammar： like ? . V ： “%xxx”
      * @param col
      * @param value
      * @return
@@ -223,7 +223,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R likeLeft(C col, V value);
 
     /**
-     * sql 模糊： like ? . V ： “%xxx”
+     * sql grammar： like ? . V ： “%xxx”
      * @param col
      * @param value
      * @return
@@ -231,7 +231,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R likeLeft(boolean condition, C col, V value);
 
     /**
-     * sql 模糊： like ? . V ： “xxx%”
+     * sql grammar： like ? . V ： “xxx%”
      * @param col
      * @param value
      * @return
@@ -239,7 +239,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R likeRight(C col, V value);
 
     /**
-     * sql 模糊： like ? . V ： “xxx%”
+     * sql grammar： like ? . V ： “xxx%”
      * @param col
      * @param value
      * @return
@@ -247,7 +247,7 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
     public R likeRight(boolean condition, C col, V value);
 
     /**
-     * sql语句  in
+     * sql grammar in
      * @param col
      * @param values
      * @return
@@ -340,14 +340,14 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
 
 
     /**
-     * where exists（）判断语句
+     * where exists（）Judge sentences
      * @param existsSql
      * @return
      */
     public R exists(String existsSql);
 
     /**
-     * where exists（）判断语句
+     * where exists（）Judge sentences
      * @param existsSql
      * @return
      */

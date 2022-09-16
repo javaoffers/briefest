@@ -236,5 +236,37 @@ public interface CrudUserMapper extends CrudMapper<User> {
 }
 ```
 <p>
- This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships.
+ This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships. The structure of the User class is as follows：
 </p>
+
+```java
+ @BaseModel     
+ public class User {
+
+    @BaseUnique
+    private Long id;
+
+    private String name;
+
+    private String birthday;
+
+    private String createTime;
+
+    private List<UserOrder> orders; //It will automatically map the data into it
+      
+    //getter, setter methods 
+  }
+      
+ @BaseModel
+ public class UserOrder {
+
+    @BaseUnique
+    private int id;
+    private String orderName;
+    private String orderMoney;
+      
+    //getter, setter methods  
+ }     
+      
+```      
+      

@@ -16,7 +16,7 @@ import java.util.List;
 public class User {
 
     /**
-     * 可以用id 做 count(id). 使用该对象 获取 count后的结果。
+     * You can use id to do count(id). Use this object to get the result of count.
      */
     @ColName("id")
     private Long countId;

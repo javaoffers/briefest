@@ -265,7 +265,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
     private String orderName;
     private String orderMoney;
       
-    //getter, setter methods  
+    //getter, setter  methods  
  }     
       
 ```      

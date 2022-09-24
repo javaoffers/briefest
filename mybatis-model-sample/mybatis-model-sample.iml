@@ -30,11 +30,11 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-spring-support:3.5.11" level="project" />
+    <orderEntry type="module" module-name="mybatis-model-spring-support" />
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-core:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.1.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.1.5.RELEASE" level="project" />
-    <orderEntry type="module" module-name="mybatis-model-common" />
+    <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-common:1.0.4" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.9.10" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.10" level="project" />
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-helper:1.0.4" level="project" />

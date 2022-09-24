@@ -10,12 +10,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-sample</artifactId>
+    <version>3.5.11-SNAPSHOT</version>
     <dependencies>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-spring-support</artifactId>
-            <version>${model-helper}</version>
+            <version>3.5.11-SNAPSHOT</version>
         </dependency>
         
         <!-- junit -->

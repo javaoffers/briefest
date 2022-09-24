@@ -6,7 +6,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
   <packaging>pom</packaging>
-  <version>1.0.0</version>
+  <version>3.5.11-SNAPSHOT</version>
   <modules>
     <module>mybatis-model-helper</module>
     <module>mybatis-model-sample</module>
@@ -23,10 +23,6 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <mybatis.version>3.5.11</mybatis.version>
     <!--大版本跟着mybatisThe big version follows mybatis-->
-    <mybatis-model-core>3.5.11-SNAPSHOT</mybatis-model-core>
-    <mybatis-model-common>3.5.11-SNAPSHOT</mybatis-model-common>
-    <mybatis-model-helper>3.5.11-SNAPSHOT</mybatis-model-helper>
-    <mybatis-model-spring-suppor>3.5.11-SNAPSHOT</mybatis-model-spring-suppor>
   </properties>
 
   <dependencies>

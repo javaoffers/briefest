@@ -5,13 +5,12 @@
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>1.0.0</version>
+        <version>3.5.11-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-helper</artifactId>
-    <version>${mybatis-model-helper}</version>
-
+    <version>3.5.11-SNAPSHOT</version>
     <dependencies>
         <!-- mybatis -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
@@ -50,7 +49,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-common</artifactId>
-            <version>${mybatis-model-common}</version>
+            <version>3.5.11-SNAPSHOT</version>
         </dependency>
 
 

@@ -5,12 +5,11 @@
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>1.0.0</version>
+        <version>3.5.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-core</artifactId>
-    <version>${mybatis-model-core}</version>
-
+    <version>3.5.11-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -26,7 +25,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-common</artifactId>
-            <version>${mybatis-model-common}</version>
+            <version>3.5.11-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

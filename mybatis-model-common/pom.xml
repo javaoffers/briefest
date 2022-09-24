@@ -3,11 +3,11 @@
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.5.11</version>
+        <version>3.5.11-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-common</artifactId>
-    <version>3.5.11</version>
+    <version>3.5.11-SNAPSHOT</version>
     <dependencies>
 
         <dependency>
@@ -46,8 +46,4 @@
         </plugins>
     </build>
 
-
-  <scm>
-    <tag>v3.5.11</tag>
-  </scm>
 </project>

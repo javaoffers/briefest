@@ -23,8 +23,9 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
     <mybatis.version>3.5.11</mybatis.version>
-    <mybatis-model-core>1.0.0-SNAPSHOT</mybatis-model-core>
-    <mybatis-model-common>1.0.4-SNAPSHOT</mybatis-model-common>
+    <!--大版本跟着mybatisThe big version follows mybatis-->
+    <mybatis-model-core>3.5.11-SNAPSHOT</mybatis-model-core>
+    <mybatis-model-common>3.5.11-SNAPSHOT</mybatis-model-common>
     <mybatis-model-helper>3.5.11-SNAPSHOT</mybatis-model-helper>
     <mybatis-model-spring-suppor>3.5.11-SNAPSHOT</mybatis-model-spring-suppor>
   </properties>

@@ -27,14 +27,14 @@ import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
 
 /**
- * @author mingjie 修改。支持Mapper接口
+ * @author mingjie Revise. Support Mapper interface
  */
-public class MapperProxyFactoryAggent<T> {
+public class MapperProxyFactoryAggent341<T> {
 
   private final Class<T> mapperInterface;
   private final Map<Method, MapperMethod> methodCache = new ConcurrentHashMap<Method, MapperMethod>();
 
-  public MapperProxyFactoryAggent(Class<T> mapperInterface) {
+  public MapperProxyFactoryAggent341(Class<T> mapperInterface) {
     this.mapperInterface = mapperInterface;
   }
 
@@ -60,7 +60,7 @@ public class MapperProxyFactoryAggent<T> {
   }
 
   public T newInstance(SqlSession sqlSession) {
-    final MapperProxy<T> mapperProxy = new MapperProxy<T>(sqlSession, mapperInterface, methodCache);
+    final MapperProxy<T> mapperProxy = new MapperProxy<T>(sqlSession, mapperInterface, (Map)methodCache);
     return newInstance(mapperProxy);
   }
 

@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-spring-support</artifactId>
     <!--Version numbers are aligned with Mybatis compatible versions-->
-    <version>3.4.1-SNAPSHOT</version>
+    <version>${mybatis-model-spring-suppor}</version>
     <dependencies>
 
         <dependency>
@@ -53,4 +53,13 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

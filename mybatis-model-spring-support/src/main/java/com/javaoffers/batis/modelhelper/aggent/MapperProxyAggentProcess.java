@@ -15,6 +15,7 @@ import java.util.*;
  * @author: caomingjiecode@outlook.com
  * @create: 2021-12-06 下午5:35
  */
+@Deprecated
 public class MapperProxyAggentProcess {
 
     private static final InheritableThreadLocal<Boolean> ISMODEL = new InheritableThreadLocal<Boolean>(){

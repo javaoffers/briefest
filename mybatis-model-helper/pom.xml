@@ -11,9 +11,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-helper</artifactId>
     <version>${mybatis-model-helper}</version>
-    <properties>
-        <mybatis-model-common>1.0.4</mybatis-model-common>
-    </properties>
 
     <dependencies>
         <!-- mybatis -->

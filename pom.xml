@@ -2,7 +2,6 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
   <packaging>pom</packaging>
@@ -50,12 +49,9 @@
   <!--配置你github信息-->
   <scm>
     <url>https://github.com/caomingjie-code/Mybatis-ModelHelper.git</url>
-    <developerConnection>scm:git:git@github.com:caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
-    <connection>scm:git:git@github.com:caomingjie-code/Mybatis-ModelHelper.git</connection>
-    <tag>v3.5.11</tag>
+    <developerConnection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
+    <connection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</connection>
   </scm>
-
-
 
   <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->
   <developers>

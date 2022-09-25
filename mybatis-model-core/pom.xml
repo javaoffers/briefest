@@ -23,7 +23,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-common</artifactId>
-            <version>3.5.11</version>
+            <version>3.5.11-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

@@ -90,26 +90,26 @@
             </executions>
           </plugin>
           <!--javadoc打包-->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.2.0</version>
-            <executions>
-              <execution>
-                <phase>package</phase>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-            <!--防止生成 javadoc 报错-->
-            <configuration>
-              <!-- jdk1.8要加上，1.7要去掉，否则会报错 -->
-              <additionalJOptions>
-                <additionalJOption>-Xdoclint:none</additionalJOption>
-              </additionalJOptions>
-            </configuration>
-          </plugin>
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--            <version>3.2.0</version>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <phase>package</phase>-->
+<!--                <goals>-->
+<!--                  <goal>jar</goal>-->
+<!--                </goals>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--            &lt;!&ndash;防止生成 javadoc 报错&ndash;&gt;-->
+<!--            <configuration>-->
+<!--              &lt;!&ndash; jdk1.8要加上，1.7要去掉，否则会报错 &ndash;&gt;-->
+<!--              <additionalJOptions>-->
+<!--                <additionalJOption>-Xdoclint:none</additionalJOption>-->
+<!--              </additionalJOptions>-->
+<!--            </configuration>-->
+<!--          </plugin>-->
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -171,8 +171,11 @@
           <tagNameFormat>v@{project.version}</tagNameFormat>
           <generateReleasePoms>false</generateReleasePoms>
           <arguments>-DskipTests</arguments>
+          <arguments>-Dmaven.javadoc.skip=true -Dmaven.test.skipTests=true -Dmaven.test.skip=true</arguments>
         </configuration>
       </plugin>
+
+
 
     </plugins>
   </build>

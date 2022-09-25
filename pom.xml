@@ -123,34 +123,6 @@
               </execution>
             </executions>
           </plugin>
-          <!--checkStyle-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-checkstyle-plugin</artifactId>-->
-<!--            <version>3.0.0</version>-->
-<!--            <configuration>-->
-<!--              <configLocation>checkstyle.xml</configLocation>-->
-<!--              <includeResources>false</includeResources>-->
-<!--              <failOnViolation>true</failOnViolation>-->
-<!--              <violationSeverity>info</violationSeverity>-->
-<!--              <maxAllowedViolations>0</maxAllowedViolations>-->
-<!--              <consoleOutput>true</consoleOutput>-->
-<!--              <encoding>UTF-8</encoding>-->
-<!--              <linkXRef>false</linkXRef>-->
-<!--              <sourceDirectories>-->
-<!--                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>-->
-<!--              </sourceDirectories>-->
-<!--            </configuration>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <goals>-->
-<!--                  <goal>check</goal>-->
-<!--                </goals>-->
-<!--                <phase>validate</phase>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--          </plugin>-->
-
         </plugins>
       </build>
 
@@ -198,8 +170,6 @@
           <tagNameFormat>v@{project.version}</tagNameFormat>
           <generateReleasePoms>false</generateReleasePoms>
           <arguments>-DskipTests</arguments>
-          <!---Dmaven.javadoc.skip=true-->
-<!--          <arguments> -Dmaven.test.skipTests=true -Dmaven.test.skip=true</arguments>-->
         </configuration>
       </plugin>
 

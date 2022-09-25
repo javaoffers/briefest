@@ -34,10 +34,10 @@
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-common:${mybatis-model-common}" level="project" />
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-helper:1.0.4" level="project" />
     <orderEntry type="module" module-name="mybatis-model-spring-support" />
-    <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-core:3.5.11-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="mybatis-model-core" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.8" level="project" />
-    <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-common:3.5.11-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="mybatis-model-common" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy:1.10.22" level="project" />
     <orderEntry type="library" name="Maven: net.bytebuddy:byte-buddy-agent:1.9.10" level="project" />
     <orderEntry type="module" module-name="mybatis-model-helper" />

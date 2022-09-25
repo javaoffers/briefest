@@ -14,7 +14,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-core</artifactId>
-            <version>3.5.11-SNAPSHOT</version>
+            <version>3.5.11.2-SNAPSHOT</version>
         </dependency>
 
         <dependency>

@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.5.12-SNAPSHOT</version>
-        <relativePath /> <!-- lookup parent from repository -->
+        <version>3.5.11.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-sample</artifactId>
-    <version>3.5.12-SNAPSHOT</version>
+    <version>3.5.11.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-spring-support</artifactId>
-            <version>3.5.12-SNAPSHOT</version>
+            <version>3.5.11.1-SNAPSHOT</version>
         </dependency>
 
         <!-- junit -->
@@ -64,14 +64,6 @@
             <version>0.9.5.2</version>
         </dependency>
 
-        <!-- jackson -->
-        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.12.3</version>
-        </dependency>
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-annotations</artifactId>
@@ -97,7 +89,7 @@
     </build>
 
 
-  <scm>
-    <tag>v3.5.11</tag>
-  </scm>
+    <scm>
+        <tag>v3.5.11</tag>
+    </scm>
 </project>

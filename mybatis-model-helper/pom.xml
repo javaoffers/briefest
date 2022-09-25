@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.5.12-SNAPSHOT</version>
+        <version>3.5.11.1-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-helper</artifactId>
-    <version>3.5.12-SNAPSHOT</version>
+    <version>3.5.11.1-SNAPSHOT</version>
     <dependencies>
         <!-- mybatis -->
         <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
@@ -32,12 +33,6 @@
             <version>0.9.12</version>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.slf4j</groupId>-->
-<!--            <artifactId>slf4j-log4j12</artifactId>-->
-<!--            <version>1.7.12</version>-->
-<!--        </dependency>-->
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -47,7 +42,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-common</artifactId>
-            <version>3.5.12-SNAPSHOT</version>
+            <version>3.5.11.1-SNAPSHOT</version>
         </dependency>
 
 

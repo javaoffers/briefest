@@ -5,7 +5,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
   <packaging>pom</packaging>
-  <version>3.5.12-SNAPSHOT</version>
+   <version>3.5.11.1-SNAPSHOT</version>
   <modules>
     <module>mybatis-model-helper</module>
     <module>mybatis-model-sample</module>
@@ -51,7 +51,6 @@
     <url>git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</url>
     <developerConnection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
     <connection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</connection>
-    <tag>HEAD</tag>
   </scm>
 
   <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->
@@ -90,26 +89,26 @@
             </executions>
           </plugin>
           <!--javadoc打包-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-javadoc-plugin</artifactId>-->
-<!--            <version>3.2.0</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>package</phase>-->
-<!--                <goals>-->
-<!--                  <goal>jar</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--            &lt;!&ndash;防止生成 javadoc 报错&ndash;&gt;-->
-<!--            <configuration>-->
-<!--              &lt;!&ndash; jdk1.8要加上，1.7要去掉，否则会报错 &ndash;&gt;-->
-<!--              <additionalJOptions>-->
-<!--                <additionalJOption>-Xdoclint:none</additionalJOption>-->
-<!--              </additionalJOptions>-->
-<!--            </configuration>-->
-<!--          </plugin>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.2.0</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+            <!--防止生成 javadoc 报错-->
+            <configuration>
+              <!-- jdk1.8要加上，1.7要去掉，否则会报错 -->
+              <additionalJOptions>
+                <additionalJOption>-Xdoclint:none</additionalJOption>
+              </additionalJOptions>
+            </configuration>
+          </plugin>
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -124,6 +123,34 @@
               </execution>
             </executions>
           </plugin>
+          <!--checkStyle-->
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--            <version>3.0.0</version>-->
+<!--            <configuration>-->
+<!--              <configLocation>checkstyle.xml</configLocation>-->
+<!--              <includeResources>false</includeResources>-->
+<!--              <failOnViolation>true</failOnViolation>-->
+<!--              <violationSeverity>info</violationSeverity>-->
+<!--              <maxAllowedViolations>0</maxAllowedViolations>-->
+<!--              <consoleOutput>true</consoleOutput>-->
+<!--              <encoding>UTF-8</encoding>-->
+<!--              <linkXRef>false</linkXRef>-->
+<!--              <sourceDirectories>-->
+<!--                <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>-->
+<!--              </sourceDirectories>-->
+<!--            </configuration>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <goals>-->
+<!--                  <goal>check</goal>-->
+<!--                </goals>-->
+<!--                <phase>validate</phase>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--          </plugin>-->
+
         </plugins>
       </build>
 
@@ -171,7 +198,8 @@
           <tagNameFormat>v@{project.version}</tagNameFormat>
           <generateReleasePoms>false</generateReleasePoms>
           <arguments>-DskipTests</arguments>
-          <arguments>-Dmaven.javadoc.skip=true -Dmaven.test.skipTests=true -Dmaven.test.skip=true</arguments>
+          <!---Dmaven.javadoc.skip=true-->
+          <arguments> -Dmaven.test.skipTests=true -Dmaven.test.skip=true</arguments>
         </configuration>
       </plugin>
 

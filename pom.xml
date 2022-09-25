@@ -51,7 +51,6 @@
     <url>git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</url>
     <developerConnection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
     <connection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</connection>
-    <tag>HEAD</tag>
   </scm>
 
   <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->

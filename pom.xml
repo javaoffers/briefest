@@ -5,7 +5,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
   <packaging>pom</packaging>
-   <version>3.5.11.1-SNAPSHOT</version>
+   <version>3.5.11.1</version>
   <modules>
     <module>mybatis-model-helper</module>
     <module>mybatis-model-sample</module>
@@ -51,6 +51,7 @@
     <url>git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</url>
     <developerConnection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
     <connection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</connection>
+    <tag>v3.5.11.1</tag>
   </scm>
 
   <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->

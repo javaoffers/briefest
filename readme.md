@@ -273,5 +273,162 @@ public interface CrudUserMapper extends CrudMapper<User> {
     //getter, setter  methods  
  }     
       
-```      
+```   
+
+<p>
+ use col support native sql 
+</p>
+
+```java
+crudUserMapper.select()
+                //The alias must be the same as the attribute name of the model class
+                .col("max(birthday) as birthday")
+                .where()
+                .groupBy("left(birthday,10)")
+                .ex();
+
+```
+
+<p>
+    use left join , group by , limitPage  
+</p>   
       
+```java
+ crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //Group by main table
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+
+```
+
+<p>
+use left join , group by , having,  limitPage 
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .groupBy(User::getName, User::getId)//Group by main table
+                .groupBy(UserOrder::getUserId) //Group according to sub-table
+                .having()
+                //Main table statistics function
+                .eq(AggTag.COUNT,User::getName,1)
+                .or()
+                // unite mean (xx and xx)
+                .unite(unite->{
+                    unite.in(AggTag.COUNT, UserOrder::getUserId,1 )
+                        .in(AggTag.COUNT, UserOrder::getUserId,1);
+                })
+                //Subtable statistics function
+                .gt(AggTag.COUNT,UserOrder::getOrderId,1)
+                .limitPage(1,10)
+                .exs();
+
+```
+<p>
+use left join , group by  , order by, limitPage
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //Group by main table
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                // Sort by primary table
+                .orderA(User::getName)
+                //Sort by subtable
+                .orderA(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+```
+
+<p>
+use condSQL, inner join ,group by, having, order asc/desc, limitPage .
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .innerJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .condSQL("1=1")
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .condSQL("1=1")
+                // params could be array or single Object
+                .condSQL("user.id in (#{ids})", params)
+                //Group by main table
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                .having()
+                // Sort by primary table
+                .orderA(User::getName)
+                //Sort by subtable
+                .orderD(UserOrder::getUserId)
+                //1 means pageNum, 10 means pageSize
+                .limitPage(1,10)
+                .exs();
+
+```
+
+<p>
+use inner join on unite, where unite  group by  , having unite, order by, limitPage
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .innerJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                //support and (xxx or xxx )
+                .unite(unite->{
+                        unite.eq(UserOrder::getUserId,1)
+                            .or()
+                            .eq(UserOrder::getUserId, 2);
+                })
+                .where()
+                //support and (xxx or xxx )
+                .unite(unite->{
+                         unite.eq(User::getId,1)
+                            .or()
+                            .eq(User::getId,2);
+                })
+                //According to the main group
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                .having()
+                // Sort by primary table
+                .orderA(User::getName)
+                //Sort by subtable
+                .orderD(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+
+```
+

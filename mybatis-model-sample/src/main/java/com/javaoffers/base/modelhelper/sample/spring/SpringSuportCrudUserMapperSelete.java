@@ -193,7 +193,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .limitPage(1,10)
                 .exs();
 
-        System.out.println("-----------left join , group by , having limitPage  --------------------");
+        System.out.println("-----------left join , group by , having,  limitPage  --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .leftJoin(UserOrder::new)

@@ -41,6 +41,9 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
                 int startIndex = 0;
                 int batchNum = 1000;
                 for(; startIndex < allBatch; startIndex = startIndex + batchNum ){
+                    if((startIndex + batchNum) > allBatch){
+                        break;
+                    }
                     list.addAll(BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, startIndex + batchNum)));
                 }
                 list.addAll(BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, sqlInfo.getParams().size())));

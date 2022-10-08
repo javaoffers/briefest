@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -103,7 +104,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 updateSqlNull.append("}");
 
                 params.put(cloName, oValue);
-                if(oValue!=null){
+                if(oValue!=null && StringUtils.isNotBlank(oValue.toString())){
                     npdateNullParams.put(cloName, oValue);
                     isExistsNoneNullValue = true;
                     if(status.get() == 0){

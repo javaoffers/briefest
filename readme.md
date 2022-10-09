@@ -467,7 +467,7 @@ crudUserMapper.general().removeById(1);
 ```
 
 <p>
-    更多的简单常用的api如下. 
+    More simple and commonly used APIs are as follows. 
 </p>
 
 ```java
@@ -486,7 +486,8 @@ crudUserMapper.general().removeById(1);
     public List<Long> saveBatch(Collection<T> models);
 
     /**
-     * delete model.Where conditions will be generated based on properties of the model
+     * delete model.Where conditions will be generated based 
+        on properties of the model
      * class for which there is a value.
      * @param model
      */
@@ -508,9 +509,11 @@ crudUserMapper.general().removeById(1);
     public int removeByIds(Collection<Serializable> ids);
 
     /**
-     * Update the model, note that the update condition is the property marked with the Unique annotation.
+     * Update the model, note that the update condition is 
+        the property marked with the Unique annotation.
      * Only properties with values ​​are updated.
-     * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+     * In other words, the @BaseUnique annotation will generate 
+        a Where condition, and other non-null properties will
      * generate a set statement
      * @param model model
      * @return The number of bars affected by the update
@@ -525,16 +528,20 @@ crudUserMapper.general().removeById(1);
     public int modifyBatchById(Collection<T> models);
 
     /**
-     * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
-     * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+     * Query the main model, be careful not to include child models. 
+        Non-null properties will generate a where statement.
+     * <>Note that properties such as Collection<Model> will be ignored, 
+        even if they are not null </>
      * @param model model
      * @return return query result
      */
     public List<T> query(T model);
 
     /**
-     * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
-     * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+     * Query the main model, be careful not to include child models. 
+        Non-null properties will generate a where statement.
+     * <>Note that properties such as Collection<Model> will be ignored, 
+        even if they are not null </>
      * @param model model
      * @param pageNum page number
      * @param pageSize Number of bars displayed per page
@@ -544,8 +551,10 @@ crudUserMapper.general().removeById(1);
 
     /**
      * Paging query full table data
-     * @param pageNum page number, If the parameter is less than 1, it defaults to 1
-     * @param pageSize Number of bars displayed per page， If the parameter is less than 1, it defaults to 10
+     * @param pageNum page number, If the parameter is less than 1, 
+        it defaults to 1
+     * @param pageSize Number of bars displayed per page， 
+        If the parameter is less than 1, it defaults to 10
      * @return return query result
      */
     public List<T> query(int pageNum,int pageSize);
@@ -572,14 +581,16 @@ crudUserMapper.general().removeById(1);
     public List<T> queryByIds(Collection<Serializable> ids);
 
     /**
-     * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+     * Map<String,Object>. String: Field names of the table. 
+        The value corresponding to the Object field
      * @param param Parameters. key database field name, value field value
      * @return model
      */
     public List<T> queryByParam(Map<String,Object> param);
 
     /**
-     * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+     * Map<String,Object>. String: Field names of the table. 
+        The value corresponding to the Object field
      * @param param Parameters. key database field name, value field value
      * @param pageNum page number
      * @param pageSize Number of bars displayed per page
@@ -590,5 +601,6 @@ crudUserMapper.general().removeById(1);
 ```
 #### Code contributions are welcome
 <p>
+The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.
 If you think it's good, please click the little star to encourage it
 </p>

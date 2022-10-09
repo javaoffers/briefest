@@ -588,4 +588,7 @@ crudUserMapper.general().removeById(1);
     public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
 
 ```
-
+#### Code contributions are welcome
+<p>
+If you think it's good, please click the little star to encourage it
+</p>

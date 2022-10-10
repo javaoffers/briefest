@@ -440,7 +440,7 @@ crudUserMapper.select()
 </p>
 
 <p>
-    常用的api只需要通过调用general()方法即可使用. 比如通过id查询数据
+    Commonly used apis only need to be used by calling the general() method. For example, query data by id
 </p>
 
 ```java

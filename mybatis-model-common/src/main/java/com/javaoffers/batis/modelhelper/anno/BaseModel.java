@@ -3,7 +3,7 @@ package com.javaoffers.batis.modelhelper.anno;
 import java.lang.annotation.*;
 
 /**
- * 用于model数据
+ * for model data
  * @author cmj
  *
  */
@@ -13,8 +13,8 @@ import java.lang.annotation.*;
 public @interface BaseModel {
 
     /**
-     * 制定表名称. 如果没有则默认为类命名驼峰变下划线
-     * 注意： 此属性在CrudMapper场景下有用
+     * Specify the table name. If not, it defaults to the class name with camel case and underscore
+     * Note: This property is useful in CrudMapper scenarios
      * @return
      */
     String value() default "";

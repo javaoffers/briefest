@@ -33,6 +33,18 @@
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-core:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-common:${mybatis-model-common}" level="project" />
     <orderEntry type="library" name="Maven: com.javaoffers:mybatis-model-helper:1.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.5.11" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-logging:1.5.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-classic:1.1.11" level="project" />
+    <orderEntry type="library" name="Maven: ch.qos.logback:logback-core:1.1.11" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:log4j-over-slf4j:1.7.25" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: org.yaml:snakeyaml:1.17" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:1.5.10.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-jdbc:8.5.27" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.tomcat:tomcat-juli:8.5.27" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.3.4" level="project" />
     <orderEntry type="module" module-name="mybatis-model-spring-support" />
     <orderEntry type="module" module-name="mybatis-model-core" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.3.8" level="project" />

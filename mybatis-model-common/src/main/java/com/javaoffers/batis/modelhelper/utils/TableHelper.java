@@ -198,7 +198,7 @@ public class TableHelper {
     }
 
     /**
-     * 解析表信息
+     * Parse table information.
      * @param implClass
      */
     private static void parseTableInfo(String implClass) {
@@ -216,8 +216,8 @@ public class TableHelper {
     }
 
     /**
-     * 解析model
-     * @param modelClazz
+     * Parse the model
+     * @param modelClazz Classes marked with the annotation @BaseModel
      */
     private static void parseModelClass(Class<?> modelClazz) {
         Boolean isParse = modelIsParse.getOrDefault(modelClazz, false);
@@ -283,7 +283,7 @@ public class TableHelper {
                             }
                             colName = conLine(colName);
                             String fName = colF.getName();
-                            //说明存在与表中的字段名称对应
+                            //The description exists corresponding to the field name in the table
                             if(tableInfo.getColNames().get(colName) != null){
                                 tableInfo.getColNameOfModel().put(fName, colName);
                                 tableInfo.putColNameOfModelField(colName, colF);
@@ -307,29 +307,37 @@ public class TableHelper {
     }
 
     /**
-     * 转下划线
+     * turn underscore
      * @param info
      * @return
      */
     private static String conLine(String info) {
+        if(info.contains("_")){
+            return info;
+        }
 
         String[] split = info.split("");
         StringBuilder builder = new StringBuilder();
+        String last = null;
         for(String s : split){
             if(StringUtils.isAllUpperCase(s)){
-                s = s.toLowerCase();
-               if(builder.length()!=0){
-                   s="_"+s;
-               }
+                if(builder.length()!=0 && StringUtils.isAllLowerCase(last)){
+                    s = s.toLowerCase();
+                    s="_"+s;
+                }
             }
             builder.append(s);
+            last = s;
         }
         info = builder.toString();
+        if(info.contains("_")){
+            info = info.toLowerCase();
+        }
         return info;
     }
 
     /**
-     * 解析 构造函数 所对应的Class
+     * Parse the class corresponding to the constructor
      * @param constructorFun
      * @param <M2>
      * @return

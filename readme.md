@@ -112,8 +112,7 @@ String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
         User h2 = User.builder().name("Jom2").birthday(date).build();
         User h3 = User.builder().name("Jom3").birthday(date).build();
         List<Id> ex = crudUserMapper.insert()
-                .colAll(h1, h2)
-                .colAll(h3)
+                .colAll(h1, h2, h3)
                 .ex();
         print(ex);
 ```

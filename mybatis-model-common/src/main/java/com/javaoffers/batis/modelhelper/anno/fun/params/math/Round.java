@@ -23,7 +23,11 @@ public @interface Round {
     String value() default ModelHelpperConstants.FIELD_COL_NAME;
 
     /**
-     * To keep a few decimal places
+     * The table field corresponding to field. The default is filed name underscore format
+     * You can also modify the value of value to change the table field corresponding to field. It is the modified value.
+     * Functions like {@link com.javaoffers.batis.modelhelper.anno.ColName}.
+     * Note: When using {@code @ColName}. on field to specify table field information. value here will be ignored
+     * (even if value has been modified).
      */
     int precision() default 0;
 }

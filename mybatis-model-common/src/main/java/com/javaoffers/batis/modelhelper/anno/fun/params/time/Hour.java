@@ -1,22 +1,12 @@
-package com.javaoffers.batis.modelhelper.anno.fun.params.math;
+package com.javaoffers.batis.modelhelper.anno.fun.params.time;
 
 import com.javaoffers.batis.modelhelper.constants.ModelHelpperConstants;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 
 /**
  * @author mingJie
  */
-@Target({ElementType.FIELD})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
-public @interface Round {
-    public static final String TAG = "ROUND";
-
+public @interface Hour {
+    public static final String TAG = "HOUR";
     /**
      * The table field corresponding to field. The default is filed name underscore format
      * You can also modify the value of value to change the table field corresponding to field. It is the modified value.
@@ -25,9 +15,4 @@ public @interface Round {
      * (even if value has been modified).
      */
     String value() default ModelHelpperConstants.FIELD_COL_NAME;
-
-    /**
-     * Accuracy
-     */
-    int precision() default 0;
 }

@@ -9,13 +9,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Numerical intercept function
  * @author mingJie
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-public @interface Round {
-    public static final String TAG = "ROUND";
+public @interface Truncate {
+
+    public static final String TAG = "TRUNCATE";
 
     /**
      * The table field corresponding to field. The default is filed name underscore format
@@ -27,7 +29,7 @@ public @interface Round {
     String value() default ModelHelpperConstants.FIELD_COL_NAME;
 
     /**
-     * Accuracy
+     * Preserve the length after the decimal point
      */
     int precision() default 0;
 }

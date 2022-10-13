@@ -7,6 +7,14 @@ import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.CurrentDate;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.CurrentTime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Curtime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
+import com.javaoffers.batis.modelhelper.anno.fun.params.If;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfGte;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfLt;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfLte;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfNeq;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Abs;
@@ -210,6 +218,37 @@ public class FunAnnoParser {
             String value = ifNull.value();
             appender.appender(ifNull.TAG, value);
         }
+        if(anno instanceof If){
+            If if_ = (If) anno;
+            String expr1 = if_.ep1();
+            String expr2 = if_.ep2();
+            appender.appender(if_.TAG, expr1, expr2);
+        }
+        if(anno instanceof If){
+
+        }
+        if(anno instanceof IfEq){
+
+        }
+        if(anno instanceof IfGt){
+
+        }
+        if(anno instanceof IfGte){
+
+        }
+        if(anno instanceof IfLt){
+
+        }
+        if(anno instanceof IfLte){
+
+        }
+        if(anno instanceof IfNeq){
+
+        }
+        if(anno instanceof IfNotNull){
+
+        }
+
     }
 
     static class Appender{

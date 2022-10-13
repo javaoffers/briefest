@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * https://m.php.cn/article/418479.html
+ * https://blog.csdn.net/weixin_51696091/article/details/124731621
  * Absolute value function: abs(x)
  * @author mingJie
  */

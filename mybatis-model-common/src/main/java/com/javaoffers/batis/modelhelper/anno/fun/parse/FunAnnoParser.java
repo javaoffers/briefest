@@ -224,9 +224,6 @@ public class FunAnnoParser {
             String expr2 = if_.ep2();
             appender.appender(if_.TAG, expr1, expr2);
         }
-        if(anno instanceof If){
-
-        }
         if(anno instanceof IfEq){
 
         }

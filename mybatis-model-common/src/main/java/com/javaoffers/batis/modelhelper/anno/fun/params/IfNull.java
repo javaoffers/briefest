@@ -9,7 +9,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ifNull(colName, 'xxx')
+ * ifNull(colName, 'xxx').
+ * sample:
+ * <p>
+ *     @ColName("name")
+ *     @IfNull("'Amop'")
+ *     private String colName;
+ * <p/>
  * create by cmj
  */
 @Target({ElementType.FIELD})

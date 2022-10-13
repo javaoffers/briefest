@@ -22,6 +22,6 @@ public @interface ColName  {
      * if both annotations are used at the same time
      * @return anotherName
      */
-    String value() default "";
+    String value();
 
 }

@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface IfNeq {
+    public static String EXPR = " != ";
     /**
      * colName not equal xx.
      */

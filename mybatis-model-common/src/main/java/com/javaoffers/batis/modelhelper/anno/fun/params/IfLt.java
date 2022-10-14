@@ -15,6 +15,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface IfLt {
+    public static String EXPR = " < ";
     /**
      * colName less than xx.
      */

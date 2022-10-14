@@ -15,8 +15,15 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface IfNotNull {
+    public static String EXPR = " is not null ";
     /**
      * When not null, output this value
      */
     String value();
+
+    /**
+     * when null. output null by default.
+     * @return
+     */
+    String ifNull() default "null";
 }

@@ -75,6 +75,7 @@ public class FunAnnoParser {
                 continue;
             }
             //No reflection here is for performance
+            //This will be optimized for strategy mode later. to avoid a lot of if statements
             parseParamCommon(appender, anno);
             parseParamVarchar(appender, anno);
             parseParamTime(appender, anno);
@@ -103,16 +104,16 @@ public class FunAnnoParser {
         if(anno instanceof Curdate){
             appender.appenderNoneParam(Curdate.TAG);
         }
-        if(anno instanceof CurrentDate){
+        else if(anno instanceof CurrentDate){
             appender.appenderNoneParam(CurrentDate.TAG);
         }
-        if(anno instanceof CurrentTime){
+        else if(anno instanceof CurrentTime){
             appender.appenderNoneParam(CurrentTime.TAG);
         }
-        if(anno instanceof Curtime){
+        else if(anno instanceof Curtime){
             appender.appenderNoneParam(Curtime.TAG);
         }
-        if(anno instanceof Now){
+        else if(anno instanceof Now){
             appender.appenderNoneParam(Now.TAG);
         }
     }
@@ -122,23 +123,23 @@ public class FunAnnoParser {
             Abs abs = (Abs) anno;
             appender.appender(abs.TAG);
         }
-        if(anno instanceof Ceil){
+        else if(anno instanceof Ceil){
             Ceil ceil = (Ceil) anno;
             appender.appender(ceil.TAG);
         }
-        if(anno instanceof Floor){
+        else if(anno instanceof Floor){
             Floor floor = (Floor) anno;
             appender.appender(floor.TAG);
         }
-        if(anno instanceof Mod){
+        else if(anno instanceof Mod){
             Mod mod = (Mod) anno;
             appender.appender(mod.TAG);
         }
-        if(anno instanceof Round){
+        else if(anno instanceof Round){
             Round round = (Round) anno;
             appender.appender(round.TAG,round.precision());
         }
-        if(anno instanceof Truncate){
+        else if(anno instanceof Truncate){
             Truncate truncate = (Truncate) anno;
             appender.appender(truncate.TAG, truncate.precision());
         }
@@ -149,32 +150,30 @@ public class FunAnnoParser {
         if(anno instanceof Dayname){
             Dayname dayname = (Dayname) anno;
             appender.appender(dayname.TAG);
-        }
-        if(anno instanceof Hour){
+        }else if(anno instanceof Hour){
             Hour hour = (Hour) anno;
             appender.appender(hour.TAG);
-        }
-        if(anno instanceof Minute){
+        }else if(anno instanceof Minute){
             Minute minute = (Minute) anno;
             appender.appender(minute.TAG);
         }
-        if(anno instanceof Month){
+        else if(anno instanceof Month){
             Month month = (Month) anno;
             appender.appender(month.TAG);
         }
-        if(anno instanceof Monthname){
+        else if(anno instanceof Monthname){
             Monthname monthname = (Monthname) anno;
             appender.appender(monthname.TAG);
         }
-        if(anno instanceof Week){
+        else if(anno instanceof Week){
             Week week = (Week) anno;
             appender.appender(week.TAG);
         }
-        if(anno instanceof Weekday){
+        else  if(anno instanceof Weekday){
             Weekday weekday = (Weekday) anno;
             appender.appender(weekday.TAG);
         }
-        if(anno instanceof Year){
+        else  if(anno instanceof Year){
             Year year = (Year) anno;
             appender.appender(year.TAG);
         }
@@ -185,65 +184,85 @@ public class FunAnnoParser {
             CharLength charLength = ((CharLength) anno);
             appender.appender(charLength.TAG);
         }
-        if(anno instanceof Concat){
+        else if(anno instanceof Concat){
             Concat concat = (Concat) anno;
             appender.appender(concat.TAG,concat.colNames());
         }
-        if(anno instanceof Length){
+        else if(anno instanceof Length){
             Length length = (Length) anno;
             appender.appender(length.TAG);
         }
-        if(anno instanceof Lower){
+        else if(anno instanceof Lower){
             Lower lower = (Lower) anno;
             appender.appender(lower.TAG);
         }
-        if(anno instanceof Strcmp){
+        else if(anno instanceof Strcmp){
             Strcmp strcmp = (Strcmp) anno;
             appender.appender(Strcmp.TAG,strcmp.expr());
         }
-        if(anno instanceof Upper){
+        else if(anno instanceof Upper){
             Upper upper = (Upper) anno;
             appender.appender(upper.TAG);
         }
     }
 
     private static void parseParamCommon(Appender appender, Annotation anno) {
+
         if(anno instanceof Left){
             Left left = (Left) anno;
             int value = left.value();
             appender.appender(left.TAG, value);
-        }
-        if(anno instanceof IfNull){
+
+        } else if(anno instanceof IfNull){
             IfNull ifNull = (IfNull) anno;
             String value = ifNull.value();
             appender.appender(ifNull.TAG, value);
-        }
-        if(anno instanceof If){
+        }else if(anno instanceof If){
             If if_ = (If) anno;
             String expr1 = if_.ep1();
             String expr2 = if_.ep2();
             appender.appender(if_.TAG, expr1, expr2);
-        }
-        if(anno instanceof IfEq){
-
-        }
-        if(anno instanceof IfGt){
-
-        }
-        if(anno instanceof IfGte){
-
-        }
-        if(anno instanceof IfLt){
-
-        }
-        if(anno instanceof IfLte){
-
-        }
-        if(anno instanceof IfNeq){
-
-        }
-        if(anno instanceof IfNotNull){
-
+        }else if(anno instanceof IfEq){
+            IfEq ifEq = (IfEq) anno;
+            String ep1 = ifEq.ep1();
+            String ep2 = ifEq.ep2();
+            String eq = ifEq.eq();
+            appender.appenderExpr(If.TAG, IfEq.EXPR + eq, ep1, ep2);
+        } else if(anno instanceof IfGt){
+            IfGt ifGt = (IfGt) anno;
+            String ep1 = ifGt.ep1();
+            String ep2 = ifGt.ep2();
+            String gt = ifGt.gt();
+            appender.appenderExpr(If.TAG, IfGt.EXPR + gt, ep1, ep2);
+        } else if(anno instanceof IfGte){
+            IfGte ifEq = (IfGte) anno;
+            String ep1 = ifEq.ep1();
+            String ep2 = ifEq.ep2();
+            String gte = ifEq.gte();
+            appender.appenderExpr(If.TAG, IfGte.EXPR + gte, ep1, ep2);
+        }else if(anno instanceof IfLt){
+            IfLt ifEq = (IfLt) anno;
+            String ep1 = ifEq.ep1();
+            String ep2 = ifEq.ep2();
+            String lt = ifEq.lt();
+            appender.appenderExpr(If.TAG, IfLt.EXPR + lt, ep1, ep2);
+        }else if(anno instanceof IfLte){
+            IfLte ifEq = (IfLte) anno;
+            String ep1 = ifEq.ep1();
+            String ep2 = ifEq.ep2();
+            String lte = ifEq.lte();
+            appender.appenderExpr(If.TAG, IfLte.EXPR + lte, ep1, ep2);
+        }else if(anno instanceof IfNeq){
+            IfNeq ifEq = (IfNeq) anno;
+            String ep1 = ifEq.ep1();
+            String ep2 = ifEq.ep2();
+            String neq = ifEq.neq();
+            appender.appenderExpr(If.TAG, IfNeq.EXPR + neq, ep1, ep2);
+        }else if(anno instanceof IfNotNull){
+            IfNotNull ifNotNull = (IfNotNull) anno;
+            String value = ifNotNull.value();
+            String ifNullValue = ifNotNull.ifNull();
+            appender.appenderExpr(If.TAG, IfNotNull.EXPR ,value, ifNullValue );
         }
 
     }
@@ -268,6 +287,25 @@ public class FunAnnoParser {
                 List<String> collect = Arrays.stream(param).filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
                 if(collect!=null &&collect.size() > 0){
                     String join = String.join(",", collect);
+                    appenderRight.append(",");
+                    appenderRight.append(join);
+                }
+            }
+            appenderRight.append(")");
+            this.appenderLeft = appenderLeftOut;
+            return this;
+        }
+
+        public Appender appenderExpr(String funName,String expr, Object... param){
+            StringBuilder appenderLeftOut = new StringBuilder();
+            appenderLeftOut.append(funName);
+            appenderLeftOut.append("(");
+            appenderLeftOut.append(this.appenderLeft);
+            if(param != null){
+                List<String> collect = Arrays.stream(param).filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
+                if(collect!=null &&collect.size() > 0){
+                    String join = String.join(",", collect);
+                    appenderRight.append(expr);
                     appenderRight.append(",");
                     appenderRight.append(join);
                 }

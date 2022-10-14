@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface IfEq {
+    public static String EXPR = " = ";
     /**
      * colName equal xx.
      */

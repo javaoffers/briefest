@@ -5,6 +5,8 @@ import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.math.Rand;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.params.If;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
@@ -86,8 +88,17 @@ public class FunAnnoParserSample {
     @If(ep1 = "'boy'", ep2 = "'girl'")
     private String colName13;// IF(IFNULL(sex,1),'boy','girl')
 
+    @ColName("sex")
+    @IfEq(eq = "1",ep1 = "'boy'", ep2 = "'girl'")
+    private String colName14; //IF(sex = 1,'boy','girl')
 
+    @ColName("money")
+    @IfNotNull("'rich'")
+    private String colName15; // IF(money is not null ,'rich',null)
 
+    @ColName("money")
+    @IfNotNull(value = "'rich'",ifNull = "'poor'")
+    private String colName16; //IF(money is not null ,'rich','poor')
 
     @Before
     public void before(){
@@ -126,7 +137,9 @@ public class FunAnnoParserSample {
         testColNameN(11);
         testColNameN(12);
         testColNameN(13);
-
+        testColNameN(14);
+        testColNameN(15);
+        testColNameN(16);
     }
 
 

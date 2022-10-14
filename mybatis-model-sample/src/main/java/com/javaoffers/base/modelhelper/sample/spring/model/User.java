@@ -39,8 +39,7 @@ public class User {
     private String now;
 
     @ColName("money")
-    @IfGt(gt = "5000", ep1 = "money", ep2 = "'poor'")
-    @IfLt(lt = "10000",ep1 = "'moderately rich'", ep2 = "'very rich'")
+    @IfGt(gt = "10000",ep1 = "'very rich'", ep2 = "'generally rich'")
     private String moneyDesc;
 
 

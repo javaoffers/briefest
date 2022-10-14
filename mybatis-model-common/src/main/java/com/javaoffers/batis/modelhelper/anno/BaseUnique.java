@@ -18,7 +18,8 @@ public @interface BaseUnique {
      * For example: select value as fieldName from table.
      * By default, the attribute name underscore format is used as a table field for sql parsing.
      * Note: This property is useful in CrudMapper scenarios
-     * Note: You can also use {@link @ColName(colName)}
+     * Note: You can also use {@link @ColName(colName)}, The value of colName will override the value here if both exist.
+     * But Unique features of {@code BaseUnique} are not lost。
      */
     String value() default "";
 }

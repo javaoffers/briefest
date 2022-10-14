@@ -3,7 +3,10 @@ package com.javaoffers.batis.modelhelper.utils;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
+import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
+import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
+import com.javaoffers.batis.modelhelper.exception.ParseTableException;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import org.apache.commons.lang3.StringUtils;
@@ -55,8 +58,13 @@ public class TableHelper {
         List<String> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         String tableName = tableInfo.getTableName();
-        tableInfo.getColNameOfModel().forEach((k,v)->{
-            colAll.add(tableName+"."+v+" as "+k);
+        tableInfo.getFieldNameColNameOfModel().forEach((fieldName,colName)->{
+            if(tableInfo.isSqlFun(colName)){
+                colAll.add(colName+" as "+fieldName);
+            }else{
+                colAll.add(tableName+"."+colName+" as "+fieldName);
+            }
+
         });
         return colAll;
     }
@@ -67,8 +75,7 @@ public class TableHelper {
         parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
-        String tableName = tableInfo.getTableName();
-        tableInfo.getColNameOfModel().forEach((colName,fieldName)->{
+        tableInfo.getFieldNameColNameOfModel().forEach((colName,fieldName)->{
             colAll.add(Pair.of(colName,fieldName));
         });
         return colAll;
@@ -80,7 +87,17 @@ public class TableHelper {
         parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
-        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameOfModelField();
+        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
+        return colNameOfModelField;
+    }
+
+    public static Map<String, List<Field>> getNColAllAndFieldOnly(Class<?> modelClss){
+        String name = modelClss.getName();
+        String implClass = name.replaceAll("\\.","/");
+        parseTableInfo(implClass);
+        List<Pair<String, String>> colAll = new LinkedList<>();
+        TableInfo tableInfo = tableInfoMap.get(modelClss);
+        Map<String, List<Field>> colNameOfModelField = tableInfo.getOriginalColNameOfModelField();
         return colNameOfModelField;
     }
 
@@ -104,8 +121,12 @@ public class TableHelper {
                 return k;
             });
             String fieldName = fieldNameOfGetter.get(methodName);
-            colName = tableInfo.getColNameOfModel().get(fieldName);
-            colName = tableInfo.getTableName()+"."+colName+" as "+ fieldName;
+            colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
+            if(tableInfo.isSqlFun(colName)){
+                colName = colName+" as "+ fieldName;
+            }else{
+                colName = tableInfo.getTableName()+"."+colName+" as "+ fieldName;
+            }
             return colName;
         }catch (Exception e){
             e.printStackTrace();
@@ -133,8 +154,10 @@ public class TableHelper {
                 return k;
             });
             String fieldName = fieldNameOfGetter.get(methodName);
-            colName = tableInfo.getColNameOfModel().get(fieldName);
-            colName = tableInfo.getTableName()+"."+colName;
+            colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
+            if(!tableInfo.isSqlFun(colName)){
+                colName = tableInfo.getTableName()+"."+colName;
+            }
             return colName;
         }catch (Exception e){
             e.printStackTrace();
@@ -162,7 +185,10 @@ public class TableHelper {
                 return k;
             });
             String fieldName = colNameOfGetter.get(methodName);;
-            String colName =  tableInfo.getTableName()+"."+tableInfo.getColNameOfModel().get(fieldName);
+            String colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
+            if(!tableInfo.isSqlFun(colName)){
+                colName =  tableInfo.getTableName()+"."+colName;
+            }
             return Pair.of(colName, fieldName);
         }catch (Exception e){
             e.printStackTrace();
@@ -189,7 +215,7 @@ public class TableHelper {
                 return k;
             });
             String fieldName = colNameOfGetter.get(methodName);;
-            String colName =  tableInfo.getColNameOfModel().get(fieldName);
+            String colName =  tableInfo.getFieldNameColNameOfModel().get(fieldName);
             return colName;
         }catch (Exception e){
             e.printStackTrace();
@@ -270,27 +296,40 @@ public class TableHelper {
                         Field[] colFs= modelClazz.getDeclaredFields();
                         for(Field colF : colFs){
                             colF.setAccessible(true);
-                            String colName = colF.getName();
+                            String colName = conLine(colF.getName());
                             BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
                             if(baseUnique != null ){
                                 if(StringUtils.isNotBlank(baseUnique.value())){
                                     colName = baseUnique.value();
                                 }
                             }
-                            ColName colNameAnno = colF.getDeclaredAnnotation(ColName.class);
-                            if(colNameAnno != null && StringUtils.isNotBlank(colNameAnno.value())){
-                                colName = colNameAnno.value();
+                            //parse @ColName and @funAnno
+                            ParseSqlFunResult parseColName = FunAnnoParser.parse(modelClazz, colF, colName);
+                            if(parseColName != null ){
+                                colName = parseColName.getSqlFun();
+                                tableInfo.putSqlFun(colName, parseColName.isFun());
+                            }else{
+                                // Indicates that this field does not have any annotation information.
+                                // then the field must belong to a field in the original table
+                                // Otherwise skip parsing of this field
+                                if(!tableInfo.getColNames().containsKey(colName)){
+                                    continue;
+                                }
                             }
-                            colName = conLine(colName);
-                            String fName = colF.getName();
-                            //The description exists corresponding to the field name in the table
-                            if(tableInfo.getColNames().get(colName) != null){
-                                tableInfo.getColNameOfModel().put(fName, colName);
-                                tableInfo.putColNameOfModelField(colName, colF);
+
+                            String fieldName = colF.getName();
+                            // original table fields and sql-fun fields
+                            tableInfo.putFieldNameColNameOfModel(fieldName, colName);
+                            tableInfo.putColNameAndFieldOfModel(colName, colF);
+
+                            if( tableInfo.getColNames().containsKey(colName)){
+                                //original table fields
+                                tableInfo.putOriginalColNameAndFieldOfModelField(colName,colF);
                             }
                         }
                     }catch (Exception e){
                         e.printStackTrace();
+                        throw new ParseTableException(e.getMessage(),e);
                     }finally {
                         if(connection != null){
                             try {
@@ -330,7 +369,9 @@ public class TableHelper {
             last = s;
         }
         info = builder.toString();
-        if(info.contains("_")){
+        String defaultIgnoreCase = "YES";
+        String ignoreCase = System.getProperty("IgnoreCase", defaultIgnoreCase);
+        if(defaultIgnoreCase.equalsIgnoreCase(ignoreCase)){
             info = info.toLowerCase();
         }
         return info;

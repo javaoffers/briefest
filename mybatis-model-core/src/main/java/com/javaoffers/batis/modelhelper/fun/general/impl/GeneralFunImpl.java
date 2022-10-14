@@ -265,7 +265,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     private AtomicBoolean parseWhere(T model, WhereFun where) {
         TableInfo tableInfo = getTableInfo(model.getClass());
         Map<String, ColumnInfo> colNames = tableInfo.getColNames();
-        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameOfModelField();
+        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
         AtomicBoolean status = new AtomicBoolean(false);
         if(colNameOfModelField != null && colNameOfModelField.size() > 0){
             colNameOfModelField.forEach((colName, fields)->{
@@ -298,7 +298,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     private void parseWhereById(WhereModifyFun<T, V> where, AtomicBoolean status, T model) {
         TableInfo tableInfo = TableHelper.getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameOfModelField();
+        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
         WhereModifyFun<T, V> finalWhere = where;
         primaryColNames.forEach((colName, colInfo)->{
             List<Field> fields = colNameOfModelField.get(colName);

@@ -37,18 +37,13 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Length;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Lower;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Strcmp;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Upper;
-import com.javaoffers.batis.modelhelper.constants.ModelHelpperConstants;
-import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import com.javaoffers.batis.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -57,214 +52,263 @@ import java.util.stream.Collectors;
  */
 public class FunAnnoParser {
 
+
     public static final String DEFAULT_VALUE = "";
 
-    public static String parse(Class modelClass, Field field){
+    public static ParseSqlFunResult parse(Class modelClass, Field field,String defaultColName){
+
         Assert.isTrue(field != null,"the field is null");
         Annotation[] allAnno = field.getDeclaredAnnotations();
         if(allAnno == null || allAnno.length == 0){
-            return DEFAULT_VALUE;
+            return null;
         }
         //先查询出@ColName注解
-        Appender appender = new Appender(modelClass,field);
-        ColName colName = null;
+        Appender appender = new Appender(modelClass,field,defaultColName);
+        ColName colNameAnno = null;
         String coreSql = null;
+        boolean status = false;
         for(Annotation anno : allAnno){
             if(anno instanceof ColName){
-                colName = (ColName) anno;
+                colNameAnno = (ColName) anno;
                 continue;
             }
             //No reflection here is for performance
             //This will be optimized for strategy mode later. to avoid a lot of if statements
-            parseParamCommon(appender, anno);
-            parseParamVarchar(appender, anno);
-            parseParamTime(appender, anno);
-            parseParamMath(appender, anno);
-            parseNoneParamTime(appender, anno);
+            status =
+            parseParamCommon(appender, anno)||
+            parseParamVarchar(appender, anno)||
+            parseParamTime(appender, anno)||
+            parseParamMath(appender, anno)||
+            parseNoneParamTime(appender, anno)||
             parseNoneParamMath(appender, anno);
 
         }
-        if(colName != null){
-            coreSql = colName.value();
+        if(colNameAnno != null){
+            coreSql = colNameAnno.value();
             //a and b cannot be used together
-            Assert.isTrue(colName != null && !appender.isNoneParam, "@ColName and" +
+            Assert.isTrue(colNameAnno != null && !appender.isNoneParam, "@ColName and" +
                     " "+appender.getNoParamFunName() + " cannot be used together");
         }
 
-        return appender.toSqlString(coreSql);
+        return new ParseSqlFunResult(appender.toSqlString(coreSql), status);
     }
 
-    private static void parseNoneParamMath(Appender appender, Annotation anno) {
+    private static boolean parseNoneParamMath(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof Rand){
             appender.appenderNoneParam(Rand.TAG);
+            status = true;
         }
+        return status;
     }
 
-    private static void parseNoneParamTime(Appender appender, Annotation anno) {
+    private static boolean parseNoneParamTime(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof Curdate){
             appender.appenderNoneParam(Curdate.TAG);
+            status = true;
         }
         else if(anno instanceof CurrentDate){
             appender.appenderNoneParam(CurrentDate.TAG);
+            status = true;
         }
         else if(anno instanceof CurrentTime){
             appender.appenderNoneParam(CurrentTime.TAG);
+            status = true;
         }
         else if(anno instanceof Curtime){
             appender.appenderNoneParam(Curtime.TAG);
+            status = true;
         }
         else if(anno instanceof Now){
             appender.appenderNoneParam(Now.TAG);
+            status = true;
         }
+        return status;
     }
 
-    private static void parseParamMath(Appender appender, Annotation anno) {
+    private static boolean parseParamMath(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof Abs){
             Abs abs = (Abs) anno;
             appender.appender(abs.TAG);
+            status = true;
         }
         else if(anno instanceof Ceil){
             Ceil ceil = (Ceil) anno;
             appender.appender(ceil.TAG);
+            status = true;
         }
         else if(anno instanceof Floor){
             Floor floor = (Floor) anno;
             appender.appender(floor.TAG);
+            status = true;
         }
         else if(anno instanceof Mod){
             Mod mod = (Mod) anno;
             appender.appender(mod.TAG);
+            status = true;
         }
         else if(anno instanceof Round){
             Round round = (Round) anno;
             appender.appender(round.TAG,round.precision());
+            status = true;
         }
         else if(anno instanceof Truncate){
             Truncate truncate = (Truncate) anno;
             appender.appender(truncate.TAG, truncate.precision());
+            status = true;
         }
+        return status;
     }
 
-    private static void parseParamTime(Appender appender, Annotation anno) {
-        
+    private static boolean parseParamTime(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof Dayname){
             Dayname dayname = (Dayname) anno;
             appender.appender(dayname.TAG);
+            status = true;
         }else if(anno instanceof Hour){
             Hour hour = (Hour) anno;
             appender.appender(hour.TAG);
+            status = true;
         }else if(anno instanceof Minute){
             Minute minute = (Minute) anno;
             appender.appender(minute.TAG);
+            status = true;
         }
         else if(anno instanceof Month){
             Month month = (Month) anno;
             appender.appender(month.TAG);
+            status = true;
         }
         else if(anno instanceof Monthname){
             Monthname monthname = (Monthname) anno;
             appender.appender(monthname.TAG);
+            status = true;
         }
         else if(anno instanceof Week){
             Week week = (Week) anno;
             appender.appender(week.TAG);
+            status = true;
         }
         else  if(anno instanceof Weekday){
             Weekday weekday = (Weekday) anno;
             appender.appender(weekday.TAG);
+            status = true;
         }
         else  if(anno instanceof Year){
             Year year = (Year) anno;
             appender.appender(year.TAG);
+            status = true;
         }
+        return status;
     }
 
-    private static void parseParamVarchar(Appender appender, Annotation anno) {
+    private static boolean parseParamVarchar(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof CharLength){
             CharLength charLength = ((CharLength) anno);
             appender.appender(charLength.TAG);
+            status = true;
         }
         else if(anno instanceof Concat){
             Concat concat = (Concat) anno;
             appender.appender(concat.TAG,concat.colNames());
+            status = true;
         }
         else if(anno instanceof Length){
             Length length = (Length) anno;
             appender.appender(length.TAG);
+            status = true;
         }
         else if(anno instanceof Lower){
             Lower lower = (Lower) anno;
             appender.appender(lower.TAG);
+            status = true;
         }
         else if(anno instanceof Strcmp){
             Strcmp strcmp = (Strcmp) anno;
             appender.appender(Strcmp.TAG,strcmp.expr());
+            status = true;
         }
         else if(anno instanceof Upper){
             Upper upper = (Upper) anno;
             appender.appender(upper.TAG);
+            status = true;
         }
+        return status;
     }
 
-    private static void parseParamCommon(Appender appender, Annotation anno) {
-
+    private static boolean parseParamCommon(Appender appender, Annotation anno) {
+        boolean status = false;
         if(anno instanceof Left){
             Left left = (Left) anno;
             int value = left.value();
             appender.appender(left.TAG, value);
+            status = true;
 
         } else if(anno instanceof IfNull){
             IfNull ifNull = (IfNull) anno;
             String value = ifNull.value();
             appender.appender(ifNull.TAG, value);
+            status = true;
         }else if(anno instanceof If){
             If if_ = (If) anno;
             String expr1 = if_.ep1();
             String expr2 = if_.ep2();
             appender.appender(if_.TAG, expr1, expr2);
+            status = true;
         }else if(anno instanceof IfEq){
             IfEq ifEq = (IfEq) anno;
             String ep1 = ifEq.ep1();
             String ep2 = ifEq.ep2();
             String eq = ifEq.eq();
             appender.appenderExpr(If.TAG, IfEq.EXPR + eq, ep1, ep2);
+            status = true;
         } else if(anno instanceof IfGt){
             IfGt ifGt = (IfGt) anno;
             String ep1 = ifGt.ep1();
             String ep2 = ifGt.ep2();
             String gt = ifGt.gt();
             appender.appenderExpr(If.TAG, IfGt.EXPR + gt, ep1, ep2);
+            status = true;
         } else if(anno instanceof IfGte){
             IfGte ifEq = (IfGte) anno;
             String ep1 = ifEq.ep1();
             String ep2 = ifEq.ep2();
             String gte = ifEq.gte();
             appender.appenderExpr(If.TAG, IfGte.EXPR + gte, ep1, ep2);
+            status = true;
         }else if(anno instanceof IfLt){
             IfLt ifEq = (IfLt) anno;
             String ep1 = ifEq.ep1();
             String ep2 = ifEq.ep2();
             String lt = ifEq.lt();
             appender.appenderExpr(If.TAG, IfLt.EXPR + lt, ep1, ep2);
+            status = true;
         }else if(anno instanceof IfLte){
             IfLte ifEq = (IfLte) anno;
             String ep1 = ifEq.ep1();
             String ep2 = ifEq.ep2();
             String lte = ifEq.lte();
             appender.appenderExpr(If.TAG, IfLte.EXPR + lte, ep1, ep2);
+            status = true;
         }else if(anno instanceof IfNeq){
             IfNeq ifEq = (IfNeq) anno;
             String ep1 = ifEq.ep1();
             String ep2 = ifEq.ep2();
             String neq = ifEq.neq();
             appender.appenderExpr(If.TAG, IfNeq.EXPR + neq, ep1, ep2);
+            status = true;
         }else if(anno instanceof IfNotNull){
             IfNotNull ifNotNull = (IfNotNull) anno;
             String value = ifNotNull.value();
             String ifNullValue = ifNotNull.ifNull();
             appender.appenderExpr(If.TAG, IfNotNull.EXPR ,value, ifNullValue );
+            status = true;
         }
-
+        return status;
     }
 
     static class Appender{
@@ -272,7 +316,6 @@ public class FunAnnoParser {
         private Field field;
         private String fieldName;
         private String colName;
-        private Map<String, String> colNameOfModel;
         private StringBuilder appenderLeft = new StringBuilder();
         private StringBuilder appenderRight = new StringBuilder();
         private boolean isNoneParam = false;
@@ -340,13 +383,11 @@ public class FunAnnoParser {
         }
 
 
-        public Appender(Class modelClass, Field field){
+        public Appender(Class modelClass, Field field, String  colName){
             this.modelClass = modelClass;
-            TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
-            this.colNameOfModel = tableInfo.getColNameOfModel();
             this.field = field;
             this.fieldName = field.getName();
-            this.colName = colNameOfModel.get(this.fieldName);
+            this.colName = colName;
         }
 
         public boolean isNoneParam() {

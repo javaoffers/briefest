@@ -6,11 +6,13 @@ import com.javaoffers.batis.modelhelper.anno.fun.noneparam.math.Rand;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.params.If;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
+import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
+import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
 import org.junit.Before;
@@ -100,6 +102,17 @@ public class FunAnnoParserSample {
     @IfNotNull(value = "'rich'",ifNull = "'poor'")
     private String colName16; //IF(money is not null ,'rich','poor')
 
+    @ColName("money")
+    @IfNotNull(value = "'rich'",ifNull = "'poor'")
+    @IfEq(eq = "'rich'",ep1 = "'i want to marry him'", ep2 = "'i want to break up with him'")
+    private String colName17; //IF(IF(money is not null ,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
+
+    @ColName("money")
+    @IfGt(gt = "100000",ep1 = "'rich'", ep2 = "'poor'")
+    @IfEq(eq = "'rich'",ep1 = "'i want to marry him'", ep2 = "'i want to break up with him'")
+    private String colName18; //IF(IF(money > 100000,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
+
+
     @Before
     public void before(){
         MockedStatic<TableHelper> mockedStatic = Mockito.mockStatic(TableHelper.class);
@@ -140,13 +153,16 @@ public class FunAnnoParserSample {
         testColNameN(14);
         testColNameN(15);
         testColNameN(16);
+        testColNameN(17);
+        testColNameN(18);
     }
 
 
     public void testColNameN(int n) throws Exception{
         Class<FunAnnoParserSample> modelClass = FunAnnoParserSample.class;
-        Field colName = modelClass.getDeclaredField("colName"+n);
-        String parse = FunAnnoParser.parse(modelClass, colName);
-        LOGUtils.printLog(parse);
+        String colName = "colName"+n;
+        Field colField = modelClass.getDeclaredField(colName);
+        ParseSqlFunResult parse = FunAnnoParser.parse(modelClass, colField, colName);
+        LOGUtils.printLog(parse.getSqlFun());
     }
 }

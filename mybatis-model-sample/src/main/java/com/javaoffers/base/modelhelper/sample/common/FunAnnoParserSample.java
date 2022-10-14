@@ -113,6 +113,8 @@ public class FunAnnoParserSample {
     private String colName18; //IF(IF(money > 100000,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
 
 
+
+
     @Before
     public void before(){
         MockedStatic<TableHelper> mockedStatic = Mockito.mockStatic(TableHelper.class);
@@ -155,6 +157,7 @@ public class FunAnnoParserSample {
         testColNameN(16);
         testColNameN(17);
         testColNameN(18);
+
     }
 
 

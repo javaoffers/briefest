@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 
 @BaseModel
@@ -31,6 +32,9 @@ public class User {
 
     private String birthday;
 
+    @ColName("birthday")
+    private Date birthdayDate;
+
     private String createTime;
 
     private String money;
@@ -41,7 +45,6 @@ public class User {
     @ColName("money")
     @IfGt(gt = "10000",ep1 = "'very rich'", ep2 = "'generally rich'")
     private String moneyDesc;
-
 
     private List<UserOrder> orders;
 

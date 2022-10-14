@@ -3,7 +3,9 @@ package com.javaoffers.base.modelhelper.sample.spring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserOrderMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
+import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.core.Id;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -11,6 +13,7 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
@@ -19,12 +22,16 @@ import java.util.*;
 @SpringBootApplication
 @RequestMapping
 @MapperScan("com.javaoffers.base.modelhelper.sample.spring.mapper")
+@Transactional(rollbackFor=Exception.class)
 public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
     CrudUserMapper crudUserMapper;
+
+    @Resource
+    CrudUserOrderMapper crudUserOrderMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperInsert.class, args);
@@ -33,10 +40,24 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testInsertModel();
-        System.exit(0);
+        testInsertModelAndOrder();
+        //System.exit(0);
 
     }
+    public void testInsertModelAndOrder(){
+        User jom = User.builder().name("Jom").money("100000").build();
+        User tom = User.builder().name("Tom").money("5000").build();
+        User amop = User.builder().name("Amop").money("50000").birthdayDate(new Date()).build();
+        List<Id> exs = crudUserMapper.insert().colAll(jom, tom, amop).exs();
+
+        UserOrder iphone = UserOrder.builder().orderMoney("5000").orderName("Iphone").userId(exs.get(0).toString()).build();
+        UserOrder huaWei = UserOrder.builder().orderMoney("5000").orderName("huaWei").userId(exs.get(2).toString()).build();
+        List<Id> exs1 = crudUserOrderMapper.insert().colAll(iphone, huaWei).exs();
+
+        LOGUtils.printLog(exs);
+        LOGUtils.printLog(exs1);
+    }
+
 
     public void testInsertModel(){
         User m1 = User.builder().name("m1").build();

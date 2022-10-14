@@ -2,12 +2,18 @@ package com.javaoffers.base.modelhelper.sample.spring.model;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 
 /**
  * @Description:
  * @Auther: create by cmj on 2021/12/13 13:03
  */
 @BaseModel
+@Data
+@Builder
+@AllArgsConstructor
 public class UserOrder {
 
     @BaseUnique("id")

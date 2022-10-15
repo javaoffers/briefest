@@ -7,6 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * CURTIME()
  * @author mingJie
  */
 @Target({ElementType.FIELD})

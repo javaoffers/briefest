@@ -7,11 +7,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * CURRENT_DATE()
  * @author mingJie
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface CurrentDate {
-    public static final String TAG = "CURRENTDATE";
+    public static final String TAG = "CURRENT_DATE";
 }

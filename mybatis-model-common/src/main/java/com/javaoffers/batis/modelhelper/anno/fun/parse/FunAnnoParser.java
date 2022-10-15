@@ -7,6 +7,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.CurrentDate;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.CurrentTime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Curtime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
+import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.UnixTimestamp;
 import com.javaoffers.batis.modelhelper.anno.fun.params.If;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
@@ -17,25 +18,41 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.IfNeq;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
+import com.javaoffers.batis.modelhelper.anno.fun.params.Right;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Abs;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Ceil;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Floor;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Mod;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Round;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Truncate;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.DateFormat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Dayname;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.FromDays;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Hour;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.Makedate;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.Maketime;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Minute;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Month;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Monthname;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.SecToTime;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.StrToDate;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.TimeFormat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.TimeToSec;
+import com.javaoffers.batis.modelhelper.anno.fun.params.time.ToDays;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Week;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Weekday;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Year;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.CharLength;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.LTrim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Length;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Lower;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.RTrim;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Repeat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Replace;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Strcmp;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.SubString;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Upper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
@@ -104,12 +121,12 @@ public class FunAnnoParser {
 
     private static boolean parseNoneParamTime(Appender appender, Annotation anno) {
         boolean status = false;
-        if(anno instanceof Curdate){
-            appender.appenderNoneParam(Curdate.TAG);
+        if(anno instanceof CurrentDate){
+            appender.appenderNoneParam(CurrentDate.TAG);
             status = true;
         }
-        else if(anno instanceof CurrentDate){
-            appender.appenderNoneParam(CurrentDate.TAG);
+        else if(anno instanceof Curdate){
+            appender.appenderNoneParam(Curdate.TAG);
             status = true;
         }
         else if(anno instanceof CurrentTime){
@@ -122,6 +139,10 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Now){
             appender.appenderNoneParam(Now.TAG);
+            status = true;
+        }
+        else if(anno instanceof UnixTimestamp){
+            appender.appender(UnixTimestamp.TAG);
             status = true;
         }
         return status;
@@ -146,7 +167,8 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Mod){
             Mod mod = (Mod) anno;
-            appender.appender(mod.TAG);
+            int ep1 = mod.ep1();
+            appender.appender(mod.TAG, ep1);
             status = true;
         }
         else if(anno instanceof Round){
@@ -164,15 +186,38 @@ public class FunAnnoParser {
 
     private static boolean parseParamTime(Appender appender, Annotation anno) {
         boolean status = false;
-        if(anno instanceof Dayname){
+
+         if(anno instanceof DateFormat){
+            DateFormat dateFormat = (DateFormat)anno;
+            String format = dateFormat.value();
+            appender.appender(dateFormat.TAG, format);
+            status = true;
+        }else if(anno instanceof Dayname){
             Dayname dayname = (Dayname) anno;
             appender.appender(dayname.TAG);
             status = true;
-        }else if(anno instanceof Hour){
+        }
+        else if(anno instanceof FromDays){
+            appender.appender(FromDays.TAG);
+            status = true;
+        }
+        else if(anno instanceof Hour){
             Hour hour = (Hour) anno;
             appender.appender(hour.TAG);
             status = true;
-        }else if(anno instanceof Minute){
+        }
+        else if(anno instanceof Maketime){
+            int ep1 = ((Maketime) anno).ep1();
+            int ep2 = ((Maketime) anno).ep2();
+            appender.appender(Maketime.TAG, ep1, ep2);
+            status = true;
+        }
+        else if(anno instanceof Makedate){
+            int value = ((Makedate) anno).value();
+            appender.appender(Makedate.TAG, value);
+            status = true;
+        }
+        else if(anno instanceof Minute){
             Minute minute = (Minute) anno;
             appender.appender(minute.TAG);
             status = true;
@@ -185,6 +230,29 @@ public class FunAnnoParser {
         else if(anno instanceof Monthname){
             Monthname monthname = (Monthname) anno;
             appender.appender(monthname.TAG);
+            status = true;
+        }
+        else if(anno instanceof SecToTime){
+            appender.appender(SecToTime.TAG);
+            status = true;
+        }
+        else if(anno instanceof StrToDate){
+            String format = ((StrToDate) anno).value();
+            appender.appender(StrToDate.TAG, format);
+            status = true;
+        }
+        else if(anno instanceof TimeFormat){
+            TimeFormat timeFormat = (TimeFormat) anno;
+            String format = timeFormat.value();
+            appender.appender(timeFormat.TAG, format);
+            status = true;
+        }
+        else if(anno instanceof ToDays){
+            appender.appender(ToDays.TAG);
+            status = true;
+        }
+        else if(anno instanceof TimeToSec){
+            appender.appender(TimeToSec.TAG);
             status = true;
         }
         else if(anno instanceof Week){
@@ -227,9 +295,44 @@ public class FunAnnoParser {
             appender.appender(lower.TAG);
             status = true;
         }
+        else if(anno instanceof LTrim){
+            LTrim lTrim = (LTrim) anno;
+            appender.appender(lTrim.TAG);
+            status = true;
+        }
+        else if(anno instanceof Repeat){
+            Repeat repeat = (Repeat) anno;
+            String value = repeat.value();
+            appender.appender(repeat.TAG,value);
+            status = true;
+        }
+        else if(anno instanceof Replace){
+            Replace replace = (Replace) anno;
+            String ep1 = replace.ep1();
+            String ep2 = replace.ep2();
+            appender.appender(replace.TAG, ep1, ep2);
+            status = true;
+        }
+        else if(anno instanceof RTrim){
+            RTrim rTrim = (RTrim)anno;
+            appender.appender(rTrim.TAG);
+            status = true;
+        }
         else if(anno instanceof Strcmp){
             Strcmp strcmp = (Strcmp) anno;
             appender.appender(Strcmp.TAG,strcmp.expr());
+            status = true;
+        }
+        else if(anno instanceof SubString){
+            SubString subString = (SubString) anno;
+            String ep1 = subString.ep1();
+            String ep2 = subString.ep2();
+            appender.appender(subString.TAG, ep1, ep2);
+            status = true;
+        }
+        else if(anno instanceof Trim){
+            Trim trim = (Trim) anno;
+            appender.appender(trim.TAG);
             status = true;
         }
         else if(anno instanceof Upper){
@@ -248,7 +351,13 @@ public class FunAnnoParser {
             appender.appender(left.TAG, value);
             status = true;
 
-        } else if(anno instanceof IfNull){
+        }else if(anno instanceof Right){
+            Right right = (Right) anno;
+            int value = right.value();
+            appender.appender(right.TAG, value);
+            status = true;
+        }
+        else if(anno instanceof IfNull){
             IfNull ifNull = (IfNull) anno;
             String value = ifNull.value();
             appender.appender(ifNull.TAG, value);

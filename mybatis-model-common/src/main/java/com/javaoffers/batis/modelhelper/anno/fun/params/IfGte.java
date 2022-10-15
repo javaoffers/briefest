@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * extended if: if (colName >= xx, xx, xx)
+ * extended if: if (colName >= xx, ep1, ep2)
  * colName >= xx
  * @author mingJie
  */

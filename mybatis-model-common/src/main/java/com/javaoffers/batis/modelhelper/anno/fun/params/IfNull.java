@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ifNull(colName, 'xxx').
+ * ifNull(colName, 'defalut value').
  * sample:
  * <p>
  *     @ColName("name")

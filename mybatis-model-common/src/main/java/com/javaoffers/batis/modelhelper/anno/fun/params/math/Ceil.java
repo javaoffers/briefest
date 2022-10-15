@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * select CEIL(X)
+ * select CEIL(colName)
  * @author mingJie
  */
 @Target({ElementType.FIELD})

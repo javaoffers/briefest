@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * select left(colName, n)
+ * select left(colName, length)
  * @author mingJie
  */
 @Target({ElementType.FIELD})
@@ -15,5 +15,9 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface Left {
     public static final String TAG = "LEFT";
+
+    /**
+     * length
+     */
     int value();
 }

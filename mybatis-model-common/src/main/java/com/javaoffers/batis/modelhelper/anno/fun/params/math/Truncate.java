@@ -9,6 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ *  TRUNCATE(colName, precision)
+ *  TRUNCATE(7.536432,2); 7.53
  * Numerical intercept function
  * @author mingJie
  */

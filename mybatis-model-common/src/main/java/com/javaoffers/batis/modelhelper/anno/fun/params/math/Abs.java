@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * https://blog.csdn.net/weixin_51696091/article/details/124731621
- * Absolute value function: abs(x)
+ * Absolute value function: abs(colName)
  * @author mingJie
  */
 @Target({ElementType.FIELD})

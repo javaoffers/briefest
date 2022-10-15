@@ -11,6 +11,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
@@ -112,7 +113,9 @@ public class FunAnnoParserSample {
     @IfEq(eq = "'rich'",ep1 = "'i want to marry him'", ep2 = "'i want to break up with him'")
     private String colName18; //IF(IF(money > 100000,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
 
-
+    @ColName("name")
+    @Trim
+    private String colName19; //TRIM(name)
 
 
     @Before
@@ -157,6 +160,7 @@ public class FunAnnoParserSample {
         testColNameN(16);
         testColNameN(17);
         testColNameN(18);
+        testColNameN(19);
 
     }
 

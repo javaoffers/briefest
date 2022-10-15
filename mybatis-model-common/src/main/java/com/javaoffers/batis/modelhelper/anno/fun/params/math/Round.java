@@ -9,6 +9,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * ROUND(colName, precision)
+ *  ROUND(20.5,0) 21
  * @author mingJie
  */
 @Target({ElementType.FIELD})

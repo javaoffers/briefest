@@ -23,7 +23,6 @@ public @interface IfNotNull {
 
     /**
      * when null. output null by default.
-     * @return
      */
     String ifNull() default "null";
 }

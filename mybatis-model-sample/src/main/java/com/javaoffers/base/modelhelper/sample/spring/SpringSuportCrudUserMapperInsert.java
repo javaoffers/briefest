@@ -45,9 +45,9 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     }
     public void testInsertModelAndOrder(){
-        User jom = User.builder().name("Jom").money("100000").build();
-        User tom = User.builder().name("Tom").money("5000").build();
-        User amop = User.builder().name("Amop").money("50000").birthdayDate(new Date()).build();
+        User jom = User.builder().name("Hom").money("200000").build();
+        User tom = User.builder().name("Pom").money("8000").build();
+        User amop = User.builder().name("Lop").money("30000").birthdayDate(new Date()).build();
         List<Id> exs = crudUserMapper.insert().colAll(jom, tom, amop).exs();
 
         UserOrder iphone = UserOrder.builder().orderMoney("5000").orderName("Iphone").userId(exs.get(0).toString()).build();

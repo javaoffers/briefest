@@ -44,5 +44,6 @@ public class Number2StringConvert extends AbstractConver<Number,String> {
         for(Class src : baseNumberClass){
             register.registerConvert(new ConverDescriptor(src,String.class),this);
         }
+        register.registerConvert(new ConverDescriptor(Number.class,String.class),this);
     }
 }

@@ -35,30 +35,30 @@ public class FunAnnoParserSample {
 
     @ColName("name")
     @Left(10)
-    @Concat(colNames = {"age"})
+    @Concat( {"age"})
     private String colName2; //CONCAT(LEFT(name,10),age)
 
 
     @Left(10)
-    @Concat(colNames = {"age"})
+    @Concat( {"age"})
     private String colName3;//CONCAT(LEFT(colName3,10),age)
 
     @Now
     @Left(10)
-    @Concat(colNames = {"age"})
+    @Concat( {"age"})
     private String colName4;//CONCAT(LEFT(NOW(),10),age)
 
 
-    @Concat(colNames = {"age"})
+    @Concat( {"age"})
     private String colName5;//CONCAT(colName5,age)
 
     @Now
-    @Concat(colNames = {"age"})
+    @Concat({"age"})
     @Left(10)
     private String colName6;//LEFT(CONCAT(NOW(),age),10)
 
 
-    @Concat(colNames = {"age"})
+    @Concat({"age"})
     @Left(10)
     private String colName7;//LEFT(CONCAT(colName7,age),10)
 

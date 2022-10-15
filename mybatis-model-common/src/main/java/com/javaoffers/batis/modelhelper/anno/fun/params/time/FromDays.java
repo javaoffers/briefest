@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 
 /**
  * @description: from_days(colName)
+ * Returns a date from a numeric date value
+ *   SELECT FROM_DAYS(780500); output 2136-12-08
  * @author: create by cmj on 2022/10/15 16:37
  */
 @Target({ElementType.FIELD})

@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * HOUR(colName)
+ * SELECT HOUR('10:05:03'); output 10
  * @author mingJie
  */
 @Target({ElementType.FIELD})

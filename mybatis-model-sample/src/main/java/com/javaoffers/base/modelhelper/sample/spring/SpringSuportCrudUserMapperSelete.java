@@ -314,7 +314,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                             .or()
                             .eq(User::getId,2);
                 })
-                //According to the main group
+                //Accordinprint(user);g to the main group
                 .groupBy(User::getName, User::getId)
                 //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
@@ -367,6 +367,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         System.out.println("-----------Implement a new way to query, written in the interface default method queryUserAndOrderByUserId------------------");
         Date birthday = ConvertRegisterSelectorDelegate.convert.converterObject(Date.class, "2021-12-13");
         user = crudUserMapper.queryUserByBrithday(birthday);
+        print(user);
+
+        user = crudUserMapper.select().colAll().where().isNotNull(User::getId).limitPage(1,1).ex();
         print(user);
 
         System.exit(0);

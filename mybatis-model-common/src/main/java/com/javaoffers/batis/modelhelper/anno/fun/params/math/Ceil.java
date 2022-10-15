@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * select CEIL(colName)
+ * CEIL(3.2) : 4
  * @author mingJie
  */
 @Target({ElementType.FIELD})

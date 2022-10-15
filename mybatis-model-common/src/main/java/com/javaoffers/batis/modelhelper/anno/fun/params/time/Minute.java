@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * MINUTE(colName)
+ * select minute('2018-9-28 10:20:25.000002') ; 20
  * @author mingJie
  */
 @Target({ElementType.FIELD})

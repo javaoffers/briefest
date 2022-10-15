@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * concat(xx,xx..) as fieldName : Merge string function
+ * concat(colName,xx..) as fieldName : Merge string function
  * create by cmj
  */
 @Target({ElementType.FIELD})
@@ -21,5 +21,5 @@ public @interface Concat {
     /**
      * Additional table field information to be spliced
      */
-    String[] colNames() ;
+    String[] value() ;
 }

@@ -22,7 +22,8 @@ public @interface Truncate {
     public static final String TAG = "TRUNCATE";
 
     /**
-     * Preserve the length after the decimal point
+     * Preserve the length after the decimal point.
+     * value of precision
      */
-    int precision() default 0;
+    int value() default 0;
 }

@@ -167,8 +167,8 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Mod){
             Mod mod = (Mod) anno;
-            int ep1 = mod.ep1();
-            appender.appender(mod.TAG, ep1);
+            int value = mod.value();
+            appender.appender(mod.TAG, value);
             status = true;
         }
         else if(anno instanceof Round){
@@ -178,7 +178,7 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Truncate){
             Truncate truncate = (Truncate) anno;
-            appender.appender(truncate.TAG, truncate.precision());
+            appender.appender(truncate.TAG, truncate.value());
             status = true;
         }
         return status;
@@ -282,7 +282,7 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Concat){
             Concat concat = (Concat) anno;
-            appender.appender(concat.TAG,concat.colNames());
+            appender.appender(concat.TAG,concat.value());
             status = true;
         }
         else if(anno instanceof Length){
@@ -302,7 +302,7 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Repeat){
             Repeat repeat = (Repeat) anno;
-            String value = repeat.value();
+            int value = repeat.value();
             appender.appender(repeat.TAG,value);
             status = true;
         }
@@ -320,7 +320,7 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Strcmp){
             Strcmp strcmp = (Strcmp) anno;
-            appender.appender(Strcmp.TAG,strcmp.expr());
+            appender.appender(Strcmp.TAG,strcmp.value());
             status = true;
         }
         else if(anno instanceof SubString){

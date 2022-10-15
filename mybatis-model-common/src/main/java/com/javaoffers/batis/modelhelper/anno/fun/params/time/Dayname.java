@@ -10,6 +10,7 @@ import java.lang.annotation.Target;
 
 /**
  * DAYNAME(colName)
+ * SELECT DAYNAME(now()); # Sunday
  * @author mingJie
  */
 @Target({ElementType.FIELD})

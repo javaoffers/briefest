@@ -7,7 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @description: str_to_date(colName, format)
+ * @description: str_to_date(colName, format) Used to convert a string to a date / time value
+ * SELECT STR_TO_DATE('202205251130','%Y%m%d%h%i'); 2022-05-25 11:30:00
  * @author: create by cmj on 2022/10/15 16:29
  */
 @Target({ElementType.FIELD})

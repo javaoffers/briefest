@@ -18,5 +18,8 @@ import java.lang.annotation.Target;
 public @interface Strcmp {
     public static final String TAG = "STRCMP";
 
-    String expr();
+    /**
+     * expr
+     */
+    String value();
 }

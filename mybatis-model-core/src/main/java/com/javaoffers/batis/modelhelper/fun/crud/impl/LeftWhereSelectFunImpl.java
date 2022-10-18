@@ -15,27 +15,14 @@ import java.util.stream.Collectors;
 
 
 /**
- * @Description: 以字符串方式输入为字段名称, 在on 条件之后转为where时使用此类。
- * 换句话说就是 on ... where (LeftWhereSelectFunImpl)
+ * @Description: Entered as a string as a field name, this class is used when turning to where after the on condition.
+ * In other words on ... where (LeftWhereSelectFunImpl)
  * @Auther: create by cmj on 2022/5/2 02:14
- * @param <M> 主表
- * @param <M2> 子表： 用于支持子表字段 group by , order by
+ * @param <M> Primary table
+ * @param <M2> Subtable: used to support subtable fields group by , order by
  *
  */
 public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M2,GetterFun<M,V>, GGetterFun<M2,V>,V> {
-
-    /**
-     * 静态
-     **/
-    private static JdbcTemplate jdbcTemplate;
-
-    public LeftWhereSelectFunImpl(JdbcTemplate jdbcTemplate) {
-        synchronized (LeftWhereSelectFunImpl.class) {
-            if (jdbcTemplate == null) {
-                LeftWhereSelectFunImpl.jdbcTemplate = jdbcTemplate;
-            }
-        }
-    }
 
     private LinkedList<Condition> conditions;
 

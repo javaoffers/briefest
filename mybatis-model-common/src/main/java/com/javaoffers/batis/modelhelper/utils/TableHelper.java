@@ -26,15 +26,10 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Description: 表信息辅助类
+ * @Description: Table Information Auxiliary Class
  * @Auther: create by cmj on 2022/5/2 02:05
  */
 public class TableHelper {
-
-    /**
-     * 数据库
-     */
-    private static DataSource dataSource;
 
     private static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
@@ -42,19 +37,14 @@ public class TableHelper {
 
     private static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
-    public TableHelper(DataSource dataSource) {
-        TableHelper.dataSource = dataSource;
-    }
-
     /**
-     * 获取 Model 对应的全部字段
+     * Get all fields corresponding to Model
      * @param modelClss
      * @return
      */
     public static List<String> getColAll(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
-        parseTableInfo(implClass);
         List<String> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         String tableName = tableInfo.getTableName();
@@ -72,7 +62,6 @@ public class TableHelper {
     public static List<Pair<String, String>> getColAllAndAliasNameOnly(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
-        parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         tableInfo.getFieldNameColNameOfModel().forEach((colName,fieldName)->{
@@ -84,7 +73,6 @@ public class TableHelper {
     public static Map<String, List<Field>> getColAllAndFieldOnly(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
-        parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
@@ -94,7 +82,6 @@ public class TableHelper {
     public static Map<String, List<Field>> getNColAllAndFieldOnly(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
-        parseTableInfo(implClass);
         List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         Map<String, List<Field>> colNameOfModelField = tableInfo.getOriginalColNameOfModelField();
@@ -112,7 +99,6 @@ public class TableHelper {
             SerializedLambda serializedLambda = (SerializedLambda) sl;
             methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
-            parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
             Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
             fieldNameOfGetter.computeIfAbsent(methodName, k -> {
@@ -145,7 +131,6 @@ public class TableHelper {
             SerializedLambda serializedLambda = (SerializedLambda) sl;
             methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
-            parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
             Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
             fieldNameOfGetter.computeIfAbsent(methodName, k->{
@@ -176,7 +161,6 @@ public class TableHelper {
             SerializedLambda serializedLambda = (SerializedLambda) sl;
             methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
-            parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
             Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
             colNameOfGetter.computeIfAbsent(methodName, k->{
@@ -193,7 +177,7 @@ public class TableHelper {
         }catch (Exception e){
             e.printStackTrace();
         }
-        throw new FindColException("解析sql字段出错 ： "+myFun.toString());
+        throw new FindColException("Error parsing sql field ： "+myFun.toString());
     }
 
     public static String getColNameOnly(GetterFun myFun){
@@ -206,7 +190,6 @@ public class TableHelper {
             SerializedLambda serializedLambda = (SerializedLambda) sl;
             methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
-            parseTableInfo(implClass);
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
             Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
             colNameOfGetter.computeIfAbsent(methodName, k->{
@@ -220,20 +203,20 @@ public class TableHelper {
         }catch (Exception e){
             e.printStackTrace();
         }
-        throw new FindColException("解析sql字段出错 ： "+myFun.toString());
+        throw new FindColException("Error parsing sql field ： "+myFun.toString());
     }
 
     /**
      * Parse table information.
-     * @param implClass
+     * @param clazz
      */
-    private static void parseTableInfo(String implClass) {
-        modelClass.computeIfAbsent(implClass, k->{
+    public static void parseTableInfo(Class clazz, Connection connection) {
+        String name = clazz.getName().replaceAll("\\.","/");
+        modelClass.computeIfAbsent(name, k->{
             try {
-                Class<?> modelClazz = Class.forName(implClass.replaceAll("/","\\."));
                 //解析model class
-                parseModelClass(modelClazz);
-                return modelClazz;
+                parseModelClass(clazz, connection);
+                return clazz;
             }catch (Exception e){
                 e.printStackTrace();
             }
@@ -245,7 +228,7 @@ public class TableHelper {
      * Parse the model
      * @param modelClazz Classes marked with the annotation @BaseModel
      */
-    private static void parseModelClass(Class<?> modelClazz) {
+    private static void parseModelClass(Class<?> modelClazz,Connection connection) {
         Boolean isParse = modelIsParse.getOrDefault(modelClazz, false);
         if(!isParse){
             synchronized (modelClazz){
@@ -258,10 +241,9 @@ public class TableHelper {
                         String simpleName = modelClazz.getSimpleName();
                         tableName = conLine(simpleName);
                     }
-                    Connection connection = null;
+
                     try {
                         TableInfo tableInfo = new TableInfo(tableName);
-                        connection = dataSource.getConnection();
                         DatabaseMetaData metaData = connection.getMetaData();
 
                         ResultSet tableResultSet = metaData.getTables(connection.getCatalog(),connection.getSchema(),tableName,null);
@@ -273,7 +255,7 @@ public class TableHelper {
                         }
                         while (tableResultSet.next()) {
                             // Get table field structure
-                            ResultSet columnResultSet = metaData.getColumns(dataSource.getConnection().getCatalog(), "", tableName, "%");
+                            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
                             while (columnResultSet.next()) {
                                 // Field Name
                                 String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
@@ -392,7 +374,6 @@ public class TableHelper {
             Object sl = method.invoke(constructorFun);
             String lamdaName = sl.getClass().getName();
             implClass = lamdaName.replaceAll("\\.","/");
-            parseTableInfo(implClass);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -421,7 +402,6 @@ public class TableHelper {
             synchronized (m2c){
                 tableInfo = tableInfoMap.get(m2c);
                 if(tableInfo == null){
-                    parseModelClass(m2c);
                     tableInfo = tableInfoMap.get(m2c);
                 }
             }

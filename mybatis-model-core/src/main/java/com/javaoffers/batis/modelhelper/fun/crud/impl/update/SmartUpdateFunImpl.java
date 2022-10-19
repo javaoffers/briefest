@@ -1,8 +1,10 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
+import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
 import com.javaoffers.batis.modelhelper.fun.crud.update.*;
@@ -34,6 +36,7 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
+        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
         this.conditions.add(new UpdateCondtionMark(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
@@ -44,6 +47,7 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.isUpdateNull = isUpdateNull;
         this.conditions = conditions;
         this.tableName = TableHelper.getTableName(mClass);
+        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
         this.conditions.add(new UpdateCondtionMark(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);

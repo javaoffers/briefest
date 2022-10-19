@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -18,25 +19,21 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**@Description: 核心实现类
+/**@Description: core implementation class
  * @Auther: create by cmj on 2022/05/22 02:56
  */
 public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
-
-	public static BaseBatisImpl baseBatis = new BaseBatisImpl(null);
 
 	private static final Object[] EMPTY = new Object[0];
 
 	private JdbcTemplate jdbcTemplate;
 
-	public BaseBatisImpl(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
+	public static  <T, ID> BaseBatisImpl getInstance(JdbcTemplateCondition jdbcTemplate) {
+		return new BaseBatisImpl<T,ID>(jdbcTemplate.getTemplate());
 	}
 
-	public synchronized void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
-		if(this.jdbcTemplate == null){
-			this.jdbcTemplate = jdbcTemplate;
-		}
+	private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
+		this.jdbcTemplate = jdbcTemplate;
 	}
 
 	/****************************crud****************************/

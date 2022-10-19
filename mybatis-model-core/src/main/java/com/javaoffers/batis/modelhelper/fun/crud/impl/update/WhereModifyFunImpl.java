@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.core.*;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.CondSQLCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.IsNullOrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.LFCondition;
@@ -311,6 +312,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public Integer ex() {
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) conditions.pollFirst());
         MoreSQLInfo moreSqlInfo = (MoreSQLInfo) ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfos = moreSqlInfo.getSqlInfos();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
@@ -328,7 +330,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
         sqlbatch.forEach((sql, params) ->{
             System.out.println("SQL: "+sql);
             System.out.println("PAM： "+params);
-            Integer integer = BaseBatisImpl.baseBatis.batchUpdate(sql, params);
+            Integer integer = instance.batchUpdate(sql, params);
             count.addAndGet(integer);
         });
 

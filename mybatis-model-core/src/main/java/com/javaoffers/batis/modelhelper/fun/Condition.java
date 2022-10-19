@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
 /**
- * @Description: 条件借口
+ * @Description: conditional excuse
  * @Auther: create by cmj on 2022/5/2 02:22
  */
 public interface Condition {

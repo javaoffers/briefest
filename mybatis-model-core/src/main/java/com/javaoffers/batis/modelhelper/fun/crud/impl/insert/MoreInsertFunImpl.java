@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 
@@ -30,6 +31,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) conditions.pollFirst());
         MoreSQLInfo sqlInfos = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
         List<Id> list = new ArrayList<>(sqlInfosList.size());
@@ -44,11 +46,11 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
                     if((startIndex + batchNum) > allBatch){
                         break;
                     }
-                    list.addAll(BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, startIndex + batchNum)));
+                    list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, startIndex + batchNum)));
                 }
-                list.addAll(BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, sqlInfo.getParams().size())));
+                list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, sqlInfo.getParams().size())));
             }else{
-                list.addAll(BaseBatisImpl.baseBatis.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
+                list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
             }
         });
         return list;

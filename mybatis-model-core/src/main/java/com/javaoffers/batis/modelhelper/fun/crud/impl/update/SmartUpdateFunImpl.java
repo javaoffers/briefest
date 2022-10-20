@@ -9,6 +9,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateAllColValueCo
 import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondtionMark;
 import com.javaoffers.batis.modelhelper.fun.crud.update.*;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author create by cmj on 2022-06-29
@@ -32,22 +33,21 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
 
     private OneUpdateFunImpl<M,C,V> oneUpdateFun;
 
-    public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull) {
+    public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull, JdbcTemplate jdbcTemplate) {
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
-        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        this.conditions.add(new JdbcTemplateCondition(jdbcTemplate));
         this.conditions.add(new UpdateCondtionMark(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }
 
-    public SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isUpdateNull) {
+    SmartUpdateFunImpl(Class<M> mClass,LinkedConditions<Condition> conditions, boolean isUpdateNull) {
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.conditions = conditions;
         this.tableName = TableHelper.getTableName(mClass);
-        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
         this.conditions.add(new UpdateCondtionMark(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);

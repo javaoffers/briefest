@@ -312,14 +312,6 @@ public class TableHelper {
                     }catch (Exception e){
                         e.printStackTrace();
                         throw new ParseTableException(e.getMessage(),e);
-                    }finally {
-                        if(connection != null){
-                            try {
-                                connection.close();
-                            }catch (Exception e){
-                                e.printStackTrace();
-                            }
-                        }
                     }
                     modelIsParse.put(modelClazz, true);
                 }

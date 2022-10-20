@@ -30,7 +30,15 @@
       <artifactId>junit</artifactId>
       <version>4.11</version>
       <scope>test</scope>
+
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>2.0.3</version>
+    </dependency>
+
   </dependencies>
 
   <!-- FIXME change it to the project's website -->

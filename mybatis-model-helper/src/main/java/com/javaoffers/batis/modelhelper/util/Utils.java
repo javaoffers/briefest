@@ -4,7 +4,10 @@ import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
+import com.javaoffers.batis.modelhelper.exception.ParseModelException;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -18,6 +21,8 @@ import java.util.stream.Collectors;
  */
 public class Utils {
 
+    static Logger logger = LoggerFactory.getLogger(Utils.class);
+
     static final String modelSeparation = "__";
 
     private static final ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
@@ -30,6 +35,7 @@ public class Utils {
      */
     @Deprecated
     public static List<Map<String, Object>> initData(List<Map<String, Object>> list_map) {
+
         ArrayList<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         if (list_map != null && list_map.size() > 0) {
             for (Map<String, Object> data : list_map) {
@@ -70,7 +76,7 @@ public class Utils {
 
     /**
      * Resolve generics Get the class object of Model
-     *
+     * Usually used in combination with Utils.is Base Model(fd)
      * @param fd
      * @return
      * @throws Exception
@@ -88,6 +94,10 @@ public class Utils {
         return type2;
     }
 
+    public static Class getGenericityClass(Field fd) throws Exception {
+        return getModelClass(fd);
+    }
+
     /**
      * Get the generic class of the collection
      *
@@ -101,13 +111,23 @@ public class Utils {
             Type listActualTypeArguments = listGenericType.getActualTypeArguments()[0];
             return Class.forName(listActualTypeArguments.getTypeName());
         } catch (Exception e) {
-            new BaseException(e.getMessage() + "\nOne-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted").printStackTrace();
+            logger.warn(e.getMessage()+ "\nOne-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted");
             throw e;
         }
 
     }
 
+    /**
+     * Get all fields of this class including parent classes
+     * @param clazz
+     * @param <E>
+     * @return
+     */
     public static <E> Set<Field> getFields(Class<E> clazz) {
+        //primitive type has no parent， so is null
+        if(clazz==null){
+            return Collections.EMPTY_SET;
+        }
         Set<Field> list = new HashSet<Field>();
         if (!clazz.getName().equals("java.lang.Object")) {
             Field[] fields = clazz.getDeclaredFields();
@@ -189,7 +209,7 @@ public class Utils {
 
     public static boolean isBaseModel(Field fd) throws Exception {
         Class<?> type = fd.getType();
-        if (type.isArray()) {
+        if (type.isArray() && !type.isPrimitive()) {
             String typeName = fd.getGenericType().getTypeName();
             Class<?> class1 = Class.forName(typeName.substring(0, typeName.length() - 2));
             if (isBaseModel(class1)) {
@@ -265,5 +285,68 @@ public class Utils {
             }
             dataList.add(m);
         }
+    }
+
+    /**
+     * Parse out all model classes
+     * @param clazz class， this not list ,set ,array .
+     * @return all model classes
+     */
+    public static List<Class> parseAllModelClass(Class clazz){
+        LinkedList<Class> modelClassList = new LinkedList<>();
+        LinkedList<Class> noneModelClassList = new LinkedList<>();
+        try {
+            parseAllModelClass(clazz, modelClassList, noneModelClassList);
+        }catch (Exception e){
+            throw new ParseModelException("parse model class is error",e);
+        }
+        return modelClassList;
+    }
+
+    private static void parseAllModelClass(Class clazz, List<Class> modelClassList, List<Class> noneModelClass) throws Exception {
+
+        boolean isModelClass = isBaseModel(clazz);
+        if(isModelClass){
+            if(!modelClassList.contains(clazz)){
+                modelClassList.add(clazz);
+                parseModelClassFromFields(clazz, modelClassList, noneModelClass);
+            }
+        }else{
+            parseModelClassFromFields(clazz, modelClassList, noneModelClass);
+        }
+    }
+
+    private static void parseModelClassFromFields(Class clazz, List<Class> modelClassList, List<Class> noneModelClass) throws Exception {
+        Set<Field> fields = getFields(clazz);
+        for(Field field : fields){
+            if(isPrimitive(field)){
+                continue;
+            }
+            boolean fieldIsModelClass = isBaseModel(field);
+            if(fieldIsModelClass){
+                Class modelClass = getModelClass(field);
+                parseAllModelClass(modelClass, modelClassList, noneModelClass);
+            }else{
+                    Class genericityClass = getGenericityClass(field);
+                    if(!noneModelClass.contains(genericityClass)){
+                        noneModelClass.add(genericityClass);
+                        parseAllModelClass(genericityClass,modelClassList, noneModelClass);
+                    }
+            }
+        }
+    }
+
+    public static boolean isPrimitive(Field field){
+        Class<?> type = field.getType();
+        if(type.isPrimitive()){
+            return true;
+        }else {
+            try {
+                getGenericityClass(field);
+            }catch (Exception e){
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -7,6 +7,7 @@ import com.javaoffers.batis.modelhelper.exception.ParseDataSourceException;
 import com.javaoffers.batis.modelhelper.exception.ParseTableInfoException;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
+import com.javaoffers.batis.modelhelper.util.Utils;
 import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import lombok.Data;
@@ -24,6 +25,7 @@ import java.lang.reflect.*;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -80,10 +82,13 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             defaultObj = ByteBuddyUtils
                     .makeObject(clazz,
                             Arrays.asList(select,insert,update,delete,general));
-
             Connection connection = jdbcTemplate.getDataSource().getConnection();
             try {
-                TableHelper.parseTableInfo((Class) modelclass, connection);
+                List<Class> modelClass = Utils.parseAllModelClass((Class) this.modelClass);
+                for(Class mc : modelClass){
+                    TableHelper.parseTableInfo(mc, connection);
+                }
+
             }catch (Exception e){
                 throw new ParseTableInfoException("parse table info exception", e);
             }finally {
@@ -91,11 +96,9 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                     connection.close();
                 }
             }
-
         }catch (Exception e){
             throw new ParseDataSourceException("parse datasource exception", e);
         }
-
     }
 
     static {
@@ -106,7 +109,6 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             isMapperMethod.put(method,method.getName());
         });
     }
-
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

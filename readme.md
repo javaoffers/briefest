@@ -598,7 +598,7 @@ crudUserMapper.general().removeById(1);
     public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
 
 ```
-### sql function annotation
+### Sql function annotation
 <p>
     We can use sql functions by using annotations on the fields of the class. 
     Here are some use cases：

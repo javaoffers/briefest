@@ -76,7 +76,7 @@ public class Utils {
 
     /**
      * Resolve generics Get the class object of Model
-     * Usually used in combination with Utils.is Base Model(fd)
+     * Usually used in combination with {@code Utils.isBaseModel(fd))
      * @param fd
      * @return
      * @throws Exception
@@ -85,6 +85,7 @@ public class Utils {
         Class<?> type2 = fd.getType();
         if (type2.isArray()) {
             String typeName = fd.getGenericType().getTypeName();
+            //If the typeName is a primitive type, an error will be reported here
             return Class.forName(typeName.substring(0, typeName.length() - 2));
         } else if (List.class.isAssignableFrom(type2)) {
             return getGenericityClassOfCollect(fd);
@@ -111,7 +112,7 @@ public class Utils {
             Type listActualTypeArguments = listGenericType.getActualTypeArguments()[0];
             return Class.forName(listActualTypeArguments.getTypeName());
         } catch (Exception e) {
-            logger.warn(e.getMessage()+ "\nOne-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted");
+            logger.warn(e.getMessage()+ "One-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted");
             throw e;
         }
 
@@ -209,12 +210,17 @@ public class Utils {
 
     public static boolean isBaseModel(Field fd) throws Exception {
         Class<?> type = fd.getType();
-        if (type.isArray() && !type.isPrimitive()) {
+        if (type.isArray()) {
             String typeName = fd.getGenericType().getTypeName();
-            Class<?> class1 = Class.forName(typeName.substring(0, typeName.length() - 2));
-            if (isBaseModel(class1)) {
-                return true;
+            try {
+                Class<?> class1 = Class.forName(typeName.substring(0, typeName.length() - 2));
+                if (isBaseModel(class1)) {
+                    return true;
+                }
+            }catch (Exception e){
+                // Primitive types, no class
             }
+
         }
         if (List.class.isAssignableFrom(type)) {
             return isModelForListAndSet(fd);
@@ -247,7 +253,7 @@ public class Utils {
                 return true;
             }
         } catch (Exception e2) {
-            new BaseException(e2.getMessage() + "\nOne-to-many relationship." +
+            new BaseException(e2.getMessage() + "One-to-many relationship." +
                     " Note that the reference collection class must be added with a generic class." +
                     " For example: List<Model>, Model cannot be omitted").printStackTrace();
         }

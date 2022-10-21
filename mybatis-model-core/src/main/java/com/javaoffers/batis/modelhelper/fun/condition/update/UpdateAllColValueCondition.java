@@ -65,7 +65,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         this.tableName = TableHelper.getTableName(modelClass);
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, ColumnInfo> colNames = tableInfo.getColNames();
-        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getNColAllAndFieldOnly(modelClass);
+        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(modelClass);
 
         updateSqlNull.append(tableName);
         updateSql.append(tableName);

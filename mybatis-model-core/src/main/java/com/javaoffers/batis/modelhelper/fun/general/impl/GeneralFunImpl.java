@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.general.impl;
 
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
+import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
@@ -16,6 +17,7 @@ import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
 
 import java.io.Serializable;
@@ -29,7 +31,7 @@ import java.util.stream.Collectors;
  * @author create by mingjie
  * @param <T>
  */
-public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements GeneralFun<T> {
+public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements GeneralFun<T,C,V> {
 
     private Class<T> mClass;
 
@@ -226,6 +228,26 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         return queryByParam(param,pageNum,pageSize,true);
     }
 
+    @Override
+    public long count() {
+        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
+        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        Map<String, List<Field>> originalColNameOfModelField = tableInfo.getOriginalColNameOfModelField();
+        String primaryColName = primaryColNames.keySet().iterator().next();
+        Field field = originalColNameOfModelField.get(primaryColName).get(0);
+        String aliasName = field.getName();
+        T ex = this.selectFun.col("count("+primaryColName+") as " + aliasName).where().ex();
+        return getNumber(field, ex);
+    }
+
+    @Override
+    public long count(C c) {
+        Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
+        String aliasName = colNameAndAliasName.getRight();
+        Field field = TableHelper.getTableInfo(mClass).getFieldNameAndField().get(aliasName);
+        T ex = this.selectFun.col(AggTag.COUNT, c).where().ex();
+        return  getNumber(field,ex);
+    }
 
     private WhereSelectFun<T, Object> parseQueryWhere(T model) {
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
@@ -326,4 +348,21 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         });
     }
 
+    private long getNumber(Field field, T ex) {
+        if(ex == null){
+            return 0;
+        }
+        Object o = null;
+        try {
+            o = field.get(ex);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        if(o instanceof Number){
+            return ((Number) o).longValue();
+        }else{
+            return Long.parseLong(o.toString());
+        }
+    }
 }

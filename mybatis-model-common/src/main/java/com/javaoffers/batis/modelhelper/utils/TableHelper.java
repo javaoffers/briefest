@@ -79,7 +79,7 @@ public class TableHelper {
         return colNameOfModelField;
     }
 
-    public static Map<String, List<Field>> getNColAllAndFieldOnly(Class<?> modelClss){
+    public static Map<String, List<Field>> getOriginalColAllAndFieldOnly(Class<?> modelClss){
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.","/");
         List<Pair<String, String>> colAll = new LinkedList<>();
@@ -303,6 +303,9 @@ public class TableHelper {
                             // original table fields and sql-fun fields
                             tableInfo.putFieldNameColNameOfModel(fieldName, colName);
                             tableInfo.putColNameAndFieldOfModel(colName, colF);
+
+                            //fieldName and field
+                            tableInfo.putFieldNameAndField(fieldName, colF);
 
                             if( tableInfo.getColNames().containsKey(colName)){
                                 //original table fields

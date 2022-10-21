@@ -48,7 +48,7 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.model = model;
         this.modelClass = modelClass;
         //left: colName. right: fieldName
-        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getNColAllAndFieldOnly(this.modelClass);
+        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
         TableInfo tableInfo = TableHelper.getTableInfo(this.modelClass);
         colAllAndFieldOnly.forEach((colName, fields)->{
             try {

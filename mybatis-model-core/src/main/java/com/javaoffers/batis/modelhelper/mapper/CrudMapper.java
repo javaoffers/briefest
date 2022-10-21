@@ -41,6 +41,6 @@ public interface CrudMapper<T> extends BaseMapper<T> {
     /**
      * general function
      */
-    public GeneralFun<T> general();
+    public <C extends  GetterFun <T, Object> ,V extends Serializable > GeneralFun<T,C,V> general();
 
 }

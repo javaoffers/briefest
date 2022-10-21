@@ -11,7 +11,7 @@ import java.util.Map;
  * create by cmj
  * @param <T>
  */
-public interface GeneralFun<T> extends BaseMapper<T> {
+public interface GeneralFun<T,C,V> extends BaseMapper<T> {
 
     /**
      * save model
@@ -128,5 +128,17 @@ public interface GeneralFun<T> extends BaseMapper<T> {
      * @return model
      */
     public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
+
+    /**
+     * The number of statistical tables
+     * @return
+     */
+    public long count();
+
+    /**
+     * The number of statistical tables, through the specified field
+     * @return
+     */
+    public long count(C c);
 
 }

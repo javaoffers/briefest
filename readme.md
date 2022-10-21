@@ -598,6 +598,105 @@ crudUserMapper.general().removeById(1);
     public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
 
 ```
+### sql function annotation
+<p>
+    We can use sql functions by using annotations on the fields of the class. 
+    Here are some use cases：
+</p>
+
+```java
+public class FunAnnoParserSample {
+    @ColName("name")
+    @Left(10)
+    private String colName1; //LEFT(name,10)
+
+    @ColName("name")
+    @Left(10)
+    @Concat( {"age"})
+    private String colName2; //CONCAT(LEFT(name,10),age)
+
+
+    @Left(10)
+    @Concat( {"age"})
+    private String colName3;//CONCAT(LEFT(colName3,10),age)
+
+    @Now
+    @Left(10)
+    @Concat( {"age"})
+    private String colName4;//CONCAT(LEFT(NOW(),10),age)
+
+
+    @Concat( {"age"})
+    private String colName5;//CONCAT(colName5,age)
+
+    @Now
+    @Concat({"age"})
+    @Left(10)
+    private String colName6;//LEFT(CONCAT(NOW(),age),10)
+
+
+    @Concat({"age"})
+    @Left(10)
+    private String colName7;//LEFT(CONCAT(colName7,age),10)
+
+    @Now
+    @Left(10)
+    private String colName8;//LEFT(NOW(),10)
+
+
+    @Rand
+    private String colName9;//RAND()
+
+    @Rand
+    @ColName("name")
+    private String colName10;//java.lang.IllegalArgumentException: @ColName and @RAND cannot be used together
+
+    @ColName("name")
+    @IfNull("'Amop'")
+    private String colName11;//IFNULL(name,'Amop')
+
+    @ColName("sex = 1")
+    @If(ep1 = "'boy'",ep2 = "'girl'")
+    private String colName12;//IF(sex = 1,'boy','girl')
+
+    /**
+     * select if(1,'1','0') output 1
+     * select if(0,'1','0') output 0
+     */
+    @ColName("sex")
+    @IfNull("1")
+    @If(ep1 = "'boy'", ep2 = "'girl'")
+    private String colName13;// IF(IFNULL(sex,1),'boy','girl')
+
+    @ColName("sex")
+    @IfEq(eq = "1",ep1 = "'boy'", ep2 = "'girl'")
+    private String colName14; //IF(sex = 1,'boy','girl')
+
+    @ColName("money")
+    @IfNotNull("'rich'")
+    private String colName15; // IF(money is not null ,'rich',null)
+
+    @ColName("money")
+    @IfNotNull(value = "'rich'",ifNull = "'poor'")
+    private String colName16; //IF(money is not null ,'rich','poor')
+
+    @ColName("money")
+    @IfNotNull(value = "'rich'",ifNull = "'poor'")
+    @IfEq(eq = "'rich'",ep1 = "'i want to marry him'", ep2 = "'i want to break up with him'")
+    private String colName17; //IF(IF(money is not null ,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
+
+    @ColName("money")
+    @IfGt(gt = "100000",ep1 = "'rich'", ep2 = "'poor'")
+    @IfEq(eq = "'rich'",ep1 = "'i want to marry him'", ep2 = "'i want to break up with him'")
+    private String colName18; //IF(IF(money > 100000,'rich','poor') = 'rich','i want to marry him','i want to break up with him')
+
+    @ColName("name")
+    @Trim
+    private String colName19; //TRIM(name)
+}
+```
+
+
 #### Code contributions are welcome
 <p>
 The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.

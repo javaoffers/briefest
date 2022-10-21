@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.condition.update;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
@@ -30,6 +31,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
     Map<String,Object> npdateNullParams = new HashMap<>();
 
     Object model;
+
+    private HeadCondition headCondition;
 
     private String tableName;
 
@@ -62,11 +65,16 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         this.isUpdateNull = isUpdateNull;
         this.modelClass = modelClass;
         this.model = model;
+
+    }
+
+    @Override
+    public void setHeadCondition(HeadCondition headCondition) {
+        this.headCondition = headCondition;
         this.tableName = TableHelper.getTableName(modelClass);
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, ColumnInfo> colNames = tableInfo.getColNames();
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(modelClass);
-
         updateSqlNull.append(tableName);
         updateSql.append(tableName);
         AtomicInteger status = new AtomicInteger(0);
@@ -89,7 +97,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                         && oValue instanceof Number
                         && ((Number) oValue).longValue() == 0L
                 ){
-                  return;
+                    return;
                 }
                 if(statusNull.get() == 0){
                     updateSqlNull.append(ConditionTag.SET.getTag());
@@ -122,5 +130,9 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 e.printStackTrace();
             }
         });
+    }
+
+    public String getNextTag(){
+        return this.headCondition.getNextTag();
     }
 }

@@ -126,7 +126,10 @@ public  class WhereOnCondition<V> implements Condition {
         this.andOrTag = andOrTag;
     }
 
-
+    public long getNextLong(){
+        Assert.isTrue(this.headCondition != null , "head condition is null ");
+        return this.headCondition.getNextLong();
+    }
 
     @Override
     public String toString() {

@@ -36,8 +36,9 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
-        this.conditions.add(new HeadCondition(jdbcTemplate));
-        this.conditions.add(new UpdateCondtionMark(mClass));
+        HeadCondition headCondition = new HeadCondition(jdbcTemplate);
+        this.conditions.add(headCondition);
+        this.conditions.add(new UpdateCondtionMark(mClass,headCondition));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }
@@ -47,7 +48,7 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.isUpdateNull = isUpdateNull;
         this.conditions = conditions;
         this.tableName = TableHelper.getTableName(mClass);
-        this.conditions.add(new UpdateCondtionMark(mClass));
+        this.conditions.add(new UpdateCondtionMark(mClass, (HeadCondition) this.conditions.peekFirst()));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }

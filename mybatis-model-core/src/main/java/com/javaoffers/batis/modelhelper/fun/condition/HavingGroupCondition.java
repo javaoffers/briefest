@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @Description: 以字符串方式输入为字段名称
+ * @Description: Enter as a string as field name
  * @Auther: create by cmj on 2022/5/2 02:25
  */
 
@@ -49,7 +49,7 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
 
     @Override
     public String getSql() {
-
+        long idx = getNextLong();
         params.put(idx+"", value);
         return aggTag.name() +"("+ colName +") "+ tag.getTag() + " "+"#{"+idx+"}";
     }

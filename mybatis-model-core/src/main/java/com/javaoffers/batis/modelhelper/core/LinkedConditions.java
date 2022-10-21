@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.core;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.WhereOnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.update.UpdateCondition;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -22,6 +23,8 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T>{
         });
         if(condition instanceof WhereOnCondition){
             ((WhereOnCondition) condition).setHeadCondition((HeadCondition) this.peekFirst());
+        }else if(condition instanceof UpdateCondition){
+            ((UpdateCondition) condition).setHeadCondition((HeadCondition) this.peekFirst());
         }
         return super.add(condition);
     }

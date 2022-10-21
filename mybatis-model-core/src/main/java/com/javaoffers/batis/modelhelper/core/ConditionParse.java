@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-
 /**
  * @Description: 用于解析Condition
  * @Auther: create by cmj on 2022/5/22 13:47
@@ -35,24 +34,20 @@ import java.util.Set;
 public class ConditionParse {
 
     public static SQLInfo conditionParse(LinkedList<Condition> conditions) {
-
         //判断类型
         Condition condition = conditions.get(0);
-        try {
-            ConditionTag conditionTag = condition.getConditionTag();
-            switch (conditionTag) {
-                case SELECT_FROM:
-                    //解析select
-                    return parseSelect(conditions);
-                case INSERT_INTO:
-                    return parseInsert(conditions);
-                case UPDATE:
-                    return parseUpdate(conditions);
-                case DELETE_FROM:
-                    return parseDelete(conditions);
-            }
-        }finally {
-            condition.clean();
+
+        ConditionTag conditionTag = condition.getConditionTag();
+        switch (conditionTag) {
+            case SELECT_FROM:
+                //解析select
+                return parseSelect(conditions);
+            case INSERT_INTO:
+                return parseInsert(conditions);
+            case UPDATE:
+                return parseUpdate(conditions);
+            case DELETE_FROM:
+                return parseDelete(conditions);
         }
         return null;
     }
@@ -75,7 +70,6 @@ public class ConditionParse {
         moreSQLInfo.addSqlInfo(sqlInfo);
         Condition condition = null;
         while((condition = conditions.peek()) != null){
-            condition.clean();
             sqlInfo = parseUpdate2(conditions);
             moreSQLInfo.addSqlInfo(sqlInfo);
         }
@@ -277,7 +271,6 @@ public class ConditionParse {
         // where
         parseWhereCondition(conditions, params, selectB);
 
-        condition.clean();
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
                 .sql(selectB.toString())
@@ -311,7 +304,6 @@ public class ConditionParse {
         if (where instanceof IgnoreAndOrWordCondition) {
             andOr = "";
         }
-        andOr = where.andOrWord(andOr);
         selectB.append(andOr);
         selectB.append(where.getSql());
         params.putAll(where.getParams());

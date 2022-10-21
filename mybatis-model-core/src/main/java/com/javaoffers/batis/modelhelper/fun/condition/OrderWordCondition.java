@@ -5,7 +5,7 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import java.util.List;
 
 /**
- * @Description: 左右括号
+ * @Description:
  * @Auther: create by cmj on 2022/6/19 02:11
  */
 public class OrderWordCondition extends WhereOnCondition<String> implements IgnoreAndOrWordCondition {
@@ -20,6 +20,7 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         this.tag = tag;
         this.cs = cs;
         this.ascOrDesc = ascOrDesc;
+        this.setAndOrTag("");
     }
 
     @Override

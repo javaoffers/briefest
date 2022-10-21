@@ -9,7 +9,7 @@ import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +24,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) conditions.pollFirst());
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ((MoreSQLInfo)ConditionParse.conditionParse(conditions)).getSqlInfos().get(0);
         System.out.println("SQL: "+sqlInfo.getSql());
         System.out.println("PAM: "+sqlInfo.getParams());

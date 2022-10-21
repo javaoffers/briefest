@@ -1,6 +1,6 @@
 package com.javaoffers.batis.modelhelper.core;
 
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
@@ -28,7 +28,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
 	private JdbcTemplate jdbcTemplate;
 
-	public static  <T, ID> BaseBatisImpl getInstance(JdbcTemplateCondition jdbcTemplate) {
+	public static  <T, ID> BaseBatisImpl getInstance(HeadCondition jdbcTemplate) {
 		return new BaseBatisImpl<T,ID>(jdbcTemplate.getTemplate());
 	}
 

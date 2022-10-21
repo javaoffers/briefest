@@ -6,7 +6,7 @@ import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteWhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 
@@ -288,7 +288,7 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
 
     @Override
     public Integer ex() {
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) conditions.pollFirst());
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
         System.out.println("SQL: "+sqlInfo.getSql());
         System.out.println("PAM： "+sqlInfo.getParams());

@@ -6,7 +6,7 @@ import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
@@ -412,7 +412,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public List<M> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) this.conditions.pollFirst());
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
         System.out.println("SQL: "+sqlInfo.getSql());
         System.out.println("PAM: "+sqlInfo.getParams());

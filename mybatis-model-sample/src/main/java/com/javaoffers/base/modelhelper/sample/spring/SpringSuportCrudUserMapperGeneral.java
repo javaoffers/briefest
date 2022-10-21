@@ -67,12 +67,17 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         List<User> users = this.crudUserMapper.general().queryByIds(query.stream().map(User::getId).collect(Collectors.toList()));
         print(users);
 
+        users = crudUserMapper.general().query(user);
+        print(users);
+
         long count = this.crudUserMapper.general().count();
         print(count);
 
         long moneyCount = this.crudUserMapper.general().count(User::getMoney);
         print(moneyCount);
         System.exit(0);
+
+
 
     }
 

@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -32,6 +33,8 @@ import java.util.stream.Collectors;
  * @param <T>
  */
 public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements GeneralFun<T,C,V> {
+
+    private AtomicInteger ato = new AtomicInteger(0);
 
     private Class<T> mClass;
 
@@ -100,8 +103,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
             if(!status.get()){
                 status.set(true);
                 Map<String, Object> param = new HashMap<>();
-                param.putIfAbsent(colName, ids);
-                where.condSQL(colName + " in ( #{"+colName+"} ) ", param);
+                String newColNameTag = getNewColNameTag();
+                param.putIfAbsent(newColNameTag, ids);
+                where.condSQL(colName + " in ( #{"+newColNameTag+"} ) ", param);
             }
         });
         if(status.get()){
@@ -204,9 +208,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         primaryColNames.forEach((colName, colInfo)->{
             if(!status.get()){
                 HashMap<String, Object> param = new HashMap<>();
-                param.put(colName,ids);
+                String newColNameTag = getNewColNameTag();
+                param.put(newColNameTag,ids);
                 status.set(true);
-                where.condSQL(colName+" in ( #{"+colName+"} ) ",param);
+                where.condSQL(colName+" in ( #{"+newColNameTag+"} ) ",param);
             }
         });
         if(status.get()){
@@ -261,8 +266,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
             AtomicBoolean status = new AtomicBoolean(false);
             param.forEach((colName, value)->{
                 Map<String, Object> param_ = new HashMap<>();
-                param_.put(colName, value);
-                where.condSQL(colName + " in ( #{"+colName+"} ) ",param_);
+                String newColNameTag = getNewColNameTag();
+                param_.put(newColNameTag, value);
+                where.condSQL(colName + " in ( #{"+newColNameTag+"} ) ",param_);
                 status.set(true);
             });
             if(status.get()){
@@ -278,6 +284,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         return Collections.EMPTY_LIST;
     }
 
+    private String getNewColNameTag() {
+        return ato.getAndIncrement()+"";
+    }
+
     private TableInfo getTableInfo(Class modelClass) {
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Assert.isTrue(tableInfo != null,"The table information corresponding to this class cannot be queried");
@@ -286,9 +296,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     private AtomicBoolean parseWhere(T model, WhereFun where) {
         TableInfo tableInfo = getTableInfo(model.getClass());
-        Map<String, ColumnInfo> colNames = tableInfo.getColNames();
+        Map<String, ColumnInfo> originalColNames = tableInfo.getColNames();
         Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
         AtomicBoolean status = new AtomicBoolean(false);
+
         if(colNameOfModelField != null && colNameOfModelField.size() > 0){
             colNameOfModelField.forEach((colName, fields)->{
                 Object o = null;
@@ -297,7 +308,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
                         Field field = fields.get(i);
                         o = field.get(model);
                         if(o != null){
-                            if(colNames.get(colName).isAutoincrement() && o instanceof Number && ((Number) o).longValue() == 0L){
+                            if(originalColNames.get(colName) !=null
+                                    && originalColNames.get(colName).isAutoincrement()
+                                    && o instanceof Number
+                                    && ((Number) o).longValue() == 0L){
                                 continue;
                             }
                             break;
@@ -308,8 +322,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
                 }
                 if(o != null){
                     HashMap<String, Object> param = new HashMap<>();
-                    param.putIfAbsent(colName,o);
-                    where.condSQL(colName+" in ( #{"+colName+"} ) ", param);
+                    String newColNameTag = getNewColNameTag();
+                    param.putIfAbsent(newColNameTag,o);
+                    where.condSQL(colName+" in ( #{"+newColNameTag+"} ) ", param);
                     status.set(true);
                 }
             });
@@ -341,8 +356,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
             }
             if(o != null){
                 Map<String, Object> param = new HashMap<>();
-                param.put(colName, o);
-                finalWhere.condSQL(colName + " in ( #{"+colName+"} ) ",param);
+                String newColNameTag = getNewColNameTag();
+                param.put(newColNameTag, o);
+                finalWhere.condSQL(colName + " in ( #{"+newColNameTag+"} ) ",param);
                 status.set(true);
             }
         });

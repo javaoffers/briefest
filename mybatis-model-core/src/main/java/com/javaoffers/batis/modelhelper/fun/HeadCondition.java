@@ -3,14 +3,18 @@ package com.javaoffers.batis.modelhelper.fun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
+ * head condition
  * @author mingJie
  */
-public class JdbcTemplateCondition implements Condition {
+public class HeadCondition implements Condition {
     private JdbcTemplate template;
 
-    public JdbcTemplateCondition(JdbcTemplate template) {
+    private AtomicLong nextTag = new AtomicLong(0);
+
+    public HeadCondition(JdbcTemplate template) {
         this.template = template;
     }
 
@@ -31,5 +35,13 @@ public class JdbcTemplateCondition implements Condition {
     @Override
     public Map<String, Object> getParams() {
         throw new UnsupportedOperationException();
+    }
+
+    public String getNextTag(){
+        return nextTag.getAndIncrement() + "";
+    }
+
+    public long getNextLong(){
+        return nextTag.getAndIncrement();
     }
 }

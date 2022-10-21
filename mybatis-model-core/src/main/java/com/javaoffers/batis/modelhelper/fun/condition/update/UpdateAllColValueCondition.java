@@ -97,15 +97,15 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 }else {
                     updateSqlNull.append(", ");
                 }
-
+                String colNameTag = getNextTag();
                 updateSqlNull.append(cloName);
                 updateSqlNull.append(" = #{");
-                updateSqlNull.append(cloName);
+                updateSqlNull.append(colNameTag);
                 updateSqlNull.append("}");
 
-                params.put(cloName, oValue);
+                params.put(colNameTag, oValue);
                 if(oValue!=null && StringUtils.isNotBlank(oValue.toString())){
-                    npdateNullParams.put(cloName, oValue);
+                    npdateNullParams.put(colNameTag, oValue);
                     isExistsNoneNullValue = true;
                     if(status.get() == 0){
                         updateSql.append(ConditionTag.SET.getTag());
@@ -115,7 +115,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                     }
                     updateSql.append(cloName);
                     updateSql.append(" = #{");
-                    updateSql.append(cloName);
+                    updateSql.append(colNameTag);
                     updateSql.append("}");
                 }
             } catch (IllegalAccessException e) {

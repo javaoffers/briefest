@@ -8,13 +8,12 @@ import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Object>, Object> {
@@ -31,7 +30,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((JdbcTemplateCondition) conditions.pollFirst());
+        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         MoreSQLInfo sqlInfos = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
         List<Id> list = new ArrayList<>(sqlInfosList.size());

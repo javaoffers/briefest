@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.fun.CategoryTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import lombok.Data;
 import org.springframework.util.Assert;
@@ -29,6 +30,13 @@ public  class WhereOnCondition<V> implements Condition {
     private ConditionTag tag;
 
     private Map<String,Object> params = new HashMap<>();
+
+    private String colNameTag ;
+
+    private HeadCondition headCondition;
+
+    //Logical relationship with the previous condition: and , or , ' '
+    private String andOrTag = " and ";
 
     public WhereOnCondition() {}
 
@@ -59,9 +67,8 @@ public  class WhereOnCondition<V> implements Condition {
 
     @Override
     public String getSql() {
-        long idx = getNextLong();
-        params.put(idx+"", value);
-        return colName +" "+ tag.getTag() + " "+"#{"+idx+"}";
+        params.put(colNameTag+"", value);
+        return andOrTag + colName +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
     }
 
     @Override
@@ -109,6 +116,17 @@ public  class WhereOnCondition<V> implements Condition {
         this.value = value;
         this.tag = tag;
     }
+
+    public void setHeadCondition(HeadCondition headCondition){
+        this.headCondition = headCondition;
+        this.colNameTag = this.headCondition.getNextTag();
+    }
+
+    public void setAndOrTag(String andOrTag){
+        this.andOrTag = andOrTag;
+    }
+
+
 
     @Override
     public String toString() {

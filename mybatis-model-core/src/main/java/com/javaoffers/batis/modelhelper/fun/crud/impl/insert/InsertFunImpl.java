@@ -4,7 +4,7 @@ import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.JdbcTemplateCondition;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.InsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
@@ -31,7 +31,7 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
 
     public InsertFunImpl(Class<M> mClass) {
         this.mClass = mClass;
-        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
         this.conditions.add(new InsertIntoCondition(mClass));
         this.oneInsertFun = new OneInsertFunImpl(mClass, conditions);
         this.moreInsertFun = new SmartMoreInsertFunImpl(mClass, conditions);

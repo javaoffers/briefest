@@ -7,7 +7,6 @@ import com.javaoffers.batis.modelhelper.fun.condition.*;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @Description:  以字符串方式输入为字段名称
@@ -30,9 +29,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
                 }
                 if(before instanceof LFCondition){
                     LFCondition rfWordCondition = (LFCondition) before;
-                    current.andOrWord(word->{
-                        return "";
-                    });
+
                 }
             }
         });
@@ -41,7 +38,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     private SmartSelectFunImpl<M,GetterFun<M,Object>,Object> smartSelectFun ;
 
     public SelectFunImpl(Class<M> mClass) {
-        this.conditions.add(new JdbcTemplateCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
         this.conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass), mClass));
         this.mClass = mClass;
         this.smartSelectFun = new SmartSelectFunImpl(mClass, conditions);

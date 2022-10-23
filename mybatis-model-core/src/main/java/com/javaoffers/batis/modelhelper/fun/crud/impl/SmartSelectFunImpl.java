@@ -6,7 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;

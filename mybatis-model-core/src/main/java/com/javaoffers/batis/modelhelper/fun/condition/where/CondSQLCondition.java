@@ -1,6 +1,7 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.core.SQLParse;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 
 import java.util.Collection;
 import java.util.Collections;

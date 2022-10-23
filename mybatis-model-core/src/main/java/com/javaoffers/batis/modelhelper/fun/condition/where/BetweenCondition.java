@@ -1,7 +1,8 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 
 /**
  * @Description: between 语句

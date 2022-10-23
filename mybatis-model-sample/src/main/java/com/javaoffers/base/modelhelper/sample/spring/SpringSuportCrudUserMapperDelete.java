@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping
 @MapperScan("com.javaoffers.base.modelhelper.sample.spring.mapper")
 public class SpringSuportCrudUserMapperDelete implements InitializingBean {
-
+    public static boolean status = true;
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
@@ -31,15 +31,21 @@ public class SpringSuportCrudUserMapperDelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testDelete();
+
+        if(status){
+            System.exit(0);
+        }
+
+    }
+
+    public void testDelete() {
         crudUserMapper.delete()
                 .where()
                 .eq(User::getId, 2)
                 //.isNotNull(User::getId)
                 .isNull(User::getId)
                 .ex();
-
-        System.exit(0);
-
     }
 
     public void print(Object user) throws JsonProcessingException {

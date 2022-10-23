@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
@@ -12,6 +12,11 @@ import java.util.Map;
  */
 public class OrCondition extends WhereOnCondition implements Condition {
     private String or = " or ";
+
+    public OrCondition() {
+        cleanAndOrTag();
+    }
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.OR;

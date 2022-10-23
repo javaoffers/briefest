@@ -21,7 +21,7 @@ import java.util.List;
 public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
-
+    public static boolean status = true;
     @Resource
     CrudUserMapper crudUserMapper;
 
@@ -34,11 +34,13 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         testUpdate();
 
-        System.exit(0);
+        if(status){
+            System.exit(0);
+        }
 
     }
 
-    private void testUpdate() throws JsonProcessingException {
+    public void testUpdate() throws JsonProcessingException {
         Long id = 109L;
         List<User> exs = crudUserMapper.select()
                 .colAll()

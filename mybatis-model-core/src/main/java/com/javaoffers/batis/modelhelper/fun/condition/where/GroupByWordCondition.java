@@ -1,7 +1,8 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 
 /**
  * @Description: 支持分组
@@ -16,19 +17,23 @@ public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndO
         super(colName, null, tag);
         this.getterFuns = getterFuns;
         this.tag = tag;
+        cleanAndOrTag();
     }
 
     public GroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
         this.getterFuns = getterFuns;
         this.tag = tag;
+        cleanAndOrTag();
     }
 
     public GroupByWordCondition(String[] colName, Object o, ConditionTag tag) {
         super(colName,o,tag);
+        cleanAndOrTag();
     }
     public GroupByWordCondition(GetterFun[] colName, Object o, ConditionTag tag) {
         super(colName,o,tag);
+        cleanAndOrTag();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.condition;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
-import com.javaoffers.batis.modelhelper.utils.TableHelper;
+import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
 
 import java.util.Collections;
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Map;
  * @Auther: create by cmj on 2022/5/2 16:31
  */
 @Deprecated
-public class KeyWordCondition extends SelectColumnCondition  {
+public class KeyWordCondition extends SelectColumnCondition {
 
     private String keyWord;
     private Class mClass;

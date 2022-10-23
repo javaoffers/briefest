@@ -7,7 +7,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
-import com.javaoffers.batis.modelhelper.fun.condition.SelectColumnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
 

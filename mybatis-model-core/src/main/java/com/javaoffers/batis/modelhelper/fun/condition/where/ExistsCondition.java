@@ -1,6 +1,7 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 
 /**
  * @Description: exists sql 语句

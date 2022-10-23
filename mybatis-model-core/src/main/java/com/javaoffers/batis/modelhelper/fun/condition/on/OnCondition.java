@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.on;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 

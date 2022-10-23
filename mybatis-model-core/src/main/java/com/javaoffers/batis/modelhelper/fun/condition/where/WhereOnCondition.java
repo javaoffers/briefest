@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.CategoryTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
@@ -19,7 +19,7 @@ import java.util.Set;
  * @Auther: create by cmj on 2022/5/2 02:25
  */
 @Data
-public  class WhereOnCondition<V> implements Condition {
+public  class WhereOnCondition<V> implements WhereCondition {
 
     private Set<String> colNames = new HashSet<>();
 
@@ -30,8 +30,6 @@ public  class WhereOnCondition<V> implements Condition {
     private ConditionTag tag;
 
     private Map<String,Object> params = new HashMap<>();
-
-    private String colNameTag ;
 
     private HeadCondition headCondition;
 
@@ -67,8 +65,9 @@ public  class WhereOnCondition<V> implements Condition {
 
     @Override
     public String getSql() {
+        String colNameTag = getNextTag();
         params.put(colNameTag+"", value);
-        return andOrTag + colName +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+        return colName +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
     }
 
     @Override
@@ -119,11 +118,14 @@ public  class WhereOnCondition<V> implements Condition {
 
     public void setHeadCondition(HeadCondition headCondition){
         this.headCondition = headCondition;
-        this.colNameTag = this.headCondition.getNextTag();
     }
 
     public void setAndOrTag(String andOrTag){
         this.andOrTag = andOrTag;
+    }
+
+    public String getAndOrTag(){
+        return this.andOrTag;
     }
 
     public long getNextLong(){
@@ -131,6 +133,13 @@ public  class WhereOnCondition<V> implements Condition {
         return this.headCondition.getNextLong();
     }
 
+    public String getNextTag() {
+        return getNextLong() + "";
+    }
+
+    public void cleanAndOrTag(){
+        this.andOrTag = "";
+    }
     @Override
     public String toString() {
         return "WhereOnCondition{" +

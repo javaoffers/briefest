@@ -1,9 +1,10 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.on;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.on.OnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,7 @@ import java.util.Map;
  *               select xx from t1 left join t2 on t2.is_del = 1;
  * @Auther: create by cmj on 2022/5/8 21:20
  */
-public class OnValueFunCondition extends WhereOnCondition implements OnCondition{
+public class OnValueFunCondition extends WhereOnCondition implements OnCondition {
 
     private String colName2; //table2 字段
     private Object value;

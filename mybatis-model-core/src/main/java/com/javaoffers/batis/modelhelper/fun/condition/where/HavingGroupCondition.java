@@ -1,12 +1,11 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.CategoryTag;
-import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import lombok.Data;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;

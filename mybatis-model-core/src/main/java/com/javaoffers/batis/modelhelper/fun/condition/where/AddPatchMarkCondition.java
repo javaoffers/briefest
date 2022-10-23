@@ -1,8 +1,11 @@
-package com.javaoffers.batis.modelhelper.fun.condition.update;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
+import jdk.nashorn.internal.objects.annotations.Where;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -10,20 +13,19 @@ import java.util.Map;
  */
 public class AddPatchMarkCondition  implements Condition {
 
-    private static Object EMPTY = null;
-
     @Override
     public ConditionTag getConditionTag() {
-        return (ConditionTag)EMPTY;
+        return ConditionTag.BLANK;
     }
 
     @Override
     public String getSql() {
-        return (String) EMPTY;
+        return ConditionTag.BLANK.getTag();
     }
 
     @Override
     public Map<String, Object> getParams() {
-        return (Map<String, Object>) EMPTY;
+        return Collections.emptyMap();
     }
+
 }

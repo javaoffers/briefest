@@ -28,6 +28,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
+    public static boolean status = true;
+
     @Resource
     CrudUserMapper crudUserMapper;
 
@@ -39,8 +41,10 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testSelect();
+        if(status){
+            System.exit(0);
+        }
 
-        System.exit(0);
 
     }
 
@@ -372,7 +376,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         user = crudUserMapper.select().colAll().where().isNotNull(User::getId).limitPage(1,1).ex();
         print(user);
 
-        System.exit(0);
     }
 
     public void print(Object user) throws JsonProcessingException {

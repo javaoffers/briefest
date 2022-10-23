@@ -1,6 +1,7 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         this.tag = tag;
         this.cs = cs;
         this.ascOrDesc = ascOrDesc;
-        this.setAndOrTag("");
+        this.cleanAndOrTag();
     }
 
     @Override
@@ -29,7 +30,6 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         if(!ascOrDesc){
             order = " desc ";
         }
-
         return tag.getTag() + String.join("," , cs) + order;
     }
 

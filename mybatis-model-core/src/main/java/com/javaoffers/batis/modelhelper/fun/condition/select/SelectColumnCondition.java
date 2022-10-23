@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.select;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
@@ -22,9 +22,13 @@ public class SelectColumnCondition implements Condition  {
         return ConditionTag.SELECT;
     }
 
+    public String getDelimiter(){
+        return ", ";
+    }
+
     @Override
     public String getSql() {
-        return ", "+colName;
+        return colName;
     }
 
     @Override

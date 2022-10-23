@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
-
+    public static boolean status = true;
     @Resource
     CrudUserMapper crudUserMapper;
 
@@ -35,6 +35,16 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testGeneral();
+        if(status){
+            System.exit(0);
+        }
+
+
+
+    }
+
+    public void testGeneral() throws JsonProcessingException {
         User general = User.builder().name("general").build();
         int remove = crudUserMapper.general().remove(general);
 
@@ -75,10 +85,6 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
         long moneyCount = this.crudUserMapper.general().count(User::getMoney);
         print(moneyCount);
-        System.exit(0);
-
-
-
     }
 
     public void print(Object user) throws JsonProcessingException {

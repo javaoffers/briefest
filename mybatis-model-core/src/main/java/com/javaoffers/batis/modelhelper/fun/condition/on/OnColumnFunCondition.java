@@ -1,7 +1,9 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.on;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.on.OnCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Collections;

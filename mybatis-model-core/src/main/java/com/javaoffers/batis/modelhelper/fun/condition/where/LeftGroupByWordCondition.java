@@ -1,10 +1,11 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.GroupByWordCondition;
 
 /**
- * @Description: 支持分组
+ * @Description: 支持分组. group by
  * @Auther: create by cmj on 2022/6/5 20:02
  */
 public class LeftGroupByWordCondition extends GroupByWordCondition {

@@ -1,10 +1,10 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
-import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.CategoryTag;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.springframework.util.Assert;
 
@@ -18,14 +18,13 @@ import java.util.Map;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-public  class HavingInCondition<V> extends WhereOnCondition implements Condition {
+public  class InCondition<V> extends WhereOnCondition implements Condition {
 
     private String colName;
     private List<V> value;
 
     private ConditionTag tag;
     private Map<String,Object> param = new HashMap<>();
-    private AggTag aggTag;
 
     /**
      * 获取 字段名称
@@ -54,10 +53,7 @@ public  class HavingInCondition<V> extends WhereOnCondition implements Condition
 
     @Override
     public String getSql() {
-        StringBuilder sql = new StringBuilder(aggTag.name());
-        sql.append("(");
-        sql.append(colName);
-        sql.append(")");
+        StringBuilder sql = new StringBuilder(colName);
         sql.append(tag.getTag());
         sql.append(" (");
         for(int i=0; value!=null && i<value.size(); i++){
@@ -79,7 +75,7 @@ public  class HavingInCondition<V> extends WhereOnCondition implements Condition
         return param;
     }
 
-    public HavingInCondition(AggTag aggTag,  GetterFun colName, Object[] value, ConditionTag tag) {
+    public InCondition(GetterFun colName, Object[] value, ConditionTag tag) {
         super(colName,value,tag);
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
         this.colName = TableHelper.getColName(colName).split(" ")[0];
@@ -96,6 +92,14 @@ public  class HavingInCondition<V> extends WhereOnCondition implements Condition
             }
         }
         this.tag = tag;
-        this.aggTag = aggTag;
+    }
+
+    @Override
+    public String toString() {
+        return "WhereOnCondition{" +
+                "colName='" + colName + '\'' +
+                ", value=" + value.toString() +
+                ", tag=" + tag +
+                '}';
     }
 }

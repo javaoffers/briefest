@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.mark;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
@@ -7,18 +7,18 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * @Description: where标记
+ * @Description: on标记
  * @Auther: create by cmj on 2022/5/22 16:18
  */
-public class WhereConditionMark implements Condition {
+public class OnConditionMark implements Condition {
     @Override
     public ConditionTag getConditionTag() {
-        return ConditionTag.WHERE;
+        return ConditionTag.ON;
     }
 
     @Override
     public String getSql() {
-        return ConditionTag.WHERE.getTag();
+        return ConditionTag.ON.getTag();
     }
 
     @Override

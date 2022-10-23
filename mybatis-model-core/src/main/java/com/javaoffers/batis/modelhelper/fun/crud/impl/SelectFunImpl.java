@@ -3,7 +3,9 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.fun.*;
-import com.javaoffers.batis.modelhelper.fun.condition.*;
+import com.javaoffers.batis.modelhelper.fun.condition.select.SelectTableCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
@@ -19,21 +21,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * 存放 查询字段
      */
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
-    {
-        this.conditions.beforeAdd((before,current)->{
-            if(before == null){
-                return;
-            }else{
-                if(before instanceof OrderWordCondition && current instanceof OrderWordCondition){
-                    ((OrderWordCondition) current).asChild();
-                }
-                if(before instanceof LFCondition){
-                    LFCondition rfWordCondition = (LFCondition) before;
 
-                }
-            }
-        });
-    }
 
     private SmartSelectFunImpl<M,GetterFun<M,Object>,Object> smartSelectFun ;
 

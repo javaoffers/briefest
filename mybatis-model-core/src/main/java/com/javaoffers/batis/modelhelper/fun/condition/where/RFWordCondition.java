@@ -1,6 +1,7 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 
 /**
  * @Description: 右括号
@@ -10,8 +11,13 @@ public class RFWordCondition extends WhereOnCondition<String> implements IgnoreA
 
     private ConditionTag tag;
 
+    public RFWordCondition() {
+        cleanAndOrTag();
+    }
+
     public RFWordCondition(ConditionTag tag) {
         this.tag = tag;
+        cleanAndOrTag();
     }
 
     @Override

@@ -26,7 +26,7 @@ import java.util.*;
 public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
-
+    public static boolean status = true;
     @Resource
     CrudUserMapper crudUserMapper;
 
@@ -41,7 +41,9 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testInsertModelAndOrder();
-        //System.exit(0);
+        if(status){
+            System.exit(0);
+        }
 
     }
     public void testInsertModelAndOrder(){

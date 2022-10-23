@@ -1,6 +1,8 @@
-package com.javaoffers.batis.modelhelper.fun.condition;
+package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.condition.IgnoreAndOrWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 
 /**
  * @Description: exists sql 语句
@@ -27,6 +29,7 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
         this.pageSize = pageSize;
         this.startIndex = (pageNum-1) * pageSize;
         this.len = pageSize;
+        cleanAndOrTag();
     }
 
     @Override

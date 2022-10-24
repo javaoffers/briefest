@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @RequestMapping
@@ -46,6 +47,24 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         }
 
     }
+
+    public void testBatchInsert(){
+        List<User> batchUser = new LinkedList<>();
+
+        for(int i=0; i < 30000; i++){
+            User jom = User.builder().name("Hom"+i).money(i+"").build();
+            batchUser.add(jom);
+        }
+        long start = System.nanoTime();
+        List<Id> exs = crudUserMapper.insert().colAll(batchUser).exs();
+        long end = System.nanoTime();
+        LOGUtils.printLog("耗时： "+TimeUnit.NANOSECONDS.toSeconds(end - start));
+        LOGUtils.printLog(exs.size());
+        Integer ex = crudUserMapper.delete().where().in(User::getId, exs).ex();
+        LOGUtils.printLog(ex);
+    }
+
+
     public void testInsertModelAndOrder(){
         User jom = User.builder().name("Hom").money("200000").build();
         User tom = User.builder().name("Pom").money("8000").build();

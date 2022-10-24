@@ -37,10 +37,10 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         sqlInfosList.forEach(sqlInfo -> {
             System.out.println("SQL: "+sqlInfo.getSql());
             System.out.println("PAM: "+sqlInfo.getParams());
-            if(sqlInfo.getParams().size() > 2){
+            int batchNum = 1000;
+            if(sqlInfo.getParams().size() > batchNum){
                 int allBatch = sqlInfo.getParams().size() / 2 * 2;
                 int startIndex = 0;
-                int batchNum = 1000;
                 for(; startIndex < allBatch; startIndex = startIndex + batchNum ){
                     if((startIndex + batchNum) > allBatch){
                         break;

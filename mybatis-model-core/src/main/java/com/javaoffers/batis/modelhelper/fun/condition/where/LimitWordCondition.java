@@ -34,7 +34,11 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
 
     @Override
     public String getSql() {
-        return getTag().getTag() +" "+this.startIndex +", "+ this.len;
+        String startIndexTag = getNextTag();
+        String lenTag = getNextTag();
+        this.getParams().put(startIndexTag, this.startIndex);
+        this.getParams().put(lenTag, this.len);
+        return getTag().getTag() +" #{" + startIndexTag +"} , #{" + lenTag +"}";
     }
 
     @Override

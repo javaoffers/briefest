@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
 import com.javaoffers.batis.modelhelper.exception.ParseModelException;
+import com.javaoffers.batis.modelhelper.utils.SoftCache;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -126,7 +127,7 @@ public class Utils {
      */
     public static <E> Set<Field> getFields(Class<E> clazz) {
         //primitive type has no parent， so is null
-        if(clazz==null){
+        if(clazz==null || clazz.isPrimitive() || clazz.isInterface()){
             return Collections.EMPTY_SET;
         }
         Set<Field> list = new HashSet<Field>();

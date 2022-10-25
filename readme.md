@@ -597,6 +597,18 @@ crudUserMapper.general().removeById(1);
      */
     public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
 
+
+   /**
+     * The number of statistical tables
+     * @return
+     */
+    public long count();
+
+    /**
+     * The number of statistical tables, through the specified field
+     * @return
+     */
+    public long count(C c);
 ```
 ### Sql function annotation
 <p>

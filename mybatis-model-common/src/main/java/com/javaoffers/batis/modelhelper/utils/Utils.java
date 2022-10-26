@@ -36,17 +36,12 @@ public class Utils {
      * @return
      */
     public static <E> Set<Field> getFields(Class<E> clazz) {
-        Set<Field> result = SOFT_CACHE_CLASS_FIELDS.get(clazz);
-        if (result != null && result.size() > 0) {
-            return result;
-        }
-        result = Collections.EMPTY_SET;
-        //primitive type has no parent， so is null
         if (clazz == null || clazz.isPrimitive() || clazz.isInterface()) {
-            result = Collections.EMPTY_SET;
-        }else{
+            return Collections.EMPTY_SET;
+        }
+        Set<Field> result = SOFT_CACHE_CLASS_FIELDS.get(clazz);
+        if (result == null) {
             Set<Field> list = new HashSet<Field>();
-
             if (!clazz.getName().equals("java.lang.Object")) {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field f : fields) {

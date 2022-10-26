@@ -25,7 +25,7 @@ public class SoftCache<T,V> {
     }
 
     public void put(T key, V value){
-        if(key == null){return;}
+        if(key == null || value == null){return;}
         SoftData<T,V> softData = new SoftData<T,V>(key, value, this.referenceQueue);
         cache.put(key, softData);
     }

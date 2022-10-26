@@ -5,14 +5,11 @@ import com.javaoffers.batis.modelhelper.core.CrudMapperMethodExcutor;
 import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.exception.ParseDataSourceException;
 import com.javaoffers.batis.modelhelper.exception.ParseTableInfoException;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
-import com.javaoffers.batis.modelhelper.util.Utils;
+import com.javaoffers.batis.modelhelper.util.HelperUtils;
 import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -84,7 +81,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                             Arrays.asList(select,insert,update,delete,general));
             Connection connection = jdbcTemplate.getDataSource().getConnection();
             try {
-                List<Class> modelClass = Utils.parseAllModelClass((Class) this.modelClass);
+                List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
                 for(Class mc : modelClass){
                     TableHelper.parseTableInfo(mc, connection);
                 }

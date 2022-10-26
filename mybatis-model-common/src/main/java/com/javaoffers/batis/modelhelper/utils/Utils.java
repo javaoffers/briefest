@@ -222,7 +222,7 @@ public class Utils {
             Type listActualTypeArguments = listGenericType.getActualTypeArguments()[0];
             return Class.forName(listActualTypeArguments.getTypeName());
         } catch (Exception e) {
-            logger.warn(e.getMessage() + "One-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted");
+            logger.debug(e.getMessage() + "One-to-many relationship. Note that the reference collection class must be added with a generic class. For example: List<Model>, Model cannot be omitted");
             throw e;
         }
 

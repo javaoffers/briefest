@@ -27,6 +27,7 @@ public class Utils {
     private static final SoftCache<Field, Boolean> SOFT_CACHE_FIELDS_IS_MODEL = SoftCache.getInstance();
 
     private static final SoftCache<Class, Boolean> SOFT_CACHE_ClASS_IS_MODEL = SoftCache.getInstance();
+
     /**
      * Get all fields of this class including parent classes
      *
@@ -39,20 +40,24 @@ public class Utils {
         if (result != null && result.size() > 0) {
             return result;
         }
+        result = Collections.EMPTY_SET;
         //primitive type has no parent， so is null
         if (clazz == null || clazz.isPrimitive() || clazz.isInterface()) {
-            return Collections.EMPTY_SET;
-        }
-        Set<Field> list = new HashSet<Field>();
-        if (!clazz.getName().equals("java.lang.Object")) {
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field f : fields) {
-                list.add(f);
+            result = Collections.EMPTY_SET;
+        }else{
+            Set<Field> list = new HashSet<Field>();
+
+            if (!clazz.getName().equals("java.lang.Object")) {
+                Field[] fields = clazz.getDeclaredFields();
+                for (Field f : fields) {
+                    list.add(f);
+                }
+                list.addAll(getFields(clazz.getSuperclass()));
             }
-            list.addAll(getFields(clazz.getSuperclass()));
+            result = list;
+            SOFT_CACHE_CLASS_FIELDS.put(clazz, result);
         }
-        SOFT_CACHE_CLASS_FIELDS.put(clazz, result);
-        return list;
+        return result;
     }
 
     public static boolean isBaseModel(Field fd) throws Exception {
@@ -106,7 +111,7 @@ public class Utils {
 
     public static boolean isBaseModel(Class clazz) {
         Boolean isBaseModel = SOFT_CACHE_ClASS_IS_MODEL.get(clazz);
-        if(isBaseModel != null){
+        if (isBaseModel != null) {
             return isBaseModel;
         }
         isBaseModel = false;

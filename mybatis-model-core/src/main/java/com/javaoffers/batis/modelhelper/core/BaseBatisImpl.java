@@ -78,10 +78,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     @Override
     public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
         SQL batchSQL = SQLParse.getSQL(sql, map);
-        long start = System.nanoTime();
         List<Map<String, Object>> result = queryData(batchSQL.getSql(), batchSQL.getArgsParam().get(0));
-        long end = System.nanoTime();
-        System.out.println("query cost time : " + TimeUnit.NANOSECONDS.toMillis(end - start));
         return result;
     }
 

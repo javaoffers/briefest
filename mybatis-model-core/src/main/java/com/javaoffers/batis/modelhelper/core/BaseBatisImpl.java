@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**@Description: core implementation class
@@ -122,7 +123,10 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 						}
 						ps.addBatch();
 					}
+//					long start = System.nanoTime();
 					ps.executeBatch();
+//					long end = System.nanoTime();
+//					System.out.println("batch const : "+TimeUnit.NANOSECONDS.toMillis(end - start));
 
 				}
 				else {

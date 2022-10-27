@@ -59,7 +59,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getOrderId)
                 .where()
-                .limitPage(1,10000)
+                .limitPage(1,100000)
                 .exs();
 
         long end = System.nanoTime();

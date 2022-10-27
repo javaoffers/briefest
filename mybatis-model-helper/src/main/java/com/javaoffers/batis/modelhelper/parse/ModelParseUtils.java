@@ -26,7 +26,7 @@ public class ModelParseUtils {
             List<List<Map<String, Object>>> partition = Lists.partition(listMap, batch);
             List<E>[] slot = new List[partition.size()];
             AtomicInteger ai = new AtomicInteger();
-            ArrayList<E> resutl = new ArrayList<>();
+            LinkedList<E> resutl = new LinkedList<>();
             partition.parallelStream().forEach(list->{
                 Integer key = ai.getAndIncrement();
                 slot[key] = modelParse.converterMap2Model(clazz, list) ;

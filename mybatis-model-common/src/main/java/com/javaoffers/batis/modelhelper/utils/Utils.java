@@ -196,16 +196,18 @@ public class Utils {
      * @throws Exception
      */
     public static Class getModelClass(Field fd) throws Exception {
+
         Class<?> type2 = fd.getType();
         if (type2.isArray()) {
             String typeName = fd.getGenericType().getTypeName();
             //If the typeName is a primitive type, an error will be reported here
-            return Class.forName(typeName.substring(0, typeName.length() - 2));
+            type2 = Class.forName(typeName.substring(0, typeName.length() - 2));
         } else if (List.class.isAssignableFrom(type2)) {
-            return getGenericityClassOfCollect(fd);
+            type2 = getGenericityClassOfCollect(fd);
         } else if (Set.class.isAssignableFrom(type2)) {
-            return getGenericityClassOfCollect(fd);
+            type2 = getGenericityClassOfCollect(fd);
         }
+
         return type2;
     }
 

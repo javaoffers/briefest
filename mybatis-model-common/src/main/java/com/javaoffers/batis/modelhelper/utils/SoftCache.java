@@ -15,7 +15,7 @@ public class SoftCache<T,V> {
     ReferenceQueue<V> referenceQueue;
 
     //cache
-    Map<T,SoftData<T,V>> cache = new ConcurrentHashMap<>();
+    Map<T,SoftData<T,V>> cache = new ConcurrentHashMap<>(1 << 8);
 
     // new install of SoftCache
     public static <T,V> SoftCache<T,V> getInstance(){
@@ -25,12 +25,14 @@ public class SoftCache<T,V> {
     }
 
     public void put(T key, V value){
+        //key = null;
         if(key == null || value == null){return;}
         SoftData<T,V> softData = new SoftData<T,V>(key, value, this.referenceQueue);
         cache.put(key, softData);
     }
 
     public V get(T key){
+        //key = null;
         if(key == null){
             return null;
         }
@@ -53,5 +55,6 @@ public class SoftCache<T,V> {
             super(value, referenceQueue);
             this.key = key;
         }
+
     }
 }

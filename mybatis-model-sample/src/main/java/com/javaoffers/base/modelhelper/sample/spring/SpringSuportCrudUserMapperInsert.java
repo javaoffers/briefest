@@ -58,7 +58,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         long start = System.nanoTime();
         List<Id> exs = crudUserMapper.insert().colAll(batchUser).exs();
         long end = System.nanoTime();
-        //40s
+        //insert cost time： 5s, 30000 pieces of data
         LOGUtils.printLog("insert cost time： "+TimeUnit.NANOSECONDS.toSeconds(end - start));
         LOGUtils.printLog(exs.size());
 

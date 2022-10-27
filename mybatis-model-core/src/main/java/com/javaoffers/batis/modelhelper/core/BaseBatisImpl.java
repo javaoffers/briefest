@@ -13,6 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -115,7 +116,11 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 				InterruptibleBatchPreparedStatementSetter ipss =
 						(pss instanceof InterruptibleBatchPreparedStatementSetter ?
 								(InterruptibleBatchPreparedStatementSetter) pss : null);
-				if (JdbcUtils.supportsBatchUpdates(ps.getConnection())) {
+				Connection connection = ps.getConnection();
+				if (JdbcUtils.supportsBatchUpdates(connection) && batchSize > 0) {
+					boolean oldAutoCommit = connection.getAutoCommit();
+					connection.setAutoCommit(false);
+
 					for (int i = 0; i < batchSize; i++) {
 						pss.setValues(ps, i);
 						if (ipss != null && ipss.isBatchExhausted(i)) {
@@ -123,10 +128,10 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 						}
 						ps.addBatch();
 					}
-//					long start = System.nanoTime();
+
 					ps.executeBatch();
-//					long end = System.nanoTime();
-//					System.out.println("batch const : "+TimeUnit.NANOSECONDS.toMillis(end - start));
+					connection.commit();
+					connection.setAutoCommit(oldAutoCommit);
 
 				}
 				else {

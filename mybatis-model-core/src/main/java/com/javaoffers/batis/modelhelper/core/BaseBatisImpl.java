@@ -21,213 +21,188 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-/**@Description: core implementation class
+/**
+ * @Description: core implementation class
  * @Auther: create by cmj on 2022/05/22 02:56
  */
 public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
-	private static final Object[] EMPTY = new Object[0];
+    private static final Object[] EMPTY = new Object[0];
 
-	private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-	public static  <T, ID> BaseBatisImpl getInstance(HeadCondition jdbcTemplate) {
-		return new BaseBatisImpl<T,ID>(jdbcTemplate.getTemplate());
-	}
+    public static <T, ID> BaseBatisImpl getInstance(HeadCondition jdbcTemplate) {
+        return new BaseBatisImpl<T, ID>(jdbcTemplate.getTemplate());
+    }
 
-	private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
-		this.jdbcTemplate = jdbcTemplate;
-	}
+    private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
-	/****************************crud****************************/
-	public int saveData(String sql) {
-		return saveData(sql,Collections.EMPTY_MAP);
-	}
+    /****************************crud****************************/
+    public int saveData(String sql) {
+        return saveData(sql, Collections.EMPTY_MAP);
+    }
 
-	@Override
-	public int saveData(String sql, Map<String, Object> map) {
-		SQL sql_ = SQLParse.getSQL(sql, map);
-		return this.jdbcTemplate.update(sql_.getSql(),  new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
-	}
+    @Override
+    public int saveData(String sql, Map<String, Object> map) {
+        SQL sql_ = SQLParse.getSQL(sql, map);
+        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+    }
 
-	public int deleteData(String sql) {
-		return deleteData(sql,Collections.EMPTY_MAP);
-	}
+    public int deleteData(String sql) {
+        return deleteData(sql, Collections.EMPTY_MAP);
+    }
 
-	@Override
-	public int deleteData(String sql, Map<String, Object> map) {
-		SQL sql_ = SQLParse.getSQL(sql, map);
-		return this.jdbcTemplate.update(sql_.getSql(),  new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
-	}
+    @Override
+    public int deleteData(String sql, Map<String, Object> map) {
+        SQL sql_ = SQLParse.getSQL(sql, map);
+        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+    }
 
-	public int updateData(String sql) {
-		return updateData(sql, Collections.EMPTY_MAP);
-	}
+    public int updateData(String sql) {
+        return updateData(sql, Collections.EMPTY_MAP);
+    }
 
-	@Override
-	public int updateData(String sql, Map<String, Object> map) {
-		SQL sql_ = SQLParse.getSQL(sql, map);
-		return this.jdbcTemplate.update(sql_.getSql(),  new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
-	}
+    @Override
+    public int updateData(String sql, Map<String, Object> map) {
+        SQL sql_ = SQLParse.getSQL(sql, map);
+        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+    }
 
-	public List<Map<String, Object>> queryData(String sql) {
-		List<Map<String, Object>> queryForList = queryData(sql, EMPTY);
-		return queryForList;
-	}
+    public List<Map<String, Object>> queryData(String sql) {
+        List<Map<String, Object>> queryForList = queryData(sql, EMPTY);
+        return queryForList;
+    }
 
-	@Override
-	public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
-		SQL batchSQL = SQLParse.getSQL(sql, map);
-		 //query(sql, args, getColumnMapRowMapper());
-		List<Map<String, Object>> result = queryData(batchSQL.getSql(), batchSQL.getArgsParam().get(0));
-		return result;
-	}
+    @Override
+    public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
+        SQL batchSQL = SQLParse.getSQL(sql, map);
+        long start = System.nanoTime();
+        List<Map<String, Object>> result = queryData(batchSQL.getSql(), batchSQL.getArgsParam().get(0));
+        long end = System.nanoTime();
+        System.out.println("query cost time : " + TimeUnit.NANOSECONDS.toMillis(end - start));
+        return result;
+    }
 
-	/*********************************Support Model*********************************/
-	public <E> List<E> queryDataForT(String sql, Class<E> clazz) {
-		List<Map<String, Object>> list_map = queryData(sql, EMPTY);
-		List<E> list = ModelParseUtils.converterMap2Model(clazz, list_map);
-		return list;
-	}
+    /*********************************Support Model*********************************/
+    public <E> List<E> queryDataForT(String sql, Class<E> clazz) {
+        List<Map<String, Object>> list_map = queryData(sql, EMPTY);
+        List<E> list = ModelParseUtils.converterMap2Model(clazz, list_map);
+        return list;
+    }
 
-	@Override
-	public <E> List<E> queryDataForT4(String sql, Map<String, Object> paramMap, Class<E> clazz) {
-		List<Map<String, Object>> maps = queryData(sql, paramMap);
-		return ModelParseUtils.converterMap2Model(clazz, maps);
-	}
+    @Override
+    public <E> List<E> queryDataForT4(String sql, Map<String, Object> paramMap, Class<E> clazz) {
+        List<Map<String, Object>> maps = queryData(sql, paramMap);
+        List<E> es = ModelParseUtils.converterMap2Model(clazz, maps);
+        return es;
+    }
 
-	/*********************************batch processing*********************************/
-	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap ) {
-		SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
-		int[] is = this.jdbcTemplate.batchUpdate( batchSQL.getSql(), batchSQL);
-		Assert.isTrue(is !=null ," batch update is null ");
-		AtomicInteger countSuccess = new AtomicInteger();
-		Arrays.stream(is).forEach(countSuccess::addAndGet);
-		return Integer.valueOf(countSuccess.get());
-	}
+    /*********************************batch processing*********************************/
+    public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {
+        SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
+        int[] is = this.jdbcTemplate.batchUpdate(batchSQL.getSql(), batchSQL);
+        Assert.isTrue(is != null, " batch update is null ");
+        AtomicInteger countSuccess = new AtomicInteger();
+        Arrays.stream(is).forEach(countSuccess::addAndGet);
+        return Integer.valueOf(countSuccess.get());
+    }
 
-	@Override
-	public List<Serializable> batchInsert(String sql, List<Map<String, Object>> paramMap) {
+    @Override
+    public List<Serializable> batchInsert(String sql, List<Map<String, Object>> paramMap) {
 
-		SQL pss = SQLParse.parseSqlParams(sql, paramMap);
-		LinkedList<Serializable> ids = new LinkedList<>();
-		jdbcTemplate.execute(new InsertPreparedStatementCreator(pss.getSql()), (PreparedStatementCallback<List<Serializable>>) ps -> {
-			try {
-				int batchSize = pss.getBatchSize();
-				InterruptibleBatchPreparedStatementSetter ipss =
-						(pss instanceof InterruptibleBatchPreparedStatementSetter ?
-								(InterruptibleBatchPreparedStatementSetter) pss : null);
-				Connection connection = ps.getConnection();
-				if (JdbcUtils.supportsBatchUpdates(connection) && batchSize > 0) {
-					boolean oldAutoCommit = connection.getAutoCommit();
-					connection.setAutoCommit(false);
+        SQL pss = SQLParse.parseSqlParams(sql, paramMap);
+        LinkedList<Serializable> ids = new LinkedList<>();
+        jdbcTemplate.execute(new InsertPreparedStatementCreator(pss.getSql()), (PreparedStatementCallback<List<Serializable>>) ps -> {
+            try {
+                int batchSize = pss.getBatchSize();
+                InterruptibleBatchPreparedStatementSetter ipss =
+                        (pss instanceof InterruptibleBatchPreparedStatementSetter ?
+                                (InterruptibleBatchPreparedStatementSetter) pss : null);
+                Connection connection = ps.getConnection();
+                if (JdbcUtils.supportsBatchUpdates(connection) && batchSize > 0) {
+                    boolean oldAutoCommit = connection.getAutoCommit();
+                    connection.setAutoCommit(false);
 
-					for (int i = 0; i < batchSize; i++) {
-						pss.setValues(ps, i);
-						if (ipss != null && ipss.isBatchExhausted(i)) {
-							break;
-						}
-						ps.addBatch();
-					}
+                    for (int i = 0; i < batchSize; i++) {
+                        pss.setValues(ps, i);
+                        if (ipss != null && ipss.isBatchExhausted(i)) {
+                            break;
+                        }
+                        ps.addBatch();
+                    }
 
-					ps.executeBatch();
-					connection.commit();
-					connection.setAutoCommit(oldAutoCommit);
+                    ps.executeBatch();
+                    connection.commit();
+                    connection.setAutoCommit(oldAutoCommit);
 
-				}
-				else {
-					List<Integer> rowsAffected = new ArrayList<>();
-					for (int i = 0; i < batchSize; i++) {
-						pss.setValues(ps, i);
-						if (ipss != null && ipss.isBatchExhausted(i)) {
-							break;
-						}
-						rowsAffected.add(ps.executeUpdate());
-					}
-					int[] rowsAffectedArray = new int[rowsAffected.size()];
-					for (int i = 0; i < rowsAffectedArray.length; i++) {
-						rowsAffectedArray[i] = rowsAffected.get(i);
-					}
+                } else {
+                    List<Integer> rowsAffected = new ArrayList<>();
+                    for (int i = 0; i < batchSize; i++) {
+                        pss.setValues(ps, i);
+                        if (ipss != null && ipss.isBatchExhausted(i)) {
+                            break;
+                        }
+                        rowsAffected.add(ps.executeUpdate());
+                    }
+                    int[] rowsAffectedArray = new int[rowsAffected.size()];
+                    for (int i = 0; i < rowsAffectedArray.length; i++) {
+                        rowsAffectedArray[i] = rowsAffected.get(i);
+                    }
 
-				}
+                }
 
-				int i = 0;
-				ResultSet rs = ps.getGeneratedKeys() ;
-				while(rs.next() && i < batchSize){
-					Object object = rs.getObject(1);
-					ids.add(new IdImpl((Serializable) object)) ;
-					i++ ;
-				}
-				return ids;
-			}
-			finally {
-				if (pss instanceof ParameterDisposer) {
-					((ParameterDisposer) pss).cleanupParameters();
-				}
-			}
-		});
+                int i = 0;
+                ResultSet rs = ps.getGeneratedKeys();
+                while (rs.next() && i < batchSize) {
+                    Object object = rs.getObject(1);
+                    ids.add(new IdImpl((Serializable) object));
+                    i++;
+                }
+                return ids;
+            } finally {
+                if (pss instanceof ParameterDisposer) {
+                    ((ParameterDisposer) pss).cleanupParameters();
+                }
+            }
+        });
 
-		return ids;
-	}
+        return ids;
+    }
 
-	/**
-	 * Basic query implementation
-	 * @param nativeSql sql
-	 * @param param parameter
-	 * @return
-	 */
-	private List<Map<String, Object>> queryData(String nativeSql,Object[] param){
-		return this.jdbcTemplate.query(nativeSql,param,new ColumnMapRowMapper(){
-			@Override
-			public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
-				ResultSetMetaData rsmd = rs.getMetaData();
-				int columnCount = rsmd.getColumnCount();
-				Map<String, Object> mapOfColumnValues = createColumnMap(columnCount);
-				for (int i = 1; i <= columnCount; i++) {
-					ColumnInfo columnInfo = lookupColumnName(rsmd, i);
-					mapOfColumnValues.putIfAbsent(columnInfo.getTableName() + getColumnKey(columnInfo.getColName()), getColumnValue(rs, i));
-				}
-				return mapOfColumnValues;
-			}
-
-			public  ColumnInfo lookupColumnName(ResultSetMetaData resultSetMetaData, int columnIndex) throws SQLException {
-				String name = resultSetMetaData.getColumnLabel(columnIndex);
-				if (!StringUtils.hasLength(name)) {
-					name = resultSetMetaData.getColumnName(columnIndex);
-				}
-				String tableName = resultSetMetaData.getTableName(columnIndex);
-				return  new ColumnInfo(name, tableName);
-			}
-
-			class ColumnInfo{
-
-				private String colName;
-				private String tableName;
-
-				public ColumnInfo(String colName, String tableName) {
-					this.colName = colName;
-					this.tableName = tableName;
-				}
-
-				public String getColName() {
-					return colName;
-				}
-
-				public void setColName(String colName) {
-					this.colName = colName;
-				}
-
-				public String getTableName() {
-					if(org.apache.commons.lang3.StringUtils.isBlank(this.tableName)){
-						return "";
-					}
-					return tableName + "__";
-				}
-
-				public void setTableName(String tableName) {
-					this.tableName = tableName;
-				}
-			}
-		});
-	}
+    /**
+     * Basic query implementation
+     *
+     * @param nativeSql sql
+     * @param param     parameter
+     * @return
+     */
+    private List<Map<String, Object>> queryData(String nativeSql, Object[] param) {
+        RowMapperResultSetExtractorPlus<Map<String, Object>> rowMapperResultSetExtractorPlus =
+                new RowMapperResultSetExtractorPlus(new ColumnMapRowMapper() {
+                    @Override
+                    public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
+                        ResultSetMetaData rsmd = rs.getMetaData();
+                        int columnCount = rsmd.getColumnCount();
+                        Map<String, Object> mapOfColumnValues = new HashMap<>(columnCount);
+                        for (int i = 1; i <= columnCount; i++) {
+                            String name = rsmd.getColumnLabel(i);
+                            if (!StringUtils.hasLength(name)) {
+                                name = rsmd.getColumnName(i);
+                            }
+                            String tableName = rsmd.getTableName(i);
+                            if (tableName == null) {
+                                tableName = "";
+                            } else {
+                                tableName = tableName + "__";
+                            }
+                            mapOfColumnValues.put(tableName + getColumnKey(name), getColumnValue(rs, i));
+                        }
+                        return mapOfColumnValues;
+                    }
+                });
+        return this.jdbcTemplate.query(nativeSql, param, rowMapperResultSetExtractorPlus);
+    }
 
 }

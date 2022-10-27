@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
 @RequestMapping
@@ -40,12 +41,30 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testSelect();
+        testSelectOp();
         if(status){
             System.exit(0);
         }
 
 
+    }
+
+    public void testSelectOp(){
+        long start = System.nanoTime();
+        List<User> exs1 = crudUserMapper
+                .select()
+                .colAll()
+                .leftJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserOrder::getOrderId)
+                .where()
+                .limitPage(1,10000)
+                .exs();
+
+        long end = System.nanoTime();
+        LOGUtils.printLog("query cost time： "+ TimeUnit.NANOSECONDS.toMillis(end - start));//100000 cost 9s
+        LOGUtils.printLog(exs1.size());
     }
 
     public void testSelect() throws Exception {

@@ -71,10 +71,11 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getOrderId)
                 .where()
+                .limitPage(1,100000)
                 .exs();
 
         end = System.nanoTime();
-        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toSeconds(end - start));// 60000 cost 9s
+        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start));//100000 cost 9s
         LOGUtils.printLog(exs1.size());
 
         Integer ex = crudUserMapper.delete().where().in(User::getId, exs).ex();

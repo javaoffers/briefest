@@ -41,7 +41,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testSelectOp();
+        testSelect();
         if(status){
             System.exit(0);
         }

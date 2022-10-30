@@ -285,7 +285,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     private String getNewColNameTag() {
-        return ato.getAndIncrement()+"";
+        return ato.getAndIncrement()+"_G_";
     }
 
     private TableInfo getTableInfo(Class modelClass) {

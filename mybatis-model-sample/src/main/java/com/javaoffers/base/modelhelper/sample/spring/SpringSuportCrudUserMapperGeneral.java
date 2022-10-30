@@ -52,6 +52,10 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         long save = crudUserMapper.general().save(general);
 
         //query by id
+        /**
+         * SQL:  update user set birthday = #{0}, id = #{1}, name = #{4} where  1=1  and id in ( #{0} )
+         * PAM： [{0=329839, 1=329839, 4=general}]
+         */
         User user = crudUserMapper.general().queryById(save);
         print(user);
 

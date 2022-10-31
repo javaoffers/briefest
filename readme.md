@@ -13,11 +13,13 @@ Currently under development, welcome to participate in this project. Let me writ
  
 - maven
   ```java
-    <dependency>
+    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.3 -->
+   <dependency>
       <groupId>com.javaoffers</groupId>
       <artifactId>mybatis-model-spring-support</artifactId>
-      <version>3.5.11.2</version>
-    </dependency>
+      <version>3.5.11.3</version>
+   </dependency>
+
   ```
     
 - Basic Usage Tutorial 

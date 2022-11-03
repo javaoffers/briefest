@@ -277,7 +277,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```   
 
 <p>
- use col support native sql 
+ use col support native sql ,Generally do not recommend this to write.It is recommended to use function annotations (there will be introduced below)
 </p>
 
 ```java

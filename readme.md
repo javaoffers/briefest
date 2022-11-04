@@ -277,20 +277,6 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```   
 
 <p>
- use col support native sql ,Generally do not recommend this to write.It is recommended to use function annotations (there will be introduced below)
-</p>
-
-```java
-crudUserMapper.select()
-                //The alias must be the same as the attribute name of the model class
-                .col("max(birthday) as birthday")
-                .where()
-                .groupBy("left(birthday,10)")
-                .ex();
-
-```
-
-<p>
     use left join , group by , limitPage  
 </p>   
       
@@ -362,37 +348,6 @@ crudUserMapper.select()
                 .orderA(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
-```
-
-<p>
-use condSQL, inner join ,group by, having, order asc/desc, limitPage .
-</p>
-
-```java
-crudUserMapper.select()
-                .col(AggTag.MAX, User::getName)
-                .innerJoin(UserOrder::new)
-                .col(AggTag.MAX, UserOrder::getOrderName)
-                .on()
-                .condSQL("1=1")
-                .oeq(User::getId, UserOrder::getUserId)
-                .where()
-                .condSQL("1=1")
-                // params could be array or single Object
-                .condSQL("user.id in (#{ids})", params)
-                //Group by main table
-                .groupBy(User::getName, User::getId)
-                //Group according to sub-table
-                .groupBy(UserOrder::getUserId)
-                .having()
-                // Sort by primary table
-                .orderA(User::getName)
-                //Sort by subtable
-                .orderD(UserOrder::getUserId)
-                //1 means pageNum, 10 means pageSize
-                .limitPage(1,10)
-                .exs();
-
 ```
 
 <p>

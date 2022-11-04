@@ -401,7 +401,7 @@ crudUserMapper.select()
 
 ```java
 //query by id
-User user = crudUserMapper.general().queryById(save);
+User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>

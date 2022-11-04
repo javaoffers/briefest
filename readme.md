@@ -43,7 +43,7 @@ public class User {
 
  List<User>  users = crudUserMapper 
     .select() 
-    .colAll() 
+    .colAll() //查询所有字段
     .where() 
     .exs(); 
  ```
@@ -55,7 +55,7 @@ public class User {
  ```java
  List<User> users = crudusermapper
      .select()
-     .col (user:: getbirthday)
+     .col (user:: getbirthday) //指定查询子字段
      .col (user:: getname)
      .where()
     .exs();

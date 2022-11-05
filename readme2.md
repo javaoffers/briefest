@@ -663,7 +663,48 @@ public class FunAnnoParserSample {
     private String colName19; //TRIM(name)
 }
 ```
+### Powerful type converter
+<p>
+Built a large number of commonly used type converter.
+Such as a database field birthday is a datetime/int,
+</p>
 
+```
+   String2DoubleConvert  
+    DateOne2DateTwoConvert  
+    String2DateConvert  
+    Boolean2StringConvert  
+    Date2OffsetDateTimeConvert  
+    Date2LongConvert  
+    Number2SQLDateConvert  
+    String2ByteConvert  
+    ByteArray2StringConvert2  
+    Number2DateConvert  
+    Date2LocalDateTimeConvert  
+    String2LocalDateConvert  
+    String2OffsetDateTimeConvert  
+    Number2StringConvert  
+    String2FloatConvert  
+    Date2StringConvert  
+    String2BooleanConvert  
+    String2ShortConvert  
+    PrimitiveNumber2PrimitiveNumberConvert  
+    String2LongConvert  
+    LocalDate2StringConvert  
+    String2CharConvert  
+    Character2StringConvert  
+    String2IntegerConvert  
+    Number2LocalDateConvert  
+    Number2PrimitiveConvert  
+    String2LocalDateTimeConvert  
+    Date2LocalDateConvert  
+    String2SQLDateConvert  
+    ByteArray2StringConvert  
+    String2BigDecimalConvert  
+    Number2BooleanConvert  
+    String2BigIntegerConvert  
+    Number2LocalDateTimeConvert  
+```
 
 #### Code contributions are welcome
 <p>

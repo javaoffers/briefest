@@ -289,6 +289,8 @@ public class TableHelper {
                             ParseSqlFunResult parseColName = FunAnnoParser.parse(modelClazz, colF, colName);
                             if(parseColName != null ){
                                 colName = parseColName.getSqlFun();
+                                //If it is not the original table field, set isFun to true
+                                if(!tableInfo.getColNames().containsKey(colName)) { parseColName.setFun(true);}
                                 tableInfo.putSqlFun(colName, parseColName.isFun());
                             }else{
                                 // Indicates that this field does not have any annotation information.

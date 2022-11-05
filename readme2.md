@@ -2,13 +2,16 @@
 ## mybatis model helper
 - Summary
   <p>
-JQL is designed with Batis as the core. The main idea is to simplify the mapping between data and avoid writing SQL The model mapping we provide is very powerful. Only
-Two annotations are required to implement the model class mapping between one-to-one and one to many to many. At the same time, we also provide crudmapper basic interface. Avoid mixing in java interface
-SQL statement. This makes writing SQL like writing java code. Here we call it JQL. And form a set of JQL API process specifications. It won't be as complicated as SQL. And JQL API will make
-The SQL error rate is reduced. JQL aims to decompose complex SQL into simple SQL Therefore, JQL supports at most two table Association queries during design. We do not recommend more than 2 tables
-join。 This will reduce the readability and maintainability of SQL. Don't think that complex nested SQL is a bull's SQL It's of no value except to pretend. And in the modelhelper
-New writing formats are supported in. The default method can be written in the java interface and the JQL API can be directly operated internally (provided that it inherits crudmapper).
-welcome to participate in this project. Let me write JQL in Java stream to improve development efficiency. Less code and more fluent writing form. I'm sure you'll love her 
+ Simplify mybatis development. Make writing SQL like writing java code. 
+ Here we call it JQL. And form a set of JQL API process to reduce the SQL error rate.
+ JQL is designed to decompose complex SQL into simple SQL, 
+ so JQL is designed to support up to two table associated queries.
+ We do not recommend joining more than 2 tables. 
+ This reduces the readability and maintainability of SQL.
+ And new writing formats are supported in modelhelper.
+ The default method can be written in the java interface,
+ and the JQL API can be directly manipulated internally (provided that crudmapper is inherited). 
+ Let me write JQL in Java stream to improve development efficiency. Less code and smoother writing.
 </p>
  
 - maven

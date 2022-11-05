@@ -648,6 +648,48 @@ public class FunAnnoParserSample {
 }
 ```
 
+### 强大的类型转换器
+<p>
+ 内置大量常用的类型转换器。 比如 数据库的字段 birthday 是datetime / int , 而我们的User 类中的为 String birthday, 转换器会自动转换为格式为
+ yyyy-MM-dd HH:mm:ss 格式的. 常用的类型转换器如下：
+</p>
+
+```
+    String2DoubleConvert (com.javaoffers.batis.modelhelper.convert)
+    DateOne2DateTwoConvert (com.javaoffers.batis.modelhelper.convert)
+    String2DateConvert (com.javaoffers.batis.modelhelper.convert)
+    Boolean2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    Date2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+    Date2LongConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
+    String2ByteConvert (com.javaoffers.batis.modelhelper.convert)
+    ByteArray2StringConvert2 (com.javaoffers.batis.modelhelper.convert)
+    Number2DateConvert (com.javaoffers.batis.modelhelper.convert)
+    Date2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+    String2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+    String2OffsetDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    String2FloatConvert (com.javaoffers.batis.modelhelper.convert)
+    Date2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    String2BooleanConvert (com.javaoffers.batis.modelhelper.convert)
+    String2ShortConvert (com.javaoffers.batis.modelhelper.convert)
+    PrimitiveNumber2PrimitiveNumberConvert (com.javaoffers.batis.modelhelper.convert)
+    String2LongConvert (com.javaoffers.batis.modelhelper.convert)
+    LocalDate2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    String2CharConvert (com.javaoffers.batis.modelhelper.convert)
+    Character2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    String2IntegerConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2PrimitiveConvert (com.javaoffers.batis.modelhelper.convert)
+    String2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+    Date2LocalDateConvert (com.javaoffers.batis.modelhelper.convert)
+    String2SQLDateConvert (com.javaoffers.batis.modelhelper.convert)
+    ByteArray2StringConvert (com.javaoffers.batis.modelhelper.convert)
+    String2BigDecimalConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2BooleanConvert (com.javaoffers.batis.modelhelper.convert)
+    String2BigIntegerConvert (com.javaoffers.batis.modelhelper.convert)
+    Number2LocalDateTimeConvert (com.javaoffers.batis.modelhelper.convert)
+```
 
 #### 欢迎代码贡献
 <p>

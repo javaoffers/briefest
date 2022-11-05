@@ -286,7 +286,7 @@ public class TableHelper {
                                 }
                             }
                             //parse @ColName and @funAnno
-                            ParseSqlFunResult parseColName = FunAnnoParser.parse(modelClazz, colF, colName);
+                            ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo,modelClazz, colF, colName);
                             if(parseColName != null ){
                                 colName = parseColName.getSqlFun();
                                 //If it is not the original table field, set isFun to true

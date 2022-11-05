@@ -54,6 +54,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Strcmp;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.SubString;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Upper;
+import com.javaoffers.batis.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
 
@@ -72,7 +73,7 @@ public class FunAnnoParser {
 
     public static final String DEFAULT_VALUE = "";
 
-    public static ParseSqlFunResult parse(Class modelClass, Field field,String defaultColName){
+    public static ParseSqlFunResult parse(TableInfo tableInfo, Class modelClass, Field field, String defaultColName){
 
         Assert.isTrue(field != null,"the field is null");
         Annotation[] allAnno = field.getDeclaredAnnotations();
@@ -106,7 +107,9 @@ public class FunAnnoParser {
             Assert.isTrue(colNameAnno != null && !appender.isNoneParam, "@ColName and" +
                     " "+appender.getNoParamFunName() + " cannot be used together");
         }
-
+        if(status && tableInfo.getColNames().containsKey(coreSql)){
+            coreSql = tableInfo.getTableName()+"."+coreSql;
+        }
         return new ParseSqlFunResult(appender.toSqlString(coreSql), status);
     }
 

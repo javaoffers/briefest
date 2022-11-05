@@ -117,11 +117,11 @@ public class FunAnnoParserSample {
     @Trim
     private String colName19; //TRIM(name)
 
-
+    static TableInfo tableHelper;
     @Before
     public void before(){
         MockedStatic<TableHelper> mockedStatic = Mockito.mockStatic(TableHelper.class);
-        TableInfo tableHelper = new TableInfo("FunAnnoParserSample"){
+        tableHelper = new TableInfo("FunAnnoParserSample"){
             public Map<String, String> getColNameOfModel() {
                 HashMap<String, String> map = new HashMap<>();
                 Field[] declaredFields = FunAnnoParserSample.class.getDeclaredFields();
@@ -169,7 +169,7 @@ public class FunAnnoParserSample {
         Class<FunAnnoParserSample> modelClass = FunAnnoParserSample.class;
         String colName = "colName"+n;
         Field colField = modelClass.getDeclaredField(colName);
-        ParseSqlFunResult parse = FunAnnoParser.parse(modelClass, colField, colName);
+        ParseSqlFunResult parse = FunAnnoParser.parse(tableHelper,modelClass, colField, colName);
         LOGUtils.printLog(parse.getSqlFun());
     }
 }

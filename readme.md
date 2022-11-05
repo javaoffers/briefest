@@ -69,8 +69,7 @@ public class User {
  ```java
  User user = crudusermapper
  .select() 
- .col(User::getBirthday) 
- .col(User::getName) 
+  .colAll() //查询所有字段
  .where() 
  .eq(User::getId, 1) 
  .ex();

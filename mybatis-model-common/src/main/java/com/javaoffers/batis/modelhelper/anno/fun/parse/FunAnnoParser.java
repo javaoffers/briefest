@@ -285,7 +285,7 @@ public class FunAnnoParser {
         }
         else if(anno instanceof Concat){
             Concat concat = (Concat) anno;
-            appender.appender(concat.TAG,concat.value());
+            appender.appenderPosition(concat.TAG, concat.position(), concat.value());
             status = true;
         }
         else if(anno instanceof Length){
@@ -446,6 +446,39 @@ public class FunAnnoParser {
                     appenderRight.append(join);
                 }
             }
+            appenderRight.append(")");
+            this.appenderLeft = appenderLeftOut;
+            return this;
+        }
+
+        public Appender appenderPosition(String funName, int position, Object... param){
+            StringBuilder appenderLeftOut = new StringBuilder();
+            appenderLeftOut.append(funName);
+            appenderLeftOut.append("(");
+
+            if(param != null){
+                List<String> collect = Arrays.stream(param).filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
+                if(position < 0){
+                    position = collect.size() + position+1;
+                }
+                Assert.isTrue(position <= collect.size() && position >= 0 ,funName +" position out of bounds");
+                List<String> left = collect.subList(0,position);
+                List<String> right = collect.subList(position, collect.size() );
+                if(left!=null &&left.size() > 0){
+                    String join = String.join(",", left);
+
+                    appenderLeftOut.append(join);
+                    appenderLeftOut.append(",");
+                }
+                if(right!=null &&right.size() > 0){
+                    String join = String.join(",", right);
+                    appenderRight.append(",");
+                    appenderRight.append(join);
+
+                }
+
+            }
+            appenderLeftOut.append(this.appenderLeft);
             appenderRight.append(")");
             this.appenderLeft = appenderLeftOut;
             return this;

@@ -117,6 +117,19 @@ public class FunAnnoParserSample {
     @Trim
     private String colName19; //TRIM(name)
 
+    @ColName("name")
+    @Concat(value = "'hello'", position = -1)
+    private String colName20;//CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = "'hello'", position = 1)
+    private String colName21; //CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = {"'hello'"," 'how are you?' "}, position = 1)
+    private String colName22;//  CONCAT('hello',name, 'how are you?' )
+
+
     static TableInfo tableHelper;
     @Before
     public void before(){
@@ -161,7 +174,9 @@ public class FunAnnoParserSample {
         testColNameN(17);
         testColNameN(18);
         testColNameN(19);
-
+        testColNameN(20);
+        testColNameN(21);
+        testColNameN(22);
     }
 
 

@@ -22,4 +22,10 @@ public @interface Concat {
      * Additional table field information to be spliced
      */
     String[] value() ;
+
+    /**
+     * Specify the parameter location of colName. 0 means at the far left- 1 stands for the far right.
+     * Greater than 0, from left to right Less than 0, from right to left
+     */
+    int position() default 0;
 }

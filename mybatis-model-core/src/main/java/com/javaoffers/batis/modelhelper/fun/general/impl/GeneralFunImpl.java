@@ -322,7 +322,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
                                     && originalColNames.get(colName).isAutoincrement()
                                     && o instanceof Number
                                     && ((Number) o).longValue() == 0L){
-                                continue;
+                                return;
                             }
                             break;
                         }

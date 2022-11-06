@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * create by cmj
@@ -47,7 +48,7 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
     /**
      * delete model by ids
      */
-    public int removeByIds(Collection<Serializable> ids);
+    public <ID extends Serializable> int removeByIds(Collection<ID> ids);
 
     /**
      * Update the model, note that the update condition is the property marked with the Unique annotation.
@@ -111,7 +112,22 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param ids primary key id
      * @return model
      */
-    public List<T> queryByIds(Collection<Serializable> ids);
+    public <ID extends Serializable>  List<T> queryByIds(Collection<ID> ids);
+
+    /**
+     * query by id
+     * @param ids primary key id
+     * @return model
+     */
+    public <ID extends Serializable> List<T> queryByIds(List<ID> ids);
+
+    /**
+     * query by id
+     * @param ids primary key id
+     * @return model
+     */
+    public <ID extends Serializable> List<T> queryByIds(Set<ID> ids);
+
 
     /**
      * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field

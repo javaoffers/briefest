@@ -78,7 +78,8 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
             user1.setCreateTime(DateFormatUtils.format(new Date(),"yyyy-MM-dd HH:mm:ss"));
         });
         this.crudUserMapper.general().modifyBatchById(query);
-        List<User> users = this.crudUserMapper.general().queryByIds(query.stream().map(User::getId).collect(Collectors.toList()));
+        List<Long> collect = query.stream().map(User::getId).collect(Collectors.toList());
+        List<User> users = this.crudUserMapper.general().queryByIds(collect);
         print(users);
 
         users = crudUserMapper.general().query(user);

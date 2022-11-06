@@ -94,7 +94,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
-    public int removeByIds(Collection<Serializable> ids) {
+    public int removeByIds(Collection ids) {
         TableInfo tableInfo = getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
         DeleteWhereFun<T, GetterFun<T, Object>, Object> where = deleteFun.where();
@@ -196,12 +196,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<T> queryByIds(Serializable... ids) {
-        Set<Serializable> idSet = Arrays.stream(ids).collect(Collectors.toSet());
+        Set idSet = Arrays.stream(ids).collect(Collectors.toSet());
         return queryByIds(idSet);
     }
 
     @Override
-    public List<T> queryByIds(Collection<Serializable> ids) {
+    public List<T> queryByIds(Collection ids) {
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
         Map<String, ColumnInfo> primaryColNames = TableHelper.getTableInfo(mClass).getPrimaryColNames();
         AtomicBoolean status = new AtomicBoolean(false);
@@ -221,6 +221,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
             }
         }
         return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<T> queryByIds(List ids) {
+        return queryByIds((Collection)ids);
+    }
+
+    @Override
+    public List<T> queryByIds(Set ids) {
+        return queryByIds((Collection)ids);
     }
 
     @Override

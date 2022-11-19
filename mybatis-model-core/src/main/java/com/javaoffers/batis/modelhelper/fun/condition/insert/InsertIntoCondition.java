@@ -20,7 +20,7 @@ public class InsertIntoCondition implements InsertCondition {
 
     @Override
     public String getSql() {
-        return getConditionTag().getTag()+tableName;
+        return getConditionTag().getTag() + tableName;
     }
 
     @Override
@@ -41,5 +41,9 @@ public class InsertIntoCondition implements InsertCondition {
     @Override
     public String getValuesSql() {
         return StringUtils.EMPTY;
+    }
+
+    public String getTableName() {
+        return tableName;
     }
 }

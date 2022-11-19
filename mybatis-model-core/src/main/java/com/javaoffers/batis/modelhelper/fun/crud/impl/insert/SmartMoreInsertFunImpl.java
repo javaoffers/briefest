@@ -2,8 +2,11 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 
 import com.javaoffers.batis.modelhelper.core.*;
 import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
+import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.SmartMoreInsertFun;
 
@@ -82,5 +85,17 @@ public class SmartMoreInsertFunImpl<M> implements SmartMoreInsertFun<M, GetterFu
         this.conditions = conditions;
         this.oneInsertFun = new OneInsertFunImpl(this.mClass, this.conditions);
         this.moreInsertFun = new MoreInsertFunImpl(this.mClass, this.conditions);
+    }
+
+    @Override
+    public ExecutOneFun<Id> dupUpdate() {
+        this.conditions.add(new OnDuplicateKeyUpdateMark());
+        return this;
+    }
+
+    @Override
+    public ExecutOneFun<Id> dupReplace() {
+        this.conditions.add(new ReplaceIntoMark());
+        return this;
     }
 }

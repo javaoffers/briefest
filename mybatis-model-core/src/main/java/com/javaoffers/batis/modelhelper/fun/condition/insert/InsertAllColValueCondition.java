@@ -23,6 +23,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private HashMap<String, Object> param = new LinkedHashMap<>();
 
+    private StringBuilder onDuplicate = new StringBuilder(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
 
     @Override
     public ConditionTag getConditionTag() {
@@ -73,6 +74,17 @@ public class InsertAllColValueCondition implements InsertCondition {
         });
         Set<String> colNamesSet = param.keySet();
         this.sqlColNames = "( "+ String.join(", ", colNamesSet)+" )";
+        byte status = 0;
+        for(String colName : colNamesSet){
+            if(status != 0){
+                this.onDuplicate.append(",");
+            }
+            status += 1;
+            this.onDuplicate.append(colName);
+            this.onDuplicate.append( " = values(");
+            this.onDuplicate.append(colName);
+            this.onDuplicate.append(")");
+        }
         StringBuilder valuesAppender = new StringBuilder("(");
         LinkedList<String> colNames = new LinkedList<>();
         for(String colName : colNamesSet){
@@ -81,5 +93,9 @@ public class InsertAllColValueCondition implements InsertCondition {
         valuesAppender.append(String.join(",", colNames));
         valuesAppender.append(")");
         this.sqlValues = valuesAppender.toString();
+    }
+
+    public String getOnDuplicate() {
+        return onDuplicate.toString();
     }
 }

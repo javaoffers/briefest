@@ -8,9 +8,12 @@ import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.ColValueCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
+import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 import org.springframework.util.CollectionUtils;
 
@@ -53,5 +56,17 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
     public OneInsertFunImpl(Class<M> mClass, LinkedConditions<Condition> conditions) {
         this.mClass = mClass;
         this.conditions = conditions;
+    }
+
+    @Override
+    public ExecutOneFun<Id> dupUpdate() {
+        this.conditions.add(new OnDuplicateKeyUpdateMark());
+        return this;
+    }
+
+    @Override
+    public ExecutOneFun<Id> dupReplace() {
+        this.conditions.add(new ReplaceIntoMark());
+        return this;
     }
 }

@@ -12,6 +12,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.delete.DeleteFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.update.UpdateFunImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
@@ -64,8 +65,48 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
+    public List<Long> saveOrModify(T model) {
+        ArrayList<T> models = new ArrayList<>();
+        models.add(model);
+        List<Long> ids = saveOrModify(models);
+        if(ids!=null){
+            return ids;
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<Long> saveOrReplace(T model) {
+        ArrayList<T> models = new ArrayList<>();
+        models.add(model);
+        List<Long> ids = this.saveOrModify(models);
+        if(ids!=null){
+            return ids;
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
     public List<Long> saveBatch(Collection<T> models) {
         List<Id> exs = insertFun.colAll(models).exs();
+        if(exs != null){
+            return exs.stream().map(Id::toLong).collect(Collectors.toList());
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<Long> saveOrModify(Collection<T> models) {
+        List<Id> exs = insertFun.colAll(models).dupUpdate().exs();
+        if(exs != null){
+            return exs.stream().map(Id::toLong).collect(Collectors.toList());
+        }
+        return Collections.EMPTY_LIST;
+    }
+
+    @Override
+    public List<Long> saveOrReplace(Collection<T> models) {
+        List<Id> exs = insertFun.colAll(models).dupReplace().exs();
         if(exs != null){
             return exs.stream().map(Id::toLong).collect(Collectors.toList());
         }

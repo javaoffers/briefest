@@ -81,4 +81,6 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
         return oneInsertFun;
     }
 
+
+
 }

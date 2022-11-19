@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @RequestMapping
@@ -41,7 +42,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testBatchInsert();
+        testInsert();
         if(status){
             System.exit(0);
         }
@@ -137,8 +138,57 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
         h1.setName("saveUser");
         crudUserMapper.saveUser(h1);
+
         print(h1);
+
+        User duplicateUpdate = User.builder().name("duplicateUpdate").birthdayDate(new Date()).build();
+        Id dupUpdate = crudUserMapper.insert().colAll(duplicateUpdate).dupUpdate().ex();
+        duplicateUpdate.setId(dupUpdate.toLong());
+
+        duplicateUpdate.setName("duplicateUpdate2");
+        Id ex1 = crudUserMapper.insert().colAll(duplicateUpdate).dupUpdate().ex();
+
+        User user = crudUserMapper.general().queryById(ex1);
+        print(user);
+
+        duplicateUpdate.setName("replaceInto");
+        Id ex2 = crudUserMapper.insert().colAll(duplicateUpdate).dupReplace().ex();
+        User user1 = crudUserMapper.general().queryById(ex2);
+        print(user1);
+
+        List<User> users = crudUserMapper.general().query(1, 2);
+        User user2 = users.get(0);
+        User user3 = users.get(1);
+        user2.setName("duplicate2");
+        user3.setName("duplicate3");
+        user3.setBirthday(null);
+        crudUserMapper.insert().colAll(user2, user3).dupUpdate().exs();
+        List<Long> collect = users.stream().map(User::getId).collect(Collectors.toList());
+        List<User> users1 = crudUserMapper.general().queryByIds(collect);
+        print(users1);
+
+        crudUserMapper.insert().col(User::getId, user2.getId()).col(User::getName,"duplicate4")
+                .dupUpdate().ex();
+        List<User> users2 = crudUserMapper.general().queryByIds(user2.getId());
+        print(user2);
+
+        crudUserMapper.insert().col(User::getId, user2.getId()).col(User::getName,"duplicate5")
+                .dupReplace().ex();
+        User user4 = crudUserMapper.general().queryById(user2.getId());
+        print(user4);
+
+        user2.setName("duplicate6");
+        crudUserMapper.insert().colAll(user2).dupReplace().ex();
+        User user5 = crudUserMapper.general().queryById(user2.getId());
+        print(user5);
+
+        user2.setName("duplicate7");
+        crudUserMapper.insert().colAll(user2).dupReplace().ex();
+
+        User user6 = crudUserMapper.general().queryById(user2.getId());
+        print(user6);
     }
+
 
     public void print(Object user) throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(user));

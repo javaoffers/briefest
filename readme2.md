@@ -437,6 +437,22 @@ crudUserMapper.general().removeById(1);
     public long save(T model);
 
     /**
+     * save or modify.
+     * sql :  insert into on duplicate key update
+     * @param model class
+     * @return primary key id
+     */
+    public List<Long> saveOrModify(T model);
+
+    /**
+     * save or replace
+     * sql: replace into
+     * @param model class
+     * @return primary key id
+     */
+    public List<Long> saveOrReplace(T model);
+
+    /**
      * save model
      * @param models class
      * @return primary key id

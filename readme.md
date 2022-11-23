@@ -13,11 +13,11 @@
  
 - maven
   ```java
-    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.3 -->
+    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.4 -->
    <dependency>
-      <groupId>com.javaoffers</groupId>
-      <artifactId>mybatis-model-spring-support</artifactId>
-      <version>3.5.11.3</version>
+       <groupId>com.javaoffers</groupId>
+       <artifactId>mybatis-model-spring-support</artifactId>
+       <version>3.5.11.4</version>
    </dependency>
 
   ```

@@ -1,5 +1,13 @@
 - English: https://github.com/caomingjie-code/mybatis-jql/blob/master/readme2.md
 ## mybatis model helper
+- Features
+ - 不用写原生sql.可以按照java流的方式编写.
+ - sql函数注解化，简单易用
+ - 新的编写形式，支持在mapper类中编写default方法.
+ - 强大的类型转换功能.
+ - 多表查询不需要额外的配置.自动映射类
+ - 常用的api已经集成，可以直接使用不需要开发.
+ 
 - Summary
   <p>
  

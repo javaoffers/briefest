@@ -403,7 +403,7 @@ crudUserMapper.select()
 
 <p>
     I encapsulate some commonly used functions, which are very simple to use. 
-    And the code is also very concise and clear. Such as query or change by id.
+    And the code is also very concise and clear. Such as query or change by id .
 </p>
 
 <p>

@@ -2,7 +2,7 @@
 ## mybatis model helper
 
 - Features
-  - Don't have to write native SQL.  Can write according to the flow of Java.
+  - Don't have to write native SQL.  Can write according to the stream api of Java.
   - SQL function annotation, simple and easy to use
   - New form of writing, support mapper class to write the default method.
   - Powerful type conversion functions.

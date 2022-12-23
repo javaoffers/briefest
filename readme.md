@@ -20,6 +20,7 @@
  And new writing formats are supported in modelhelper.
  The default method can be written in the java interface,
  and the JQL API can be directly manipulated internally (provided that crudmapper is inherited). 
+ Common crud operations have been integrated, so you can directly use thoese api.
  Let me write JQL in Java stream to improve development efficiency. Less code and smoother writing.
 </p>
  

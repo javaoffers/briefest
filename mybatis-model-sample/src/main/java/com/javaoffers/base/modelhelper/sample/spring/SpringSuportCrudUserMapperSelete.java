@@ -102,7 +102,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     public void testSelect() throws Exception {
-
+        crudUserMapper.delete().where().gt(User::getId, 1000).ex();
         /**
          * Queries the specified field
          */

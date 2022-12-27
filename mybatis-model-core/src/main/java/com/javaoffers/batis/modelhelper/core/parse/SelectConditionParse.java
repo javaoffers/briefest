@@ -35,24 +35,29 @@ public class SelectConditionParse implements ParseCondition {
         String fromTable = condition.getSql();
 
         //生成select语句
-        StringBuilder selectB = new StringBuilder(ConditionTag.SELECT.getTag());
+        StringBuilder selectCols = new StringBuilder(ConditionTag.SELECT.getTag());
         if(conditions.peekFirst() == null || !(conditions.peekFirst() instanceof SelectColumnCondition)){
             //没有要查询的字段
             return null;
         }
-        parseSelectClo(true, conditions, selectB);
+        parseSelectClo(true, conditions, selectCols);
+
+        //append table
+        StringBuilder fromTables = new StringBuilder(fromTable);
+        //appender on xxx
+        StringBuilder onCondition = new StringBuilder();
 
         //是否存在left join
-        if (conditions.peekFirst() instanceof JoinTableCondition) {
+        while (conditions.peekFirst() instanceof JoinTableCondition) {
             Condition leftJoin = conditions.pollFirst();
-            parseSelectClo(conditions, selectB);
-            selectB.append(fromTable);// a left join b
-            selectB.append(leftJoin.getSql());
+            parseSelectClo(conditions, selectCols);
+            //append join table name
+            fromTables.append(leftJoin.getSql());
             //指定on条件
             Condition on = null;
             if (conditions.peekFirst() instanceof OnConditionMark) {//.on()
-                selectB.append(conditions.pollFirst().getSql());
-                selectB.append("1=1");
+                onCondition.append(conditions.pollFirst().getSql());
+                onCondition.append("1=1");
                 for (; !(conditions.peekFirst() instanceof WhereConditionMark); ) {//如果没有 .where()
                     on = conditions.pollFirst();
                     if (on instanceof OrCondition) {
@@ -60,21 +65,24 @@ public class SelectConditionParse implements ParseCondition {
                         on = conditions.pollFirst();
                     }else if(on instanceof WhereOnCondition){
                         and = ((WhereOnCondition) on).getAndOrTag();
+                    }else if(on instanceof JoinTableCondition){
+                        conditions.addFirst(on);
+                        break;
                     }
-                    whereAndOn(params, selectB, and, on);
-
+                    whereAndOn(params, onCondition, and, on);
                 }
             }
-        } else {
-            selectB.append(fromTable);
+            fromTables.append(onCondition);
+            onCondition = new StringBuilder();
         }
+        selectCols.append(fromTables);
 
         // where
-        parseWhereCondition(conditions, params, selectB);
+        parseWhereCondition(conditions, params, selectCols);
 
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
-                .sql(selectB.toString())
+                .sql(selectCols.toString())
                 .build();
     }
 

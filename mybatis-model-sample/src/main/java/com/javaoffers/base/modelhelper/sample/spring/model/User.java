@@ -223,13 +223,9 @@ public class User {
     @Upper
     private String upperCN;
 
-
-
-
-
-
-
     private List<UserOrder> orders;
+
+    private List<Teacher> teachers;
 
     public Long getId() {
         return id;

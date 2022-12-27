@@ -122,12 +122,14 @@ public class HelperUtils {
      * @throws Exception
      * @throws SecurityException
      */
-    public static void getUniqueFieldNames(String tableName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
+    public static void getUniqueFieldNames(Class mClass, String tableName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
         //String prefix = modelClassName + modelSeparation;
         Set<String> hashSet = new HashSet<String>();
-        for (Field fd : ones) {//
-            if (isBaseModel(fd)) {// one on one
-                Field[] bmFs = fd.getType().getDeclaredFields();//model中field
+        //The framework does not allow to query only the subtable fields without querying the main table fields.
+        // This situation will not occur
+        for (Field fd : ones) {// one 2 one
+            if (isBaseModel(fd)) {
+                Field[] bmFs = fd.getType().getDeclaredFields();//field of model
                 for (int i = 0; bmFs != null && i < bmFs.length; i++) {
                     Field bmf = bmFs[i];
                     BaseUnique[] uniques = bmf.getAnnotationsByType(BaseUnique.class);
@@ -138,6 +140,8 @@ public class HelperUtils {
                             hashSet.add( uniqueFieldName);
                         }else if(standardClumMap.containsKey(name)){
                             hashSet.add( name);
+                        }else if(standardClumMap.containsKey(uniqueFieldName = getSpecialColName(mClass, bmf))){
+                            hashSet.add( uniqueFieldName);
                         }
                     }
                 }
@@ -150,6 +154,8 @@ public class HelperUtils {
                     hashSet.add(uniqueFieldName);
                 }else if(standardClumMap.containsKey(name)){
                     hashSet.add( name);
+                }else if(standardClumMap.containsKey(uniqueFieldName = getSpecialColName(mClass, fd))){
+                    hashSet.add( uniqueFieldName);
                 }
             }
         }
@@ -164,6 +170,8 @@ public class HelperUtils {
                                     return uniqueFieldName;
                                 } else if (standardClumMap.containsKey(name)) {
                                     return name;
+                                }else if(standardClumMap.containsKey(uniqueFieldName = getSpecialColName(mClass, field))){
+                                    return uniqueFieldName;
                                 }
                                 return null;
                             }
@@ -175,6 +183,10 @@ public class HelperUtils {
 
     public static String getSpecialColName(String tableName, String colName){
         return tableName + "__" + colName;
+    }
+
+    public static String getSpecialColName(Class mClass, Field fd){
+        return mClass.getSimpleName()+fd.getName();
     }
 
     public static boolean isInstanceOfCharSequenceOrNumber(Class c){

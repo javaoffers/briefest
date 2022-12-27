@@ -6,8 +6,9 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
-import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
+import com.javaoffers.batis.modelhelper.fun.crud.FirstOnFun;
 import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
+import com.javaoffers.batis.modelhelper.fun.crud.OnFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -36,12 +37,12 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
 
     /**
      * 添加查询字段
-     * @param cols
+     * @param colSql
      * @return
      */
     @Override
-    public JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... cols) {
-        Stream.of(cols).forEach(col->{conditions.add(new SelectColumnCondition( col));});
+    public JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... colSql) {
+        Stream.of(colSql).forEach(col->{conditions.add(new SelectColumnCondition( col));});
         return this;
     }
 
@@ -83,6 +84,7 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
         String colName = colNameAndAliasName.getLeft();
         conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "
+                //join table need SimpleName+asName for diff with main table.
                 + this.m2Class.getSimpleName() + asName));
         return this;
     }
@@ -105,8 +107,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     }
 
     @Override
-    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, C1, GetterFun<M2, Object>, V> on() {
-        return  new OnFunImpl(conditions);
+    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, V> on() {
+        return  new OnFunImpl(this.m1Class, this.m2Class, this.conditions);
     }
 
 }

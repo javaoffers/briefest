@@ -10,29 +10,8 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
  * C: 字段,
  * V: 字段值
  */
-public interface SmartSelectFun<M, C extends GetterFun<M,Object> , V> extends SelectFun<M,C,V> {
-
-    /**
-     * sql 语句： left join
-     * @param m2 model类( left join m2)
-     * @return
-     */
-    public <M2 , C2 extends GetterFun<M2,Object>> JoinFun<M,M2, C2, V> leftJoin(ConstructorFun<M2> m2);
-
-    /**
-     * sql 语句： left join
-     * @param m2 model类( left join m2)
-     * @return
-     */
-    public <M2 , C2 extends GetterFun<M2,Object>> JoinFun<M,M2, C2, V> innerJoin(ConstructorFun<M2> m2);
-
-    /**
-     * sql 语句： left join
-     * @param m2 model类( left join m2)
-     * @return
-     */
-    public <M2 , C2 extends GetterFun<M2,Object>> JoinFun<M,M2, C2, V> rightJoin(ConstructorFun<M2> m2);
-
+public interface SmartSelectFun<M, C extends GetterFun<M,Object> , V>
+        extends SelectFun<M,C,V> , ToJoinFun<M,C,V> {
     /**
      * sql 语句： where
      * @return

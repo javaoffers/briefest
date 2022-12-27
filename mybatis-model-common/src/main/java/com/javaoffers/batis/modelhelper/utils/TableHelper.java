@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -31,11 +32,11 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TableHelper {
 
-    private static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
+    private final static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
-    private static Map<String, Class> modelClass = new ConcurrentHashMap<>();
+    private final static Map<String, Class> modelClass = new ConcurrentHashMap<>();
 
-    private static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
+    private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
     /**
      * Get all fields corresponding to Model
@@ -379,6 +380,52 @@ public class TableHelper {
     }
 
     /**
+     * Parse the class corresponding to the constructor
+     * @param constructorFun
+     * @param <M2>
+     * @return
+     */
+    public static <M2> Class<M2> getClassFromConstructorFunForJoin(ConstructorFun<M2> constructorFun,Connection connection) {
+        // 直接调用writeReplace
+        String implClass = StringUtils.EMPTY;
+        Class clazz = null;
+        try {
+            Method method = constructorFun.getClass().getDeclaredMethods()[0];
+            method.setAccessible(true);
+            Object sl = method.invoke(constructorFun);
+            clazz = sl.getClass();
+            String lamdaName = clazz.getName();
+            implClass = lamdaName.replaceAll("\\.","/");
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        Class aClass = modelClass.get(implClass);
+        // if null, The description has not been parsed.
+        // Maybe there is no corresponding Mapper for this class, we need to parse it again
+        if(aClass == null){
+            try {
+                parseTableInfo(clazz, connection);
+                aClass = modelClass.get(implClass);
+                if(aClass == null){
+                    throw new ParseTableException("There was an error parsing the table, the table may not exist");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                try {
+                    if(!connection.isClosed()){
+                        connection.close();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return aClass;
+    }
+
+    /**
      * get tableName by Class
      * @param m2c
      * @param <M2>
@@ -395,14 +442,6 @@ public class TableHelper {
      */
     public static TableInfo getTableInfo(Class<?> m2c){
         TableInfo tableInfo = tableInfoMap.get(m2c);
-        if(tableInfo == null){
-            synchronized (m2c){
-                tableInfo = tableInfoMap.get(m2c);
-                if(tableInfo == null){
-                    tableInfo = tableInfoMap.get(m2c);
-                }
-            }
-        }
         return tableInfo;
     }
 }

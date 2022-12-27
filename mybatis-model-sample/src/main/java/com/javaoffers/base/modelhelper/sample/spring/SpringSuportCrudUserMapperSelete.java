@@ -3,8 +3,10 @@ package com.javaoffers.base.modelhelper.sample.spring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
+import com.javaoffers.base.modelhelper.sample.spring.model.UserTeacher;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Id;
@@ -41,13 +43,45 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        test3Join();
+        testAsName();
+        testSelectOp();
         testSelect();
+
         if(status){
             System.exit(0);
         }
 
 
     }
+
+    public void test3Join(){
+        List<User> exs = this.crudUserMapper.select()
+                .col(User::getId)
+                .innerJoin(UserTeacher::new)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .exs();
+        LOGUtils.printLog(exs);
+    }
+
+    public void testAsName(){
+        User id = this.crudUserMapper.select()
+                .col(AggTag.MAX, User::getId, "id")
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderId,"orderId")
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .ex();
+        LOGUtils.printLog(id);
+    }
+
 
     public void testSelectOp(){
         long start = System.nanoTime();

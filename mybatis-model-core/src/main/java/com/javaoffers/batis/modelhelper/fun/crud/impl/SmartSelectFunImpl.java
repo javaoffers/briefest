@@ -6,6 +6,7 @@ import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
@@ -13,6 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.sql.Connection;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -108,17 +110,20 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> leftJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFun(m2),this.conditions,ConditionTag.LEFT_JOIN);
+        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions,ConditionTag.LEFT_JOIN);
     }
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> innerJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFun(m2),this.conditions, ConditionTag.INNER_JOIN);
+        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions, ConditionTag.INNER_JOIN);
     }
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> rightJoin(ConstructorFun<M2> m2) {
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFun(m2),this.conditions, ConditionTag.RIGHT_JOIN);
+        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions, ConditionTag.RIGHT_JOIN);
     }
 
     @Override

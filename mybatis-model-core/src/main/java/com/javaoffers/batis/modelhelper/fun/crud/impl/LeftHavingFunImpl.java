@@ -15,9 +15,6 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
-import com.javaoffers.batis.modelhelper.fun.crud.HavingFun2;
-import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
-import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;

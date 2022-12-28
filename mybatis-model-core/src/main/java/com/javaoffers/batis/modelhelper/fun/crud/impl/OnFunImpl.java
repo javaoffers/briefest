@@ -410,19 +410,19 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
 
     @Override
     public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> leftJoin(ConstructorFun<M3> m3) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,newConnection), this.conditions, ConditionTag.LEFT_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.LEFT_JOIN);
     }
 
     @Override
     public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> innerJoin(ConstructorFun<M3> m3) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,newConnection), this.conditions, ConditionTag.INNER_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.INNER_JOIN);
     }
 
     @Override
     public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,newConnection), this.conditions, ConditionTag.RIGHT_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.RIGHT_JOIN);
     }
 }

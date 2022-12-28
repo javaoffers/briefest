@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Map;
@@ -55,5 +56,9 @@ public class HeadCondition implements Condition {
             e.printStackTrace();
         }
         return connection;
+    }
+
+    public DataSource getDataSource(){
+       return this.getTemplate().getDataSource();
     }
 }

@@ -110,20 +110,20 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> leftJoin(ConstructorFun<M2> m2) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions,ConditionTag.LEFT_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,headCondition.getDataSource()),this.conditions,ConditionTag.LEFT_JOIN);
     }
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> innerJoin(ConstructorFun<M2> m2) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions, ConditionTag.INNER_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,headCondition.getDataSource()),this.conditions, ConditionTag.INNER_JOIN);
     }
 
     @Override
     public <M2, C2 extends GetterFun<M2, Object>> JoinFun<M, M2, C2, V> rightJoin(ConstructorFun<M2> m2) {
-        Connection newConnection = HeadCondition.getNewConnection((HeadCondition) this.conditions.peekFirst());
-        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,newConnection),this.conditions, ConditionTag.RIGHT_JOIN);
+        HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
+        return new JoinFunmpl(this.mClass,TableHelper.getClassFromConstructorFunForJoin(m2,headCondition.getDataSource()),this.conditions, ConditionTag.RIGHT_JOIN);
     }
 
     @Override

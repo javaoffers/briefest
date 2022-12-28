@@ -395,12 +395,13 @@ public class TableHelper {
      * @param <M2>
      * @return
      */
-    public static <M2> Class<M2> getClassFromConstructorFunForJoin(ConstructorFun<M2> constructorFun, Connection connection) {
+    public static <M2> Class<M2> getClassFromConstructorFunForJoin(ConstructorFun<M2> constructorFun, DataSource dataSource) {
 
         // 直接调用writeReplace
         String implClass = StringUtils.EMPTY;
         Class clazz = null;
         Class aClass = null;
+        Connection connection = null;
         try {
             try {
                 Method method = constructorFun.getClass().getDeclaredMethods()[0];
@@ -418,6 +419,7 @@ public class TableHelper {
             // Maybe there is no corresponding Mapper for this class, we need to parse it again
             if (aClass == null) {
                 try {
+                    connection = dataSource.getConnection();
                     parseTableInfo(clazz, connection);
                     aClass = modelClass.get(implClass);
                     if (aClass == null) {
@@ -432,7 +434,7 @@ public class TableHelper {
             e.printStackTrace();
         } finally {
             try {
-                if (!connection.isClosed()) {
+                if (connection != null && !connection.isClosed()) {
                     connection.close();
                 }
             } catch (SQLException e) {

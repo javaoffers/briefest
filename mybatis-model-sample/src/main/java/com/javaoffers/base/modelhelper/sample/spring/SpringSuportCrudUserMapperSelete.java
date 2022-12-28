@@ -343,7 +343,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(User::getName, User::getId)
                 //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
-                .having()
                 // Sort by primary table
                 .orderA(User::getName)
                 //Sort by subtable
@@ -388,6 +387,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .condSQL("2=2")
                 .groupBy("left(birthday,10)")
+
                 .ex();
         print(ex1);
 
@@ -396,6 +396,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .col("max(birthday) as birthday")
                 .where()
                 .groupBy("left(birthday,10)")
+
                 .ex();
         print(ex1);
 

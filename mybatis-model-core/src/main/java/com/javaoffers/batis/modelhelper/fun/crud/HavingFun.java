@@ -7,10 +7,14 @@ import java.util.Collection;
 import java.util.function.Consumer;
 
 /**
- * @Description: having 只实现统计函数条件。普通条件建议写在where中
+ * @Description: having Only statistical function conditions are implemented.
+ * Common conditions are recommended to be written in where
  * @Auther: create by cmj on 2022/6/5 18:31
  */
-public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>> extends LimitFun<M, R>,
+public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>>
+        extends
+        LimitFun<M, R>,
+        OrderFun<M,C,V, HavingFun<M,C,V,R>>,
         ExecutFun<M> {
 
     /**

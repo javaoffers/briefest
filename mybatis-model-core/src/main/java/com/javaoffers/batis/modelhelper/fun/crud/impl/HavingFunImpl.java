@@ -11,22 +11,26 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.HavingMarkWordCondit
 import com.javaoffers.batis.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
+import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 /**
  * @Description: having 后面只允许出现统计函数条件表达式. 若想非统计函数表达式应在where / on 中书写. (设计如此)
  * @Auther: create by cmj on 2022/6/5 19:44
  */
-public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C, V, HavingFunImpl<M,C,V>>
-        , LimitFun<M, HavingFunImpl<M,C,V>> {
+public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C, V, HavingFunImpl<M,C,V>> {
 
     LinkedList<Condition> conditions;
 
@@ -288,5 +292,41 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     @Override
     public List<M> exs() {
         return whereSelectFun.exs();
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> orderA(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> orderA(boolean condition, C... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> orderD(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> orderD(boolean condition, C... cs) {
+        if(condition){
+            orderD(cs);
+        }
+        return this;
     }
 }

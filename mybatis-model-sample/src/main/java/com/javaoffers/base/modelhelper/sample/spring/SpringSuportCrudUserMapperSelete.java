@@ -375,6 +375,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .having()
+                .gt(AggTag.MAX,User::getId,1)
+                .gt(AggTag.MAX,UserOrder::getOrderId,1)
                 // Sort by primary table
                 .orderA(User::getName)
                 //Sort by subtable
@@ -387,7 +389,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .condSQL("2=2")
                 .groupBy("left(birthday,10)")
-
                 .ex();
         print(ex1);
 
@@ -396,10 +397,30 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .col("max(birthday) as birthday")
                 .where()
                 .groupBy("left(birthday,10)")
-
                 .ex();
         print(ex1);
 
+        ex1 = crudUserMapper.select()
+                .col(AggTag.MAX,User::getBirthday)
+                .where()
+                .condSQL("2=2")
+                .groupBy("left(birthday,10)")
+                .orderA(User::getBirthday)
+                .limitPage(1,1000)
+                .ex();
+        print(ex1);
+
+        ex1 = crudUserMapper.select()
+                .col(AggTag.MAX,User::getBirthday)
+                .where()
+                .condSQL("2=2")
+                .groupBy("left(birthday,10)")
+                .having()
+                .gt(AggTag.AVG,User::getAbsCN,1)
+                .orderA(User::getBirthday)
+                .limitPage(1,1000)
+                .ex();
+        print(ex1);
 
 
         System.out.println("-----------Implement a new way to query, written in the interface default method queryAll-------------------");

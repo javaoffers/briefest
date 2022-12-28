@@ -15,6 +15,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
+import com.javaoffers.batis.modelhelper.fun.crud.HavingFun2;
 import com.javaoffers.batis.modelhelper.fun.crud.LimitFun;
 import com.javaoffers.batis.modelhelper.fun.crud.OrderFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
@@ -32,8 +33,8 @@ import java.util.stream.Collectors;
  */
 public class LeftHavingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2>
         implements HavingFun<M, C, V, LeftHavingFunImpl<M,M2,C, C2,V, V2>>
-        , LimitFun<M, LeftHavingFunImpl<M, M2,C, C2,V , V2>>
-        , OrderFun<M,C,V,LeftHavingFunImpl<M,M2,C,C2,V,V2>> {
+
+        {
 
     private LinkedList<Condition> conditions;
 

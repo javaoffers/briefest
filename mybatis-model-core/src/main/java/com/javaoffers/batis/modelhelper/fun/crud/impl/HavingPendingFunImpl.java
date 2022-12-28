@@ -1,12 +1,18 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
+import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description:
@@ -40,7 +46,52 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> limitPage(int pageNum, int size) {
+        conditions.add(new LimitWordCondition<>(pageNum, size));
+        return this;
+    }
+
+    @Override
     public List<M> exs() {
         return whereSelectFun.exs();
     }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        return this;
+    }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(boolean condition, C... cs) {
+        if(condition){
+            orderA(cs);
+        }
+        return this;
+    }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(C... cs) {
+        List<String> clos = Arrays.stream(cs).map(getterFun -> {
+            String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            return cloName;
+        }).collect(Collectors.toList());
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        return this;
+    }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(boolean condition, C... cs) {
+        if(condition){
+            orderD(cs);
+        }
+        return this;
+    }
+
+
+
 }

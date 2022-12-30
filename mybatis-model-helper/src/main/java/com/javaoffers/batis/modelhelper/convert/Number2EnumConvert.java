@@ -6,7 +6,8 @@ import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Register;
 
 /**
- * create by cmj
+ * create by cmj.
+ * Note that enum conversion can only support one type. It cannot support multiple types.
  */
 public class Number2EnumConvert extends AbstractConver<Number, Enum> {
     @Override

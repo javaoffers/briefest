@@ -79,6 +79,8 @@ public class SQLParse {
                     Object o = pm.get(paramKey);
                     if (o instanceof Id) {
                         o = ((Id) o).value();
+                    }else if( o instanceof Enum){
+                        o = ((Enum) o).ordinal();
                     }
                     params[k] = o;
                 }
@@ -94,12 +96,16 @@ public class SQLParse {
                     Object oLeft = pmLeft.get(paramKey);
                     if (oLeft instanceof Id) {
                         oLeft = ((Id) oLeft).value();
+                    }else if( oLeft instanceof Enum){
+                        oLeft = ((Enum) oLeft).ordinal();
                     }
                     paramsLeft[k] = oLeft;
 
                     Object oRight = pmRight.get(paramKey);
                     if (oRight instanceof Id) {
                         oRight = ((Id) oRight).value();
+                    }else if(oRight instanceof Enum){
+                        oRight = ((Enum) oRight).ordinal();
                     }
                     paramsRight[k] = oRight;
 

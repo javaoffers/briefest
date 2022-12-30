@@ -2,6 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserOrderMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
@@ -42,11 +43,64 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testInsert();
+        //testInsert();
+        testEnum();
         if(status){
             System.exit(0);
         }
 
+    }
+    public void testEnum(){
+        User ex = this.crudUserMapper
+                .select()
+                .col(User::getId)
+                .col(User::getSex)
+                .where()
+                .isNotNull(User::getSex)
+                .limitPage(1, 1)
+                .ex();
+        if(ex != null){
+            Sex sex = ex.getSex();
+            if(sex == null){
+                ex.setSex(Sex.Boy);
+            }else {
+                resetNewSexx(ex, sex);
+            }
+            this.crudUserMapper.general().saveOrModify(ex);
+            User user = this.crudUserMapper.select().col(User::getId)
+                    .col(User::getSex)
+                    .where().eq(User::getId, ex.getId())
+                    .ex();
+            LOGUtils.printLog(user);
+
+            this.crudUserMapper.update().npdateNull()
+                    .col(User::getSex, Sex.Boy)
+                    .where()
+                    .eq(User::getId, user.getId())
+                    .ex();
+
+            user = this.crudUserMapper.select().col(User::getId)
+                    .col(User::getSex)
+                    .where().eq(User::getId, ex.getId())
+                    .ex();
+            LOGUtils.printLog(user);
+        }
+
+
+
+    }
+
+    private void resetNewSexx(User ex, Sex sex) {
+        switch (sex){
+            case Boy:
+                ex.setSex(Sex.Girl);
+                break;
+            case Girl:
+                ex.setSex(Sex.Boy);
+                break;
+            default:
+                break;
+        }
     }
 
     public void testBatchInsert(){

@@ -21,6 +21,7 @@ public class ConvertRegisterSelectorDelegate {
 
     public final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
 
+    private ThreadLocal<Class> processingConvertClass = new ThreadLocal<>();
 
     private ConvertRegisterSelectorDelegate() { }
 
@@ -116,6 +117,7 @@ public class ConvertRegisterSelectorDelegate {
      * @return
      */
     public <T> T converterObject(Class<T> des, Object srcValue) {
+        Class<T> orgDes = des;
         //基础类型转换为包装类型，如果存在基础类型
         des = baseClassUpgrade(des);
         Class src = baseClassUpgrade(srcValue.getClass());
@@ -131,9 +133,12 @@ public class ConvertRegisterSelectorDelegate {
         }
         T desObject = null;
         try {
+            processingConvertClass.set(orgDes);
             desObject = (T) convert.convert(src.cast(srcValue));
         }catch (Exception e){
             e.printStackTrace();
+        }finally {
+            processingConvertClass.remove();
         }
         return desObject;
     }
@@ -180,9 +185,18 @@ public class ConvertRegisterSelectorDelegate {
             if(void.class == baseClass){
                 return Void.class;
             }
+        }else if(baseClass.isEnum()){
+            return Enum.class;
         }
         return baseClass;
     }
 
+    private Class getProcessingConvertClass(){
+        return this.processingConvertClass.get();
+    }
+
+    public static Class getProcessingConvertDesClass(){
+        return convert.getProcessingConvertClass();
+    }
 
 }

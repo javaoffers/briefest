@@ -733,7 +733,8 @@ Such as a database field birthday is a datetime/int,
     String2BigDecimalConvert  
     Number2BooleanConvert  
     String2BigIntegerConvert  
-    Number2LocalDateTimeConvert  
+    Number2LocalDateTimeConvert
+    Number2EnumConvert
 ```
 
 #### Code contributions are welcome

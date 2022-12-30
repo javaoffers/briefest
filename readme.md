@@ -15,7 +15,7 @@
  Here we call it JQL. And form a set of JQL API process to reduce the SQL error rate.
  JQL is designed to decompose complex SQL into simple SQL, 
  so JQL is designed to support up to two table associated queries.
- We do not recommend joining more than 2 tables. 
+ We do not recommend joining more than 3 tables. 
  This reduces the readability and maintainability of SQL.
  And new writing formats are supported in modelhelper.
  The default method can be written in the java interface,
@@ -733,7 +733,8 @@ Such as a database field birthday is a datetime/int,
     String2BigDecimalConvert  
     Number2BooleanConvert  
     String2BigIntegerConvert  
-    Number2LocalDateTimeConvert  
+    Number2LocalDateTimeConvert
+    Number2EnumConvert
 ```
 
 #### Code contributions are welcome

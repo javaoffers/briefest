@@ -34,6 +34,13 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
     }
 
     @Override
+    public SmartSelectFun<M, C, V> col(C col) {
+        this.conditions.add(new SelectColumnCondition(col));
+        return this;
+    }
+
+
+    @Override
     public SmartSelectFun<M, C, V> col(C... cols) {
         Stream.of(cols).forEach(col -> {
             this.conditions.add(new SelectColumnCondition(col));
@@ -54,7 +61,10 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
         Stream.of(cols).forEach(col->{
             Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
             String colName = colNameAndAliasName.getLeft();
-            String aliasName = colNameAndAliasName.getRight();
+            String tableName = colName.split("\\.")[0];
+            // It be the aggTag function. The corresponding table name cannot be found in the query results.
+            // Therefore, it is spliced ​​​​in advance __
+            String aliasName = tableName+"__"+colNameAndAliasName.getRight();
             this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as " + aliasName));
         });
         return this;

@@ -68,6 +68,59 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .exs();
         LOGUtils.printLog(exs);
+
+        exs = this.crudUserMapper.select()
+                .col(AggTag.MAX, User::getId)
+                .innerJoin(UserTeacher::new)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .groupBy(Teacher::getId)
+                .exs();
+        LOGUtils.printLog(exs);
+
+        exs = this.crudUserMapper.select()
+                .col( User::getId)
+                .innerJoin(UserTeacher::new)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .groupBy(User::getId)
+                .groupBy(UserTeacher::getTeacherId)
+                .groupBy(Teacher::getId)
+                .having()
+                .exs();
+        LOGUtils.printLog(exs);
+
+        exs = this.crudUserMapper.select()
+                .col(User::getId)
+                .innerJoin(UserTeacher::new)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .gt(User::getId, 0)
+                .groupBy(Teacher::getId)
+                .having()
+                .gt(AggTag.MAX, User::getId, 0)
+                .gt(AggTag.MAX, UserTeacher::getId, 0)
+                .gt(AggTag.MAX, Teacher::getId, 0)
+                .orderA(User::getId)
+                .orderA(UserTeacher::getId)
+                .orderA(Teacher::getId)
+                .exs();
+        LOGUtils.printLog(exs);
     }
 
     public void testAsName(){
@@ -189,7 +242,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .exs();
 
         System.out.println("-----------group by ,  having, limitPage  --------------------");
-        exs1 = crudUserMapper.select()
+        exs1 = crudUserMapper
+                .select()
                 .col(User::getBirthday)
                 .col(User::getName)
                 .col(AggTag.MAX,User::getId)

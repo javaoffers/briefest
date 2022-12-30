@@ -34,6 +34,17 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
 
     /**
      *  添加查询字段
+     * @param col
+     * @return
+     */
+    @Override
+    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(GetterFun col) {
+        this.smartSelectFun.col(col);
+        return this.smartSelectFun;
+    }
+
+    /**
+     *  添加查询字段
      * @param cols
      * @return
      */

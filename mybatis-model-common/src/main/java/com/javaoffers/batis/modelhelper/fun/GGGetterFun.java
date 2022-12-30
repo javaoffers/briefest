@@ -8,6 +8,6 @@ import java.io.Serializable;
  * @param <B>
  */
 @FunctionalInterface
-public interface GetterFun<A , B> extends Serializable {
-    B reply(A b);
+public interface GGGetterFun<A ,B> extends Serializable ,GetterFun<A ,B>{
+    B reply(A a);
 }

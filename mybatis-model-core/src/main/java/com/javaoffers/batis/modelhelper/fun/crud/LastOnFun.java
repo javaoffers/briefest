@@ -64,6 +64,6 @@ public interface LastOnFun<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
      * on 条件结束。返回 Where
      * @return
      */
-    public LeftWhereSelectFunImpl<M1, M2,V> where();
+    public LastLeftWhereSelectFunImpl<M1, M2, M3, V> where();
 
 }

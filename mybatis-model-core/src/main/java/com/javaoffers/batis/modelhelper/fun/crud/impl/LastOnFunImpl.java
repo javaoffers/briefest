@@ -14,6 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
+import com.javaoffers.batis.modelhelper.fun.crud.LastLeftWhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.LastOnFun;
 
 import java.io.Serializable;
@@ -381,8 +382,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LeftWhereSelectFunImpl<M1, M2, V> where() {
-        return new LeftWhereSelectFunImpl<>(conditions);
+    public LastLeftWhereSelectFunImpl<M1, M2, M3, V> where() {
+        return new LastLeftWhereSelectFunImpl<>(conditions);
     }
 
 }

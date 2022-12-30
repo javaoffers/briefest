@@ -3,7 +3,14 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 
-public interface SelectFun<M, C extends GetterFun<M,Object>, V>  {
+public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
+
+    /**
+     * Add query field
+     * @param col
+     * @return
+     */
+    public SmartSelectFun<M, C, V> col(C col);
 
     /**
      * Add query field

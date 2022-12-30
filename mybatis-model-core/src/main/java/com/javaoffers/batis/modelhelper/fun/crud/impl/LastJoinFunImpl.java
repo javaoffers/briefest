@@ -52,10 +52,8 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     @Override
     public LastJoinFun<M1, M2, M3, C3, V> col(AggTag aggTag, C3... cols) {
         Stream.of(cols).forEach(col->{
-            Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
-            String colName = colNameAndAliasName.getLeft();
-            String aliasName = colNameAndAliasName.getRight();
-            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ aliasName));
+            Pair<String, String> colAgg = TableHelper.getSelectAggrColStatement(col);
+            this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colAgg.getLeft()+") as " + colAgg.getRight()));
         });
         return this;
     }

@@ -78,7 +78,7 @@ public  class InCondition<V> extends WhereOnCondition implements Condition {
     public InCondition(GetterFun colName, Object[] value, ConditionTag tag) {
         super(colName,value,tag);
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
-        this.colName = TableHelper.getColName(colName).split(" ")[0];
+        this.colName = TableHelper.getColNameNotAs(colName);
         this.value = new ArrayList<>();
         for(Object v : value){
             if(v instanceof Collection){

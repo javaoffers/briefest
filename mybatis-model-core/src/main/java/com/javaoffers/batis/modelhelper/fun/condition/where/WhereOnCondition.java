@@ -77,7 +77,7 @@ public  class WhereOnCondition<V> implements WhereCondition {
 
     public WhereOnCondition(GetterFun colName, V value, ConditionTag tag) {
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
-        this.colName = TableHelper.getColName(colName).split(" ")[0];
+        this.colName = TableHelper.getColNameNotAs(colName);
         this.value = value;
         this.tag = tag;
         colNames.add(this.colName);

@@ -100,13 +100,38 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .exs();
         LOGUtils.printLog(exs);
 
-        exs = this.crudUserMapper.select()
+        exs = this.crudUserMapper
+                .select()
                 .col(User::getId)
                 .innerJoin(UserTeacher::new)
                 .on()
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
                 .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .gt(User::getId, 0)
+                .groupBy(Teacher::getId)
+                .having()
+                .gt(AggTag.MAX, User::getId, 0)
+                .gt(AggTag.MAX, UserTeacher::getId, 0)
+                .gt(AggTag.MAX, Teacher::getId, 0)
+                .orderA(User::getId)
+                .orderA(UserTeacher::getId)
+                .orderA(Teacher::getId)
+                .exs();
+        LOGUtils.printLog(exs);
+
+        exs = this.crudUserMapper
+                .select()
+                .col(User::getId)
+                .innerJoin(UserTeacher::new)
+                .col(AggTag.MAX,UserTeacher::getTeacherId)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(AggTag.MAX, Teacher::getName)
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
                 .where()
@@ -265,6 +290,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .groupBy(User::getName, User::getId)//According to the main group
                 .exs();
+        print(exs1);
 
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
@@ -275,6 +301,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .groupBy(UserOrder::getUserId) //It can be grouped directly by subtable
                 .exs();
+        print(exs1);
 
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
@@ -288,6 +315,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
                 .exs();
+        print(exs1);
 
         System.out.println("-----------left join , group by , limitPage  --------------------");
         exs1 = crudUserMapper.select()
@@ -303,6 +331,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
+        print(exs1);
 
         System.out.println("-----------left join , group by , having,  limitPage  --------------------");
         exs1 = crudUserMapper.select()
@@ -326,7 +355,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .gt(AggTag.COUNT,UserOrder::getOrderId,1)
                 .limitPage(1,10)
                 .exs();
-
+        print(exs1);
 
         System.out.println("-----------left join , order by , limitPage --------------------");
         exs1 = crudUserMapper.select()
@@ -342,6 +371,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderA(UserOrder::getIsDel)
                 .limitPage(1,10)
                 .exs();
+        print(exs1);
 
         System.out.println("-----------left join , group by  , order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
@@ -361,6 +391,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderA(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
+        print(exs1);
 
         System.out.println("----------- inner join , group by  , having , order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
@@ -381,6 +412,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
+        print(exs1);
+
         HashMap<String, Object> params = new HashMap<>();
         params.put("ids",Arrays.asList(1,2));
         exs1 = crudUserMapper.select()
@@ -403,7 +436,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
-
+        print(exs1);
         System.out.println("----------- inner join on unite, where unite  group by  , having unite, order by, limitPage --------------------");
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
@@ -437,6 +470,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderD(UserOrder::getUserId)
                 .limitPage(1,10)
                 .exs();
+        print(exs1);
 
         ex1 = crudUserMapper.select()
                 .col(AggTag.MAX,User::getBirthday)

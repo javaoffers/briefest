@@ -60,7 +60,7 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
 
     public HavingGroupCondition(AggTag aggTag, GetterFun colName, V value, ConditionTag tag) {
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
-        this.colName = TableHelper.getColName(colName).split(" ")[0];
+        this.colName = TableHelper.getColNameNotAs(colName);
         this.tag = tag;
         this.aggTag = aggTag;
         this.value = value;
@@ -75,7 +75,7 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
                 cls.append(",");
             }
             i = i+1;
-            cls.append(TableHelper.getColName(colName).split(" ")[0]);
+            cls.append(TableHelper.getColNameNotAs(colName));
         }
         this.colName = cls.toString();
         this.tag = tag;

@@ -63,10 +63,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     @Override
     public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object>... cols) {
         Stream.of(cols).forEach(col->{
-            Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
-            String colName = colNameAndAliasName.getLeft();
-            String aliasName = colNameAndAliasName.getRight();
-            conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as "+ aliasName));
+            Pair<String, String> colAgg = TableHelper.getSelectAggrColStatement(col);
+            this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colAgg.getLeft()+") as " + colAgg.getRight()));
         });
         return this;
     }

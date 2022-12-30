@@ -48,7 +48,7 @@ public class OnValueFunCondition extends WhereOnCondition implements OnCondition
     }
 
     public OnValueFunCondition(GetterFun colName, Object value, ConditionTag tag) {
-        this.colName2 = TableHelper.getColName(colName).split(" ")[0];
+        this.colName2 = TableHelper.getColNameNotAs(colName);
         this.value = value;
         this.tag = tag;
     }

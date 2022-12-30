@@ -9,4 +9,7 @@ public interface ModelHelpperConstants {
 
     String FIELD_COL_NAME = "__FIELD_COL_NAME__";
 
+    //split_line
+    String SPLIT_LINE = "__";
+
 }

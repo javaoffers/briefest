@@ -46,8 +46,8 @@ public class OnColumnFunCondition extends WhereOnCondition implements OnConditio
 
     public OnColumnFunCondition(GetterFun colName1, GetterFun colName2, ConditionTag tag) {
         super();
-        this.colName1 = TableHelper.getColName(colName1).split(" ")[0];
-        this.colName2 = TableHelper.getColName(colName2).split(" ")[0];
+        this.colName1 = TableHelper.getColNameNotAs(colName1);
+        this.colName2 = TableHelper.getColNameNotAs(colName2);
         this.tag = tag;
     }
 

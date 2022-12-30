@@ -5,6 +5,7 @@ import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
+import com.javaoffers.batis.modelhelper.constants.ModelHelpperConstants;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.exception.ParseTableException;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
@@ -39,7 +40,7 @@ public class TableHelper {
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
     /**
-     * Get all fields corresponding to Model
+     * Get all fields corresponding to Model. for select().colAll() parse
      *
      * @param modelClss
      * @return
@@ -52,7 +53,7 @@ public class TableHelper {
         String tableName = tableInfo.getTableName();
         tableInfo.getFieldNameColNameOfModel().forEach((fieldName, colName) -> {
             if (tableInfo.isSqlFun(colName)) {
-                colAll.add(colName + " as " + fieldName);
+                colAll.add(colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
             } else {
                 colAll.add(tableName + "." + colName + " as " + fieldName);
             }
@@ -61,13 +62,13 @@ public class TableHelper {
         return colAll;
     }
 
-    public static List<Pair<String, String>> getColAllAndAliasNameOnly(Class<?> modelClss) {
+    public static List<SqlColInfo> getColAllAndAliasNameOnly(Class<?> modelClss) {
         String name = modelClss.getName();
         String implClass = name.replaceAll("\\.", "/");
-        List<Pair<String, String>> colAll = new LinkedList<>();
+        List<SqlColInfo> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         tableInfo.getFieldNameColNameOfModel().forEach((colName, fieldName) -> {
-            colAll.add(Pair.of(colName, fieldName));
+            colAll.add(new SqlColInfo(tableInfo.getTableName(), colName, fieldName, tableInfo.isSqlFun(colName)));
         });
         return colAll;
     }
@@ -90,41 +91,60 @@ public class TableHelper {
         return colNameOfModelField;
     }
 
+    /**
+     * for select col
+     * @param myFun
+     * @return col info
+     */
     public static String getColName(GetterFun myFun) {
-        String methodName = StringUtils.EMPTY;
-        String colName = StringUtils.EMPTY;
-        try {
-            // 直接调用writeReplace
-            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
-            writeReplace.setAccessible(true);
-            Object sl = writeReplace.invoke(myFun);
-            SerializedLambda serializedLambda = (SerializedLambda) sl;
-            methodName = serializedLambda.getImplMethodName();
-            String implClass = serializedLambda.getImplClass();
-            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
-            fieldNameOfGetter.computeIfAbsent(methodName, k -> {
-                k = k.startsWith("get") ? k.substring(3) : k.startsWith("is") ? k.substring(2) : k;
-                k = k.substring(0, 1).toLowerCase() + k.substring(1);
-                return k;
-            });
-            String fieldName = fieldNameOfGetter.get(methodName);
-            colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
-            if (tableInfo.isSqlFun(colName)) {
-                colName = colName + " as " + fieldName;
-            } else {
-                colName = tableInfo.getTableName() + "." + colName + " as " + fieldName;
-            }
-            return colName;
-        } catch (Exception e) {
-            e.printStackTrace();
+        SqlColInfo sqlColInfo = getSqlColInfo(myFun);
+        String tableName = sqlColInfo.getTableName();
+        String colName = sqlColInfo.getColName();
+        String aliasName = sqlColInfo.getAliasName();
+        if(sqlColInfo.isSqlFun()){
+            colName = colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
+        }else{
+            // dont append  ModelHelpperConstants.SPLIT_LINE.
+            colName = tableName + "." + colName + " as " + aliasName;
         }
         return colName;
     }
 
+    public static Pair<String, String> getSelectAggrColStatement(GetterFun myFun){
+        /**
+         *  Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
+         *             String colName = colNameAndAliasName.getLeft();
+         *             String tableName = colName.split("\\.")[0];
+         *             // It be the aggTag function. The corresponding table name cannot be found in the query results.
+         *             // Therefore, it is spliced ​​​​in advance __
+         *             String aliasName = tableName+"__"+colNameAndAliasName.getRight();
+         *             this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as " + aliasName));
+         */
+        SqlColInfo sqlColInfo = getSqlColInfo(myFun);
+        String tableName = sqlColInfo.getTableName();
+        String colName = sqlColInfo.getColName();
+        String aliasName = tableName + ModelHelpperConstants.SPLIT_LINE + sqlColInfo.getAliasName();
+        Pair<String, String> pair = null;
+        if(sqlColInfo.isSqlFun()){
+            pair = Pair.of(colName, aliasName);
+        }else{
+            pair = Pair.of(tableName + "." + colName, aliasName);
+        }
+        return pair;
+    }
+
     public static String getColNameNotAs(GetterFun myFun) {
+        SqlColInfo sqlColInfo = getSqlColInfo(myFun);
+        String colName = sqlColInfo.getColName();
+        String tableName = sqlColInfo.getTableName();
+        if(!sqlColInfo.isSqlFun()){
+            colName = tableName + "." + colName;
+        }
+        return colName;
+    }
+
+    public static SqlColInfo getSqlColInfo(GetterFun myFun){
         String methodName = StringUtils.EMPTY;
-        String colName = StringUtils.EMPTY;
         try {
             // 直接调用writeReplace
             Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
@@ -134,80 +154,37 @@ public class TableHelper {
             methodName = serializedLambda.getImplMethodName();
             String implClass = serializedLambda.getImplClass();
             TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> fieldNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
-            fieldNameOfGetter.computeIfAbsent(methodName, k -> {
+            Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
+            colNameOfGetter.computeIfAbsent(methodName, k -> {
                 k = k.startsWith("get") ? k.substring(3) : k.startsWith("is") ? k.substring(2) : k;
                 k = k.substring(0, 1).toLowerCase() + k.substring(1);
                 return k;
             });
-            String fieldName = fieldNameOfGetter.get(methodName);
-            colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
-            if (!tableInfo.isSqlFun(colName)) {
-                colName = tableInfo.getTableName() + "." + colName;
-            }
-            return colName;
+
+            String fieldName = colNameOfGetter.get(methodName);
+            String colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
+            return new SqlColInfo(tableInfo.getTableName(), colName, fieldName, tableInfo.isSqlFun(colName));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return colName;
+        throw new FindColException("Error parsing sql field ： " + myFun.toString());
     }
 
 
     public static Pair<String, String> getColNameAndAliasName(GetterFun myFun) {
-        String methodName = StringUtils.EMPTY;
-        try {
-            // 直接调用writeReplace
-            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
-            writeReplace.setAccessible(true);
-            Object sl = writeReplace.invoke(myFun);
-            SerializedLambda serializedLambda = (SerializedLambda) sl;
-            methodName = serializedLambda.getImplMethodName();
-            String implClass = serializedLambda.getImplClass();
-            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
-            colNameOfGetter.computeIfAbsent(methodName, k -> {
-                k = k.startsWith("get") ? k.substring(3) : k.startsWith("is") ? k.substring(2) : k;
-                k = k.substring(0, 1).toLowerCase() + k.substring(1);
-                return k;
-            });
-            String fieldName = colNameOfGetter.get(methodName);
-            ;
-            String colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
-            if (!tableInfo.isSqlFun(colName)) {
-                colName = tableInfo.getTableName() + "." + colName;
-            }
-            return Pair.of(colName, fieldName);
-        } catch (Exception e) {
-            e.printStackTrace();
+        SqlColInfo selectColInfo = getSqlColInfo(myFun);
+        String tableName = selectColInfo.getTableName();
+        String colName = selectColInfo.getColName();
+        String aliasName = selectColInfo.getAliasName();
+        if(!selectColInfo.isSqlFun()){
+            colName = tableName + "." + colName;
         }
-        throw new FindColException("Error parsing sql field ： " + myFun.toString());
+        return Pair.of(colName, aliasName);
     }
 
     public static String getColNameOnly(GetterFun myFun) {
-        String methodName = StringUtils.EMPTY;
-        try {
-            // 直接调用writeReplace
-            Method writeReplace = myFun.getClass().getDeclaredMethod("writeReplace");
-            writeReplace.setAccessible(true);
-            Object sl = writeReplace.invoke(myFun);
-            SerializedLambda serializedLambda = (SerializedLambda) sl;
-            methodName = serializedLambda.getImplMethodName();
-            String implClass = serializedLambda.getImplClass();
-            TableInfo tableInfo = tableInfoMap.get(modelClass.get(implClass));
-            Map<String, String> colNameOfGetter = tableInfo.getMethodNameMappingFieldNameOfGetter();
-            colNameOfGetter.computeIfAbsent(methodName, k -> {
-                k = k.startsWith("get") ? k.substring(3) : k.startsWith("is") ? k.substring(2) : k;
-                k = k.substring(0, 1).toLowerCase() + k.substring(1);
-                return k;
-            });
-            String fieldName = colNameOfGetter.get(methodName);
-            ;
-            String colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
-            return colName;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        throw new FindColException("Error parsing sql field ： " + myFun.toString());
+        SqlColInfo sqlColInfo = getSqlColInfo(myFun);
+        return sqlColInfo.getColName();
     }
 
     /**

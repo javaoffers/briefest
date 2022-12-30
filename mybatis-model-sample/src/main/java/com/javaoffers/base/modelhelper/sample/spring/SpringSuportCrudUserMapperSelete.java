@@ -144,6 +144,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .orderA(User::getId)
                 .orderA(UserTeacher::getId)
                 .orderA(Teacher::getId)
+                .limitPage(1, 10)
                 .exs();
         LOGUtils.printLog(exs);
     }

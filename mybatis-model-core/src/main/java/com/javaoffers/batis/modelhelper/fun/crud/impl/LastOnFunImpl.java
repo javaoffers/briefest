@@ -14,7 +14,6 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.LastLeftWhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.LastOnFun;
 
 import java.io.Serializable;

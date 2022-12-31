@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.fun.crud;
+package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
@@ -7,9 +7,7 @@ import com.javaoffers.batis.modelhelper.fun.GGetterFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.where.GroupByWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.LastLeftHavingPendingFunImpl;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.LeftHavingPendingFunImpl;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.LeftWhereSelectFunImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.LeftWhereSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;

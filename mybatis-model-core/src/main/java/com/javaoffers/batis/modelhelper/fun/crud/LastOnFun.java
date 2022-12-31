@@ -1,7 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.javaoffers.batis.modelhelper.fun.crud.impl.LeftWhereSelectFunImpl;
+import com.javaoffers.batis.modelhelper.fun.crud.impl.LastLeftWhereSelectFunImpl;
 
 import java.io.Serializable;
 

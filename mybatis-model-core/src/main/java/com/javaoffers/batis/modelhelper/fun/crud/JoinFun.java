@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.sun.istack.internal.NotNull;
 
 /**
  * @Description: join 语句
@@ -14,14 +15,14 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param col
      * @return
      */
-    public JoinFun<M1,M2, C2, V> col(C2... col);
+    public JoinFun<M1,M2, C2, V> col(@NotNull C2... col);
 
     /**
      * 添加查询字段
      * @param cols
      * @return
      */
-    public JoinFun<M1,M2, C2, V> col(boolean condition, C2... cols);
+    public JoinFun<M1,M2, C2, V> col(boolean condition, @NotNull C2... cols);
 
     /**
      * 添加查询字段
@@ -29,7 +30,7 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param cols 查询字段
      * @return
      */
-    public JoinFun<M1,M2, C2, V>  col(AggTag aggTag, C2... cols);
+    public JoinFun<M1,M2, C2, V>  col(AggTag aggTag, @NotNull C2... cols);
 
     /**
      * 添加查询字段
@@ -37,7 +38,7 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param cols
      * @return
      */
-    public JoinFun<M1,M2, C2, V>  col(boolean condition, AggTag aggTag, C2... cols);
+    public JoinFun<M1,M2, C2, V>  col(boolean condition, AggTag aggTag, @NotNull C2... cols);
 
     /**
      * 添加查询字段
@@ -46,7 +47,7 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param asName 别名
      * @return
      */
-    public JoinFun<M1,M2, C2, V>  col(AggTag aggTag, C2 col, String asName);
+    public JoinFun<M1,M2, C2, V>  col(AggTag aggTag,@NotNull C2 col, String asName);
 
     /**
      * 添加查询字段
@@ -55,7 +56,7 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param asName 别名
      * @return
      */
-    public JoinFun<M1,M2, C2, V>  col(boolean condition, AggTag aggTag, C2 col, String asName);
+    public JoinFun<M1,M2, C2, V>  col(boolean condition, AggTag aggTag, @NotNull C2 col, String asName);
 
     /**
      * 添加所有查询字段
@@ -68,7 +69,7 @@ public interface JoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * @param colSql
      * @return
      */
-    public JoinFun<M1,M2, C2, V> col(String... colSql);
+    public JoinFun<M1,M2, C2, V> col(@NotNull String... colSql);
 
     /**
      * sql语句： on 条件

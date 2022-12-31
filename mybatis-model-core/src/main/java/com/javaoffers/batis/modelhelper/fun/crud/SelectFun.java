@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.sun.istack.internal.NotNull;
 
 public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
 
@@ -10,14 +11,14 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param col
      * @return
      */
-    public SmartSelectFun<M, C, V> col(C col);
+    public SmartSelectFun<M, C, V> col(@NotNull  C col);
 
     /**
      * Add query field
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(C... cols);
+    public SmartSelectFun<M, C, V> col(@NotNull  C... cols);
 
     /**
      * Add query field
@@ -25,7 +26,7 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, C... cols);
+    public SmartSelectFun<M, C, V> col(boolean condition, @NotNull  C... cols);
 
     /**
      * Add query field
@@ -33,7 +34,7 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols query field
      * @return
      */
-    public SmartSelectFun<M, C, V> col(AggTag aggTag, C... cols);
+    public SmartSelectFun<M, C, V> col(AggTag aggTag,  @NotNull C... cols);
 
     /**
      * Add query field
@@ -41,7 +42,7 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, C... cols);
+    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, @NotNull C... cols);
 
     /**
      * Add query field
@@ -50,7 +51,7 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param asName  asName
      * @return
      */
-    public SmartSelectFun<M, C, V> col(AggTag aggTag, C col, String asName);
+    public SmartSelectFun<M, C, V> col(AggTag aggTag, @NotNull C col, String asName);
 
     /**
      * Add query field
@@ -59,14 +60,14 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param asName alias
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, C col, String asName);
+    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, @NotNull C col, String asName);
 
     /**
      * Add query field or sub query sql
      * @param colSql
      * @return
      */
-    public SmartSelectFun<M, C, V> col(String... colSql);
+    public SmartSelectFun<M, C, V> col(@NotNull String... colSql);
 
     /**
      * Add query field or sub query sql
@@ -74,7 +75,7 @@ public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param colSql
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, String... colSql);
+    public SmartSelectFun<M, C, V> col(boolean condition, @NotNull String... colSql);
 
     /**
      * Add all query fields

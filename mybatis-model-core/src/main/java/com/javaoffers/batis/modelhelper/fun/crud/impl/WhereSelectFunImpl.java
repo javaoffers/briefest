@@ -108,7 +108,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public WhereSelectFun<M, V> eq(boolean condition, GetterFun<M, V> col, V value) {
         if (condition) {
-
+            eq(col, value);
         }
         return this;
     }

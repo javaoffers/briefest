@@ -704,26 +704,27 @@ public class FunAnnoParserSample {
     @Concat(value = {"'hello'"," 'how are you?' "}, position = 1)
     private String colName22;//  CONCAT('hello',name, 'how are you?' )
 
+
     @ColName("name")
     @GroupConcat
-    private String colName23;
+    private String colName23;//GROUP_CONCAT( name )
 
     @ColName("name")
     @GroupConcat(distinct = true)
-    private String colName24;
+    private String colName24;//GROUP_CONCAT( distinct name )
 
     @ColName("name")
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.ASC) )
-    private String colName25;
+    private String colName25;//GROUP_CONCAT( distinct name  order by age ASC)
 
     @ColName("name")
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
-    private String colName26;
+    private String colName26;//GROUP_CONCAT( distinct name  order by age DESC separator '-')
 
     @ColName("name")
     @Concat("age")
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
-    private String colName27;
+    private String colName27;//GROUP_CONCAT( distinct CONCAT(name,age)  order by age DESC separator '-')
 
 }
 ```

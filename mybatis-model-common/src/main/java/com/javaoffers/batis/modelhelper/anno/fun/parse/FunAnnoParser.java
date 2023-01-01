@@ -44,6 +44,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.time.Weekday;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Year;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.CharLength;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.GroupConcat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.LTrim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Length;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Lower;
@@ -90,7 +91,6 @@ public class FunAnnoParser {
                 colNameAnno = (ColName) anno;
                 continue;
             }
-            //No reflection here is for performance
             //This will be optimized for strategy mode later. to avoid a lot of if statements
             status =
             parseParamCommon(appender, anno)||
@@ -288,6 +288,25 @@ public class FunAnnoParser {
             appender.appenderPosition(concat.TAG, concat.position(), concat.value());
             status = true;
         }
+        else if(anno instanceof GroupConcat){
+            GroupConcat groupConcat = (GroupConcat) anno;
+            boolean distinct = groupConcat.distinct();
+            String distinctKeyWord = distinct ? " distinct " : " ";
+            GroupConcat.OrderBy orderBy = groupConcat.orderBy();
+            String orderByColName = orderBy.colName();
+            GroupConcat.Sort sort = orderBy.sort();
+            String groupConcatStatment = "";
+            if(StringUtils.isNotBlank(orderByColName)){
+                groupConcatStatment = " order by "+orderByColName +" "+ sort.name();
+            }
+            String separator = groupConcat.separator();
+            if(StringUtils.isNotBlank(separator)){
+                //SEPARATOR
+                groupConcatStatment = groupConcatStatment + " separator '" +separator+"'";
+            }
+            appender.appenderParamNotSeparatorComma(groupConcat.TAG, distinctKeyWord, groupConcatStatment);
+            status = true;
+        }
         else if(anno instanceof Length){
             Length length = (Length) anno;
             appender.appender(length.TAG);
@@ -443,6 +462,25 @@ public class FunAnnoParser {
                 if(collect!=null &&collect.size() > 0){
                     String join = String.join(",", collect);
                     appenderRight.append(",");
+                    appenderRight.append(join);
+                }
+            }
+            appenderRight.append(")");
+            this.appenderLeft = appenderLeftOut;
+            return this;
+        }
+
+        public Appender appenderParamNotSeparatorComma(String funName, String expr,  Object... param){
+            StringBuilder appenderLeftOut = new StringBuilder();
+            appenderLeftOut.append(funName);
+            appenderLeftOut.append("(");
+            appenderLeftOut.append(expr);
+            appenderLeftOut.append(this.appenderLeft);
+            if(param != null){
+                List<String> collect = Arrays.stream(param).filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
+                if(collect!=null &&collect.size() > 0){
+                    String join = String.join(" ", collect);
+                    appenderRight.append(" ");
                     appenderRight.append(join);
                 }
             }

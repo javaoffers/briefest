@@ -11,6 +11,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.GroupConcat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
@@ -129,6 +130,26 @@ public class FunAnnoParserSample {
     @Concat(value = {"'hello'"," 'how are you?' "}, position = 1)
     private String colName22;//  CONCAT('hello',name, 'how are you?' )
 
+    @ColName("name")
+    @GroupConcat
+    private String colName23;
+
+    @ColName("name")
+    @GroupConcat(distinct = true)
+    private String colName24;
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.ASC) )
+    private String colName25;
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName26;
+
+    @ColName("name")
+    @Concat("age")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName27;
 
     static TableInfo tableHelper;
     @Before
@@ -177,6 +198,12 @@ public class FunAnnoParserSample {
         testColNameN(20);
         testColNameN(21);
         testColNameN(22);
+        testColNameN(23);
+        testColNameN(24);
+        testColNameN(25);
+        testColNameN(26);
+        testColNameN(27);
+
     }
 
 

@@ -691,6 +691,40 @@ public class FunAnnoParserSample {
     @ColName("name")
     @Trim
     private String colName19; //TRIM(name)
+
+    @ColName("name")
+    @Concat(value = "'hello'", position = -1)
+    private String colName20;//CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = "'hello'", position = 1)
+    private String colName21; //CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = {"'hello'"," 'how are you?' "}, position = 1)
+    private String colName22;//  CONCAT('hello',name, 'how are you?' )
+
+    @ColName("name")
+    @GroupConcat
+    private String colName23;
+
+    @ColName("name")
+    @GroupConcat(distinct = true)
+    private String colName24;
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.ASC) )
+    private String colName25;
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName26;
+
+    @ColName("name")
+    @Concat("age")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName27;
+
 }
 ```
 ### Powerful type converter

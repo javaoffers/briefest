@@ -44,11 +44,11 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testColAll();
-        //testEnum();
-        //test3Join();
-        //testAsName();
-        //testSelectOp();
-        //testSelect();
+        testEnum();
+        test3Join();
+        testAsName();
+        testSelectOp();
+        testSelect();
 
         if (status) {
             System.exit(0);
@@ -93,7 +93,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
-                .col(Teacher::getName)
+                .col(AggTag.MAX, Teacher::getName)
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
                 .where()
@@ -107,7 +107,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
-                .col(Teacher::getName)
+                .col(AggTag.MAX, Teacher::getName)
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
                 .where()
@@ -122,15 +122,19 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .select()
                 .col(User::getId)
                 .innerJoin(UserTeacher::new)
+                .col(UserTeacher::getTeacherId)
                 .on()
-                .oeq(User::getId, UserTeacher::getUserId)
+                .oeq(User::getId, UserTeacher::getId)
                 .innerJoin(Teacher::new)
-                .col(Teacher::getName)
+                .col(Teacher::getId)
+                .col(AggTag.MAX, Teacher::getName)
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
                 .where()
                 .gt(User::getId, 0)
                 .groupBy(Teacher::getId)
+                .groupBy(UserTeacher::getTeacherId)
+                .groupBy(User::getId)
                 .having()
                 .gt(AggTag.MAX, User::getId, 0)
                 .gt(AggTag.MAX, UserTeacher::getId, 0)
@@ -143,12 +147,13 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
         exs = this.crudUserMapper
                 .select()
-                .col(User::getId)
+                .col(AggTag.MAX, User::getId)
                 .innerJoin(UserTeacher::new)
                 .col(AggTag.MAX, UserTeacher::getTeacherId)
                 .on()
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
+                .col(Teacher::getId)
                 .col(AggTag.MAX, Teacher::getName)
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
@@ -159,8 +164,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .gt(AggTag.MAX, User::getId, 0)
                 .gt(AggTag.MAX, UserTeacher::getId, 0)
                 .gt(AggTag.MAX, Teacher::getId, 0)
-                .orderA(User::getId)
-                .orderA(UserTeacher::getId)
+                //sql_mode=only_full_group_by
+//                .orderA(User::getId)
+//                .orderA(UserTeacher::getId)
                 .orderA(Teacher::getId)
                 .limitPage(1, 10)
                 .exs();
@@ -512,7 +518,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .where()
                 .condSQL("2=2")
                 .groupBy("left(birthday,10)")
-                .orderA(User::getBirthday)
+                //sql_mode=only_full_group_by
+                //.orderA(User::getBirthday)
                 .limitPage(1, 1000)
                 .ex();
         print(ex1);
@@ -524,7 +531,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .groupBy("left(birthday,10)")
                 .having()
                 .gt(AggTag.AVG, User::getAbsCN, 1)
-                .orderA(User::getBirthday)
+                //sql_mode=only_full_group_by
+                //.orderA(User::getBirthday)
                 .limitPage(1, 1000)
                 .ex();
         print(ex1);

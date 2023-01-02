@@ -1,13 +1,16 @@
 Please do not create a Pull Request without creating an issue first.
 
 ## What is the purpose of the change
+xxxx
 
-XXXXX
 
-## Brief changelog
+## The Issue associated with the Pull Request
+xxxx
 
-XX
+
+## Brief changelog OR 
+xxxx
+
 
 ## Verifying this change
-
-XXXX
+xxxx

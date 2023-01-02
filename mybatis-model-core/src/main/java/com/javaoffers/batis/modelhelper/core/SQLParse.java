@@ -1,5 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import com.javaoffers.batis.modelhelper.utils.EnumValueUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,7 +82,7 @@ public class SQLParse {
                     if (o instanceof Id) {
                         o = ((Id) o).value();
                     }else if( o instanceof Enum){
-                        o = ((Enum) o).ordinal();
+                        o = EnumValueUtils.getEnumValue(((Enum) o));
                     }
                     params[k] = o;
                 }
@@ -97,7 +99,7 @@ public class SQLParse {
                     if (oLeft instanceof Id) {
                         oLeft = ((Id) oLeft).value();
                     }else if( oLeft instanceof Enum){
-                        oLeft = ((Enum) oLeft).ordinal();
+                        oLeft =  EnumValueUtils.getEnumValue(((Enum) oLeft));
                     }
                     paramsLeft[k] = oLeft;
 
@@ -105,7 +107,7 @@ public class SQLParse {
                     if (oRight instanceof Id) {
                         oRight = ((Id) oRight).value();
                     }else if(oRight instanceof Enum){
-                        oRight = ((Enum) oRight).ordinal();
+                        oRight =  EnumValueUtils.getEnumValue(((Enum) oRight));
                     }
                     paramsRight[k] = oRight;
 
@@ -119,6 +121,8 @@ public class SQLParse {
         return SQL;
 
     }
+
+
 
     public static SQL getSQL(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();

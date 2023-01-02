@@ -1,6 +1,8 @@
 package com.javaoffers.base.modelhelper.sample.spring.model;
 
+import com.javaoffers.base.modelhelper.sample.spring.constant.ManLevel;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
@@ -77,6 +79,13 @@ public class User {
     private String money;
 
     private Sex sex;
+
+    private com.javaoffers.base.modelhelper.sample.spring.constant.Month  month;
+
+    private Work work;
+
+    @ColName("'poor'")
+    private ManLevel manLevel;
 
     @Now
     private String now;

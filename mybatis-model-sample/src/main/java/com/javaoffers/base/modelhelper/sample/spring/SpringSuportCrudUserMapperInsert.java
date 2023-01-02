@@ -2,7 +2,9 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Month;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserOrderMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
@@ -55,10 +57,13 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
                 .select()
                 .col(User::getId)
                 .col(User::getSex)
+                .col(User::getMonth)
+                .col(User::getWork)
                 .where()
                 .isNotNull(User::getSex)
                 .limitPage(1, 1)
                 .ex();
+        ex = ex == null ? crudUserMapper.general().query(1,1).get(0) : ex;
         if(ex != null){
             Sex sex = ex.getSex();
             if(sex == null){
@@ -66,9 +71,15 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             }else {
                 resetNewSexx(ex, sex);
             }
+            ex.setMonth(Month.values()[(int)(Math.random()*10.0)]);
+            ex.setWork(Work.values()[(int)(System.nanoTime() & 1)]);
             this.crudUserMapper.general().saveOrModify(ex);
-            User user = this.crudUserMapper.select().col(User::getId)
+            User user = this.crudUserMapper
+                    .select()
+                    .col(User::getId)
                     .col(User::getSex)
+                    .col(User::getMonth)
+                    .col(User::getWork)
                     .where().eq(User::getId, ex.getId())
                     .ex();
             LOGUtils.printLog(user);

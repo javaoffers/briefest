@@ -8,6 +8,7 @@
   - Powerful type conversion functions.
   - Multi-table queries do not require additional configuration. Automatic mapping classes
   - Commonly used APIs have been integrated and can be used directly without development.
+  - Currently, only mysql syntax standards are supported
 
 - Summary
   <p>

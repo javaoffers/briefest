@@ -733,6 +733,7 @@ public class FunAnnoParserSample {
 <p>
 Built a large number of commonly used type converter.
 Such as a database field birthday is a datetime/int,
+Number/string and the conversion between enumeration class conversion.
 </p>
 
 ```

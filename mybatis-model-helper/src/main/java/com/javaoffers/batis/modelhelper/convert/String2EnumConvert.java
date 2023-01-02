@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  * create by cmj.
- * Note that enum conversion can only support one type. It cannot support multiple types.
+ *
  */
 public class String2EnumConvert extends AbstractConver<String, Enum> {
     @Override

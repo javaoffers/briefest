@@ -771,6 +771,8 @@ Such as a database field birthday is a datetime/int,
     String2BigIntegerConvert  
     Number2LocalDateTimeConvert
     Number2EnumConvert
+    String2EnumConvert
+
 ```
 
 #### Code contributions are welcome

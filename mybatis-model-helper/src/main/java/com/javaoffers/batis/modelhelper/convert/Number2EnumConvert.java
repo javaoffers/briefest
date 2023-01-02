@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * create by cmj.
- * Note that enum conversion can only support one type. It cannot support multiple types.
+ *
  */
 public class Number2EnumConvert extends AbstractConver<Number, Enum> {
     @Override
@@ -51,17 +51,14 @@ public class Number2EnumConvert extends AbstractConver<Number, Enum> {
         return null;
     }
 
-
     @Override
     public void register(Register register) {
-
         super.register(register);
         Class[] baseNumberClass = ModelConsistants.baseNumberClass;
         for (Class numClazz : baseNumberClass) {
             ConverDescriptor converDescriptor = new ConverDescriptor(numClazz, Enum.class);
             register.registerConvert(converDescriptor, this);
         }
-
     }
 
 }

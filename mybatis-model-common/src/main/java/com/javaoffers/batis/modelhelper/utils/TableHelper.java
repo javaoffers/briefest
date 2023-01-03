@@ -46,8 +46,6 @@ public class TableHelper {
      * @return
      */
     public static List<String> getColAll(Class<?> modelClss) {
-        String name = modelClss.getName();
-        String implClass = name.replaceAll("\\.", "/");
         List<String> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         String tableName = tableInfo.getTableName();
@@ -63,8 +61,6 @@ public class TableHelper {
     }
 
     public static List<SqlColInfo> getColAllAndAliasNameOnly(Class<?> modelClss) {
-        String name = modelClss.getName();
-        String implClass = name.replaceAll("\\.", "/");
         List<SqlColInfo> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         tableInfo.getFieldNameColNameOfModel().forEach((colName, fieldName) -> {
@@ -74,18 +70,12 @@ public class TableHelper {
     }
 
     public static Map<String, List<Field>> getColAllAndFieldOnly(Class<?> modelClss) {
-        String name = modelClss.getName();
-        String implClass = name.replaceAll("\\.", "/");
-        List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
         return colNameOfModelField;
     }
 
     public static Map<String, List<Field>> getOriginalColAllAndFieldOnly(Class<?> modelClss) {
-        String name = modelClss.getName();
-        String implClass = name.replaceAll("\\.", "/");
-        List<Pair<String, String>> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         Map<String, List<Field>> colNameOfModelField = tableInfo.getOriginalColNameOfModelField();
         return colNameOfModelField;
@@ -99,7 +89,7 @@ public class TableHelper {
     public static String getColName(GetterFun myFun) {
         SqlColInfo sqlColInfo = getSqlColInfo(myFun);
         String tableName = sqlColInfo.getTableName();
-        String colName = sqlColInfo.getColName();
+        String colName = sqlColInfo.getColNameNotBlank();
         String aliasName = sqlColInfo.getAliasName();
         if(sqlColInfo.isSqlFun()){
             colName = colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
@@ -111,18 +101,9 @@ public class TableHelper {
     }
 
     public static Pair<String, String> getSelectAggrColStatement(GetterFun myFun){
-        /**
-         *  Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(col);
-         *             String colName = colNameAndAliasName.getLeft();
-         *             String tableName = colName.split("\\.")[0];
-         *             // It be the aggTag function. The corresponding table name cannot be found in the query results.
-         *             // Therefore, it is spliced ​​​​in advance __
-         *             String aliasName = tableName+"__"+colNameAndAliasName.getRight();
-         *             this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colName+") as " + aliasName));
-         */
         SqlColInfo sqlColInfo = getSqlColInfo(myFun);
         String tableName = sqlColInfo.getTableName();
-        String colName = sqlColInfo.getColName();
+        String colName = sqlColInfo.getColNameNotBlank();
         String aliasName = tableName + ModelHelpperConstants.SPLIT_LINE + sqlColInfo.getAliasName();
         Pair<String, String> pair = null;
         if(sqlColInfo.isSqlFun()){
@@ -135,7 +116,7 @@ public class TableHelper {
 
     public static String getColNameNotAs(GetterFun myFun) {
         SqlColInfo sqlColInfo = getSqlColInfo(myFun);
-        String colName = sqlColInfo.getColName();
+        String colName = sqlColInfo.getColNameNotBlank();
         String tableName = sqlColInfo.getTableName();
         if(!sqlColInfo.isSqlFun()){
             colName = tableName + "." + colName;
@@ -184,7 +165,7 @@ public class TableHelper {
 
     public static String getColNameOnly(GetterFun myFun) {
         SqlColInfo sqlColInfo = getSqlColInfo(myFun);
-        return sqlColInfo.getColName();
+        return sqlColInfo.getColNameNotBlank();
     }
 
     /**
@@ -250,9 +231,9 @@ public class TableHelper {
                                 boolean isAutoincrement = "YES".equalsIgnoreCase(columnResultSet.getString(ColumnLabel.IS_AUTOINCREMENT));
                                 ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
                                 tableInfo.getColumnInfos().add(columnInfo);
-                                tableInfo.getColNames().put(columnName, columnInfo);
+                                tableInfo.putColNames(columnName, columnInfo);
                                 if (primaryKeyList.contains(columnName)) {
-                                    tableInfo.getPrimaryColNames().put(columnName, columnInfo);
+                                    tableInfo.putPrimaryColNames(columnName, columnInfo);
                                 }
                             }
                         }
@@ -299,6 +280,7 @@ public class TableHelper {
                                 tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
                             }
                         }
+                        tableInfo.unmodifiable();
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw new ParseTableException(e.getMessage(), e);

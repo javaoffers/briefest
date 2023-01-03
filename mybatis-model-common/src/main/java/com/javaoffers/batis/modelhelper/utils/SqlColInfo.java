@@ -1,5 +1,8 @@
 package com.javaoffers.batis.modelhelper.utils;
 
+import com.javaoffers.batis.modelhelper.exception.FindColException;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * @author mingJie
  */
@@ -24,6 +27,15 @@ public class SqlColInfo {
 
     public String getColName() {
         return colName;
+    }
+
+    public String getColNameNotBlank(){
+        if(StringUtils.isBlank(colName)){
+            //The corresponding column name was not found in the user table
+            throw new FindColException("No matching col name found in the " +
+                    tableName + " table for " + this.getAliasName() +" field");
+        }
+        return this.colName;
     }
 
     public void setColName(String colName) {
@@ -52,4 +64,5 @@ public class SqlColInfo {
         this.aliasName = aliasName;
         this.sqlFun = sqlFun;
     }
+
 }

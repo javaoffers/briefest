@@ -15,6 +15,7 @@ import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.sql.Connection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -107,8 +108,8 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
 
     @Override
     public SmartSelectFun<M, C, V> colAll() {
-        Set<SelectColumnCondition> cols = TableHelper.getColAll(this.mClass).stream().map(colName ->
-                new SelectColumnCondition(colName)).collect(Collectors.toSet());
+        List<SelectColumnCondition> cols = TableHelper.getColAll(this.mClass).stream().map(colName ->
+                new SelectColumnCondition(colName)).collect(Collectors.toList());
         this.conditions.addAll(cols);
         return this;
     }

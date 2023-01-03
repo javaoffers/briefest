@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.general.impl;
 
 import com.javaoffers.batis.modelhelper.core.Id;
+import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -288,6 +289,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     public long count() {
         TableInfo tableInfo = TableHelper.getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        if(primaryColNames == null || primaryColNames.size() == 0){
+             throw new FindColException("Please provide primary key field");
+        }
         Map<String, List<Field>> originalColNameOfModelField = tableInfo.getOriginalColNameOfModelField();
         String primaryColName = primaryColNames.keySet().iterator().next();
         Field field = originalColNameOfModelField.get(primaryColName).get(0);

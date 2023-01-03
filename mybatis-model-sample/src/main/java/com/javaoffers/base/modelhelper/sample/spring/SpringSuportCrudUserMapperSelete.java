@@ -63,10 +63,10 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     public void testColAll(){
         for (int i = 0; i < 1000; i++){
-            long start = System.currentTimeMillis();
-            List<User> query = crudUserMapper.general().query(1, 1);
-            long end = System.currentTimeMillis();
-            LOGUtils.printLog("cost time : "+ (end - start) +"ms"+", size : "+query.size());
+            long start = System.nanoTime();
+            List<User> query = crudUserMapper.general().query(1, 10);
+            long end = System.nanoTime();
+            LOGUtils.printLog("cost time : "+ TimeUnit.NANOSECONDS.toMillis(end - start) +"ms"+", size : "+query.size());
             LOGUtils.printLog(query);
         }
     }

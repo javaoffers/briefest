@@ -15,7 +15,7 @@
  Simplify mybatis development. Make writing SQL like writing java code. 
  Here we call it JQL. And form a set of JQL API process to reduce the SQL error rate.
  JQL is designed to decompose complex SQL into simple SQL, 
- so JQL is designed to support up to two table associated queries.
+ so JQL is designed to support up to 3 table associated queries.
  We do not recommend joining more than 3 tables. 
  This reduces the readability and maintainability of SQL.
  And new writing formats are supported in modelhelper.

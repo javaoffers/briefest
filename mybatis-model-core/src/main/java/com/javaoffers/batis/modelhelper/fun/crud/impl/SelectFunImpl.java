@@ -2,10 +2,13 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
 import com.javaoffers.batis.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
-import com.javaoffers.batis.modelhelper.fun.*;
+import com.javaoffers.batis.modelhelper.fun.AggTag;
+import com.javaoffers.batis.modelhelper.fun.Condition;
+import com.javaoffers.batis.modelhelper.fun.ConditionTag;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.HeadCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.KeyWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.select.SelectTableCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.where.LFCondition;
-import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.SelectFun;
 import com.javaoffers.batis.modelhelper.fun.crud.SmartSelectFun;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
@@ -30,6 +33,12 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
         this.conditions.add(new SelectTableCondition(TableHelper.getTableName(mClass), mClass));
         this.mClass = mClass;
         this.smartSelectFun = new SmartSelectFunImpl(mClass, conditions);
+    }
+
+    @Override
+    public SmartSelectFun<M, GetterFun<M,Object>, Object> distinct() {
+        this.conditions.add(new KeyWordCondition(ConditionTag.DISTINCT.getTag()));
+        return smartSelectFun;
     }
 
     /**
@@ -107,7 +116,5 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
         this.smartSelectFun.colAll();
         return this.smartSelectFun;
     }
-
-
 
 }

@@ -1,6 +1,5 @@
 package com.javaoffers.batis.modelhelper.fun.crud;
 
-import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 
 /**
@@ -11,7 +10,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
  * V: 字段值
  */
 public interface SmartSelectFun<M, C extends GetterFun<M,Object> , V>
-        extends SelectFun<M,C,V> , ToJoinFun<M,C,V> {
+        extends BaseSelectFun<M,C,V>, ToJoinFun<M,C,V> {
     /**
      * sql 语句： where
      * @return

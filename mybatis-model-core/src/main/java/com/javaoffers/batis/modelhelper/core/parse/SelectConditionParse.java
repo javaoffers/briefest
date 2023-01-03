@@ -4,6 +4,7 @@ import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.condition.JoinTableCondition;
+import com.javaoffers.batis.modelhelper.fun.condition.KeyWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.mark.OnConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.mark.WhereConditionMark;
 import com.javaoffers.batis.modelhelper.fun.condition.select.SelectColumnCondition;
@@ -104,6 +105,10 @@ public class SelectConditionParse implements ParseCondition {
             if(status){
                 selectB.append(sql);
                 status = false;
+                if(selectCol instanceof KeyWordCondition){
+                    // keyword is not a field
+                    status = true;
+                }
             }else {
                 selectB.append(selectCol.getDelimiter());
                 selectB.append(sql);

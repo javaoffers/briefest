@@ -10,11 +10,10 @@ import java.util.Map;
  * @Description: select statement: query fields
  * @Auther: create by cmj on 2022/5/2 16:31
  */
-@Deprecated
 public class KeyWordCondition extends SelectColumnCondition {
 
     private String keyWord;
-    private Class mClass;
+    private String delimiter;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -23,7 +22,7 @@ public class KeyWordCondition extends SelectColumnCondition {
 
     @Override
     public String getSql() {
-        return keyWord+" ";
+        return keyWord ;
     }
 
     @Override
@@ -34,6 +33,12 @@ public class KeyWordCondition extends SelectColumnCondition {
     public KeyWordCondition(String keyWord) {
         super(keyWord);
         this.keyWord = keyWord;
+        this.delimiter = "";
+    }
+
+    @Override
+    public String getDelimiter() {
+        return this.delimiter;
     }
 
     @Override

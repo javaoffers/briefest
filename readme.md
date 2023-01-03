@@ -123,11 +123,11 @@ Id exOne = crudUserMapper
 
 ```java
 String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-        User h1 = User.builder().name("Jom1").birthday(date).build();
-        User h2 = User.builder().name("Jom2").birthday(date).build();
-        User h3 = User.builder().name("Jom3").birthday(date).build();
-        List<Id> ex = crudUserMapper.insert()
-                .colAll(h1, h2, h3)
+        User user = User.builder().name("Jom1").birthday(date).build();
+        
+        List<Id> ex = crudUserMapper
+                .insert()
+                .colAll(user)
                 .ex();
         print(ex);
 ```

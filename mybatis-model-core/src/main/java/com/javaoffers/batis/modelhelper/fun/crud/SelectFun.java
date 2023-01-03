@@ -2,7 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.crud;
 
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
-import com.sun.istack.internal.NotNull;
+import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
 
 public interface SelectFun<M, C extends GetterFun<M, Object>, V>  {
 

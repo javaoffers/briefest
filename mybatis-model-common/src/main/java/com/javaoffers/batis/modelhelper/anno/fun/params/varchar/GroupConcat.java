@@ -33,6 +33,12 @@ public @interface GroupConcat {
      */
     String separator() default "";
 
+    /**
+     * default true . Execute the select.colAll() will filter out this fields and colName.
+     * @return
+     */
+    boolean excludeColAll() default true;
+
     @Target({ElementType.FIELD})
     @Retention(RetentionPolicy.RUNTIME)
     @Inherited

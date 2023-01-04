@@ -1,5 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -50,7 +52,7 @@ public class IdImpl implements Id {
         return srcValue;
     }
 
-    public IdImpl(Serializable srcValue) {
+    public IdImpl(@NotNull Serializable srcValue) {
         this.srcValue = srcValue;
     }
 

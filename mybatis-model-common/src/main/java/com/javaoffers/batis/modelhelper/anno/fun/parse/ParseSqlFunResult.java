@@ -6,10 +6,12 @@ package com.javaoffers.batis.modelhelper.anno.fun.parse;
 public class ParseSqlFunResult {
     String sqlFun;
     boolean isFun;
+    boolean excludeColAll;
 
-    public ParseSqlFunResult(String sqlFun, boolean isFun) {
+    public ParseSqlFunResult(String sqlFun, boolean isFun, boolean excludeColAll) {
         this.sqlFun = sqlFun;
         this.isFun = isFun;
+        this.excludeColAll = excludeColAll;
     }
 
     public String getSqlFun() {

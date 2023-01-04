@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
 import com.javaoffers.batis.modelhelper.convert.AbstractConver;
 import com.javaoffers.batis.modelhelper.convert.Convert;
 import com.javaoffers.batis.modelhelper.util.ReflectionUtils;
@@ -116,7 +117,7 @@ public class ConvertRegisterSelectorDelegate {
      * @param <T>
      * @return
      */
-    public <T> T converterObject(Class<T> des, Object srcValue) {
+    public <T> T converterObject(Class<T> des, @NotNull Object srcValue) {
         Class<T> orgDes = des;
         //基础类型转换为包装类型，如果存在基础类型
         des = baseClassUpgrade(des);

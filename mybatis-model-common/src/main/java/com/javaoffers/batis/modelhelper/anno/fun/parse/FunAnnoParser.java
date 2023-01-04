@@ -86,10 +86,14 @@ public class FunAnnoParser {
         ColName colNameAnno = null;
         String coreSql = null;
         boolean status = false;
+        boolean excludeColAll = false;
         for(Annotation anno : allAnno){
             if(anno instanceof ColName){
                 colNameAnno = (ColName) anno;
                 continue;
+            }
+            if(anno instanceof GroupConcat){
+                excludeColAll = ((GroupConcat) anno).excludeColAll();
             }
             //This will be optimized for strategy mode later. to avoid a lot of if statements
             status =
@@ -99,6 +103,8 @@ public class FunAnnoParser {
             parseParamMath(appender, anno)||
             parseNoneParamTime(appender, anno)||
             parseNoneParamMath(appender, anno);
+
+
 
         }
         if(colNameAnno != null){
@@ -110,7 +116,7 @@ public class FunAnnoParser {
         if(status && tableInfo.getColNames().containsKey(coreSql)){
             coreSql = tableInfo.getTableName()+"."+coreSql;
         }
-        return new ParseSqlFunResult(appender.toSqlString(coreSql), status);
+        return new ParseSqlFunResult(appender.toSqlString(coreSql), status, excludeColAll);
     }
 
     private static boolean parseNoneParamMath(Appender appender, Annotation anno) {

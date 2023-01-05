@@ -66,10 +66,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
-    public List<Long> saveOrModify(T model) {
+    public List<Id> saveOrModify(T model) {
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
-        List<Long> ids = saveOrModify(models);
+        List<Id> ids = saveOrModify(models);
         if(ids!=null){
             return ids;
         }
@@ -77,10 +77,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
-    public List<Long> saveOrReplace(T model) {
+    public List<Id> saveOrReplace(T model) {
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
-        List<Long> ids = this.saveOrModify(models);
+        List<Id> ids = this.saveOrModify(models);
         if(ids!=null){
             return ids;
         }
@@ -88,28 +88,28 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
-    public List<Long> saveBatch(Collection<T> models) {
+    public List<Id> saveBatch(Collection<T> models) {
         List<Id> exs = insertFun.colAll(models).exs();
         if(exs != null){
-            return exs.stream().map(Id::toLong).collect(Collectors.toList());
+            return exs;
         }
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<Long> saveOrModify(Collection<T> models) {
+    public List<Id> saveOrModify(Collection<T> models) {
         List<Id> exs = insertFun.colAll(models).dupUpdate().exs();
         if(exs != null){
-            return exs.stream().map(Id::toLong).collect(Collectors.toList());
+            return exs;
         }
         return Collections.EMPTY_LIST;
     }
 
     @Override
-    public List<Long> saveOrReplace(Collection<T> models) {
+    public List<Id> saveOrReplace(Collection<T> models) {
         List<Id> exs = insertFun.colAll(models).dupReplace().exs();
         if(exs != null){
-            return exs.stream().map(Id::toLong).collect(Collectors.toList());
+            return exs;
         }
         return Collections.EMPTY_LIST;
     }

@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.general;
 
 import com.javaoffers.batis.modelhelper.anno.ColName;
+import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.mapper.BaseMapper;
 
 import java.io.Serializable;
@@ -28,7 +29,7 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrModify(T model);
+    public List<Id> saveOrModify(T model);
 
     /**
      * save or replace
@@ -36,14 +37,14 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrReplace(T model);
+    public List<Id> saveOrReplace(T model);
 
     /**
      * save model
      * @param models class
      * @return primary key id
      */
-    public List<Long> saveBatch(Collection<T> models);
+    public List<Id> saveBatch(Collection<T> models);
 
     /**
      * save or modify.
@@ -51,7 +52,7 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param models class
      * @return primary key id
      */
-    public List<Long> saveOrModify(Collection<T> models);
+    public List<Id> saveOrModify(Collection<T> models);
 
     /**
      * save or replace
@@ -59,7 +60,7 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param models class
      * @return primary key id
      */
-    public List<Long> saveOrReplace(Collection<T> models);
+    public List<Id> saveOrReplace(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based on properties of the model

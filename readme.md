@@ -68,10 +68,10 @@ public class User {
  ```java
 
  List<User>  users = crudUserMapper 
-    .select() 
-    .colAll() 
-    .where() 
-    .exs(); 
+                    .select() 
+                    .colAll() 
+                    .where() 
+                    .exs(); 
  ```
  
   <p>
@@ -80,11 +80,11 @@ This JQL will eventually be translated as select * from user. Here, colall means
  
  ```java
  List<User> users = crudusermapper
-     .select()
-     .col (user:: getbirthday)
-     .col (user:: getname)
-     .where()
-    .exs();
+                    .select()
+                    .col (user:: getbirthday)
+                    .col (user:: getname)
+                    .where()
+                    .exs();
  ```
  
  <p>
@@ -93,11 +93,11 @@ This JQL will eventually be translated as select * from user. Here, colall means
  
  ```java
  User user = crudusermapper
- .select() 
- .colAll() 
- .where() 
- .eq(User::getId, 1) 
- .ex();
+             .select() 
+             .colAll() 
+             .where() 
+             .eq(User::getId, 1) 
+             .ex();
  ```
  <p>
  In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
@@ -125,13 +125,12 @@ Id exOne = crudUserMapper
 </p>
 
 ```java
-String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
         User user = User.builder().name("Jom1").birthday(date).build();
         
         List<Id> ex = crudUserMapper
-                .insert()
-                .colAll(user)
-                .ex();
+                      .insert()
+                      .colAll(user)
+                      .ex();
         print(ex);
 ```
 
@@ -246,7 +245,7 @@ When my interface inherits the CrudMapper interface, we can write our JQL logic 
 public interface CrudUserMapper extends CrudMapper<User> {
     
     default List<User> queryAllAndOrder(){
-        return select()
+        return   select()
                 .colAll()
                 .leftJoin(UserOrder::new)
                 .colAll()

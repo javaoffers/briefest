@@ -301,6 +301,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .leftJoin(UserOrder::new)
                 .col(AggTag.MAX, UserOrder::getOrderName)
                 .on()
+                //OXX The beginning indicates the relationship between two tables
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
                 //Group by main table

@@ -82,6 +82,11 @@ public class TableInfo {
      */
     private Map<String, Boolean> isSqlFun = new HashMap<>();
 
+    /**
+     * Is it a Group Function
+     */
+    private Map<String, Boolean> isGroupFun = new HashMap<>();
+
     public String getTableName() {
         return tableName;
     }
@@ -164,12 +169,20 @@ public class TableInfo {
         fields.add(field);
     }
 
-    void putSqlFun(String colName, boolean isFunSql) {
-        isSqlFun.put(colName, isFunSql);
+    void putSqlFun(String colName, boolean isFunFun) {
+        isSqlFun.put(colName, isFunFun);
+    }
+
+    void putGroupFun(String colName, boolean isFunGroup){
+        isGroupFun.put(colName, isFunGroup);
     }
 
     public boolean isSqlFun(String colName) {
         return isSqlFun.getOrDefault(colName, false);
+    }
+
+    public boolean isGroupFun(String colName) {
+        return isGroupFun.getOrDefault(colName, false);
     }
 
     void putFieldNameAndField(String fieldName, Field field) {

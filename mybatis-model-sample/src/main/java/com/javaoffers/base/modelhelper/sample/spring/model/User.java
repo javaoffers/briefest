@@ -34,6 +34,8 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.time.Weekday;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Year;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.CharLength;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.ConcatWs;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.GroupConcat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.LTrim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Length;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Lower;
@@ -83,6 +85,11 @@ public class User {
     private com.javaoffers.base.modelhelper.sample.spring.constant.Month  month;
 
     private Work work;
+
+    @ColName("name")
+    @ConcatWs(separator = "':'", value = "id", position = 1)
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "id",sort = GroupConcat.Sort.DESC))
+    private String groupConcat;
 
     @ColName("'poor'")
     private ManLevel manLevel;

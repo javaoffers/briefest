@@ -11,6 +11,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.ConcatWs;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.GroupConcat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
@@ -151,6 +152,14 @@ public class FunAnnoParserSample {
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
     private String colName27;//GROUP_CONCAT( distinct CONCAT(name,age)  order by age DESC separator '-')
 
+    @ColName("name")
+    @ConcatWs(separator = " '-' ", value = "age")
+    private String colName28;
+
+    @ColName("name")
+    @ConcatWs(separator = " '-' ", value = {"age","'hello'"}, position = 1)
+    private String colName29;
+
     static TableInfo tableHelper;
     @Before
     public void before(){
@@ -203,6 +212,8 @@ public class FunAnnoParserSample {
         testColNameN(25);
         testColNameN(26);
         testColNameN(27);
+        testColNameN(28);
+        testColNameN(29);
 
     }
 

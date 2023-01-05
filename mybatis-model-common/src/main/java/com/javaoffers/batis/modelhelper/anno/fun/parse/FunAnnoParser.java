@@ -44,6 +44,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.time.Weekday;
 import com.javaoffers.batis.modelhelper.anno.fun.params.time.Year;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.CharLength;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Concat;
+import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.ConcatWs;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.GroupConcat;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.LTrim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Length;
@@ -62,6 +63,7 @@ import org.springframework.util.Assert;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -86,14 +88,13 @@ public class FunAnnoParser {
         ColName colNameAnno = null;
         String coreSql = null;
         boolean status = false;
-        boolean excludeColAll = false;
+        boolean isGroup = false;
         for(Annotation anno : allAnno){
             if(anno instanceof ColName){
                 colNameAnno = (ColName) anno;
                 continue;
-            }
-            if(anno instanceof GroupConcat){
-                excludeColAll = ((GroupConcat) anno).excludeColAll();
+            }else if(anno instanceof GroupConcat){
+                isGroup = ((GroupConcat) anno).excludeColAll();
             }
             //This will be optimized for strategy mode later. to avoid a lot of if statements
             status =
@@ -103,8 +104,6 @@ public class FunAnnoParser {
             parseParamMath(appender, anno)||
             parseNoneParamTime(appender, anno)||
             parseNoneParamMath(appender, anno);
-
-
 
         }
         if(colNameAnno != null){
@@ -116,7 +115,7 @@ public class FunAnnoParser {
         if(status && tableInfo.getColNames().containsKey(coreSql)){
             coreSql = tableInfo.getTableName()+"."+coreSql;
         }
-        return new ParseSqlFunResult(appender.toSqlString(coreSql), status, excludeColAll);
+        return new ParseSqlFunResult(appender.toSqlString(coreSql), status, isGroup);
     }
 
     private static boolean parseNoneParamMath(Appender appender, Annotation anno) {
@@ -292,6 +291,21 @@ public class FunAnnoParser {
         else if(anno instanceof Concat){
             Concat concat = (Concat) anno;
             appender.appenderPosition(concat.TAG, concat.position(), concat.value());
+            status = true;
+        }
+        else if(anno instanceof ConcatWs){
+            ConcatWs concat = (ConcatWs) anno;
+            String separator = concat.separator();
+            String[] value = concat.value();
+            LinkedList<Object> params = new LinkedList<>();
+            for(String conc : value){
+                //Allow empty
+                params.add(conc);
+            }
+            //separator not null
+            params.addFirst(separator);
+            // concat.position() + 1 for separator always as first element
+            appender.appenderPosition(concat.TAG, concat.position() + 1, params);
             status = true;
         }
         else if(anno instanceof GroupConcat){
@@ -502,6 +516,39 @@ public class FunAnnoParser {
 
             if(param != null){
                 List<String> collect = Arrays.stream(param).filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
+                if(position < 0){
+                    position = collect.size() + position+1;
+                }
+                Assert.isTrue(position <= collect.size() && position >= 0 ,funName +" position out of bounds");
+                List<String> left = collect.subList(0,position);
+                List<String> right = collect.subList(position, collect.size() );
+                if(left!=null &&left.size() > 0){
+                    String join = String.join(",", left);
+
+                    appenderLeftOut.append(join);
+                    appenderLeftOut.append(",");
+                }
+                if(right!=null &&right.size() > 0){
+                    String join = String.join(",", right);
+                    appenderRight.append(",");
+                    appenderRight.append(join);
+
+                }
+
+            }
+            appenderLeftOut.append(this.appenderLeft);
+            appenderRight.append(")");
+            this.appenderLeft = appenderLeftOut;
+            return this;
+        }
+
+        public Appender appenderPosition(String funName, int position, List<Object> param){
+            StringBuilder appenderLeftOut = new StringBuilder();
+            appenderLeftOut.append(funName);
+            appenderLeftOut.append("(");
+
+            if(param != null){
+                List<String> collect = param.stream().filter(Objects::nonNull).map(String::valueOf).collect(Collectors.toList());
                 if(position < 0){
                     position = collect.size() + position+1;
                 }

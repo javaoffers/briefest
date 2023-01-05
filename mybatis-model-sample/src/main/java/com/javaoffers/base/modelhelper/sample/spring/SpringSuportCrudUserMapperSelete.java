@@ -43,17 +43,29 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testDistinc();
-        testColAll();
-        testEnum();
-        test3Join();
-        testAsName();
-        testSelectOp();
-        testSelect();
+        testGroupConcat();
+//        testDistinc();
+//        testColAll();
+//        testEnum();
+//        test3Join();
+//        testAsName();
+//        testSelectOp();
+//        testSelect();
 
         if (status) {
             System.exit(0);
         }
+    }
+
+    public void testGroupConcat(){
+        User ex = crudUserMapper.select().colAll().where().limitPage(1, 1).ex();
+        LOGUtils.printLog(ex);
+        List<User> exs = crudUserMapper
+                .select()
+                .col(User::getGroupConcat)
+                .col(User::getSex)
+                .where().groupBy(User::getSex).exs();
+        LOGUtils.printLog(exs);
     }
 
     public void testDistinc(){

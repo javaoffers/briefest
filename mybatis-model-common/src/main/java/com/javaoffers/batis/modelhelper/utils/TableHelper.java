@@ -51,7 +51,9 @@ public class TableHelper {
         String tableName = tableInfo.getTableName();
         tableInfo.getFieldNameColNameOfModel().forEach((fieldName, colName) -> {
             if (tableInfo.isSqlFun(colName)) {
-                colAll.add(colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
+                if(!tableInfo.isGroupFun(colName)){
+                    colAll.add(colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
+                }
             } else {
                 colAll.add(tableName + "." + colName + " as " + fieldName);
             }
@@ -258,6 +260,7 @@ public class TableHelper {
                                     parseColName.setFun(true);
                                 }
                                 tableInfo.putSqlFun(colName, parseColName.isFun());
+                                tableInfo.putGroupFun(colName, parseColName.isGroup());
                             } else {
                                 // Indicates that this field does not have any annotation information.
                                 // then the field must belong to a field in the original table

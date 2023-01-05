@@ -26,7 +26,7 @@ public @interface GroupConcat {
      * col name for order by operation
      * @return
      */
-    OrderBy orderBy() default @OrderBy;
+    OrderBy orderBy() default @OrderBy(colName = "");
 
     /**
      * SEPARATOR seq
@@ -47,7 +47,7 @@ public @interface GroupConcat {
         /**
          * order by colName .
          */
-        String colName() default "";
+        String colName() ;
 
         /**
          * sort model.

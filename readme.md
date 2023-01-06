@@ -1,6 +1,6 @@
 
 ## mybatis model helper
-<a href="">中文<a/>
+<a href="./readmeCn.md">中文<a/>
 <p>
  welcome to fork and star
 </p>

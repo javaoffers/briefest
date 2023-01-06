@@ -1,7 +1,7 @@
 
 ## mybatis model helper
 <a href="./readmeCn.md">中文<a/>
-####  welcome to fork and star
+####  Welcome to fork and star for encourage
 
 - Features
   - Don't have to write native SQL.  Can write according to the stream api of Java.

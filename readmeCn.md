@@ -1,6 +1,6 @@
 
 ## mybatis model helper
-####  欢迎 fork 和 star
+####  欢迎 fork 和 star 鼓励一下
 
 - 特征
   - 不必编写本机 SQL。可以按照Java的stream api来写。

@@ -4,18 +4,29 @@
  welcome to fork and star
 </p>
 
-- 特征
-  - 不必编写本机 SQL。可以按照Java的stream api来写。
-  - SQL函数注解，简单易用
-  - 新的写法，支持mapper类写默认方法。
-  - 强大的类型转换功能。
-  - 多表查询不需要额外配置。自动映射类
-  - 集成了常用的API，无需开发即可直接使用。
-  - 目前只支持mysql语法标准
+- Features
+  - Don't have to write native SQL.  Can write according to the stream api of Java.
+  - SQL function annotation, simple and easy to use
+  - New form of writing, support mapper class to write the default method.
+  - Powerful type conversion functions.
+  - Insert/update automatic recognition optimized for batch execution
+  - Multi-table queries do not require additional configuration. Automatic mapping classes
+  - Commonly used APIs have been integrated and can be used directly without development.
+  - Currently, only mysql syntax standards are supported
 
-- 概要
+- Summary
   <p>
-简化mybatis开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 旨在支持最多 3 个表的关联查询。我们不建议加入超过 3 个表。这降低了 SQL 的可读性和可维护性。 modelhelper 支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。集成了常用的crud操作，可以直接使用thoese api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
+ Simplify mybatis development. Make writing SQL like writing java code. 
+ Here we call it JQL. And form a set of JQL API process to reduce the SQL error rate.
+ JQL is designed to decompose complex SQL into simple SQL, 
+ so JQL is designed to support up to 3 table associated queries.
+ We do not recommend joining more than 3 tables. 
+ This reduces the readability and maintainability of SQL.
+ And new writing formats are supported in modelhelper.
+ The default method can be written in the java interface,
+ and the JQL API can be directly manipulated internally (provided that crudmapper is inherited). 
+ Common crud operations have been integrated, so you can directly use thoese api.
+ Let me write JQL in Java stream to improve development efficiency. Less code and smoother writing.
 </p>
  
 - maven
@@ -29,12 +40,16 @@
 
   ```
     
-- 基本使用教程 
+- Basic Usage Tutorial 
  <p>
     A Normal Query
  </p>
  <p>
-在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
+    Before looking at the operation, let's take a look at the data structure: there are two key annotations here.
+     @BaseModel is used to indicate that the class belongs to the model class (the class name is the same as the table name,
+      ModelHelp will eventually convert the camel case class name into an underscore table name, and the attributes are the same), 
+      @BaseUnique indicates the only attribute in the class (corresponding to A unique attribute in a table, which can be multiple 
+      when a federated primary key is used in the table). We will explain the use of annotations in detail at the end. Here is the basic use
  </p>
  
  ```java
@@ -61,8 +76,8 @@ public class User {
  ```
  
   <p>
-这个 JQL 最终会被翻译为 select * from user。这里的colall是查询所有表字段的意思。如果要查询指定的字段，比如姓名和生日字段，可以这样做： 
-</p>
+This JQL will eventually be translated as select * from user. Here, colall means to query all table   fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: 
+ </p>
  
  ```java
  List<User> users = crudusermapper
@@ -74,7 +89,7 @@ public class User {
  ```
  
  <p>
-可以通过col()指定要查询的字段。这里的where()和SQL中的关键字where是一样的。比如要查询一个id值为1的用户，可以这样写：
+ You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: 
  </p>
  
  ```java
@@ -86,15 +101,15 @@ public class User {
              .ex();
  ```
  <p>
-在这三种情况下，你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
+ In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
  </p>  
  <p>
  
-   更多查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+   More query cases：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
 <p>
- 正常的插入操作
+  A Normal Insert Operation
 </p> 
 
 ```java
@@ -105,8 +120,9 @@ Id exOne = crudUserMapper
                 .ex();
 ```
 <p>
-一个简单的insert语句，返回一个wrapper class Id，通常是新插入数据的主键。一个插入操作就这么简单。还有一种更简单的插入数据的方法。插入对象。并支持多个。
-编队逻辑针对批处理进行了优化。例如下面的案例
+    A simple insert statement that returns a wrapper class Id, which is usually the primary key of the newly inserted data. An insert operation is so simple.
+    There is also a simpler way to insert data. Insert object. and supports multiple. Formation logic is optimized for batch processing. 
+    For example the following case
 </p>
 
 ```java
@@ -121,13 +137,13 @@ Id exOne = crudUserMapper
 
 <p>
 
-  我们可以插入整个模型对象，表示要查询所有字段，对层进行批处理。性能非常好。
-  更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
-
+  We can insert the entire model object, indicating that all fields are to be queried, and the stratum is batched. Performance is very good.
+  For more cases, please refer to：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 </p>
 
 <p>
-更新操作，更新操作有两种模式，允许更新空值updateNull和不允许更新空值npdateNull，请看下面的案例</p>
+Update operation, update operation has two modes, allowing to update null value updateNull and not allowing to update null value npdateNull, please see the following case
+</p>
 
 ```java
 crudUserMapper
@@ -151,7 +167,8 @@ crudUserMapper
 ```
 
 <p>
-此方法对于模型对象实例非常有用。比如一个User对象中有些属性有值（not null）有些属性没有值（null），那么没有值的属性是否应该更新呢？可以通过npdateNull（不更新）updateNull（更新属性为null），比如下面这种情况</p>
+   This method is very useful for model object instances. For example, some properties in a User object have values ​​(not null) and some properties have no value (null), so should the properties without values ​​be updated? You can pass npdateNull (do not update) updateNull (update property is null), such as the following case
+</p>
 
 ```java
     public void testUpdateUser(){
@@ -175,13 +192,14 @@ crudUserMapper
 ```
 
 <p>
-通过上面的案例，我们可以在业务中很好的控制字段的更新。当我使用模型类时。
+ Through the above case, we can control the update of the field very well in the business. When I use the model class.
 </p>
 
 
 
 <p>
-一种新的编码方式。我们可以在 Mapper 接口中编写默认方法。例如下面的案例我们推荐使用这种风格
+A new way of encoding. We can write default method in Mapper interface. For example the following case
+We recommend using this style
 </p>
 
 ```java
@@ -198,21 +216,30 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```
 
 <p>
-当我的接口继承了CrudMapper接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 Mapper 接口上编写原生 SQL 语句的方法。.
-更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
+When my interface inherits the CrudMapper interface, we can write our JQL logic in default. This avoids the traditional method of writing native SQL statements on the Mapper interface.
+. For more cases, please see:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
-- 演示 crud:
+- demo crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
-#### 进阶 
-- 这部分主要介绍如何使用JQL来表达一些复杂的查询语句
+#### Advanced Advanced
+- This part mainly describes how to use JQL to express some complex query statements
 <p>
-  在上面的基础部分，我们解释了一些常见和最基本的用途。接下来，我们将介绍一些实际项目中的场景。一些稍微复杂的用例。主要包括连接查询、分组查询、统计查询和常用的通用操作。
+   In the basic part above, we explained some common and most basic uses. Next, 
+   we will introduce some scenarios in real projects. Some slightly more complex use cases. 
+   It mainly includes join query, group query, statistical query, and common general operations.
 </p>
 
 <p>
-    JQL 提供了丰富的常用 API。比如 >= , <= , in , between, like, likeLeft, likeRight, exists等。还有一个combination unite，主要是把多个条件组合成一个，比如(xx > xx or xx < xx )把两个关联条件为一。同时我们让你写原生sql的入口，比如col(sql), condSQL(sql)，虽然我们通常不推荐使用原生sql。因为尽量不要用sql进行复杂的逻辑处理，比如截取一些字符串。或者拼接等，这些操作建议在业务层处理。先来看一个简单的join JQL案例：推荐在接口类中写JQL
+    JQL provides a wealth of commonly used APIs. For example >= , <= , in , between, like,  
+    likeLeft, likeRight, exists, etc. There is also a combination unite that mainly combines  
+    multiple conditions into one, such as (xx > xx or xx < xx ) treats two association conditions 
+    as one. At the same time, we let you write the entry of native sql, such as col(sql), 
+    condSQL(sql), although we usually do not recommend using native sql. Because try not to 
+    use sql for complex logic processing , such as the interception of some strings.  
+    Or splicing, etc. It is recommended that these operations be handled at the business layer. 
+    Let's first look at a simple join JQL case: We recommend writing JQL in an interface class
 </p>
 
 ```java
@@ -231,7 +258,8 @@ public interface CrudUserMapper extends CrudMapper<User> {
 }
 ```
 <p>
-这个JQL就是查询user和userOrder满足关系的数据，并且自动映射一对多关系。 User类的结构如下：</p>
+ This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships. The structure of the User class is as follows：
+</p>
 
 ```java
  @BaseModel     
@@ -246,7 +274,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
     private String createTime;
 
-    private List<UserOrder> orders; //它会自动将数据映射到其中
+    private List<UserOrder> orders; //It will automatically map the data into it
       
     //getter, setter methods 
   }
@@ -287,14 +315,106 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
 ```
 
-####   通用API
+<p>
+use left join , group by , having,  limitPage 
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .groupBy(User::getName, User::getId)//Group by main table
+                .groupBy(UserOrder::getUserId) //Group according to sub-table
+                .having()
+                //Main table statistics function
+                .eq(AggTag.COUNT,User::getName,1)
+                .or()
+                // unite mean (xx and xx)
+                .unite(unite->{
+                    unite.in(AggTag.COUNT, UserOrder::getUserId,1 )
+                        .in(AggTag.COUNT, UserOrder::getUserId,1);
+                })
+                //Subtable statistics function
+                .gt(AggTag.COUNT,UserOrder::getOrderId,1)
+                .limitPage(1,10)
+                .exs();
+
+```
+<p>
+use left join , group by  , order by, limitPage
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .leftJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                //Group by main table
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                // Sort by primary table
+                .orderA(User::getName)
+                //Sort by subtable
+                .orderA(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+```
 
 <p>
-    我封装了一些常用的功能，使用起来非常简单。而且代码也非常简洁明了。例如通过 id 查询或更改。
+use inner join on unite, where unite  group by  , having unite, order by, limitPage
+</p>
+
+```java
+crudUserMapper.select()
+                .col(AggTag.MAX, User::getName)
+                .innerJoin(UserOrder::new)
+                .col(AggTag.MAX, UserOrder::getOrderName)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                //support and (xxx or xxx )
+                .unite(unite->{
+                        unite.eq(UserOrder::getUserId,1)
+                            .or()
+                            .eq(UserOrder::getUserId, 2);
+                })
+                .where()
+                //support and (xxx or xxx )
+                .unite(unite->{
+                         unite.eq(User::getId,1)
+                            .or()
+                            .eq(User::getId,2);
+                })
+                //According to the main group
+                .groupBy(User::getName, User::getId)
+                //Group according to sub-table
+                .groupBy(UserOrder::getUserId)
+                .having()
+                // Sort by primary table
+                .orderA(User::getName)
+                //Sort by subtable
+                .orderD(UserOrder::getUserId)
+                .limitPage(1,10)
+                .exs();
+
+```
+
+####   Common APIs 
+
+<p>
+    I encapsulate some commonly used functions, which are very simple to use. 
+    And the code is also very concise and clear. Such as query or change by id .
 </p>
 
 <p>
-    常用的api只需要调用general()方法即可使用。比如通过id查询数据
+    Commonly used apis only need to be used by calling the general() method. For example, query data by id
 </p>
 
 ```java
@@ -303,7 +423,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    save api，保存一个对象到数据库
+    save api，save an object to the database
 </p>
 
 ```java
@@ -313,7 +433,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    通过id删除指定数据
+    Delete the specified data by id
 </p>
 
 ```java
@@ -321,7 +441,7 @@ crudUserMapper.general().removeById(1);
 ```
 
 <p>
-   比较简单常用的API如下。
+    More simple and commonly used APIs are as follows. 
 </p>
 
 ```java
@@ -483,9 +603,10 @@ crudUserMapper.general().removeById(1);
      */
     public long count(C c);
 ```
-### sql函数注解
+### Sql function annotation
 <p>
-    我们可以通过在类的字段上使用注解来使用sql函数。以下是一些用例：
+    We can use sql functions by using annotations on the fields of the class. 
+    Here are some use cases：
 </p>
 
 ```java
@@ -616,7 +737,10 @@ public class FunAnnoParserSample {
 ```
 ### Powerful type converter
 <p>
-内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
+Built a large number of commonly used type converter.
+Such as a database field birthday is a datetime/int,
+Number/varchar and the conversion between enumeration class conversion .
+Enumeration classes are usually used together with @EnumValue to identify the unique attribute of the enumeration class, which will be automatically associated with the fields in the table(sample of enum : 
 https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 ). 
 </p>
@@ -663,5 +787,6 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 #### Code contributions are welcome
 <p>
-该项目已在内部使用。大大提高了开发效率和代码整洁度。如果觉得不错，请点个小星星鼓励一下
+The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.
+If you think it's good, please click the little star to encourage it
 </p>

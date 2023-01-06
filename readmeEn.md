@@ -39,7 +39,8 @@
    </dependency>
 
   ```
-    
+
+### Basic use      
 - Basic Usage Tutorial 
  <p>
     A Normal Query

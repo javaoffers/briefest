@@ -1,41 +1,40 @@
-- English: https://github.com/caomingjie-code/mybatis-jql/blob/master/readme2.md
+
 ## mybatis model helper
-- Features
-  - 不用写原生sql.可以按照java流的方式编写.
-  - sql函数注解化，简单易用
-  - 新的编写形式，支持在mapper类中编写default方法.
-  - 强大的类型转换功能.
-  - 多表查询不需要额外的配置.自动映射类
-  - 常用的api已经集成，可以直接使用不需要开发.
- 
-- Summary
+<p>
+ welcome to fork and star
+</p>
+
+- 特征
+  - 不必编写本机 SQL。可以按照Java的stream api来写。
+  - SQL函数注解，简单易用
+  - 新的写法，支持mapper类写默认方法。
+  - 强大的类型转换功能。
+  - 多表查询不需要额外配置。自动映射类
+  - 集成了常用的API，无需开发即可直接使用。
+  - 目前只支持mysql语法标准
+
+- 概要
   <p>
- 
- 简化mybatis开发.使得编写 SQL 就像编写 java 代码一样。这里我们称之为 JQL。
- 并形成一套 JQL API 流程使 SQL 错误率降低。
- JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 在设计时最多支持两个表关联查询。
- 我们不建议加入超过 2 个表。这样会降低 SQL 的可读性和可维护性。并且在modelhelper中支持了新的编写格式。
- 默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
- 让我在 Java 流中编写 JQL 以提高开发效率。更少的代码和更流畅的书写形式。
+简化mybatis开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 旨在支持最多 3 个表的关联查询。我们不建议加入超过 3 个表。这降低了 SQL 的可读性和可维护性。 modelhelper 支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。集成了常用的crud操作，可以直接使用thoese api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 </p>
  
 - maven
   ```java
-    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.3 -->
+    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.4 -->
    <dependency>
-      <groupId>com.javaoffers</groupId>
-      <artifactId>mybatis-model-spring-support</artifactId>
-      <version>3.5.11.3</version>
+       <groupId>com.javaoffers</groupId>
+       <artifactId>mybatis-model-spring-support</artifactId>
+       <version>3.5.11.6</version>
    </dependency>
 
   ```
     
-- 基本使用教程
+- 基本使用教程 
  <p>
-    普通查询
+    A Normal Query
  </p>
  <p>
-    在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel 用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰类名转换为下划线表名，属性相同），@ BaseUnique 表示类中唯一的属性（对应表中的唯一属性，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。这里是基本用法
+在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
  </p>
  
  ```java
@@ -55,49 +54,47 @@ public class User {
  ```java
 
  List<User>  users = crudUserMapper 
-    .select() 
-    .colAll() //查询所有字段
-    .where() 
-    .exs(); 
+                    .select() 
+                    .colAll() 
+                    .where() 
+                    .exs(); 
  ```
  
   <p>
-这个 JQL 最终会被翻译为 select * from user。这里的 colall 表示查询所有表字段。如果要查询指定的字段，例如姓名、生日等字段，可以这样做：
- </p>
+这个 JQL 最终会被翻译为 select * from user。这里的colall是查询所有表字段的意思。如果要查询指定的字段，比如姓名和生日字段，可以这样做： 
+</p>
  
  ```java
  List<User> users = crudusermapper
-     .select()
-     .col (user:: getbirthday) //指定查询子字段
-     .col (user:: getname)
-     .where()
-    .exs();
+                    .select()
+                    .col (user:: getbirthday)
+                    .col (user:: getname)
+                    .where()
+                    .exs();
  ```
  
  <p>
- 
-您可以通过 col() 指定要查询的字段。这里的 where() 与 SQL 中的关键字 where 相同。比如要查询一个ID值为1的用户，可以这样写： 
+可以通过col()指定要查询的字段。这里的where()和SQL中的关键字where是一样的。比如要查询一个id值为1的用户，可以这样写：
  </p>
  
  ```java
  User user = crudusermapper
- .select() 
-  .colAll() //查询所有字段
- .where() 
- .eq(User::getId, 1) 
- .ex();
+             .select() 
+             .colAll() 
+             .where() 
+             .eq(User::getId, 1) 
+             .ex();
  ```
  <p>
-在这三种情况下，你会发现有两个特殊的函数 exs(), ex() 这两个函数代表触发器执行。 exs()通常用于查询更多数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。在大多数工作场景中，过滤条件都会在WHERE之后添加，除了特殊的count all table data之外，这个设计也是一个很好的提醒，记得填写WHERE条件，当然如果你不需要添加任何WHERE条件为了查询所有表数据，可以使用where().ex(), where().exs()
+在这三种情况下，你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
  </p>  
  <p>
  
    更多查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
- 
  </p>
 
 <p>
-正常的插入操作
+ 正常的插入操作
 </p> 
 
 ```java
@@ -108,32 +105,29 @@ Id exOne = crudUserMapper
                 .ex();
 ```
 <p>
-
-一个简单的插入语句，它返回一个包装类 ID，它通常是新插入数据的主键。插入操作就是这么简单。还有一种更简单的插入数据的方法。插入对象。并支持多个。形成逻辑针对批处理进行了优化。例如下面的案例
-    
+一个简单的insert语句，返回一个wrapper class Id，通常是新插入数据的主键。一个插入操作就这么简单。还有一种更简单的插入数据的方法。插入对象。并支持多个。
+编队逻辑针对批处理进行了优化。例如下面的案例
 </p>
 
 ```java
-String date = DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss");
-        User h1 = User.builder().name("Jom1").birthday(date).build();
-        User h2 = User.builder().name("Jom2").birthday(date).build();
-        User h3 = User.builder().name("Jom3").birthday(date).build();
-        List<Id> ex = crudUserMapper.insert()
-                .colAll(h1, h2, h3)
-                .ex();
+        User user = User.builder().name("Jom1").birthday(date).build();
+        
+        List<Id> ex = crudUserMapper
+                      .insert()
+                      .colAll(user)
+                      .ex();
         print(ex);
 ```
 
 <p>
 
- 我们可以插入整个模型对象，表示要查询所有字段，分批分层。性能非常好。更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+  我们可以插入整个模型对象，表示要查询所有字段，对层进行批处理。性能非常好。
+  更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 
 </p>
 
 <p>
-
-更新操作，更新操作有两种模式，允许更新空值updateNull和不允许更新空值npdateNull，请看以下案例
-</p>
+更新操作，更新操作有两种模式，允许更新空值updateNull和不允许更新空值npdateNull，请看下面的案例</p>
 
 ```java
 crudUserMapper
@@ -157,9 +151,7 @@ crudUserMapper
 ```
 
 <p>
-
-此方法对于模型对象实例非常有用。比如User对象中有些属性有值（不为null），有些属性没有值（null），那么没有值的属性是否应该更新呢？可以通过npdateNull（不更新）updateNull（更新属性为null），比如下面的情况
-</p>
+此方法对于模型对象实例非常有用。比如一个User对象中有些属性有值（not null）有些属性没有值（null），那么没有值的属性是否应该更新呢？可以通过npdateNull（不更新）updateNull（更新属性为null），比如下面这种情况</p>
 
 ```java
     public void testUpdateUser(){
@@ -183,14 +175,13 @@ crudUserMapper
 ```
 
 <p>
-
-通过上面的案例，我们可以很好的控制业务中字段的更新。当我使用模型类时。
+通过上面的案例，我们可以在业务中很好的控制字段的更新。当我使用模型类时。
 </p>
 
+
+
 <p>
-
-一种新的编码方式。我们可以在 Mapper 接口中编写默认方法。比如下面的案例我们推荐使用这种风格
-
+一种新的编码方式。我们可以在 Mapper 接口中编写默认方法。例如下面的案例我们推荐使用这种风格
 </p>
 
 ```java
@@ -207,28 +198,28 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```
 
 <p>
-
-当我的接口继承了 CrudMapper 接口时，我们可以默认编写我们的 JQL 逻辑。这避免了在 Mapper 接口上编写本机 SQL 语句的传统方法。 .更多案例请看：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring /mapper/CrudUserMapper.java
+当我的接口继承了CrudMapper接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 Mapper 接口上编写原生 SQL 语句的方法。.
+更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
-- demo crud:
+- 演示 crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
-#### 进阶
+#### 进阶 
 - 这部分主要介绍如何使用JQL来表达一些复杂的查询语句
 <p>
-在上面的基础部分，我们解释了一些常见和最基本的用途。接下来，我们将介绍一些实际项目中的场景。一些稍微复杂的用例。主要包括join查询、group查询、统计查询、常用的通用操作。
+  在上面的基础部分，我们解释了一些常见和最基本的用途。接下来，我们将介绍一些实际项目中的场景。一些稍微复杂的用例。主要包括连接查询、分组查询、统计查询和常用的通用操作。
 </p>
 
 <p>
-JQL 提供了丰富的常用 API。例如 >= 、 <= 、 in 、 between、like、likeLeft、likeRight、exists 等。还有一种组合 unite 主要将多个条件合二为一，如 (xx > xx 或 xx < xx ) 对待两个关联条件为一。同时我们让你写原生sql的入口，比如col(sql)，condSQL(sql)，虽然我们通常不推荐使用原生sql。因为尽量不要用sql进行复杂的逻辑处理，比如截取一些字符串。或者拼接等。建议在业务层处理这些操作。我们先来看一个简单的join JQL案例：我们推荐在接口类中写JQL
+    JQL 提供了丰富的常用 API。比如 >= , <= , in , between, like, likeLeft, likeRight, exists等。还有一个combination unite，主要是把多个条件组合成一个，比如(xx > xx or xx < xx )把两个关联条件为一。同时我们让你写原生sql的入口，比如col(sql), condSQL(sql)，虽然我们通常不推荐使用原生sql。因为尽量不要用sql进行复杂的逻辑处理，比如截取一些字符串。或者拼接等，这些操作建议在业务层处理。先来看一个简单的join JQL案例：推荐在接口类中写JQL
 </p>
 
 ```java
 public interface CrudUserMapper extends CrudMapper<User> {
     
     default List<User> queryAllAndOrder(){
-        return select()
+        return   select()
                 .colAll()
                 .leftJoin(UserOrder::new)
                 .colAll()
@@ -240,7 +231,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 }
 ```
 <p>
-这个JQL是查询user和userOrder满足关系的数据，并自动映射一对多关系。 User类的结构如下：</p>
+这个JQL就是查询user和userOrder满足关系的数据，并且自动映射一对多关系。 User类的结构如下：</p>
 
 ```java
  @BaseModel     
@@ -255,7 +246,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
     private String createTime;
 
-    private List<UserOrder> orders; //It will automatically map the data into it
+    private List<UserOrder> orders; //它会自动将数据映射到其中
       
     //getter, setter methods 
   }
@@ -274,7 +265,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 ```   
 
 <p>
-    使用 left join , group by , limitPage  
+    use left join , group by , limitPage  
 </p>   
       
 ```java
@@ -283,116 +274,27 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .leftJoin(UserOrder::new)
                 .col(AggTag.MAX, UserOrder::getOrderName)
                 .on()
+                //OXX The beginning indicates the relationship between two tables
                 .oeq(User::getId, UserOrder::getUserId)
                 .where()
                 //Group by main table
                 .groupBy(User::getName, User::getId)
                 //Group according to sub-table
                 .groupBy(UserOrder::getUserId)
+                //1:pageNum,10:pageSize
                 .limitPage(1,10)
                 .exs();
 
 ```
 
-<p>
-使用 left join , group by , having,  limitPage 
-</p>
-
-```java
-crudUserMapper.select()
-                .col(AggTag.MAX, User::getName)
-                .leftJoin(UserOrder::new)
-                .col(AggTag.MAX, UserOrder::getOrderName)
-                .on()
-                .oeq(User::getId, UserOrder::getUserId)
-                .where()
-                .groupBy(User::getName, User::getId)//按主表分组
-                .groupBy(UserOrder::getUserId) //按子表分组
-                .having()
-                //主表统计功能
-                .eq(AggTag.COUNT,User::getName,1)
-                .or()
-                // 意思 (xx and xx)
-                .unite(unite->{
-                    unite.in(AggTag.COUNT, UserOrder::getUserId,1 )
-                        .in(AggTag.COUNT, UserOrder::getUserId,1);
-                })
-                //子表统计功能
-                .gt(AggTag.COUNT,UserOrder::getOrderId,1)
-                .limitPage(1,10)
-                .exs();
-
-```
-<p>
-use left join , group by  , order by, limitPage
-</p>
-
-```java
-crudUserMapper.select()
-                .col(AggTag.MAX, User::getName)
-                .leftJoin(UserOrder::new)
-                .col(AggTag.MAX, UserOrder::getOrderName)
-                .on()
-                .oeq(User::getId, UserOrder::getUserId)
-                .where()
-                //按主表分组
-                .groupBy(User::getName, User::getId)
-                //按子表分组
-                .groupBy(UserOrder::getUserId)
-                // 按主表排序
-                .orderA(User::getName)
-                //按子表排序
-                .orderA(UserOrder::getUserId)
-                .limitPage(1,10)
-                .exs();
-```
+####   通用API
 
 <p>
-在 unite 上使用内部联接，其中 unite group by ，具有 unite、order by、limitPage
-</p>
-
-```java
-crudUserMapper.select()
-                .col(AggTag.MAX, User::getName)
-                .innerJoin(UserOrder::new)
-                .col(AggTag.MAX, UserOrder::getOrderName)
-                .on()
-                .oeq(User::getId, UserOrder::getUserId)
-                //支持 and（xxx or xxx）
-                .unite(unite->{
-                        unite.eq(UserOrder::getUserId,1)
-                            .or()
-                            .eq(UserOrder::getUserId, 2);
-                })
-                .where()
-                //support and (xxx or xxx )
-                .unite(unite->{
-                         unite.eq(User::getId,1)
-                            .or()
-                            .eq(User::getId,2);
-                })
-                //根据主分组
-                .groupBy(User::getName, User::getId)
-                //按子表分组
-                .groupBy(UserOrder::getUserId)
-                .having()
-                // 按主表排序 （升序）
-                .orderA(User::getName)
-                //按子表排序 （倒序)
-                .orderD(UserOrder::getUserId)
-                .limitPage(1,10)
-                .exs();
-
-```
-
-####  常用
-
-<p>
-    我封装了一些常用的函数，使用起来非常简单。而且代码也非常简洁明了。如通过id查询或更改。
+    我封装了一些常用的功能，使用起来非常简单。而且代码也非常简洁明了。例如通过 id 查询或更改。
 </p>
 
 <p>
-    常用的api只需调用general()方法即可。比如通过id查询数据
+    常用的api只需要调用general()方法即可使用。比如通过id查询数据
 </p>
 
 ```java
@@ -401,7 +303,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-   save api，保存一个对象到数据库
+    save api，保存一个对象到数据库
 </p>
 
 ```java
@@ -411,7 +313,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-按id删除指定数据
+    通过id删除指定数据
 </p>
 
 ```java
@@ -419,7 +321,7 @@ crudUserMapper.general().removeById(1);
 ```
 
 <p>
-    更简单常用的API如下。
+   比较简单常用的API如下。
 </p>
 
 ```java
@@ -463,6 +365,8 @@ crudUserMapper.general().removeById(1);
 
     /**
      * delete model by id
+
+
      */
     public int removeById(Serializable id );
 
@@ -581,7 +485,7 @@ crudUserMapper.general().removeById(1);
 ```
 ### sql函数注解
 <p>
-   我们可以通过在类的字段上使用注释来使用 sql 函数。以下是一些用例：
+    我们可以通过在类的字段上使用注解来使用sql函数。以下是一些用例：
 </p>
 
 ```java
@@ -673,17 +577,52 @@ public class FunAnnoParserSample {
     @ColName("name")
     @Trim
     private String colName19; //TRIM(name)
+
+    @ColName("name")
+    @Concat(value = "'hello'", position = -1)
+    private String colName20;//CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = "'hello'", position = 1)
+    private String colName21; //CONCAT('hello',name)
+
+    @ColName("name")
+    @Concat(value = {"'hello'"," 'how are you?' "}, position = 1)
+    private String colName22;//  CONCAT('hello',name, 'how are you?' )
+
+
+    @ColName("name")
+    @GroupConcat
+    private String colName23;//GROUP_CONCAT( name )
+
+    @ColName("name")
+    @GroupConcat(distinct = true)
+    private String colName24;//GROUP_CONCAT( distinct name )
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.ASC) )
+    private String colName25;//GROUP_CONCAT( distinct name  order by age ASC)
+
+    @ColName("name")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName26;//GROUP_CONCAT( distinct name  order by age DESC separator '-')
+
+    @ColName("name")
+    @Concat("age")
+    @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
+    private String colName27;//GROUP_CONCAT( distinct CONCAT(name,age)  order by age DESC separator '-')
+
 }
 ```
-
-### 强大的类型转换器
+### Powerful type converter
 <p>
- 内置大量常用的类型转换器。 比如 数据库的字段 birthday 是datetime / int , 而我们的User 类中的为 String birthday, 转换器会自动转换为格式为
- yyyy-MM-dd HH:mm:ss 格式的. 常用的类型转换器如下：
+内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
+https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+). 
 </p>
 
 ```
-    String2DoubleConvert  
+   String2DoubleConvert  
     DateOne2DateTwoConvert  
     String2DateConvert  
     Boolean2StringConvert  
@@ -716,10 +655,13 @@ public class FunAnnoParserSample {
     String2BigDecimalConvert  
     Number2BooleanConvert  
     String2BigIntegerConvert  
-    Number2LocalDateTimeConvert  
+    Number2LocalDateTimeConvert
+    Number2EnumConvert
+    String2EnumConvert
+
 ```
 
-#### 欢迎代码贡献
+#### Code contributions are welcome
 <p>
-该项目已在内部使用。开发效率和代码整洁度都有了很大的提高。如果觉得不错，请点个小星星鼓励一下
+该项目已在内部使用。大大提高了开发效率和代码整洁度。如果觉得不错，请点个小星星鼓励一下
 </p>

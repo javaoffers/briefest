@@ -5,7 +5,9 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.condition.where.GroupByWordCondition;
 
 /**
- * @Description: 支持分组. group by
+ * @Description: 主表分组之后，子表进行分组. group by aa , xx,xxx,xx
+ * group by aa : GroupByWordCondition 主表分组
+ * ,xx,xxx,xx  : LeftGroupByWordCondition 子表分组
  * @Auther: create by cmj on 2022/6/5 20:02
  */
 public class LeftGroupByWordCondition extends GroupByWordCondition {
@@ -15,13 +17,12 @@ public class LeftGroupByWordCondition extends GroupByWordCondition {
 
     public LeftGroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
-        this.getterFuns = getterFuns;
+        this.getterFuns = colName;
         this.tag = tag;
     }
 
     public LeftGroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
-        this.getterFuns = getterFuns;
         this.tag = tag;
     }
 

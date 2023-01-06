@@ -1,8 +1,12 @@
 package com.javaoffers.batis.modelhelper.fun.condition.where;
 
 import com.javaoffers.batis.modelhelper.core.SQLParse;
+import com.javaoffers.batis.modelhelper.exception.ParseParamException;
 import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,6 +28,18 @@ public class CondSQLCondition extends WhereOnCondition<Object> {
                 String result = matcher.group(1);
                 String paramKey = result.substring(2, result.length() - 1);
                 Object paramValue = params.get(paramKey);
+                if(paramValue == null){
+                    throw new ParseParamException("param is null for " + paramKey);
+                }
+                int length = 0 ;
+                //If is an array, the array into the list
+                if(paramValue.getClass().isArray() &&  (length = Array.getLength(paramValue)) > 0){
+                    ArrayList<Object> list = new ArrayList<>(length);
+                    for(int i = 0 ; i < length; i++){
+                        list.add(Array.get(paramValue, i));
+                    }
+                    paramValue = list;
+                }
                 if(paramValue instanceof Collection){
                     Collection pvs = (Collection) paramValue;
                     for(Object pv : pvs){

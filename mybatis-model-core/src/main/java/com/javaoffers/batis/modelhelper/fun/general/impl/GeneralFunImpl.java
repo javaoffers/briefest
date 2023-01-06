@@ -178,7 +178,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         int i = 0;
         for( T model : models){
             if(i==0){
-                where= npdateNull.colAll(model).where();
+                where = npdateNull.colAll(model).where();
             }else{
                 where.addBatch().colAll(model).where();
                 //Where participation should be consistent otherwise it will affect batch processing

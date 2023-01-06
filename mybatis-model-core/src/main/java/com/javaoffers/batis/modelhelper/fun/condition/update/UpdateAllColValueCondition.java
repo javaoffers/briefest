@@ -105,8 +105,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 }else {
                     updateSqlNull.append(", ");
                 }
-                //Can't use getNext, otherwise it will affect batch processing
-                String colNameTag = cloName;
+
+                String colNameTag = getNextTag();
                 updateSqlNull.append(cloName);
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(colNameTag);

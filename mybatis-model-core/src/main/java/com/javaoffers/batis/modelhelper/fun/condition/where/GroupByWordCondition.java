@@ -15,14 +15,13 @@ public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndO
 
     public GroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
-        this.getterFuns = getterFuns;
+        this.getterFuns = colName;
         this.tag = tag;
         cleanAndOrTag();
     }
 
     public GroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
-        this.getterFuns = getterFuns;
         this.tag = tag;
         cleanAndOrTag();
     }

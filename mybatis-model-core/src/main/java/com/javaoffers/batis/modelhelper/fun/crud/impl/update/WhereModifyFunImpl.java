@@ -339,7 +339,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public SmartUpdateFun<M, GetterFun<M, Object>, V> addBatch() {
-         conditions.add(new AddPatchMarkCondition());
-         return new SmartUpdateFunImpl(modelClass, conditions,isUpdateNull);
+        conditions.add(new AddPatchMarkCondition());
+        conditions.add(((HeadCondition)this.conditions.peekFirst()).clone());
+        return new SmartUpdateFunImpl(modelClass, conditions,isUpdateNull);
     }
 }

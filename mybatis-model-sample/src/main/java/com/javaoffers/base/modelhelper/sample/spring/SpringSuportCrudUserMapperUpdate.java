@@ -2,6 +2,8 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.batis.modelhelper.core.Id;
@@ -33,12 +35,28 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testUpdate();
-
+        testBatchUpdate();
         if(status){
             System.exit(0);
         }
 
     }
+    public void testBatchUpdate(){
+        List<User> users = crudUserMapper.queryAll();
+        for(User user : users){
+            user.setSex(Sex.Boy);
+        }
+        crudUserMapper.update().npdateNull()
+                .col(User::getWork, Work.JAVA)
+                .where()
+                .eq(User::getId, users.get(0).getId())
+                .addBatch()
+                .col(User::getWork, Work.PYTHON)
+                .where()
+                .eq(User::getId, users.get(1).getId())
+                .ex();
+    }
+
 
     public void testUpdate() throws JsonProcessingException {
         Long id = 109L;

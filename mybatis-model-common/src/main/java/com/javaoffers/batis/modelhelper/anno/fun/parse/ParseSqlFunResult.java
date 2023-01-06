@@ -6,29 +6,28 @@ package com.javaoffers.batis.modelhelper.anno.fun.parse;
 public class ParseSqlFunResult {
     String sqlFun;
     boolean isFun;
-    //Is it a group function, group fun is a special case of isFun
-    boolean isGroup;
+    boolean excludeColAll;
 
-    public ParseSqlFunResult(String sqlFun, boolean isFun, boolean isGroup) {
+    public ParseSqlFunResult(String sqlFun, boolean isFun, boolean excludeColAll) {
         this.sqlFun = sqlFun;
         this.isFun = isFun;
-        this.isGroup = isGroup;
+        this.excludeColAll = excludeColAll;
     }
 
     public String getSqlFun() {
         return sqlFun;
     }
 
-    public void setSqlFun(String sqlFun) {
-        this.sqlFun = sqlFun;
-    }
-
     public boolean isFun() {
         return isFun;
     }
 
-    public boolean isGroup(){
-        return isGroup;
+    public boolean isExcludeColAll(){
+        return excludeColAll;
+    }
+
+    public void setExcludeColAll(boolean excludeColAll) {
+        this.excludeColAll = excludeColAll;
     }
 
     public void setFun(boolean fun) {

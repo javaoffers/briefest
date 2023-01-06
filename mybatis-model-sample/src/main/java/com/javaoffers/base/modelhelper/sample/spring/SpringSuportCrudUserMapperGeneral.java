@@ -2,6 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.batis.modelhelper.util.DateUtils;
@@ -36,12 +37,20 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testGeneral();
+        testBatchUpdate();
         if(status){
             System.exit(0);
         }
 
 
 
+    }
+    public void testBatchUpdate(){
+        List<User> users = crudUserMapper.queryAll();
+        for(User user : users){
+            user.setSex(Sex.Boy);
+        }
+        crudUserMapper.general().modifyBatchById(users);
     }
 
     public void testGeneral() throws JsonProcessingException {
@@ -67,6 +76,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
         //modify By Id, If id is set to null, the update operation will not be triggered
         user.setId(null);//If id is set to null, the update operation will not be triggered
+        user.setIdImpl(null);
         user.setCountId(null);//If id is set to null, the update operation will not be triggered
         user.setName("no update");
         int i = crudUserMapper.general().modifyById(user);

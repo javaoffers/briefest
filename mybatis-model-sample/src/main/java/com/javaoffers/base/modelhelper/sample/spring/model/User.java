@@ -46,6 +46,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Strcmp;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.SubString;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.batis.modelhelper.anno.fun.params.varchar.Upper;
+import com.javaoffers.batis.modelhelper.core.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -63,8 +64,11 @@ public class User {
     /**
      * You can use id to do count(id). Use this object to get the result of count.
      */
-    @ColName("id")
+    @ColName(value = "id", excludeColAll = true)
     private Long countId;
+
+    @ColName("id")
+    private Id IdImpl;
 
     @BaseUnique
     private Long id;

@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.aggent.InstallModelHelper;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
+import com.javaoffers.batis.modelhelper.core.Id;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSession;
@@ -106,5 +107,12 @@ public class HelpSample {
         byte[] bs = "hello".getBytes();
         String s4 = delegate.converterObject(String.class, bs);
         LOGUtils.printLog(s4);
+
+        Id id = delegate.converterObject(Id.class, 54);
+        LOGUtils.printLog(id);
+        LOGUtils.printLog(id.toInt());
+
+        id = delegate.converterObject(Id.class, "hellouuxxxx001");
+        LOGUtils.printLog(id);
     }
 }

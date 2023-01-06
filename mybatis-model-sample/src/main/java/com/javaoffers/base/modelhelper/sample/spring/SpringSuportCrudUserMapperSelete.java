@@ -44,13 +44,13 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testGroupConcat();
-//        testDistinc();
-//        testColAll();
-//        testEnum();
-//        test3Join();
-//        testAsName();
-//        testSelectOp();
-//        testSelect();
+        testDistinc();
+        testColAll();
+        testEnum();
+        test3Join();
+        testAsName();
+        testSelectOp();
+        testSelect();
 
         if (status) {
             System.exit(0);

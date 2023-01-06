@@ -1,8 +1,11 @@
 package com.javaoffers.batis.modelhelper.core;
 
+import com.javaoffers.batis.modelhelper.convert.Serializable2IdConvert;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
+import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.InterruptibleBatchPreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -99,11 +102,69 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     /*********************************batch processing*********************************/
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {
         SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
-        int[] is = this.jdbcTemplate.batchUpdate(batchSQL.getSql(), batchSQL);
+        int[] is = batchUpdate(batchSQL.getSql(), batchSQL);
+
         Assert.isTrue(is != null, " batch update is null ");
         AtomicInteger countSuccess = new AtomicInteger();
         Arrays.stream(is).forEach(countSuccess::addAndGet);
         return Integer.valueOf(countSuccess.get());
+    }
+
+    int[] batchUpdate(String sql, final BatchPreparedStatementSetter pss) throws DataAccessException {
+
+
+        int[] result = this.jdbcTemplate.execute(sql, (PreparedStatementCallback<int[]>) ps -> {
+            try {
+                int batchSize = pss.getBatchSize();
+                InterruptibleBatchPreparedStatementSetter ipss =
+                        (pss instanceof InterruptibleBatchPreparedStatementSetter ?
+                                (InterruptibleBatchPreparedStatementSetter) pss : null);
+                Connection connection = ps.getConnection();
+                if (JdbcUtils.supportsBatchUpdates(connection)) {
+                    boolean oldAutoCommit = connection.getAutoCommit();
+                    connection.setAutoCommit(false);
+                    try {
+                        for (int i = 0; i < batchSize; i++) {
+                            pss.setValues(ps, i);
+                            if (ipss != null && ipss.isBatchExhausted(i)) {
+                                break;
+                            }
+                            ps.addBatch();
+                        }
+                        int[] ints = ps.executeBatch();
+                        connection.commit();
+                        return ints;
+                    }catch (Exception e){
+                        throw e;
+                    }finally {
+                        connection.setAutoCommit(oldAutoCommit);
+                    }
+                }
+                else {
+                    List<Integer> rowsAffected = new ArrayList<>();
+                    for (int i = 0; i < batchSize; i++) {
+                        pss.setValues(ps, i);
+                        if (ipss != null && ipss.isBatchExhausted(i)) {
+                            break;
+                        }
+                        rowsAffected.add(ps.executeUpdate());
+                    }
+                    int[] rowsAffectedArray = new int[rowsAffected.size()];
+                    for (int i = 0; i < rowsAffectedArray.length; i++) {
+                        rowsAffectedArray[i] = rowsAffected.get(i);
+                    }
+                    return rowsAffectedArray;
+                }
+            }
+            finally {
+                if (pss instanceof ParameterDisposer) {
+                    ((ParameterDisposer) pss).cleanupParameters();
+                }
+            }
+        });
+
+        Assert.state(result != null, "No result array");
+        return result;
     }
 
     @Override
@@ -121,18 +182,22 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                 if (JdbcUtils.supportsBatchUpdates(connection) && batchSize > 0) {
                     boolean oldAutoCommit = connection.getAutoCommit();
                     connection.setAutoCommit(false);
-
-                    for (int i = 0; i < batchSize; i++) {
-                        pss.setValues(ps, i);
-                        if (ipss != null && ipss.isBatchExhausted(i)) {
-                            break;
+                    try {
+                        for (int i = 0; i < batchSize; i++) {
+                            pss.setValues(ps, i);
+                            if (ipss != null && ipss.isBatchExhausted(i)) {
+                                break;
+                            }
+                            ps.addBatch();
                         }
-                        ps.addBatch();
-                    }
 
-                    ps.executeBatch();
-                    connection.commit();
-                    connection.setAutoCommit(oldAutoCommit);
+                        ps.executeBatch();
+                        connection.commit();
+                    }catch (Exception e){
+                        throw e;
+                    }finally {
+                        connection.setAutoCommit(oldAutoCommit);
+                    }
 
                 } else {
                     List<Integer> rowsAffected = new ArrayList<>();
@@ -154,7 +219,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                 ResultSet rs = ps.getGeneratedKeys();
                 while (rs.next() && i < batchSize) {
                     Object object = rs.getObject(1);
-                    ids.add(new IdImpl((Serializable) object));
+                    ids.add(Serializable2IdConvert.newId((Serializable) object));
                     i++;
                 }
                 return ids;

@@ -87,17 +87,18 @@ public class FunAnnoParser {
         Appender appender = new Appender(modelClass,field,defaultColName);
         ColName colNameAnno = null;
         String coreSql = null;
-        boolean status = false;
-        boolean isGroup = false;
+        boolean isFunSql = false;
+        boolean isExcludeColAll = false;
         for(Annotation anno : allAnno){
             if(anno instanceof ColName){
                 colNameAnno = (ColName) anno;
+                isExcludeColAll = colNameAnno.excludeColAll();
                 continue;
             }else if(anno instanceof GroupConcat){
-                isGroup = ((GroupConcat) anno).excludeColAll();
+                isExcludeColAll = ((GroupConcat) anno).excludeColAll();
             }
             //This will be optimized for strategy mode later. to avoid a lot of if statements
-            status =
+            isFunSql =
             parseParamCommon(appender, anno)||
             parseParamVarchar(appender, anno)||
             parseParamTime(appender, anno)||
@@ -112,10 +113,16 @@ public class FunAnnoParser {
             Assert.isTrue(colNameAnno != null && !appender.isNoneParam, "@ColName and" +
                     " "+appender.getNoParamFunName() + " cannot be used together");
         }
-        if(status && tableInfo.getColNames().containsKey(coreSql)){
+        if(isFunSql && tableInfo.getColNames().containsKey(coreSql)){
             coreSql = tableInfo.getTableName()+"."+coreSql;
         }
-        return new ParseSqlFunResult(appender.toSqlString(coreSql), status, isGroup);
+        String finishSql = appender.toSqlString(coreSql);
+        // only one @ColName(" 'xxx' ")  on field
+        if(!isFunSql && !tableInfo.getColNames().containsKey(finishSql)){
+            isFunSql = true;
+        }
+
+        return new ParseSqlFunResult(finishSql, isFunSql, isExcludeColAll);
     }
 
     private static boolean parseNoneParamMath(Appender appender, Annotation anno) {

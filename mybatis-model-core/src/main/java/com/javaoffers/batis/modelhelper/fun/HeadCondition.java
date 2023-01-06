@@ -13,6 +13,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @author mingJie
  */
 public class HeadCondition implements Condition {
+
     private JdbcTemplate template;
 
     private AtomicLong nextTag = new AtomicLong(0);
@@ -46,6 +47,10 @@ public class HeadCondition implements Condition {
 
     public long getNextLong(){
         return nextTag.getAndIncrement();
+    }
+
+    public HeadCondition clone(){
+        return new HeadCondition(this.template);
     }
 
     public static Connection getNewConnection(HeadCondition condition) {

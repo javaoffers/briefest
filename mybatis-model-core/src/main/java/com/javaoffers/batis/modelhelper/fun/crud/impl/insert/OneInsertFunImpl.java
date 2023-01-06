@@ -3,7 +3,6 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
 import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.Id;
-import com.javaoffers.batis.modelhelper.core.IdImpl;
 import com.javaoffers.batis.modelhelper.core.LinkedConditions;
 import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
@@ -33,7 +32,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
         System.out.println("PAM: "+sqlInfo.getParams());
         List<Id> list = instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
         if(CollectionUtils.isEmpty(list)){
-            return IdImpl.EMPTY_ID;
+            return Id.EMPTY_ID;
         }
         return list.get(0);
     }

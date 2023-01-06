@@ -1,19 +1,31 @@
-package com.javaoffers.batis.modelhelper.core;
+package com.javaoffers.batis.modelhelper.convert;
 
 import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
-
+import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
+import com.javaoffers.batis.modelhelper.core.Id;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.Objects;
 
 /**
- * @author create by cmj
+ * @author mingJie
  */
-public class IdImpl implements Id {
+public class Serializable2IdConvert extends AbstractConver<Serializable, Id> {
+    @Override
+    public Id convert(Serializable serializable) {
+        return newId(serializable);
+    }
+    public static Id newId(Serializable serializable){
+        return new IdImpl(serializable);
+    }
+}
+
+class IdImpl implements Id {
 
     private static final ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
-
-    public static final IdImpl EMPTY_ID = new IdImpl(Integer.MIN_VALUE);
 
     Serializable srcValue;
 
@@ -64,4 +76,19 @@ public class IdImpl implements Id {
     public String toString() {
         return String.valueOf(srcValue);
     }
+
+    @Override
+    public int hashCode() {
+        if(srcValue == null) {
+            return 0;
+        }
+        return srcValue.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return Objects.equals(srcValue, obj);
+    }
 }
+
+

@@ -24,4 +24,9 @@ public @interface ColName  {
      */
     String value();
 
+    /**
+     * default false . if as true when execute the select.colAll() will filter out this fields and colName.
+     * @return
+     */
+    boolean excludeColAll() default false;
 }

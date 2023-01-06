@@ -51,10 +51,10 @@ public class TableHelper {
         String tableName = tableInfo.getTableName();
         tableInfo.getFieldNameColNameOfModel().forEach((fieldName, colName) -> {
             if (tableInfo.isSqlFun(colName)) {
-                if(!tableInfo.isGroupFun(colName)){
+                if(!tableInfo.colNameIsExcludeColAll(colName)){
                     colAll.add(colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
                 }
-            } else {
+            } else if(!tableInfo.fieldNameIsExcludeColAll(fieldName)){
                 colAll.add(tableName + "." + colName + " as " + fieldName);
             }
 
@@ -223,7 +223,7 @@ public class TableHelper {
                             // Get table field structure
                             ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
                             while (columnResultSet.next()) {
-                                // Field Name
+                                // Col Name
                                 String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
                                 // type of data
                                 String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
@@ -253,14 +253,21 @@ public class TableHelper {
                             }
                             //parse @ColName and @funAnno
                             ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
+                            String fieldName = colF.getName();
                             if (parseColName != null) {
                                 colName = parseColName.getSqlFun();
-                                //If it is not the original table field, set isFun to true
-                                if (!tableInfo.getColNames().containsKey(colName)) {
-                                    parseColName.setFun(true);
+                                //If it is  the original table field, set isFun to false
+                                if (tableInfo.getColNames().containsKey(colName)) {
+                                    parseColName.setFun(false);
+                                    // The original table field is not allowed to exclude colAll.
+                                    // The field of model will to the record excludes colAll
+                                    if( parseColName.isExcludeColAll()){
+                                        tableInfo.putFieldNameExcludeColAll(fieldName, true);
+                                    }
+                                    parseColName.setExcludeColAll(false);
                                 }
                                 tableInfo.putSqlFun(colName, parseColName.isFun());
-                                tableInfo.putGroupFun(colName, parseColName.isGroup());
+                                tableInfo.putColNameExcludeColAll(colName, parseColName.isExcludeColAll());
                             } else {
                                 // Indicates that this field does not have any annotation information.
                                 // then the field must belong to a field in the original table
@@ -269,8 +276,6 @@ public class TableHelper {
                                     continue;
                                 }
                             }
-
-                            String fieldName = colF.getName();
                             // original table fields and sql-fun fields
                             tableInfo.putFieldNameColNameOfModel(fieldName, colName);
                             tableInfo.putColNameAndFieldOfModel(colName, colF);

@@ -43,6 +43,10 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> {
             ((WhereOnCondition) condition).setHeadCondition((HeadCondition) this.peekFirst());
         } else if (condition instanceof UpdateCondition) {
             ((UpdateCondition) condition).setHeadCondition((HeadCondition) this.peekFirst());
+        } else if(condition instanceof HeadCondition && this.peekFirst() instanceof HeadCondition){
+            this.pollFirst();
+            this.addFirst(condition);
+            return true;
         }
         return super.add(condition);
     }

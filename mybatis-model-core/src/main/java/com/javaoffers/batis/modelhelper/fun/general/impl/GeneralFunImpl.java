@@ -181,6 +181,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
                 where= npdateNull.colAll(model).where();
             }else{
                 where.addBatch().colAll(model).where();
+                //Where participation should be consistent otherwise it will affect batch processing
+                ato = new AtomicInteger(0);
             }
             i++;
             AtomicBoolean status_ = new AtomicBoolean(false);

@@ -1,5 +1,8 @@
 - 摘要 mybatis-jql 是什么? 解决了什么? 
-
+  <p>
+     mybatis-jql 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性. 
+     目的是快速开发. 简化代码. 增强代码易读性. 提高项目可维护行.   
+  </p>
 - @BaseModel, @BaseUnique
 
 - CurdMapper<T> 接口

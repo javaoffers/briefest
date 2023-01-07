@@ -58,6 +58,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     public void testGroupBy(){
+
         List<User> exs =
                 crudUserMapper
                         .select()

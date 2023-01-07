@@ -1,7 +1,7 @@
 #### 摘要 mybatis-jql 是什么? 解决了什么? 
 <p>
 
- mybatis-jql 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性. 
+ mybatis-jql 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性 (完全支持原生Mybatis). 
  目的是快速开发. 简化代码. 增强代码易读性. 提高项目可维护性. 比如
  不用写xml文件, 不用写原生的字符sql,直接在接口的defalut方法中编写jql即可(java stream sql).
  这种方式即加快了sql的编写又起到了规范作用. 常用的crud操作已经集成
@@ -48,19 +48,89 @@ public class User {
 }
 ```
 
-#### CurdMapper<T> 接口
+#### CrudMapper<T> 接口
+<p>
+mybatis-jql 以简单快速开发为理念，因此mybatis-jql几乎没有学习成本. 我们只需要将我们的接口继承 CrudMapper 接口即可. T 为泛型Model类
+（标记@BaseModel注解的类）。这样我们的Mapper接口在mybatis的基础上又拥有了jql的能力了. 在CrudMapper接口中主要有5个方法：select(),
+insert(), update(), delete(), general(). 就是这这么简单. 案例如下
+</p>
+
+```java
+public interface CrudUserMapper extends CrudMapper<User> {
+    
+        //查询全表数据
+        default List<User> queryAll(){
+            return select()
+                    .colAll()
+                    .where()
+                    .exs();
+        }
+        
+        //增加user
+        default int addUser(User user){
+            Id ex = insert().colAll(user).ex();
+            return ex.toInt();
+        }   
+        //.... 这里不一一举例了， 
+}
+```
+
+<p>
+当然上面两个常用的方法其实你是不需要写的，因为在常用api中都已经实现了. 我们通过general()来调用常用api.
+</p>
+
+```java
+@Service
+public class UserServiceImpl {
+    @Resource
+    CrudUserMapper crudUserMapper;
+    
+    public List<User> queryAll(int pageNum, int size){
+        return crudUserMapper.general().query(pageNum, size);
+    }
+
+}
+```
+
+#### crud 操作划分
+<p>
+  我们的数据库主要就是查询数据，新增数据，更新数据以及删除数据. 因此设计了4个核心方法以及一个常用的api方法。
+</p>
+
+- select()
+
+<p>
+    查询数据的入口方法
 <p>
 
+- insert()
+<p>
+    新增数据的入口方法
+</p>
+  
+- update()
+<p>
+    更新数据的入口方法
+</p>  
+
+- delete()
+<p>
+    删除数据的入口方法
+</p>
+
+- general()
+<p>
+    集成常用crud方法
 </p>
 
 
-#### crud 操作划分
-  
+
+
 #### 一个普通查询
 
 #### 条件查询
 
-#### select()
+#### col() 和 colAll()
   - col()
 
   - colAll()

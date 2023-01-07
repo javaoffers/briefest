@@ -1,4 +1,4 @@
-#### 摘要 mybatis-jql 是什么? 解决了什么? 
+### 摘要 mybatis-jql 是什么? 解决了什么? 
 <p>
 
  mybatis-jql 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性 (完全支持原生Mybatis). 
@@ -13,7 +13,7 @@
     
 </p>
   
-#### @BaseModel, @BaseUnique
+### @BaseModel, @BaseUnique
 <p>
   @BaseModel 表示是一个Model类，mybatis-jql会自动解析映射表字段. mybatis-jql并不会向mysql发送ddl语句（这是非常危险的）.
   mybatis-jql会根据@BaseModel解析出表名称（将Model类名解析为下划线格式作为数据库表名，如果表名和Model类型不一样则可以使用
@@ -48,7 +48,7 @@ public class User {
 }
 ```
 
-#### CrudMapper<T> 接口
+### CrudMapper<T> 接口
 <p>
 mybatis-jql 以简单快速开发为理念，因此mybatis-jql几乎没有学习成本. 我们只需要将我们的接口继承 CrudMapper 接口即可. T 为泛型Model类
 （标记@BaseModel注解的类）。这样我们的Mapper接口在mybatis的基础上又拥有了jql的能力了. 在CrudMapper接口中主要有5个方法：select(),
@@ -92,9 +92,9 @@ public class UserServiceImpl {
 }
 ```
 
-#### crud 操作划分
+### crud 操作划分
 <p>
-  我们的数据库主要就是查询数据，新增数据，更新数据以及删除数据. 因此设计了4个核心方法以及一个常用的api方法。
+  我们的数据库主要就是查询数据，新增数据，更新数据以及删除数据. 因此设计了4个核心方法以及1个常用的api方法。
 </p>
 
 - select()
@@ -186,40 +186,150 @@ public class UserServiceImpl {
 ```java
     public class UserServiceImpl {
            
-          public Integer deleteUserById(User user){
-                Id id = crudUserMapper.update()
-                                      .col(User::getName, user.getName())
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
-                return id.toInt();
-           }   
+          public User queryUserById(User user){
+                 User user = crudUserMapper.general().queryById(save);
+                 return user;
+          }
+
+          public Integer saveUser(User user){
+                long id = crudUserMapper.general().save(general).toLong();
+                return id;
+          } 
+          
+          public int updateUserById(User user){
+                return crudUserMapper.general().modifyById(user);
+          }   
+          
+          public void deleteUserById(int id){
+               crudUserMapper.general().removeById(id);
+          }     
    
     }    
 ```
 
-#### 条件查询
-
-#### col() 和 colAll()
+### col() 和 colAll()
   - col()
-
+    <p>
+     col()方法用于指定具体的字段。
+    </p>
   - colAll()
+    <p>
+    colAll()方法在select()的时候查询所有字段，包括表字段和函数sql语句(指标有函数注解的)。
+    在insert() update() 时插入表所有字段.
+    </p>
 
-#### where()
+### where() 这里简单介绍一下，因为都是接近原生sql. 所以学习成本比较低.
   - eq()
-  - xxx
+    - 表示等于
   - unite()
+    - 表示括号逻辑，（xxxxx）
   - or()
+    - 默认是and,通过or() 方法指定为or.
   - groupBy
+    - 分组
   - having
+    - 处理分组后的统计逻辑
+    
    
-#### 自动识别表字段和函数语句与model类进行关联映射
+### 自动识别表字段和函数语句与model类进行关联映射
+<p>
+   字段主要分为表字段和sql函数语句。 表字段通过Model类的属性自动和表字段进行映射（属性转换为下划线格式后与表字段进行映射）。
+   如果表字段和Model类中的属性名称（属性转换为下划线格式后）不相同时。可以通过@ColName进行指定具体的表字段。
+</p>
   - 案例
+
+  ```java
+   @BaseModel
+   @Data
+   @Builder
+   @AllArgsConstructor
+   public class User {
+       
+       @BaseUnique
+       private Integer id;     
+       
+       private String name;
+       
+       private Date birthday;
+       
+       //通过@ColName 指定 birthday 字段与 birthdayStr属性进行关联。  
+       @ColName("birthday") 
+       private String birthdayStr;
+      
+   }
+   
+   public interface CrudUserMapper{
+   
+        default User queryUserBirthdayById(int id){
+           // SQL: select user.birthday as birthdayStr from user where 1=1 and user.id = #{id} 
+           return crudUserMapper.select().col(User::getBirthdayStr).where().eq(User::getId, id).ex();
+        }
+   }
+
+   
+  ```
+
   - enum枚举支持
+    <p>
+    当Model类的属性是枚举时 ，jql对枚举类支持的也非常好. 如果枚举类中存在属性时我们可以通过@EnumValue来指定枚举类中的属性。
+    该属性的值作为表字段属性的值。 如果没有@EnumValue则默认将枚举类的 ordinal 作为表属性的默认值。
+    </p>
+    
+    ```java
+     @BaseModel
+     @Data
+     @Builder
+     @AllArgsConstructor
+     public class User {
+       
+         @BaseUnique
+         private Integer id;     
+       
+         private String name;
+       
+         private Sex sex;
+    
+         private Work work;
+     
+     }   
+    
+     public enum Sex {
+         Girl,
+         Boy
+     }
+    
+     public enum Work {
+     
+         JAVA(1,"JAVA"),
+         PYTHON(2,"PYTHON")
+         ;
+    
+         @EnumValue
+         private int code;
+         private String workName;
+     
+         Work(int code, String workName){
+             this.code = code;
+             this.workName = workName;
+         }
+     }
+    
+    ```
+    
+  - @ColName 
+    <p>
+    @ColName 非常灵活，不仅可以指定表字段名称。还可以指定sql语句。本质上是将@ColName的
+    值最后将会被解析到要执行的sql语句中。@ColName 与 Sql函数注解经常配合使用。
+    </p>
+    
 
-#### @ColName 使用
 
-#### sql函数注解
+### sql函数注解（通常和@ColName联合使用的比较多当属性名称和表字段不一致时），sql函数注解比较多这里举例部分。
+<p>
+注解类名称与mysql数据库中的函数名称保持一致。多个sql注解可以组合使用。 
+多个组合sql函数注解最后会解析为嵌套的sql函数逻辑。组合注解解析的顺序
+是从上向下开始解析。
+</p>
   - 有参函数
     - 通用函数
       - @if
@@ -236,7 +346,7 @@ public class UserServiceImpl {
     - 数学函数
       - @Abs
       - @Ceil
-  - 无参函数
+  - 无参函数 不需要和@ColName进行配合使用
     - 时间函数
       - @Curdate
       - CurrentDate
@@ -244,8 +354,52 @@ public class UserServiceImpl {
     - 数学函数
       - @Rand
 
+```java
+     @BaseModel
+     @Data
+     @Builder
+     @AllArgsConstructor
+     public class User {
+       
+         @BaseUnique
+         private Integer id;     
+         
+         @Trim()
+         private String name; //trim(name)
+
+         private Sex sex;
+        
+         @ColName("name")
+         @Trim()
+         @Concat("sex")
+         private String concatName; // concat(trim(name),sex)
+
+     }   
+```
 #### 多表
-            
+  
+<p>
+jql 支持多表映射，而且非常简单没有复杂的配置。 一对一， 一对多，多对多。用Model类表示
+则为类与类（一对一），类与集合的关系（一对多，多对多）。解析来我们看一下案例
+</p> 
+  - 一对一
+
+```java
+
+```  
+
+  - 一对多
+
+```java
+
+``` 
+
+  - 多对多
+
+```java
+
+```               
+
 #### join 
   - left join
   - right join

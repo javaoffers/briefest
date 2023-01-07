@@ -58,7 +58,8 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         int remove = crudUserMapper.general().remove(general);
 
         //save
-        long save = crudUserMapper.general().save(general);
+        long save = crudUserMapper.general().save(general).toLong();
+
 
         //query by id
         /**

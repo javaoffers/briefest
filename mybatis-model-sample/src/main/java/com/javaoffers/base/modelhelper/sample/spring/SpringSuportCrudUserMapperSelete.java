@@ -51,11 +51,25 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         testAsName();
         testSelectOp();
         testSelect();
-
+        testGroupBy();
         if (status) {
             System.exit(0);
         }
     }
+
+    public void testGroupBy(){
+        List<User> exs =
+                crudUserMapper
+                        .select()
+                        .col(User::getName)
+                        .col(User::getSex)
+                        .where()
+                        .groupBy(User::getName)
+                        .groupBy(User::getSex)
+                        .exs();
+        LOGUtils.printLog(exs);
+    }
+
 
     public void testGroupConcat(){
         User ex = crudUserMapper.select().colAll().where().limitPage(1, 1).ex();
@@ -64,7 +78,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .select()
                 .col(User::getGroupConcat)
                 .col(User::getSex)
-                .where().groupBy(User::getSex).exs();
+                .where()
+                .groupBy(User::getSex)
+                .exs();
         LOGUtils.printLog(exs);
     }
 

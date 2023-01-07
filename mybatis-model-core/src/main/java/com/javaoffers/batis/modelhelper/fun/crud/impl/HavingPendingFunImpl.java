@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.crud.impl;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.fun.condition.where.LeftGroupByWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingFun;
@@ -37,6 +38,18 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
             return exs.get(0);
         }
         return null;
+    }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(C... c) {
+        conditions.add(new LeftGroupByWordCondition(c,ConditionTag.GROUP_BY));
+        return this;
+    }
+
+    @Override
+    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(String... c) {
+        conditions.add(new LeftGroupByWordCondition(c,ConditionTag.GROUP_BY));
+        return this;
     }
 
     @Override

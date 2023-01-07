@@ -57,12 +57,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
     }
 
     @Override
-    public long save(T model) {
+    public Id save(T model) {
         Id ex = insertFun.colAll(model).ex();
         if(ex != null){
-            return ex.toLong();
+            return ex;
         }
-        return 0L;
+        return Id.EMPTY_ID;
     }
 
     @Override

@@ -21,7 +21,7 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @param model class
      * @return primary key id
      */
-    public long save(T model);
+    public Id save(T model);
 
     /**
      * save or modify.

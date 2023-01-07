@@ -98,35 +98,105 @@ public class UserServiceImpl {
 </p>
 
 - select()
-
 <p>
     查询数据的入口方法
 <p>
+
+```java
+    public interface CrudUserMapper extends CrudMapper<User>{
+        
+        default List<User> queryUserByName(String name){
+             List<User> exs = crudUserMapper
+                                    .select()
+                                    .col(User::getName)
+                                    .col(User::getSex)
+                                    .where()
+                                    .eq(User::getName, name)
+                                    .exs();
+        }   
+
+    }
+```
 
 - insert()
 <p>
     新增数据的入口方法
 </p>
+
+```java
+    public interface CrudUserMapper extends CrudMapper<User>{
+        
+        default Integer saveUsers(User user){
+             Id id = crudUserMapper.insert()
+                                   .col(User::getName, user.getName())
+                                   .col(User::getSex, user.getName())
+                                   .where()
+                                   .ex();
+             return id.toInt();
+        }   
+
+    }
+```
   
 - update()
 <p>
     更新数据的入口方法
 </p>  
 
+```java
+    public interface CrudUserMapper extends CrudMapper<User>{
+           
+           default Integer updateUserNameById(User user){
+                Id id = crudUserMapper.update()
+                                      .col(User::getName, user.getName())
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }   
+   
+       }
+```
+
 - delete()
 <p>
     删除数据的入口方法
 </p>
+
+```java
+    public interface CrudUserMapper extends CrudMapper<User>{
+           
+           default Integer deleteUserById(User user){
+                Id id = crudUserMapper.update()
+                                      .col(User::getName, user.getName())
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }   
+   
+    }
+```
 
 - general()
 <p>
     集成常用crud方法
 </p>
 
-
-
-
-#### 一个普通查询
+```java
+    public class UserServiceImpl {
+           
+          public Integer deleteUserById(User user){
+                Id id = crudUserMapper.update()
+                                      .col(User::getName, user.getName())
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }   
+   
+    }    
+```
 
 #### 条件查询
 

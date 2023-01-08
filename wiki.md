@@ -34,8 +34,6 @@ CREATE TABLE `user` (
 ```java
 @BaseModel
 @Data
-@Builder
-@AllArgsConstructor
 public class User {
     
     @BaseUnique
@@ -218,7 +216,17 @@ public class UserServiceImpl {
     在insert() update() 时插入表所有字段.
     </p>
 
-### where() 这里简单介绍一下，因为都是接近原生sql. 所以学习成本比较低.
+### ex() 和 exs()的区别
+
+<p>
+ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数据，
+而exs() 的执行结果则为集合。返回多条List<Model> 数据.
+</p>
+
+### where() 这里简单介绍一下，因为都是接近原生sql. 所以学习成本比较低. 
+<p>
+在jql中where()代表原生sql中的where. 在jql的设计中，
+</p>
   - eq()
     - 表示等于
   - unite()
@@ -241,8 +249,6 @@ public class UserServiceImpl {
   ```java
    @BaseModel
    @Data
-   @Builder
-   @AllArgsConstructor
    public class User {
        
        @BaseUnique
@@ -278,8 +284,6 @@ public class UserServiceImpl {
     ```java
      @BaseModel
      @Data
-     @Builder
-     @AllArgsConstructor
      public class User {
        
          @BaseUnique
@@ -357,8 +361,6 @@ public class UserServiceImpl {
 ```java
      @BaseModel
      @Data
-     @Builder
-     @AllArgsConstructor
      public class User {
        
          @BaseUnique
@@ -376,41 +378,181 @@ public class UserServiceImpl {
 
      }   
 ```
-#### 多表
+### 多表
   
 <p>
 jql 支持多表映射，而且非常简单没有复杂的配置。 一对一， 一对多，多对多。用Model类表示
 则为类与类（一对一），类与集合的关系（一对多，多对多）。解析来我们看一下案例
 </p> 
-  - 一对一
+  - 一对一 （类与类的关系）
 
 ```java
+ @BaseModel
+ @Data
+ public class User {
+   
+     @BaseUnique
+     private Integer id;     
+     
+     private String name; 
+    
+     private Card card; //一对一。 不需要任何配置就是这么简单
+
+ }   
+ 
+//省份证号
+ @BaseModel
+ @Data
+ public class Card{ 
+    //主键id
+    @BaseUnique
+    private Integer id;
+    
+    //身份证号
+    private String cardNum;
+    
+    //用户id
+    private Interge userId;
+
+ }
+
 
 ```  
 
-  - 一对多
+  - 一对多 (类与集合的关系)
 
 ```java
+
+ @BaseModel
+ @Data
+ public class User {
+   
+     @BaseUnique
+     private Integer id;     
+     
+     private String name; 
+    
+     private List<Order> order; //一对多。 不需要任何配置就是这么简单
+
+ }  
+
+//订单
+ @BaseModel
+ @Data
+ public class Order{ 
+    //主键id
+    @BaseUnique
+    private Integer id;
+    
+    //订单号
+    private String orderNum;
+    
+    //用户id
+    private Interge userId;
+
+ }
+
 
 ``` 
 
-  - 多对多
+  - 多对多 （类与集合的关系）
 
 ```java
 
+ @BaseModel
+ @Data
+ public class Student {
+   
+     @BaseUnique
+     private Integer id;     
+     
+     private String name; 
+    
+     private List<Teacher> order; //多对多。 不需要任何配置就是这么简单
+
+ }  
+
+ //老师
+ @BaseModel
+ @Data
+ public class Teacher{ 
+    //主键id
+    @BaseUnique
+    private Integer id;
+    
+    //老师名称
+    private String teacherName;
+    
+    //学科
+    private String subject;
+
+ }
+
+ //中间表
+ @BaseModel
+ @Data
+ public class StudentTeacher{
+        
+     //主键id
+     private Integer id;
+     //学生id
+     private Integer studentId;
+     //老师id
+     private Integer teacherId;
+
+ }
+
 ```               
 
-#### join 
+### join 支持。
   - left join
-  - right join
-  - inner join
+  ```java
+  List<User> users = crudUserMapper
+                    .select()
+                    .colAll()
+                    .leftJoin(UserOrder::new)
+                    .colAll()
+                    .on()
+                    .oeq(User::getId, UserOrder::getUserId)
+                    .where()
+                    .exs();
 
-#### 通用api
+  ```
+  - right join
+  
+  ```java
+    List<User> users = crudUserMapper
+                      .select()
+                      .colAll()
+                      .rightJoin(UserOrder::new)
+                      .colAll()
+                      .on()
+                      .oeq(User::getId, UserOrder::getUserId)
+                      .where()
+                      .exs();
+  
+  ```
+    
+  - inner join
+  ```java
+    List<User> users = crudUserMapper
+                      .select()
+                      .colAll()
+                      .innerJoin(UserOrder::new)
+                      .colAll()
+                      .on()
+                      .oeq(User::getId, UserOrder::getUserId)
+                      .where()
+                      .exs();
+  
+  ```
+
+### 通用api
     
 
-#### 接口default方法中编写jql  
+### 接口default方法中编写jql  
 
-#### 内置类型转换器
+### 内置类型转换器
   - Number2DateConvert
   - Date2StringConvert
   - xxx

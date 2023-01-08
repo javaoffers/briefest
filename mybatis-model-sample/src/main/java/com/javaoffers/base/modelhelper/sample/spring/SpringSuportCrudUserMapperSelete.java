@@ -43,6 +43,15 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        List<User> users = crudUserMapper
+                .select()
+                .colAll()
+                .innerJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .exs();
         testGroupConcat();
         testDistinc();
         testColAll();

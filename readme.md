@@ -692,6 +692,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     Number2LocalDateTimeConvert
     Number2EnumConvert
     String2EnumConvert
+    xxxx...
 
 ```
 
@@ -700,3 +701,5 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.
 If you think it's good, please click the little star to encourage it
 </p>
+
+### Please see the wiki more tutorial

@@ -205,6 +205,29 @@ public class UserServiceImpl {
     }    
 ```
 
+### Id类
+<p>
+jql中有一基础Id类， 此类表示主键id. 当新增一条数据时，会返回Id对象. 表主键的类型可能不同。有varchar 或者 int 等. 因此
+Id类包装了主键id的数据。我们可以通过toInt, toLong等方法获取自己想要的主键数据，当然如果你想获取原始数据可以通过 value()
+方法获取。并且Id类会被jql底层进行解析当Id作为参数时。 比如： 
+</p>
+
+```java
+// name = hello
+User save = new User("hello")
+
+//保存返回Id主键
+Id id = crudUserMapper.general().save(save);
+//Id主键返回int 类型
+int idInt = id.toInt();
+
+//下面这两句是等价的。
+User user = crudUserMapper.general().queryById(id);
+User user2 = crudUserMapper.general().queryByIda(idInt);
+
+
+```
+
 ### col() 和 colAll()
   - col()
     <p>
@@ -217,15 +240,16 @@ public class UserServiceImpl {
     </p>
 
 ### ex() 和 exs()的区别
-
 <p>
-ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数据，
-而exs() 的执行结果则为集合。返回多条List<Model> 数据.
+ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数据，而exs() 的执行结果则为集合。返回多条List<Model> 数据.
 </p>
+
 
 ### where() 这里简单介绍一下，因为都是接近原生sql. 所以学习成本比较低. 
 <p>
-在jql中where()代表原生sql中的where. 在jql的设计中，
+在jql中where()代表原生sql中的where. 在jql的设计中，select(), update(), delete() 都需要通过where()方法来触发ex()/exs()执行。
+这样设计的目的是避免全表的失误操作 （总是提醒你不要忘记添加where条件）。当然如果你就是想进行全表操作也是可以的。比如where().ex() 或
+者 where().exs(); where() 会被解析为 where 1=1 进行执行。 
 </p>
   - eq()
     - 表示等于
@@ -278,7 +302,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
   - enum枚举支持
     <p>
     当Model类的属性是枚举时 ，jql对枚举类支持的也非常好. 如果枚举类中存在属性时我们可以通过@EnumValue来指定枚举类中的属性。
-    该属性的值作为表字段属性的值。 如果没有@EnumValue则默认将枚举类的 ordinal 作为表属性的默认值。
+    该属性的值作为表字段属性的值。 如果没有@EnumValue则默认将枚举类的 ordinal() 的值作为表字段的默认值。
     </p>
     
     ```java
@@ -297,11 +321,13 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
      
      }   
     
+    //没有属性可以不使用@EnumValue
      public enum Sex {
          Girl,
          Boy
      }
     
+    //有属性需要用@NnumValue进行指定.
      public enum Work {
      
          JAVA(1,"JAVA"),
@@ -323,7 +349,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
   - @ColName 
     <p>
     @ColName 非常灵活，不仅可以指定表字段名称。还可以指定sql语句。本质上是将@ColName的
-    值最后将会被解析到要执行的sql语句中。@ColName 与 Sql函数注解经常配合使用。
+    值最后将会被解析到要执行的sql语句中。@ColName 与 Sql函数注解也经常配合使用（不是必须的）。
     </p>
     
 
@@ -357,6 +383,14 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
       - xxxx
     - 数学函数
       - @Rand
+
+#### @GroupConcat 函数注解
+<p>
+ 该注解属于分组sql函数注解，当执行select().colAll() 时可能会将该注解对应的sql语句不进行解析. 因为colAll()通常是查询所有字段，
+ 除非你按照所有字段进行了分组。这种场景不是很多。如果你想让colAll() 包含@GroupConcat进行解析，则只需要将@GroupConcat中的
+ excludeColAll 属性改为false即可，默认为true. 另外一种方式是通过col(xxx) 来指定也是可以的（推荐这种方式）
+</p>
+      
 
 ```java
      @BaseModel
@@ -537,22 +571,86 @@ jql 支持多表映射，而且非常简单没有复杂的配置。 一对一，
   ```java
     List<User> users = crudUserMapper
                       .select()
-                      .colAll()
+                      .colAll() //查询user的所有字段和sql函数语句（标有函数注解的也将会被解析）
                       .innerJoin(UserOrder::new)
                       .colAll()
                       .on()
-                      .oeq(User::getId, UserOrder::getUserId)
+                      .oeq(User::getId, UserOrder::getUserId) //绑定两张表的关系字段。
                       .where()
                       .exs();
   
   ```
+<p>
+ 在join 进行关联时，我们可以使用on来指定两张表的关系。 以oxx开头的方法是用来描述两张表之间的关系。
+ 如果你想指定子表的某一个字段的逻辑关系，可是调用非o开都的方法即可。非常简单。
+ 
+<p/>
+
 
 ### 通用api
-    
+<p>
+jql中提供了很多常用的api操作，不需要开发人员二次开发。我们可以通过general()方法来使用常用方法。
+比如：User user = crudUserMapper.general().queryById(id); 这里我们来举例部分. 您也可以通
+过 general() 来查看全部支持的方法。
+</p>
+- 常用api
+  - save() 保存
+  - saveOrModify() 保存或更新，解析的sql为 insert into xxx on duplicate key update xxx
+  - saveOrReplace() 对应sql中的replace into 
+  - saveBatch() 批量保存。进行批处理。效率非常高。
+  - remove() 会将model对象属性不为空解析成where条件进行执行delete
+  - removeById() 根据id删除
+  - modifyById() 根据id执行更新操
+  - modifyBatchById() 支持批量更新，底层会进行优化当更新的字段相同时会进行分组，每组作为一个批次进行更新
+  - query() 会将model对象属性不为空解析成where条件进行执行 select. 还有各种其他的query()这里只举例部分
+  - count() 统计表数量
 
 ### 接口default方法中编写jql  
+<p>
+为了同意jql的编码风格。并且方便项目的维护。方式sql/jql出现的到处都是。因此在设计jql的时候支持了在接口中编写defalue
+风格。在接口中的default方法中直接可以编写jql.
+</p>
 
 ### 内置类型转换器
-  - Number2DateConvert
-  - Date2StringConvert
-  - xxx
+<p>
+在实际的开发中，我们通常把数据查看出来然后再进行格式化转换。为了避免这种问题没，我们支持了自动类型转换。常用的类型
+转换器我们已经进行了实现。开发者只需要在Model类中定义自己想要的类型即可。 我们当前支持的类型转换如下。  比如
+Number2DateConvert 表示 number数字转换为date日期 .
+
+</p>
+- String2DoubleConvert      
+- DateOne2DateTwoConvert  
+- String2DateConvert  
+- Boolean2StringConvert  
+- Date2OffsetDateTimeConvert  
+- Date2LongConvert  
+- Number2SQLDateConvert  
+- String2ByteConvert  
+- ByteArray2StringConvert2  
+- Number2DateConvert  
+- Date2LocalDateTimeConvert  
+- String2LocalDateConvert  
+- String2OffsetDateTimeConvert  
+- Number2StringConvert  
+- String2FloatConvert  
+- Date2StringConvert  
+- String2BooleanConvert  
+- String2ShortConvert  
+- PrimitiveNumber2PrimitiveNumberConvert  
+- String2LongConvert  
+- LocalDate2StringConvert  
+- String2CharConvert  
+- Character2StringConvert  
+- String2IntegerConvert  
+- Number2LocalDateConvert  
+- Number2PrimitiveConvert  
+- String2LocalDateTimeConvert  
+- Date2LocalDateConvert  
+- String2SQLDateConvert  
+- ByteArray2StringConvert  
+- String2BigDecimalConvert  
+- Number2BooleanConvert  
+- String2BigIntegerConvert  
+- Number2LocalDateTimeConvert
+- Number2EnumConvert
+- String2EnumConvert

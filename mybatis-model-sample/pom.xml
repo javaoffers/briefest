@@ -3,16 +3,16 @@
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-         <version>3.5.11.7</version>
+         <version>3.5.11.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-sample</artifactId>
-     <version>3.5.11.7</version>
+     <version>3.5.11.8-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-spring-support</artifactId>
-             <version>3.5.11.7</version>
+             <version>3.5.11.8-SNAPSHOT</version>
         </dependency>
 
         <!-- junit -->
@@ -118,6 +118,6 @@
 
 
     <scm>
-        <tag>v3.5.11.7</tag>
+        <tag>vy</tag>
     </scm>
 </project>

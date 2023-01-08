@@ -34,7 +34,7 @@
    <dependency>
        <groupId>com.javaoffers</groupId>
        <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.6</version>
+       <version>3.5.11.7</version>
    </dependency>
 
   ```

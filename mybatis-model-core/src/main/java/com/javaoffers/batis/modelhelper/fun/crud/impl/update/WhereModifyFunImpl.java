@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.update;
 
 import com.javaoffers.batis.modelhelper.core.*;
+import com.javaoffers.batis.modelhelper.exception.UpdateFieldsException;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
@@ -13,6 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.AddPatchMarkConditio
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
+import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -325,6 +327,11 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
                 sqlbatch.put(sql, paramBatch);
             }
             paramBatch.addAll(params);
+        }
+        if(sqlbatch.size() == 0){
+            //Even npdate Null must be at least one update field
+            throw new UpdateFieldsException("Update fields must be specified." +
+                    "Even npdate Null must be at least one update field");
         }
         AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{

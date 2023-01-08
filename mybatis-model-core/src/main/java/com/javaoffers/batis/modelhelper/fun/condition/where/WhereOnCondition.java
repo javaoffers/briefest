@@ -6,7 +6,6 @@ import com.javaoffers.batis.modelhelper.fun.ConditionTag;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
-import lombok.Data;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
@@ -18,7 +17,6 @@ import java.util.Set;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-@Data
 public  class WhereOnCondition<V> implements WhereCondition {
 
     private Set<String> colNames = new HashSet<>();
@@ -37,6 +35,42 @@ public  class WhereOnCondition<V> implements WhereCondition {
     private String andOrTag = " and ";
 
     public WhereOnCondition() {}
+
+    public Set<String> getColNames() {
+        return colNames;
+    }
+
+    public void setColNames(Set<String> colNames) {
+        this.colNames = colNames;
+    }
+
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
+
+    public V getValue() {
+        return value;
+    }
+
+    public void setValue(V value) {
+        this.value = value;
+    }
+
+    public ConditionTag getTag() {
+        return tag;
+    }
+
+    public void setTag(ConditionTag tag) {
+        this.tag = tag;
+    }
+
+    public void setParams(Map<String, Object> params) {
+        this.params = params;
+    }
+
+    public HeadCondition getHeadCondition() {
+        return headCondition;
+    }
 
     /**
      * 获取 字段名称

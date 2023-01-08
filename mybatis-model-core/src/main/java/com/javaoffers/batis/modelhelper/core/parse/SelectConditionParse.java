@@ -84,6 +84,7 @@ public class SelectConditionParse implements ParseCondition {
         return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
                 .sql(selectCols.toString())
+                .status(true)
                 .build();
     }
 

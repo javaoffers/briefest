@@ -146,15 +146,53 @@ public class UserServiceImpl {
            
            default Integer updateUserNameById(User user){
                 Id id = crudUserMapper.update()
+                                      .npdateNull() 
                                       .col(User::getName, user.getName())
                                       .where()
                                       .eq(User::getId, user.getId())
                                       .ex();
                 return id.toInt();
-           }   
+           }
+            
+            
+           default Integer updateUserNameById2(User user){
+                Id id = crudUserMapper.update()
+                                      .updateNull() 
+                                      .col(User::getName, user.getName())
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }
+
+
+           default Integer updateUserById(User user){
+                Id id = crudUserMapper.update()
+                                      .updateNull() 
+                                      .colAll(user)
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }
+
+           default Integer updateUserById2(User user){
+                Id id = crudUserMapper.update()
+                                      .npdateNull() 
+                                      .colAll(user)
+                                      .where()
+                                      .eq(User::getId, user.getId())
+                                      .ex();
+                return id.toInt();
+           }
    
        }
-```
+```            
+ 
+  - col()指定具体要更新的字段
+  - colAll() 更新全部字段（映射匹配的字段）
+  - updateNull() 会包含 colname = null. 会将字段更为为空.
+  - npdateNull() 过滤掉 colname = null. 不会将字段跟心为空
 
 - delete()
 <p>
@@ -350,6 +388,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
     <p>
     @ColName 非常灵活，不仅可以指定表字段名称。还可以指定sql语句。本质上是将@ColName的
     值最后将会被解析到要执行的sql语句中。@ColName 与 Sql函数注解也经常配合使用（不是必须的）。
+    @ColName的excludeColAll属性默认，是否参与select().colAll()查询。（默认参与查询）
     </p>
     
 
@@ -618,6 +657,7 @@ jql中提供了很多常用的api操作，不需要开发人员二次开发。�
 Number2DateConvert 表示 number数字转换为date日期 .
 
 </p>
+
 - String2DoubleConvert      
 - DateOne2DateTwoConvert  
 - String2DateConvert  

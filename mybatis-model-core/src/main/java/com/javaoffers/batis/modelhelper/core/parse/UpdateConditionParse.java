@@ -52,7 +52,13 @@ public class UpdateConditionParse implements ParseCondition {
         condition = conditions.pollFirst();
         if(condition == null || (!(condition instanceof UpdateColValueCondition)
                 && !(condition instanceof UpdateAllColValueCondition))){
-            //没有要更新的字段
+            //没有要更新的字段跳到下一个UpdateCondtionMark
+            while (condition != null && !(condition instanceof UpdateCondtionMark)){
+                condition = conditions.pollFirst();
+            }
+            if(condition instanceof UpdateCondtionMark){
+                conditions.addFirst(condition);
+            }
             return null;
         }
         boolean status = false;

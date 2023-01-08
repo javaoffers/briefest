@@ -23,7 +23,9 @@ public class MoreSQLInfo extends SQLInfo {
 
     public void addAllSqlInfo(Collection<SQLInfo> sqlInfos){
         if(!CollectionUtils.isEmpty(sqlInfos)){
-            this.sqlInfos.addAll(sqlInfos);
+            for(SQLInfo sqlInfo : sqlInfos){
+                this.addSqlInfo(sqlInfo);
+            }
         }
     }
 

@@ -1,13 +1,10 @@
 package com.javaoffers.batis.modelhelper.core;
 
-
-import lombok.Data;
-
 /**
  * @Description:
  * @Auther: create by cmj on 2021/12/8 13:00
  */
-@Data
+
 public class ConverDescriptor implements Descriptor{
 
     private Class src;
@@ -24,4 +21,6 @@ public class ConverDescriptor implements Descriptor{
         this.des = des;
         this.um = src.getName()+"#"+des.getName();
     }
+
+
 }

@@ -34,6 +34,7 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testNpdateNull();
         testUpdate();
         testBatchUpdate();
         if(status){
@@ -41,6 +42,21 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
         }
 
     }
+
+    public void testNpdateNull(){
+        try {
+            crudUserMapper.update()
+                    .npdateNull()
+                    .col(User::getName, null)
+                    .where()
+                    .eq(User::getId, 1)
+                    .ex();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+    }
+
     public void testBatchUpdate(){
         List<User> users = crudUserMapper.queryAll();
         for(User user : users){
@@ -105,13 +121,17 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
                 .where()
                 .eq(User::getId,id)
                 .ex();
+        try {
+            crudUserMapper.update()
+                    .npdateNull()
+                    .colAll(new User())
+                    .where()
+                    .eq(User::getId,id)
+                    .ex();
 
-        crudUserMapper.update()
-                .npdateNull()
-                .colAll(new User())
-                .where()
-                .eq(User::getId,id)
-                .ex();
+        }catch (Exception e){
+            print(e.getMessage());
+        }
 
         crudUserMapper.update()
                 .npdateNull()

@@ -118,9 +118,11 @@ public class InsertConditionParse implements ParseCondition {
             if(sqlInfo == null){
                 LinkedList parems = new LinkedList();
                 parems.add(sqlParam);
-                sqlInfo = SQLInfo.builder().aClass(insertIntoTableCondition.getModelClass())
+                sqlInfo = SQLInfo.builder()
+                        .aClass(insertIntoTableCondition.getModelClass())
                         .params(parems)
                         .sql(sql)
+                        .status(true)
                         .build();
                 batch.put(sql, sqlInfo);
             }else{

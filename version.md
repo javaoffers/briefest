@@ -4,4 +4,7 @@
   - 新增注解@GroupConcat
   - 修改通用api返回Id包装类型
   - @ColName新增excludeColAll属性
+
+- 3.5.11.8
+  - 避免批处理事务自动提交  
   

@@ -192,7 +192,7 @@ public class UserServiceImpl {
   - col()指定具体要更新的字段
   - colAll() 更新全部字段（映射匹配的字段）
   - updateNull() 会包含 colname = null. 会将字段更为为空.
-  - npdateNull() 过滤掉 colname = null. 不会将字段跟心为空
+  - npdateNull() 过滤掉 colname = null. 不会将字段更新为空
 
 - delete()
 <p>

@@ -5,6 +5,7 @@ import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.fun.AggTag;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -98,5 +99,11 @@ public interface CrudUserMapper extends CrudMapper<User> {
         Id ex = insert().colAll(user).ex();
         user.setId(ex.toLong());
         return user;
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    default List<Id> saveUserWithTran(User... users){
+        List<Id> exs = insert().colAll(users).exs();
+        return exs;
     }
 }

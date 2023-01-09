@@ -45,6 +45,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        transactionInsert();
         testBatchInsert();
         testInsert();
         testEnum();
@@ -53,6 +54,16 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         }
 
     }
+
+    public void transactionInsert(){
+        User user = new User();
+        user.setName("tran");
+        user.setSex(Sex.Boy);
+        user.setWork(Work.JAVA);
+
+         crudUserMapper.saveUserWithTran(user);
+    }
+
     public void testEnum(){
         User ex = this.crudUserMapper
                 .select()

@@ -132,7 +132,10 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                             ps.addBatch();
                         }
                         int[] ints = ps.executeBatch();
-                        connection.commit();
+                        //Avoid transactional inconsistencies
+                        if(oldAutoCommit){
+                            connection.commit();
+                        }
                         return ints;
                     }catch (Exception e){
                         throw e;
@@ -192,7 +195,10 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                         }
 
                         ps.executeBatch();
-                        connection.commit();
+                        //Avoid transactional inconsistencies
+                        if(oldAutoCommit){
+                            connection.commit();
+                        }
                     }catch (Exception e){
                         throw e;
                     }finally {

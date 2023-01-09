@@ -203,8 +203,7 @@ public class UserServiceImpl {
     public interface CrudUserMapper extends CrudMapper<User>{
            
            default Integer deleteUserById(User user){
-                Id id = crudUserMapper.update()
-                                      .col(User::getName, user.getName())
+                Id id = crudUserMapper.delete()
                                       .where()
                                       .eq(User::getId, user.getId())
                                       .ex();

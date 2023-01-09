@@ -58,15 +58,15 @@ public interface CrudUserMapper extends CrudMapper<User> {
     
         //查询全表数据
         default List<User> queryAll(){
-            return select()
-                    .colAll()
-                    .where()
-                    .exs();
+            return this.select()
+                       .colAll()
+                       .where()
+                       .exs();
         }
         
         //增加user
         default int addUser(User user){
-            Id ex = insert().colAll(user).ex();
+            Id ex = this.insert().colAll(user).ex();
             return ex.toInt();
         }   
         //.... 这里不一一举例了， 
@@ -104,13 +104,14 @@ public class UserServiceImpl {
     public interface CrudUserMapper extends CrudMapper<User>{
         
         default List<User> queryUserByName(String name){
-             List<User> exs = crudUserMapper
-                                    .select()
-                                    .col(User::getName)
-                                    .col(User::getSex)
-                                    .where()
-                                    .eq(User::getName, name)
-                                    .exs();
+             
+            List<User> exs = this .select()
+                                  .col(User::getName)
+                                  .col(User::getSex)
+                                  .where()
+                                  .eq(User::getName, name)
+                                  .exs();  
+
         }   
 
     }
@@ -125,11 +126,11 @@ public class UserServiceImpl {
     public interface CrudUserMapper extends CrudMapper<User>{
         
         default Integer saveUsers(User user){
-             Id id = crudUserMapper.insert()
-                                   .col(User::getName, user.getName())
-                                   .col(User::getSex, user.getName())
-                                   .where()
-                                   .ex();
+             Id id = this.insert()
+                         .col(User::getName, user.getName())
+                         .col(User::getSex, user.getName())
+                         .where()
+                         .ex();
              return id.toInt();
         }   
 
@@ -145,44 +146,44 @@ public class UserServiceImpl {
     public interface CrudUserMapper extends CrudMapper<User>{
            
            default Integer updateUserNameById(User user){
-                Id id = crudUserMapper.update()
-                                      .npdateNull() 
-                                      .col(User::getName, user.getName())
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
+                Id id = this.update()
+                            .npdateNull() 
+                            .col(User::getName, user.getName())
+                            .where()
+                            .eq(User::getId, user.getId())
+                            .ex();
                 return id.toInt();
            }
             
             
            default Integer updateUserNameById2(User user){
-                Id id = crudUserMapper.update()
-                                      .updateNull() 
-                                      .col(User::getName, user.getName())
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
+                Id id = this.update()
+                            .updateNull() 
+                            .col(User::getName, user.getName())
+                            .where()
+                            .eq(User::getId, user.getId())
+                            .ex();
                 return id.toInt();
            }
 
 
            default Integer updateUserById(User user){
-                Id id = crudUserMapper.update()
-                                      .updateNull() 
-                                      .colAll(user)
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
+                Id id = this.update()
+                            .updateNull() 
+                            .colAll(user)
+                            .where()
+                            .eq(User::getId, user.getId())
+                            .ex();
                 return id.toInt();
            }
 
            default Integer updateUserById2(User user){
-                Id id = crudUserMapper.update()
-                                      .npdateNull() 
-                                      .colAll(user)
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
+                Id id = this.update()
+                            .npdateNull() 
+                            .colAll(user)
+                            .where()
+                            .eq(User::getId, user.getId())
+                            .ex();
                 return id.toInt();
            }
    
@@ -203,10 +204,10 @@ public class UserServiceImpl {
     public interface CrudUserMapper extends CrudMapper<User>{
            
            default Integer deleteUserById(User user){
-                Id id = crudUserMapper.delete()
-                                      .where()
-                                      .eq(User::getId, user.getId())
-                                      .ex();
+                Id id = this.delete()
+                            .where()
+                            .eq(User::getId, user.getId())
+                            .ex();
                 return id.toInt();
            }   
    
@@ -219,8 +220,12 @@ public class UserServiceImpl {
 </p>
 
 ```java
+    import javax.annotation.Resource;
     public class UserServiceImpl {
-           
+          
+          @Resource
+          CrudUserMapper  crudUserMapper;     
+
           public User queryUserById(User user){
                  User user = crudUserMapper.general().queryById(save);
                  return user;
@@ -333,7 +338,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
    
         default User queryUserBirthdayById(int id){
            // SQL: select user.birthday as birthdayStr from user where 1=1 and user.id = #{id} 
-           return crudUserMapper.select().col(User::getBirthdayStr).where().eq(User::getId, id).ex();
+           return this.select().col(User::getBirthdayStr).where().eq(User::getId, id).ex();
         }
    }
 

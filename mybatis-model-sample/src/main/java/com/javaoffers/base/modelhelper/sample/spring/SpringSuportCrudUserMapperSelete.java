@@ -43,15 +43,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        List<User> users = crudUserMapper
-                .select()
-                .colAll()
-                .innerJoin(UserOrder::new)
-                .colAll()
-                .on()
-                .oeq(User::getId, UserOrder::getUserId)
-                .where()
-                .exs();
         testGroupConcat();
         testDistinc();
         testColAll();
@@ -127,6 +118,19 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
                 .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .exs();
+        LOGUtils.printLog(exs);
+
+        exs = this.crudUserMapper.select()
+                .colAll()
+                .innerJoin(UserTeacher::new)
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .colAll()
                 .on()
                 .oeq(UserTeacher::getTeacherId, Teacher::getId)
                 .where()

@@ -227,7 +227,7 @@ public class UserServiceImpl {
           }
 
           public Integer saveUser(User user){
-                long id = crudUserMapper.general().save(general).toLong();
+                int id = crudUserMapper.general().save(general).toInt();
                 return id;
           } 
           
@@ -288,6 +288,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
 这样设计的目的是避免全表的失误操作 （总是提醒你不要忘记添加where条件）。当然如果你就是想进行全表操作也是可以的。比如where().ex() 或
 者 where().exs(); where() 会被解析为 where 1=1 进行执行。 
 </p>
+
   - eq()
     - 表示等于
   - unite()
@@ -305,6 +306,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
    字段主要分为表字段和sql函数语句。 表字段通过Model类的属性自动和表字段进行映射（属性转换为下划线格式后与表字段进行映射）。
    如果表字段和Model类中的属性名称（属性转换为下划线格式后）不相同时。可以通过@ColName进行指定具体的表字段。
 </p>
+
   - 案例
 
   ```java
@@ -338,8 +340,9 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
 
   - enum枚举支持
     <p>
-    当Model类的属性是枚举时 ，jql对枚举类支持的也非常好. 如果枚举类中存在属性时我们可以通过@EnumValue来指定枚举类中的属性。
-    该属性的值作为表字段属性的值。 如果没有@EnumValue则默认将枚举类的 ordinal() 的值作为表字段的默认值。
+    当Model类的属性是枚举时 ，jql对枚举类支持的也非常好. 如果枚举类中存在属性时我们可以通过@EnumValue来指定枚举类中的属性(具有唯一特性)。
+    该属性的值作为表字段属性的值。 如果没有@EnumValue则默认将枚举类的 ordinal() 的值作为表字段的默认值。 注意@EnumValue在枚举类中
+    只能指定一个属性.不能指定多个
     </p>
     
     ```java
@@ -398,6 +401,7 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
 多个组合sql函数注解最后会解析为嵌套的sql函数逻辑。组合注解解析的顺序
 是从上向下开始解析。
 </p>
+
   - 有参函数
     - 通用函数
       - @if
@@ -422,14 +426,6 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
     - 数学函数
       - @Rand
 
-#### @GroupConcat 函数注解
-<p>
- 该注解属于分组sql函数注解，当执行select().colAll() 时可能会将该注解对应的sql语句不进行解析. 因为colAll()通常是查询所有字段，
- 除非你按照所有字段进行了分组。这种场景不是很多。如果你想让colAll() 包含@GroupConcat进行解析，则只需要将@GroupConcat中的
- excludeColAll 属性改为false即可，默认为true. 另外一种方式是通过col(xxx) 来指定也是可以的（推荐这种方式）
-</p>
-      
-
 ```java
      @BaseModel
      @Data
@@ -450,11 +446,19 @@ ex() 和 exs() 表示使jql触发执行。不同的是ex()返回一条Model数�
 
      }   
 ```
+
+#### @GroupConcat 函数注解
+<p>
+ 该注解属于分组sql函数注解，当执行select().colAll() 时可能会将该注解对应的sql语句不进行解析. 因为colAll()通常是查询所有字段，
+ 除非你按照所有字段进行了分组。这种场景不是很多。如果你想让colAll() 包含@GroupConcat进行解析，则只需要将@GroupConcat中的
+ excludeColAll 属性改为false即可，默认为true. 另外一种方式是通过col(xxx) 来指定也是可以的（推荐这种方式）
+</p>
+      
 ### 多表
   
 <p>
 jql 支持多表映射，而且非常简单没有复杂的配置。 一对一， 一对多，多对多。用Model类表示
-则为类与类（一对一），类与集合的关系（一对多，多对多）。解析来我们看一下案例
+则为类与类（一对一），类与集合的关系（一对多，多对多）。来我们看一下案例
 </p> 
   - 一对一 （类与类的关系）
 
@@ -472,7 +476,7 @@ jql 支持多表映射，而且非常简单没有复杂的配置。 一对一，
 
  }   
  
-//省份证号
+//身份证号
  @BaseModel
  @Data
  public class Card{ 
@@ -540,7 +544,7 @@ jql 支持多表映射，而且非常简单没有复杂的配置。 一对一，
      
      private String name; 
     
-     private List<Teacher> order; //多对多。 不需要任何配置就是这么简单
+     private List<Teacher> teachers; //多对多。 不需要任何配置就是这么简单
 
  }  
 
@@ -595,27 +599,30 @@ jql 支持多表映射，而且非常简单没有复杂的配置。 一对一，
   ```java
     List<User> users = crudUserMapper
                       .select()
-                      .colAll()
+                      .colAll() //查询user的所有字段和sql函数语句（标有函数注解的也将会被解析）
                       .rightJoin(UserOrder::new)
                       .colAll()
                       .on()
-                      .oeq(User::getId, UserOrder::getUserId)
+                      .oeq(User::getId, UserOrder::getUserId)//绑定两张表的关系字段。
                       .where()
                       .exs();
   
   ```
     
-  - inner join
+  - inner join (多对多案例)
   ```java
     List<User> users = crudUserMapper
-                      .select()
-                      .colAll() //查询user的所有字段和sql函数语句（标有函数注解的也将会被解析）
-                      .innerJoin(UserOrder::new)
-                      .colAll()
-                      .on()
-                      .oeq(User::getId, UserOrder::getUserId) //绑定两张表的关系字段。
-                      .where()
-                      .exs();
+                       .select()
+                       .colAll()//查询user所有字段
+                       .innerJoin(UserTeacher::new) //关联中间表
+                       .on()
+                       .oeq(User::getId, UserTeacher::getUserId) //指定关联关系
+                       .innerJoin(Teacher::new)//关联子表
+                       .colAll()//查询子表所有字段
+                       .on()
+                       .oeq(UserTeacher::getTeacherId, Teacher::getId)//指定关联关系
+                       .where()
+                       .exs();//执行
   
   ```
 <p>
@@ -631,6 +638,7 @@ jql中提供了很多常用的api操作，不需要开发人员二次开发。�
 比如：User user = crudUserMapper.general().queryById(id); 这里我们来举例部分. 您也可以通
 过 general() 来查看全部支持的方法。
 </p>
+
 - 常用api
   - save() 保存
   - saveOrModify() 保存或更新，解析的sql为 insert into xxx on duplicate key update xxx

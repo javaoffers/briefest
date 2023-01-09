@@ -104,7 +104,7 @@ public class FunAnnoParser {
             parseParamTime(appender, anno)||
             parseParamMath(appender, anno)||
             parseNoneParamTime(appender, anno)||
-            parseNoneParamMath(appender, anno);
+            parseNoneParamMath(appender, anno) || isFunSql;
 
         }
         if(colNameAnno != null){

@@ -1,6 +1,6 @@
 
 ## mybatis model helper
-<a href="./readmeCn.md">中文<a/>
+<a href="./readmeCn.md">中文<a/> &nbsp; <a href="./wiki.md">wiki<a/>
 ####  Welcome to fork and star for encourage
 
 - Features
@@ -703,3 +703,4 @@ If you think it's good, please click the little star to encourage it
 </p>
 
 ### Please see the wiki more tutorial
+<a href="./wiki.md">中文<a/>

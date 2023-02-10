@@ -265,7 +265,7 @@ int idInt = id.toInt();
 
 //下面这两句是等价的。
 User user = crudUserMapper.general().queryById(id);
-User user2 = crudUserMapper.general().queryByIda(idInt);
+User user2 = crudUserMapper.general().queryById(idInt);
 
 
 ```

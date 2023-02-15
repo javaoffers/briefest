@@ -128,11 +128,11 @@ Id exOne = crudUserMapper
 ```java
         User user = User.builder().name("Jom1").birthday(date).build();
         
-        List<Id> ex = crudUserMapper
+        Id id = crudUserMapper
                       .insert()
                       .colAll(user)
                       .ex();
-        print(ex);
+        print(id);
 ```
 
 <p>

@@ -583,6 +583,7 @@ jql 支持多表映射，而且非常简单没有复杂的配置。 一对一，
  public class StudentTeacher{
         
      //主键id
+     @BaseUnique
      private Integer id;
      //学生id
      private Integer studentId;

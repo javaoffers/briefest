@@ -53,9 +53,10 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     public void testMultThread(){
-        CountDownLatch countDownLatch = new CountDownLatch(5);
+        int c = 10;
+        CountDownLatch countDownLatch = new CountDownLatch(c);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
-        for(int i = 0 ; i < 50; ++i){
+        for(int i = 0 ; i < c; ++i){
             executorService.submit(()->{
                 try {
                     testGroupConcat();
@@ -69,7 +70,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                     testGroupBy();
                 }catch (Exception e){
                     e.printStackTrace();
-                    System.exit(0);
+                    //System.exit(0);
                 }
                 countDownLatch.countDown();
 

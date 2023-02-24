@@ -11,6 +11,7 @@ import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
 import com.javaoffers.batis.modelhelper.utils.FutureLock;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -46,7 +47,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private JdbcTemplate jdbcTemplate;
 
-    private FutureLock<Boolean> status = new FutureLock();
+    private FutureLock<Pair<Boolean, Exception>> status = new FutureLock();
 
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
         this.mapperProxy = mapperProxy;
@@ -120,13 +121,19 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
             if( !isReady() ){
+                // Note that after unLock, tryLock is still unsuccessful. FutureLock can only be used once,
+                // unless it can be used again after reset
                 if(this.status.tryLock()){
-                    parseTableInfo(this.mapperProxy, this.clazz);
-                    // Note that after unLock, tryLock is still unsuccessful. FutureLock can only be used once,
-                    // unless it can be used again after reset
-                    this.status.unlock(true);
-                }else if(!isReady()){
-                    this.status.get();
+                    try {
+                        parseTableInfo(this.mapperProxy, this.clazz);
+                        this.status.unlock(Pair.of(true, null));
+                    }catch (Exception e){
+                        this.status.unlock(Pair.of(false, e));
+                        e.printStackTrace();
+                        throw new ParseTableInfoException("parse table info exception", e);
+                    }
+                }else if(!this.status.get().getLeft()){
+                    throw new ParseTableInfoException("parse table info exception", this.status.get().getRight());
                 }
             }
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);

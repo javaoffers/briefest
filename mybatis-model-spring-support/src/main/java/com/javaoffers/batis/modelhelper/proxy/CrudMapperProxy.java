@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.exception.ParseTableInfoException;
 import com.javaoffers.batis.modelhelper.mapper.CrudMapper;
 import com.javaoffers.batis.modelhelper.util.HelperUtils;
 import com.javaoffers.batis.modelhelper.utils.ByteBuddyUtils;
+import com.javaoffers.batis.modelhelper.utils.FutureLock;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.binding.MapperProxy;
@@ -45,7 +46,14 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private JdbcTemplate jdbcTemplate;
 
+    private FutureLock<Boolean> status = new FutureLock();
+
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
+        this.mapperProxy = mapperProxy;
+        this.clazz = clazz;
+    }
+
+    private void parseTableInfo(MapperProxy<T> mapperProxy, Class clazz) {
         try {
 
             Field sqlSessionField = mapperProxy.getClass().getDeclaredField("sqlSession");
@@ -56,8 +64,6 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             SqlSessionFactory sessionFactory = (SqlSessionFactory)sqlSessionFactoryField.get(sqlSession);
             DataSource dataSource = sessionFactory.getConfiguration().getEnvironment().getDataSource();
             this.jdbcTemplate = new JdbcTemplate(dataSource);
-            this.mapperProxy = mapperProxy;
-            this.clazz = clazz;
             if(!crudClass.isAssignableFrom(clazz)){
                 return;
             }
@@ -107,9 +113,22 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
         });
     }
 
+    private boolean isReady(){
+        return status.isDone();
+    }
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
+            if( !isReady() ){
+                if(this.status.tryLock()){
+                    parseTableInfo(this.mapperProxy, this.clazz);
+                    // Note that after unLock, tryLock is still unsuccessful. FutureLock can only be used once,
+                    // unless it can be used again after reset
+                    this.status.unlock(true);
+                }else if(!isReady()){
+                    this.status.get();
+                }
+            }
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);
             CrudMapperMethodThreadLocal.addExcutorJdbcTemplate(this.jdbcTemplate);
             //If defaultObj is null, it means CrudMapper interface is not inherited

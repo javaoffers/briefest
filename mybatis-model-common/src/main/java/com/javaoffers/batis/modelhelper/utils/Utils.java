@@ -36,6 +36,10 @@ public class Utils {
      * @return
      */
     public static <E> Set<Field> getFields(Class<E> clazz) {
+        return getFields(clazz, false);
+    }
+
+    private static <E> Set<Field> getFields(Class<E> clazz, boolean isParentClass) {
         if (clazz == null || clazz.isPrimitive() || clazz.isInterface()) {
             return Collections.EMPTY_SET;
         }
@@ -47,10 +51,13 @@ public class Utils {
                 for (Field f : fields) {
                     list.add(f);
                 }
-                list.addAll(getFields(clazz.getSuperclass()));
+                list.addAll(getFields(clazz.getSuperclass(), true));
             }
             result = list;
-            SOFT_CACHE_CLASS_FIELDS.put(clazz, result);
+            //Avoid caching the fields data corresponding to the parent class
+            if(!isParentClass){
+                SOFT_CACHE_CLASS_FIELDS.put(clazz, result);
+            }
         }
         return result;
     }

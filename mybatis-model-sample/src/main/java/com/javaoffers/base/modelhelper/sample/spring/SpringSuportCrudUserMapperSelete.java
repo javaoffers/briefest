@@ -22,6 +22,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
@@ -43,18 +46,43 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testGroupConcat();
-        testDistinc();
-        testColAll();
-        testEnum();
-        test3Join();
-        testAsName();
-        testSelectOp();
-        testSelect();
-        testGroupBy();
+        testMultThread();
         if (status) {
             System.exit(0);
         }
+    }
+
+    public void testMultThread(){
+        CountDownLatch countDownLatch = new CountDownLatch(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        for(int i = 0 ; i < 50; ++i){
+            executorService.submit(()->{
+                try {
+                    testGroupConcat();
+                    testDistinc();
+                    testColAll();
+                    testEnum();
+                    test3Join();
+                    testAsName();
+                    testSelectOp();
+                    testSelect();
+                    testGroupBy();
+                }catch (Exception e){
+                    e.printStackTrace();
+                    System.exit(0);
+                }
+                countDownLatch.countDown();
+
+            });
+        }
+
+        try {
+            countDownLatch.await();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     public void testGroupBy(){
@@ -114,6 +142,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         List<User> exs = this.crudUserMapper.select()
                 .col(User::getId)
                 .innerJoin(UserTeacher::new)
+                .colAll()
                 .on()
                 .oeq(User::getId, UserTeacher::getUserId)
                 .innerJoin(Teacher::new)
@@ -254,7 +283,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         LOGUtils.printLog(exs1.size());
     }
 
-    public void testSelect() throws Exception {
+    public void testSelect() {
         crudUserMapper.delete().where().gt(User::getId, 1000).ex();
         /**
          * Queries the specified field
@@ -618,7 +647,12 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     }
 
-    public void print(Object user) throws JsonProcessingException {
-        System.out.println(objectMapper.writeValueAsString(user));
+    public void print(Object user) {
+        try {
+            System.out.println(objectMapper.writeValueAsString(user));
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

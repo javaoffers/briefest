@@ -6,6 +6,7 @@ import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.constants.ModelHelpperConstants;
+import com.javaoffers.batis.modelhelper.exception.BaseException;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.exception.ParseTableException;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
@@ -33,9 +34,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TableHelper {
 
-    private final static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
+    private final  static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
-    private final static Map<String, Class> modelClass = new ConcurrentHashMap<>();
+    private final  static Map<String, Class> modelClass = new ConcurrentHashMap<>();
 
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
@@ -184,8 +185,8 @@ public class TableHelper {
                 return clazz;
             } catch (Exception e) {
                 e.printStackTrace();
+                throw e;
             }
-            return null;
         });
     }
 
@@ -351,6 +352,7 @@ public class TableHelper {
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new BaseException(e.getMessage());
         }
         return modelClass.get(implClass);
     }
@@ -394,11 +396,13 @@ public class TableHelper {
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    throw new ParseTableException(e.getMessage());
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
+            throw new ParseTableException(e.getMessage());
         } finally {
             try {
                 if (connection != null && !connection.isClosed()) {
@@ -406,6 +410,7 @@ public class TableHelper {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
+                throw new ParseTableException(e.getMessage());
             }
         }
         return aClass;

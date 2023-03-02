@@ -22,8 +22,8 @@ public class String2EnumConvert extends AbstractConver<String, Enum> {
         Class desClass = ConvertRegisterSelectorDelegate.getProcessingConvertDesClass();
         Object[] enumConstants = desClass.getEnumConstants();
         if (StringUtils.isNotBlank(str) && enumConstants != null) {
-            List<Field> enumValueFields = EnumValueUtils.getEnumValueFields(desClass);
-            if (enumValueFields == null || enumValueFields.size() == 0) {
+            Field enumValueField = EnumValueUtils.getEnumValueFields(desClass);
+            if (enumValueField == null) {
                 for (Object o : enumConstants) {
                     Enum enu = (Enum) o;
                     //Can't take the name here, No @EnumValue attribute will be ordinal as default values
@@ -32,11 +32,9 @@ public class String2EnumConvert extends AbstractConver<String, Enum> {
                     }
                 }
             } else {
-                for (Field field : enumValueFields) {
-                    field.setAccessible(true);
                     for (Object o : enumConstants) {
                         try {
-                            Object enumValue = field.get(o);
+                            Object enumValue = enumValueField.get(o);
                             if (str.equals(valueOf(enumValue))) {
                                 return (Enum) o;
                             }
@@ -46,7 +44,7 @@ public class String2EnumConvert extends AbstractConver<String, Enum> {
                     }
 
 
-                }
+
             }
         }
         return null;

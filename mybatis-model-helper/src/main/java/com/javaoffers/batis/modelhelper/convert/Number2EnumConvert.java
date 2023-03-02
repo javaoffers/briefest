@@ -23,18 +23,16 @@ public class Number2EnumConvert extends AbstractConver<Number, Enum> {
         Class desClass = ConvertRegisterSelectorDelegate.getProcessingConvertDesClass();
         Object[] enumConstants = desClass.getEnumConstants();
         if (number != null && enumConstants != null) {
-            List<Field> declaredFields = EnumValueUtils.getEnumValueFields(desClass);
+            Field enumValueField = EnumValueUtils.getEnumValueFields(desClass);
 
-            if (declaredFields.size() == 0) {
+            if (enumValueField == null) {
                 if (enumConstants.length > number.intValue()) {
                     return (Enum) enumConstants[number.intValue()];
                 }
             } else {
-                for (Field field : declaredFields) {
-                    field.setAccessible(true);
                     for (Object o : enumConstants) {
                         try {
-                            Object enumValue = field.get(o);
+                            Object enumValue = enumValueField.get(o);
                             if (number.equals(enumValue)) {
                                 return (Enum) o;
                             } else if (enumValue != null
@@ -45,7 +43,7 @@ public class Number2EnumConvert extends AbstractConver<Number, Enum> {
                             e.printStackTrace();
                         }
                     }
-                }
+
             }
         }
         return null;

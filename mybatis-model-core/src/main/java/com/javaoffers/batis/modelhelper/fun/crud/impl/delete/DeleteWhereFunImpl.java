@@ -291,7 +291,7 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
         BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
         System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("PAM： "+sqlInfo.getParams());
+        System.out.println("PAM: "+sqlInfo.getParams());
         Integer count = instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
         return count;
     }

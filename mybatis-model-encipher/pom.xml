@@ -15,6 +15,12 @@
             <artifactId>jsqlparser</artifactId>
             <version>4.5</version>
         </dependency>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>mybatis-model-common</artifactId>
+            <version>3.5.11.9-SNAPSHOT</version>
+
+        </dependency>
 
     </dependencies>
 

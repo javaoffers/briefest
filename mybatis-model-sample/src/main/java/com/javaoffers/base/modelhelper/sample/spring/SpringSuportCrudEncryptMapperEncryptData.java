@@ -48,16 +48,21 @@ public class SpringSuportCrudEncryptMapperEncryptData implements InitializingBea
     }
 
     private void testEncrypt() throws JsonProcessingException {
-        List<EncryptData> query = this.crudEncryptDataMapper.general().query(1, 10000);
-        if(query != null){
-            Set<Integer> ids = query.stream().map(EncryptData::getId).collect(Collectors.toSet());
+        List<EncryptData> encryptDatas = this.crudEncryptDataMapper.general().query(1, 10000);
+        if(encryptDatas != null){
+            Set<Integer> ids = encryptDatas.stream().map(EncryptData::getId).collect(Collectors.toSet());
             crudEncryptDataMapper.general().removeByIds(ids);
         }
         EncryptData encryptData = new EncryptData();
-        encryptData.setEncryptNum("1234567890");
+        String encryptNum = "1234567890";
+        encryptData.setEncryptNum(encryptNum);
         Id id = this.crudEncryptDataMapper.general().save(encryptData); //The value of encrypt_num in the table is C3F41B512C08D900DBBB74E9379279DD
-        List<EncryptData> encryptData1 = this.crudEncryptDataMapper.general().queryByIds(id); //Query will be decrypted automatically
-        print(encryptData1);
+        encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); //Query will be decrypted automatically
+        print(encryptDatas);
+        // Inscription query, the bottom will be converted into ciphertext and query.
+        EncryptData ex = this.crudEncryptDataMapper.select().colAll().where().eq(EncryptData::getEncryptNum, encryptNum).ex();
+        print(ex);
+
     }
 
     public void print(Object user) throws JsonProcessingException {

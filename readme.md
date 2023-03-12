@@ -696,6 +696,37 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 ```
 
+### 支持自动加解密
+<p>
+   When we need to add certain fields in a database table for decryption. Mybatis JQL provides a simple configuration can be done; 
+   We only need to specify a key (length is 32 hexadecimal). Then specify tables and the fields in the table. Encryption is to frame to do it. Let's for example.
+   We specify a private key is' AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF '.
+   And give the encrypt_num encryption. In table encrypt_data configuration is as follows:
+</p>
+
+```java
+  /**
+     * Configure the tables and fields that need to be decrypted.
+     * the key Is the length of 32 hexadecimal;
+     */
+    @AesEncryptConfig(key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF", encryptTableColumns = {
+            @EncryptTableColumns(tableName = "encrypt_data", columns = {"encrypt_num"})
+    })
+    @Configuration
+    static class EncryptConfig{ }
+```
+```java
+    EncryptData encryptData = new EncryptData();
+    String encryptNum = "1234567890";
+    encryptData.setEncryptNum(encryptNum);
+    Id id = this.crudEncryptDataMapper.general().save(encryptData); //The value of encrypt_num in the table is C3F41B512C08D900DBBB74E9379279DD
+    encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); //Query will be decrypted automatically
+    print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
+    // Inscription query, the bottom will be converted into ciphertext and query.
+    EncryptData ex = this.crudEncryptDataMapper.select().colAll().where().eq(EncryptData::getEncryptNum, encryptNum).ex();
+    print(ex);//{"id":10,"encryptNum":"1234567890"}
+```
+
 #### Code contributions are welcome
 <p>
 The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.

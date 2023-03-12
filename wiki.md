@@ -715,3 +715,36 @@ Number2DateConvert 表示 number数字转换为date日期 .
 - Number2LocalDateTimeConvert
 - Number2EnumConvert
 - String2EnumConvert
+
+### 支持自动加解密
+<p>
+    当我们需要将数据库表中的某些字段进行加解密时。mybatis-jql 提供了一个简单的配置就可以搞定。 
+    我们只需要指定一个key(长度是32个十六进制). 然后指定表和表中的字段即可。加解密的
+    事情就交给框架去做.下面我们举例来说. 我们指定一个私钥是 ‘AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF’
+    并且给表 encrypt_data 中的encrypt_num 加密. 配置如下：
+</p>
+
+```java
+  /**
+     * Configure the tables and fields that need to be decrypted.
+     * the key Is the length of 32 hexadecimal;
+     */
+    @AesEncryptConfig(key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF", encryptTableColumns = {
+            @EncryptTableColumns(tableName = "encrypt_data", columns = {"encrypt_num"})
+    })
+    @Configuration
+    static class EncryptConfig{ }
+```
+```java
+    EncryptData encryptData = new EncryptData();
+    String encryptNum = "1234567890";
+    encryptData.setEncryptNum(encryptNum);
+    //encrypt_num的值在表里是： C3F41B512C08D900DBBB74E9379279DD
+    Id id = this.crudEncryptDataMapper.general().save(encryptData);
+    //查询的结果被自动解密
+    encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id);
+    print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
+    //查询时可以指定铭文去查询，jql会转化成密文去匹配. 因此可以正确的查询到数据。
+    EncryptData ex = this.crudEncryptDataMapper.select().colAll().where().eq(EncryptData::getEncryptNum, encryptNum).ex();
+    print(ex);//{"id":10,"encryptNum":"1234567890"}
+```

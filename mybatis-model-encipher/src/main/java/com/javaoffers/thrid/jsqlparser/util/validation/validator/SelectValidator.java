@@ -1,0 +1,310 @@
+/*-
+ * #%L
+ * JSQLParser library
+ * %%
+ * Copyright (C) 2004 - 2019 JSQLParser
+ * %%
+ * Dual licensed under GNU LGPL 2.1 or Apache License 2.0
+ * #L%
+ */
+package com.javaoffers.thrid.jsqlparser.util.validation.validator;
+
+import com.javaoffers.thrid.jsqlparser.expression.Expression;
+import com.javaoffers.thrid.jsqlparser.expression.MySQLIndexHint;
+import com.javaoffers.thrid.jsqlparser.expression.SQLServerHints;
+import com.javaoffers.thrid.jsqlparser.parser.feature.Feature;
+import com.javaoffers.thrid.jsqlparser.schema.Table;
+import com.javaoffers.thrid.jsqlparser.statement.select.*;
+import com.javaoffers.thrid.jsqlparser.statement.values.ValuesStatement;
+import com.javaoffers.thrid.jsqlparser.util.validation.ValidationCapability;
+import com.javaoffers.thrid.jsqlparser.util.validation.ValidationUtil;
+import com.javaoffers.thrid.jsqlparser.util.validation.metadata.NamedObject;
+
+import java.util.List;
+
+/**
+ * @author gitmotte
+ */
+public class SelectValidator extends AbstractValidator<SelectItem>
+        implements SelectVisitor, SelectItemVisitor, FromItemVisitor, PivotVisitor {
+
+    @Override
+    public void visit(PlainSelect plainSelect) {
+
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.select);
+            validateFeature(c, plainSelect.getMySqlHintStraightJoin(), Feature.mySqlHintStraightJoin);
+            validateOptionalFeature(c, plainSelect.getOracleHint(), Feature.oracleHint);
+            validateOptionalFeature(c, plainSelect.getSkip(), Feature.skip);
+            validateOptionalFeature(c, plainSelect.getFirst(), Feature.first);
+
+            if (plainSelect.getDistinct() != null) {
+                if (plainSelect.getDistinct().isUseUnique()) {
+                    validateFeature(c, Feature.selectUnique);
+                } else {
+                    validateFeature(c, Feature.distinct);
+                }
+                validateOptionalFeature(c, plainSelect.getDistinct().getOnSelectItems(), Feature.distinctOn);
+            }
+
+            validateOptionalFeature(c, plainSelect.getTop(), Feature.top);
+            validateFeature(c, plainSelect.getMySqlSqlCacheFlag() != null, Feature.mysqlSqlCacheFlag);
+            validateFeature(c, plainSelect.getMySqlSqlCalcFoundRows(), Feature.mysqlCalcFoundRows);
+            validateOptionalFeature(c, plainSelect.getIntoTables(), Feature.selectInto);
+            validateOptionalFeature(c, plainSelect.getKsqlWindow(), Feature.kSqlWindow);
+            validateFeature(c, isNotEmpty(plainSelect.getOrderByElements()) && plainSelect.isOracleSiblings(),
+                    Feature.oracleOrderBySiblings);
+
+            if (plainSelect.isForUpdate()) {
+                validateFeature(c, Feature.selectForUpdate);
+                validateOptionalFeature(c, plainSelect.getForUpdateTable(), Feature.selectForUpdateOfTable);
+                validateOptionalFeature(c, plainSelect.getWait(), Feature.selectForUpdateWait);
+                validateFeature(c, plainSelect.isNoWait(), Feature.selectForUpdateNoWait);
+            }
+
+            validateOptionalFeature(c, plainSelect.getForXmlPath(), Feature.selectForXmlPath);
+            validateOptionalFeature(c, plainSelect.getOptimizeFor(), Feature.optimizeFor);
+        } // end for
+
+        validateOptionalFromItem(plainSelect.getFromItem());
+        validateOptionalFromItems(plainSelect.getIntoTables());
+        validateOptionalJoins(plainSelect.getJoins());
+        
+        // to correctly recognize aliased tables
+        validateOptionalList(plainSelect.getSelectItems(), () -> this, (e, v) -> e.accept(v));
+        
+        validateOptionalExpression(plainSelect.getWhere());
+        validateOptionalExpression(plainSelect.getOracleHierarchical());
+
+        if (plainSelect.getGroupBy() != null) {
+            plainSelect.getGroupBy().accept(getValidator(GroupByValidator.class));
+        }
+
+        validateOptionalExpression(plainSelect.getHaving());
+        validateOptionalOrderByElements(plainSelect.getOrderByElements());
+
+        if (plainSelect.getLimit() != null) {
+            getValidator(LimitValidator.class).validate(plainSelect.getLimit());
+        }
+
+        if (plainSelect.getOffset() != null) {
+            validateOffset(plainSelect.getOffset());
+        }
+
+        if (plainSelect.getFetch() != null) {
+            validateFetch(plainSelect.getFetch());
+        }
+
+    }
+
+    @Override
+    public void visit(AllTableColumns allTableColumns) {
+        // nothing to validate - allTableColumns.getTable() will be validated with from
+        // clause
+    }
+
+    @Override
+    public void visit(AllColumns allColumns) {
+        // nothing to validate
+    }
+
+    @Override
+    public void visit(SelectExpressionItem selectExpressionItem) {
+        selectExpressionItem.getExpression().accept(getValidator(ExpressionValidator.class));
+    }
+
+    @Override
+    public void visit(SubSelect subSelect) {
+        if (isNotEmpty(subSelect.getWithItemsList())) {
+            subSelect.getWithItemsList().forEach(withItem -> withItem.accept(this));
+        }
+        subSelect.getSelectBody().accept(this);
+        validateOptional(subSelect.getPivot(), p -> p.accept(this));
+    }
+
+    @Override
+    public void visit(Table table) {
+        validateNameWithAlias(NamedObject.table, table.getFullyQualifiedName(),
+                ValidationUtil.getAlias(table.getAlias()));
+
+        validateOptional(table.getPivot(), p -> p.accept(this));
+        validateOptional(table.getUnPivot(), up -> up.accept(this));
+
+        MySQLIndexHint indexHint = table.getIndexHint();
+        if (indexHint != null && isNotEmpty(indexHint.getIndexNames())) {
+            indexHint.getIndexNames().forEach(i -> validateName(NamedObject.index, i));
+        }
+        SQLServerHints sqlServerHints = table.getSqlServerHints();
+        if (sqlServerHints != null) {
+            validateName(NamedObject.index, sqlServerHints.getIndexName());
+        }
+    }
+
+    @Override
+    public void visit(Pivot pivot) {
+        validateFeature(Feature.pivot);
+        validateOptionalExpressions(pivot.getForColumns());
+    }
+
+    @Override
+    public void visit(UnPivot unpivot) {
+        validateFeature(Feature.unpivot);
+
+        validateOptionalExpressions(unpivot.getUnPivotForClause());
+        validateOptionalExpressions(unpivot.getUnPivotClause());
+    }
+
+    @Override
+    public void visit(PivotXml pivot) {
+        validateFeature(Feature.pivotXml);
+        validateOptionalExpressions(pivot.getForColumns());
+        if (isNotEmpty(pivot.getFunctionItems())) {
+            ExpressionValidator v = getValidator(ExpressionValidator.class);
+            pivot.getFunctionItems().forEach(f -> f.getFunction().accept(v));
+        }
+        if (pivot.getInSelect() != null) {
+            pivot.getInSelect().accept(this);
+        }
+    }
+
+    public void validateOffset(Offset offset) {
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.offset);
+            validateOptionalFeature(c, offset.getOffsetParam(), Feature.offsetParam);
+        }
+    }
+
+    public void validateFetch(Fetch fetch) {
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.fetch);
+            validateFeature(c, fetch.isFetchParamFirst(), Feature.fetchFirst);
+            validateFeature(c, !fetch.isFetchParamFirst(), Feature.fetchNext);
+        }
+
+        validateOptionalExpression(fetch.getFetchJdbcParameter());
+    }
+
+    @Override
+    public void visit(SubJoin subjoin) {
+        validateOptionalFromItem(subjoin.getLeft());
+        validateOptionalJoins(subjoin.getJoinList());
+        validateOptional(subjoin.getPivot(), e -> e.accept(this));
+    }
+
+    public void validateOptionalJoins(List<Join> joins) {
+        if (joins != null) {
+            for (Join join : joins) {
+                validateOptionalJoin(join);
+            }
+        }
+    }
+
+    public void validateOptionalJoin(Join join) {
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.join);
+            validateFeature(c, join.isSimple() && join.isOuter(), Feature.joinOuterSimple);
+            validateFeature(c, join.isSimple(), Feature.joinSimple);
+            validateFeature(c, join.isRight(), Feature.joinRight);
+            validateFeature(c, join.isNatural(), Feature.joinNatural);
+            validateFeature(c, join.isFull(), Feature.joinFull);
+            validateFeature(c, join.isLeft(), Feature.joinLeft);
+            validateFeature(c, join.isCross(), Feature.joinCross);
+            validateFeature(c, join.isOuter(), Feature.joinOuter);
+            validateFeature(c, join.isInner(), Feature.joinInner);
+            validateFeature(c, join.isSemi(), Feature.joinSemi);
+            validateFeature(c, join.isStraight(), Feature.joinStraight);
+            validateFeature(c, join.isApply(), Feature.joinApply);
+            validateFeature(c, join.isWindowJoin(), Feature.joinWindow);
+            validateOptionalFeature(c, join.getUsingColumns(), Feature.joinUsingColumns);
+        }
+
+        validateOptionalFromItem(join.getRightItem());
+        for (Expression onExpression : join.getOnExpressions()) {
+            validateOptionalExpression(onExpression);
+        }
+        validateOptionalExpressions(join.getUsingColumns());
+    }
+
+    @Override
+    public void visit(SetOperationList setOperation) {
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.setOperation);
+            validateFeature(c, setOperation.getOperations().stream().anyMatch(o -> o instanceof UnionOp),
+                    Feature.setOperationUnion);
+            validateFeature(c, setOperation.getOperations().stream().anyMatch(o -> o instanceof IntersectOp),
+                    Feature.setOperationIntersect);
+            validateFeature(c, setOperation.getOperations().stream().anyMatch(o -> o instanceof ExceptOp),
+                    Feature.setOperationExcept);
+            validateFeature(c, setOperation.getOperations().stream().anyMatch(o -> o instanceof MinusOp),
+                    Feature.setOperationMinus);
+        }
+
+        if (isNotEmpty(setOperation.getSelects())) {
+            setOperation.getSelects().forEach(s -> s.accept(this));
+        }
+
+        validateOptionalOrderByElements(setOperation.getOrderByElements());
+
+        if (setOperation.getLimit() != null) {
+            getValidator(LimitValidator.class).validate(setOperation.getLimit());
+        }
+
+        if (setOperation.getOffset() != null) {
+            validateOffset(setOperation.getOffset());
+        }
+
+        if (setOperation.getFetch() != null) {
+            validateFetch(setOperation.getFetch());
+        }
+    }
+
+    @Override
+    public void visit(WithItem withItem) {
+        for (ValidationCapability c : getCapabilities()) {
+            validateFeature(c, Feature.withItem);
+            validateFeature(c, withItem.isRecursive(), Feature.withItemRecursive);
+        }
+        if (isNotEmpty(withItem.getWithItemList())) {
+            withItem.getWithItemList().forEach(wi -> wi.accept(this));
+        }
+        withItem.getSubSelect().accept(this);
+    }
+
+    @Override
+    public void visit(LateralSubSelect lateralSubSelect) {
+        validateFeature(Feature.lateralSubSelect);
+        validateOptional(lateralSubSelect.getPivot(), p -> p.accept(this));
+        validateOptional(lateralSubSelect.getUnPivot(), up -> up.accept(this));
+        validateOptional(lateralSubSelect.getSubSelect(), e -> e.accept(this));
+    }
+
+    @Override
+    public void visit(ValuesList valuesList) {
+        validateFeature(Feature.valuesList);
+        validateOptionalMultiExpressionList(valuesList.getMultiExpressionList());
+    }
+
+    @Override
+    public void visit(TableFunction tableFunction) {
+        validateFeature(Feature.tableFunction);
+
+        validateOptional(tableFunction.getPivot(), p -> p.accept(this));
+        validateOptional(tableFunction.getUnPivot(), up -> up.accept(this));
+    }
+
+    @Override
+    public void visit(ParenthesisFromItem parenthesis) {
+        validateOptional(parenthesis.getFromItem(), e -> e.accept(this));
+    }
+
+    @Override
+    public void visit(ValuesStatement values) {
+        getValidator(ValuesStatementValidator.class).validate(values);
+    }
+
+    @Override
+    public void validate(SelectItem statement) {
+        statement.accept(this);
+    }
+
+}

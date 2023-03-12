@@ -21,12 +21,12 @@ import java.util.Set;
  * @description:
  * @author: create by cmj on 2022/10/23 10:44
  */
-public class InsertConditionParse implements ParseCondition {
+public class InsertConditionParse extends AbstractParseCondition {
 
     public static ConditionTag conditionTag  = ConditionTag.INSERT_INTO;
 
     @Override
-    public SQLInfo parse(LinkedList<Condition> conditions) {
+    public SQLInfo doParse(LinkedList<Condition> conditions) {
         return parseInsert(conditions);
     }
 

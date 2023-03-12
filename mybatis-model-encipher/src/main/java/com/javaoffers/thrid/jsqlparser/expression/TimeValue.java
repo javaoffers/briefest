@@ -1,0 +1,53 @@
+/*-
+ * #%L
+ * JSQLParser library
+ * %%
+ * Copyright (C) 2004 - 2019 JSQLParser
+ * %%
+ * Dual licensed under GNU LGPL 2.1 or Apache License 2.0
+ * #L%
+ */
+package com.javaoffers.thrid.jsqlparser.expression;
+
+import com.javaoffers.thrid.jsqlparser.parser.ASTNodeAccessImpl;
+
+import java.sql.Time;
+
+/**
+ * A Time in the form {t 'hh:mm:ss'}
+ */
+public class TimeValue extends ASTNodeAccessImpl implements Expression {
+
+    private Time value;
+
+    public TimeValue() {
+        // empty constructor
+    }
+
+    public TimeValue(String value) {
+        this.value = Time.valueOf(value.substring(1, value.length() - 1));
+    }
+
+    @Override
+    public void accept(ExpressionVisitor expressionVisitor) {
+        expressionVisitor.visit(this);
+    }
+
+    public Time getValue() {
+        return value;
+    }
+
+    public void setValue(Time d) {
+        value = d;
+    }
+
+    @Override
+    public String toString() {
+        return "{t '" + value + "'}";
+    }
+
+    public TimeValue withValue(Time value) {
+        this.setValue(value);
+        return this;
+    }
+}

@@ -1,0 +1,90 @@
+/*-
+ * #%L
+ * JSQLParser library
+ * %%
+ * Copyright (C) 2004 - 2019 JSQLParser
+ * %%
+ * Dual licensed under GNU LGPL 2.1 or Apache License 2.0
+ * #L%
+ */
+package com.javaoffers.thrid.jsqlparser.statement.comment;
+
+import com.javaoffers.thrid.jsqlparser.expression.StringValue;
+import com.javaoffers.thrid.jsqlparser.schema.Column;
+import com.javaoffers.thrid.jsqlparser.schema.Table;
+import com.javaoffers.thrid.jsqlparser.statement.Statement;
+import com.javaoffers.thrid.jsqlparser.statement.StatementVisitor;
+
+public class Comment implements Statement {
+
+    private Table table;
+    private Column column;
+    private Table view;
+    private StringValue comment;
+
+    @Override
+    public void accept(StatementVisitor statementVisitor) {
+        statementVisitor.visit(this);
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table table) {
+        this.table = table;
+    }
+
+    public Column getColumn() {
+        return column;
+    }
+
+    public void setColumn(Column column) {
+        this.column = column;
+    }
+
+    public Table getView() {
+        return view;
+    }
+
+    public void setView(Table view) {
+        this.view = view;
+    }
+
+    public StringValue getComment() {
+        return comment;
+    }
+
+    public void setComment(StringValue comment) {
+        this.comment = comment;
+    }
+
+    @Override
+    public String toString() {
+        String sql = "COMMENT ON ";
+        if (table != null) {
+            sql += "TABLE " + table + " ";
+        } else if (column != null) {
+            sql += "COLUMN " + column + " ";
+        } else if (view != null) {
+            sql += "VIEW " + view + " ";
+        }
+        sql += "IS " + comment;
+        return sql;
+    }
+
+    public Comment withTable(Table table) {
+        this.setTable(table);
+        return this;
+    }
+
+    public Comment withColumn(Column column) {
+        this.setColumn(column);
+        return this;
+    }
+
+    public Comment withComment(StringValue comment) {
+        this.setComment(comment);
+        return this;
+    }
+}

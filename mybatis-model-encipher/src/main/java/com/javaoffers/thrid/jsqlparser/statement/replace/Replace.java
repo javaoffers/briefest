@@ -1,0 +1,184 @@
+/*-
+ * #%L
+ * JSQLParser library
+ * %%
+ * Copyright (C) 2004 - 2019 JSQLParser
+ * %%
+ * Dual licensed under GNU LGPL 2.1 or Apache License 2.0
+ * #L%
+ */
+package com.javaoffers.thrid.jsqlparser.statement.replace;
+
+import com.javaoffers.thrid.jsqlparser.expression.Expression;
+import com.javaoffers.thrid.jsqlparser.expression.operators.relational.ItemsList;
+import com.javaoffers.thrid.jsqlparser.schema.Column;
+import com.javaoffers.thrid.jsqlparser.schema.Table;
+import com.javaoffers.thrid.jsqlparser.statement.Statement;
+import com.javaoffers.thrid.jsqlparser.statement.StatementVisitor;
+import com.javaoffers.thrid.jsqlparser.statement.select.PlainSelect;
+
+import java.util.*;
+
+public class Replace implements Statement {
+
+    private Table table;
+    private List<Column> columns;
+    private ItemsList itemsList;
+    private List<Expression> expressions;
+    private boolean useValues = true;
+    private boolean useIntoTables = false;
+
+    @Override
+    public void accept(StatementVisitor statementVisitor) {
+        statementVisitor.visit(this);
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public void setTable(Table name) {
+        table = name;
+    }
+
+    public boolean isUseIntoTables() {
+        return useIntoTables;
+    }
+
+    public void setUseIntoTables(boolean useIntoTables) {
+        this.useIntoTables = useIntoTables;
+    }
+
+    public List<Column> getColumns() {
+        return columns;
+    }
+
+    public ItemsList getItemsList() {
+        return itemsList;
+    }
+
+    public void setColumns(List<Column> list) {
+        columns = list;
+    }
+
+    public void setItemsList(ItemsList list) {
+        itemsList = list;
+    }
+
+    /**
+     * A list of {@link Expression}s (from a "REPLACE mytab SET
+     * col1=exp1, col2=exp2"). <br>
+     * it is null in case of a "REPLACE mytab (col1, col2) [...]"
+     */
+    public List<Expression> getExpressions() {
+        return expressions;
+    }
+
+    public void setExpressions(List<Expression> list) {
+        expressions = list;
+    }
+
+    public boolean isUseValues() {
+        return useValues;
+    }
+
+    public void setUseValues(boolean useValues) {
+        this.useValues = useValues;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sql = new StringBuilder();
+        sql.append("REPLACE ");
+        if (isUseIntoTables()) {
+            sql.append("INTO ");
+        }
+        sql.append(table);
+
+        if (expressions != null && columns != null) {
+            // the SET col1=exp1, col2=exp2 case
+            sql.append(" SET ");
+            // each element from expressions match up with a column from columns.
+            for (int i = 0, s = columns.size(); i < s; i++) {
+                sql.append(columns.get(i)).append("=").append(expressions.get(i));
+                sql.append( i < s - 1 
+                                      ? ", " 
+                                      : "" );
+            }
+        } else if (columns != null) {
+            // the REPLACE mytab (col1, col2) [...] case
+            sql.append(" ").append(PlainSelect.getStringList(columns, true, true));
+        }
+
+        if (itemsList != null) {
+            // REPLACE mytab SELECT * FROM mytab2
+            // or VALUES ('as', ?, 565)
+
+            if (useValues) {
+                sql.append(" VALUES");
+            }
+
+            sql.append(" ").append(itemsList);
+        }
+
+        return sql.toString();
+    }
+
+    public Replace withUseValues(boolean useValues) {
+        this.setUseValues(useValues);
+        return this;
+    }
+
+    public Replace withUseIntoTables(boolean useIntoTables) {
+        this.setUseIntoTables(useIntoTables);
+        return this;
+    }
+
+    public Replace withTable(Table table) {
+        this.setTable(table);
+        return this;
+    }
+
+    public Replace withColumns(List<Column> columns) {
+        this.setColumns(columns);
+        return this;
+    }
+
+    public Replace withItemsList(ItemsList itemsList) {
+        this.setItemsList(itemsList);
+        return this;
+    }
+
+    public Replace withExpressions(List<Expression> expressions) {
+        this.setExpressions(expressions);
+        return this;
+    }
+
+    public Replace addColumns(Column... columns) {
+        List<Column> collection = Optional.ofNullable(getColumns()).orElseGet(ArrayList::new);
+        Collections.addAll(collection, columns);
+        return this.withColumns(collection);
+    }
+
+    public Replace addColumns(Collection<? extends Column> columns) {
+        List<Column> collection = Optional.ofNullable(getColumns()).orElseGet(ArrayList::new);
+        collection.addAll(columns);
+        return this.withColumns(collection);
+    }
+
+    public Replace addExpressions(Expression... expressions) {
+        List<Expression> collection = Optional.ofNullable(getExpressions()).orElseGet(ArrayList::new);
+        Collections.addAll(collection, expressions);
+        return this.withExpressions(collection);
+    }
+
+    public Replace addExpressions(Collection<? extends Expression> expressions) {
+        List<Expression> collection = Optional.ofNullable(getExpressions()).orElseGet(ArrayList::new);
+        collection.addAll(expressions);
+        return this.withExpressions(collection);
+    }
+
+    public <E extends ItemsList> E getItemsList(Class<E> type) {
+        return type.cast(getItemsList());
+    }
+}

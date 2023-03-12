@@ -1,0 +1,106 @@
+/*-
+ * #%L
+ * JSQLParser library
+ * %%
+ * Copyright (C) 2004 - 2019 JSQLParser
+ * %%
+ * Dual licensed under GNU LGPL 2.1 or Apache License 2.0
+ * #L%
+ */
+package com.javaoffers.thrid.jsqlparser.statement.drop;
+
+import com.javaoffers.thrid.jsqlparser.schema.Table;
+import com.javaoffers.thrid.jsqlparser.statement.Statement;
+import com.javaoffers.thrid.jsqlparser.statement.StatementVisitor;
+import com.javaoffers.thrid.jsqlparser.statement.select.PlainSelect;
+
+import java.util.*;
+
+public class Drop implements Statement {
+
+    private String type;
+    private Table name;
+    private List<String> parameters;
+    private boolean ifExists = false;
+
+    @Override
+    public void accept(StatementVisitor statementVisitor) {
+        statementVisitor.visit(this);
+    }
+
+    public Table getName() {
+        return name;
+    }
+
+    public List<String> getParameters() {
+        return parameters;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setName(Table string) {
+        name = string;
+    }
+
+    public void setParameters(List<String> list) {
+        parameters = list;
+    }
+
+    public void setType(String string) {
+        type = string;
+    }
+
+    public boolean isIfExists() {
+        return ifExists;
+    }
+
+    public void setIfExists(boolean ifExists) {
+        this.ifExists = ifExists;
+    }
+
+    @Override
+    public String toString() {
+        String sql = "DROP " + type + " "
+                + (ifExists ? "IF EXISTS " : "") + name.toString();
+
+        if (parameters != null && !parameters.isEmpty()) {
+            sql += " " + PlainSelect.getStringList(parameters);
+        }
+
+        return sql;
+    }
+
+    public Drop withIfExists(boolean ifExists) {
+        this.setIfExists(ifExists);
+        return this;
+    }
+
+    public Drop withType(String type) {
+        this.setType(type);
+        return this;
+    }
+
+    public Drop withName(Table name) {
+        this.setName(name);
+        return this;
+    }
+
+    public Drop withParameters(List<String> parameters) {
+        this.setParameters(parameters);
+        return this;
+    }
+
+    public Drop addParameters(String... parameters) {
+        List<String> collection = Optional.ofNullable(getParameters()).orElseGet(ArrayList::new);
+        Collections.addAll(collection, parameters);
+        return this.withParameters(collection);
+    }
+
+    public Drop addParameters(Collection<String> parameters) {
+        List<String> collection = Optional.ofNullable(getParameters()).orElseGet(ArrayList::new);
+        collection.addAll(parameters);
+        return this.withParameters(collection);
+    }
+}

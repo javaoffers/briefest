@@ -20,10 +20,10 @@ import java.util.LinkedList;
  * @description:
  * @author: create by cmj on 2022/10/23 10:44
  */
-public class UpdateConditionParse implements ParseCondition {
+public class UpdateConditionParse extends AbstractParseCondition {
     public static ConditionTag conditionTag  = ConditionTag.UPDATE;
     @Override
-    public SQLInfo parse(LinkedList<Condition> conditions) {
+    public SQLInfo doParse(LinkedList<Condition> conditions) {
         return parseUpdate(conditions);
     }
 

@@ -702,8 +702,11 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
    When we need to add certain fields in a database table for decryption. Mybatis JQL provides a simple configuration can be done; 
    We only need to specify a key (length is 32 hexadecimal). Then specify tables and the fields in the table. Encryption is to frame to do it. Let's for example.
    We specify a private key is' AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF '.
-   And give the encrypt_num encryption. In table encrypt_data configuration is as follows:
+   And give the encrypt_num encryption. In table encrypt_data configuration is as follows: 
 </p>
+  <p>
+  加解密模块在设计时作为一个独立的模块. 如果业务中需要用到这个功能需要加入mvn引用即可.如下
+  </p> 
 
 ```java
 <dependency>

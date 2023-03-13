@@ -7,6 +7,7 @@ import com.javaoffers.thrid.jsqlparser.statement.select.SelectBody;
 import com.javaoffers.thrid.jsqlparser.statement.select.SubSelect;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -72,13 +73,13 @@ public class NamingSelectExpressionVisitorAdapter extends ExpressionVisitorAdapt
                 && namingContent.isContainsProcessorRealTableName()
         ) {
             //这些表（主表和子表）, 正确来讲只会属于其中一个表， 如果同时属于多个表则sql是错误的
-            namingContent.getTableNameMapper().values().forEach(tableName0->{
+            Collection<String> values = namingContent.getTableNameMapper().values();
+            for(String tableName0 : values){
                 if(namingContent.isProcessorCloName(tableName0, columnName )){
                     namingContent.getProcessorByTableName(tableName0).accept(colNameProcessorInfo);
                     return;
                 }
-            });
-
+            }
             //column.setColumnName("NAME");
 
         }
@@ -87,12 +88,13 @@ public class NamingSelectExpressionVisitorAdapter extends ExpressionVisitorAdapt
                 &&namingContent.isContainsProcessorRealTableName()
         ) {
             // join 多表中存在要处理的表
-            namingContent.getTableNameMapper().values().forEach(tableName0->{
+            Collection<String> values = namingContent.getTableNameMapper().values();
+            for(String tableName0 : values){
                 if(namingContent.isProcessorCloName(tableName0, columnName )){
                     namingContent.getProcessorByTableName(tableName0).accept(colNameProcessorInfo);
                     return;
                 }
-            });
+            }
             //column.setColumnName("NAME");
         }
     }

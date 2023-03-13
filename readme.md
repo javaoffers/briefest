@@ -720,11 +720,14 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     EncryptData encryptData = new EncryptData();
     String encryptNum = "1234567890";
     encryptData.setEncryptNum(encryptNum);
-    Id id = this.crudEncryptDataMapper.general().save(encryptData); //The value of encrypt_num in the table is C3F41B512C08D900DBBB74E9379279DD
-    encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); //Query will be decrypted automatically
+     //The value of encrypt_num in the table is C3F41B512C08D900DBBB74E9379279DD
+    Id id = this.crudEncryptDataMapper.general().save(encryptData);
+    //Query will be decrypted automatically
+    encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); 
     print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
     // Inscription query, the bottom will be converted into ciphertext and query.
-    EncryptData ex = this.crudEncryptDataMapper.select().colAll().where().eq(EncryptData::getEncryptNum, encryptNum).ex();
+    EncryptData ex = this.crudEncryptDataMapper.select().colAll()
+    .where().eq(EncryptData::getEncryptNum, encryptNum).ex();
     print(ex);//{"id":10,"encryptNum":"1234567890"}
 ```
 

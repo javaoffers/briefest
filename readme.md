@@ -705,7 +705,8 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
    And give the encrypt_num encryption. In table encrypt_data configuration is as follows: 
 </p>
   <p>
-  加解密模块在设计时作为一个独立的模块. 如果业务中需要用到这个功能需要加入mvn引用即可.如下
+  The encryption and decryption module is designed as an independent module. 
+  To use this function in services, you need to add mvn references. As follows
   </p> 
 
 ```java

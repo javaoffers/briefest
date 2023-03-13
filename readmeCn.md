@@ -660,6 +660,19 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     String2EnumConvert
 
 ```
+  
+    <p>
+  加解密模块在设计时作为一个独立的模块. 如果业务中需要用到这个功能需要加入mvn引用即可.如下
+  </p> 
+
+```java
+<dependency>
+  <groupId>com.javaoffers</groupId>
+  <artifactId>mybatis-model-encipher</artifactId>
+  <version>3.5.11.9</version>
+</dependency>
+```
+  
 
 #### Code contributions are welcome
 <p>

@@ -706,6 +706,14 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 </p>
 
 ```java
+<dependency>
+  <groupId>com.javaoffers</groupId>
+  <artifactId>mybatis-model-encipher</artifactId>
+  <version>3.5.11.9</version>
+</dependency>
+```
+
+```java
   /**
      * Configure the tables and fields that need to be decrypted.
      * the key Is the length of 32 hexadecimal;

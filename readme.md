@@ -697,7 +697,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 ```
 
-### 支持自动加解密
+### Supports automatic encryption and decryption
 <p>
    When we need to add certain fields in a database table for decryption. Mybatis JQL provides a simple configuration can be done; 
    We only need to specify a key (length is 32 hexadecimal). Then specify tables and the fields in the table. Encryption is to frame to do it. Let's for example.

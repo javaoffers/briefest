@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.encrypt.parser;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.function.Consumer;
  * sql的上下文数据, 可以从这个实例中得知当前sql的状态信息
  * @author mingJie
  */
+
 public class NamingSelectContent {
 
     /**--------------------select-----------------**/
@@ -58,13 +60,35 @@ public class NamingSelectContent {
     //是否存在要处理的table表. case: 多表关联, 并且where column中没有指定具体表名
     public boolean isContainsProcessorRealTableName(){
         return this.tableNameMapper.values().stream().anyMatch(tableName->{
-            return this.processor.keySet().contains(tableName);
+            return isContans(this.processor.keySet(), tableName);
         });
     }
 
     //是否是要拦截处理的table表
     public boolean isProcessorTableName(String realTableName){
-        return processor.containsKey(realTableName);
+        return isContans(processor.keySet(), realTableName);
+    }
+
+    private boolean isContans(Collection<String> ls, String str){
+        boolean status = false;
+        for(String n : ls){
+            if(!status){
+                status =  n.equalsIgnoreCase(str);
+            }
+        }
+        return status;
+    }
+
+    private String isContansGetKey(Collection<String> ls, String str){
+        boolean status = false;
+        String key = str;
+        for(String n : ls){
+            if(!status){
+                status =  n.equalsIgnoreCase(str);
+                key = n;
+            }
+        }
+        return key;
     }
 
     /**
@@ -74,13 +98,16 @@ public class NamingSelectContent {
      * @return true. 需要处理
      */
     public boolean isProcessorCloName(String realTableName, String colName){
-        return processor.getOrDefault(realTableName, Pair.of(Collections.emptySet(), null)).getLeft().contains(colName);
+        realTableName = isContansGetKey(processor.keySet(), realTableName);
+        Set<String> left = processor.getOrDefault(realTableName, Pair.of(Collections.emptySet(), null)).getLeft();
+        return isContans(left, colName);
     }
 
     /**
      * 使用该方法时,需要用 {@code isProcessorCloName} 进行一次判断.
      */
     public Consumer<ColNameProcessorInfo> getProcessorByTableName(String realTableName){
+        realTableName = isContansGetKey(processor.keySet(), realTableName);
         Pair<Set<String>, Consumer<ColNameProcessorInfo>> processorColName = processor.get(realTableName);
         Assert.isTrue(processorColName != null , "processorColName is null");
         return processorColName.getRight();

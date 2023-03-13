@@ -177,6 +177,32 @@ public class SqlParserProcessorTest {
                 "and left(name, 10)"+//会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "and left(user.name, 10) "; //会更改name
 
+        //parseSql(sqlStr);
+
+        // 子查询中的name解析
+        sqlStr = "select " +
+                "a.name ," + //解密
+                "b.name ," +// 不会解密,因为子查询内部已经解密
+                "name " + //解密
+                "from user  a inner join (select name , id from user ) b " + //子查询name解密
+                "on a.id = b.id and  a.name = b.name " + //a.name 需要解密 , b.name 不需要解密(因为在子查询中已经解密了)
+                "where a.name = b.name "; //a.name 需要解密. b.name 不需要解密 (因为在子查询中已经解密了).
+
+        //parseSql(sqlStr);
+
+        // 子查询中的name解析
+        sqlStr = "select " +
+                "a.name ," + //解密
+                "b.xx ," +
+                "xx ," +
+                "name " + //解密
+                "from user  a inner join (select xx , id from tablex ) b " + // xx 会被解密
+                "on " +
+                "a.id = b.id " +
+                "and  a.name = b.xx " + //a.name加密, b.xx 不加密 (因为在子查询中已经解密).
+                "where " +
+                "a.name = xx "; // a.name 解密.  b.xx 不加密 (因为在子查询中已经解密).
+
         parseSql(sqlStr);
 
 

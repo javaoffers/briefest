@@ -11,11 +11,11 @@ import java.util.function.Consumer;
 
 /**
  * @author cmj
- * @createTime 2023年03月04日 21:00:00
+ * @createTime March 04, 2023 21:00:00
  */
 public class SqlParserProcessor {
 
-    //static Logger log = LoggerFactory.getLogger(SqlParserProcessor.class);
+    static Logger log = LoggerFactory.getLogger(SqlParserProcessor.class);
 
     private static final String so = "`"; //symbol
 
@@ -23,17 +23,17 @@ public class SqlParserProcessor {
 
     public String parseSql(String sqlStr) throws JSQLParserException {
 
-        //创建content,储存处理过程中的数据信息
+        //Create content to store data information during processing
         NamingSelectContent namingContent = new NamingSelectContent();
-        //设置处理器
+        //set processor
         namingContent.setProcessor(Collections.unmodifiableMap(processor));
-        //解析sql
+        //parsing sql
         Statement statement = CCJSqlParserUtil.parse(sqlStr);
 
         //log.info("start parse : {}", statement.toString());
-        //创建sql解析入口类
+        //Create sql analysis entry class
         NamingStatementVisitorAdapter statementVisitorAdapter = new NamingStatementVisitorAdapter(namingContent);
-        //开始解析
+        //start parsing
         statement.accept(statementVisitorAdapter);
 
         //log.info("end parse : {}", statement.toString());
@@ -42,7 +42,7 @@ public class SqlParserProcessor {
     }
 
     /**
-     * 获取要解析的tableName
+     * Get the table Name to be parsed
      *
      * @return
      */
@@ -55,14 +55,15 @@ public class SqlParserProcessor {
     }
 
     public static class SqlParserProcessorBuild {
-        //key: realTableName, Set: colNames, consumer: 用于处理colNames
+        //key: realTableName, Set: colNames, consumer: Used to process col Names
         private HashMap<String, Pair<Set<String>, Consumer<ColNameProcessorInfo>>> processor = new HashMap<>();
 
         /**
-         * 如果tableName对应的columnProcessor已经存在则不会进行覆盖.也不会新增成功.
+         * If the column Processor corresponding to the table Name already exists,
+         * it will not be overwritten. It will not be added successfully.
          *
-         * @param tableName       表名称
-         * @param columnProcessor 表名对应的处理器
+         * @param tableName       table name
+         * @param columnProcessor The processor corresponding to the table name
          * @return this
          */
         public SqlParserProcessorBuild addProcessor(String tableName, Consumer<ColNameProcessorInfo> columnProcessor){
@@ -82,10 +83,11 @@ public class SqlParserProcessor {
         }
 
         /**
-         * 添加tableName对应的colName, 执行此方法前要确保{@code addProcessor} tableName和columnProcessor已经存在.
+         * Add colName corresponding to tableName, before executing this method,
+         * make sure {@code addProcessor} tableName and columnProcessor already exist.
          *
-         * @param tableName 表名称
-         * @param colName   字段名称
+         * @param tableName table name
+         * @param colName   Field Name
          * @return this
          */
         public SqlParserProcessorBuild addColName(String tableName, String colName){
@@ -110,7 +112,7 @@ public class SqlParserProcessor {
         }
 
         /**
-         * 创建一个sql解析处理器
+         * Create a sql parsing processor
          *
          * @return sqlParserProcessor
          */

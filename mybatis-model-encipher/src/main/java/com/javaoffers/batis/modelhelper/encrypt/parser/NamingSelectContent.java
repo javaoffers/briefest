@@ -60,16 +60,16 @@ public class NamingSelectContent {
     //是否存在要处理的table表. case: 多表关联, 并且where column中没有指定具体表名
     public boolean isContainsProcessorRealTableName(){
         return this.tableNameMapper.values().stream().anyMatch(tableName->{
-            return isContans(this.processor.keySet(), tableName);
+            return isContains(this.processor.keySet(), tableName);
         });
     }
 
     //是否是要拦截处理的table表
     public boolean isProcessorTableName(String realTableName){
-        return isContans(processor.keySet(), realTableName);
+        return isContains(processor.keySet(), realTableName);
     }
 
-    private boolean isContans(Collection<String> ls, String str){
+    private boolean isContains(Collection<String> ls, String str){
         boolean status = false;
         for(String n : ls){
             if(!status){
@@ -79,7 +79,7 @@ public class NamingSelectContent {
         return status;
     }
 
-    private String isContansGetKey(Collection<String> ls, String str){
+    private String isContainsGetKey(Collection<String> ls, String str){
         boolean status = false;
         String key = str;
         for(String n : ls){
@@ -98,16 +98,16 @@ public class NamingSelectContent {
      * @return true. 需要处理
      */
     public boolean isProcessorCloName(String realTableName, String colName){
-        realTableName = isContansGetKey(processor.keySet(), realTableName);
+        realTableName = isContainsGetKey(processor.keySet(), realTableName);
         Set<String> left = processor.getOrDefault(realTableName, Pair.of(Collections.emptySet(), null)).getLeft();
-        return isContans(left, colName);
+        return isContains(left, colName);
     }
 
     /**
      * 使用该方法时,需要用 {@code isProcessorCloName} 进行一次判断.
      */
     public Consumer<ColNameProcessorInfo> getProcessorByTableName(String realTableName){
-        realTableName = isContansGetKey(processor.keySet(), realTableName);
+        realTableName = isContainsGetKey(processor.keySet(), realTableName);
         Pair<Set<String>, Consumer<ColNameProcessorInfo>> processorColName = processor.get(realTableName);
         Assert.isTrue(processorColName != null , "processorColName is null");
         return processorColName.getRight();

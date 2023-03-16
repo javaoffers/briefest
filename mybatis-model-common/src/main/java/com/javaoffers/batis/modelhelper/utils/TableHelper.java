@@ -241,10 +241,8 @@ public class TableHelper {
                             }
                         }
                         tableInfoMap.put(modelClazz, tableInfo);
-
                         Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
                         for (Field colF : colFs) {
-                            colF.setAccessible(true);
                             String colName = conLine(colF.getName());
                             BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
                             if (baseUnique != null) {

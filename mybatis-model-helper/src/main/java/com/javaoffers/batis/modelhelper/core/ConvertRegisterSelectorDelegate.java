@@ -4,7 +4,11 @@ import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
 import com.javaoffers.batis.modelhelper.convert.AbstractConver;
 import com.javaoffers.batis.modelhelper.convert.Convert;
 import com.javaoffers.batis.modelhelper.util.ReflectionUtils;
+import com.javaoffers.batis.modelhelper.utils.BlurUtils;
+import com.javaoffers.batis.modelhelper.utils.Utils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -103,7 +107,13 @@ public class ConvertRegisterSelectorDelegate {
      */
     public <T> T converterObject(Class<T> des, Object srcValue, Field field)  {
         try {
-           return converterObject( des, srcValue);
+            T t = (converterObject(des, srcValue));
+            Annotation anno = null;
+            if(t instanceof String && StringUtils.isNotBlank((String)t)
+                    && (anno = Utils.getBlurAnnotation(field)) != null){
+                t = (T)BlurUtils.processBlurAnno(anno, (String) t);
+            }
+            return t;
         }catch (ClassCastException e){
 
            throw new ClassCastException(e.getMessage()+" the field name is "+field.getName());

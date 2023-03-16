@@ -12,4 +12,7 @@ public interface ModelHelpperConstants {
     //split_line
     String SPLIT_LINE = "__";
 
+    double BLUR_PERCENT= 0.3;
+
+    String BLUR_TAG = "*";
 }

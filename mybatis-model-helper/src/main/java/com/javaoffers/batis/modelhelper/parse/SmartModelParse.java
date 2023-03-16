@@ -63,7 +63,6 @@ public class SmartModelParse implements ModelParse {
         ArrayList<Field> list_ = new ArrayList<Field>();//存放list集合model
         ArrayList<Field> set_ = new ArrayList<Field>();//存放set集合model
         for(Field fd : fields) {
-            fd.setAccessible(true);
             if(fd.getType().isArray()) {
                 arrays.add(fd);
             }else if(List.class.isAssignableFrom(fd.getType())) {

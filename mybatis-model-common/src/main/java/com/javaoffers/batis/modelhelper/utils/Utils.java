@@ -1,11 +1,14 @@
 package com.javaoffers.batis.modelhelper.utils;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
+import com.javaoffers.batis.modelhelper.anno.derive.EmailBlur;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
 import com.javaoffers.batis.modelhelper.exception.ParseModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -13,6 +16,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -27,6 +31,36 @@ public class Utils {
     private static final SoftCache<Field, Boolean> SOFT_CACHE_FIELDS_IS_MODEL = SoftCache.getInstance();
 
     private static final SoftCache<Class, Boolean> SOFT_CACHE_ClASS_IS_MODEL = SoftCache.getInstance();
+
+    private static final SoftCache<Field, Optional<Annotation>> SOFT_CACHE_FIELDS_BLURS = SoftCache.getInstance();
+
+    /**
+     * Get fuzzy annotation information
+     * @param field
+     * @return
+     */
+    public static Annotation getBlurAnnotation(Field field){
+        if(field == null){
+            return null;
+        }
+        Optional<Annotation> annotation = SOFT_CACHE_FIELDS_BLURS.get(field);
+        if(annotation == null){
+            annotation = Optional.empty();
+            Annotation[] declaredAnnotations = field.getDeclaredAnnotations();
+            for(Annotation annotation0 : declaredAnnotations){
+                if(BlurUtils.isBlurAnno(annotation0.annotationType())){
+                    annotation = Optional.of(annotation0);
+                    break;
+                }
+            }
+            SOFT_CACHE_FIELDS_BLURS.put(field, annotation);
+        }
+
+        if(annotation.isPresent()){
+            return annotation.get();
+        }
+        return null;
+    }
 
     /**
      * Get all fields of this class including parent classes
@@ -49,6 +83,7 @@ public class Utils {
             if (!clazz.getName().equals("java.lang.Object")) {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field f : fields) {
+                    f.setAccessible(true);
                     list.add(f);
                 }
                 list.addAll(getFields(clazz.getSuperclass(), true));

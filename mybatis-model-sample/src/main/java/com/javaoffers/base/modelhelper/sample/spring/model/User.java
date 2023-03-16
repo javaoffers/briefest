@@ -6,6 +6,8 @@ import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
+import com.javaoffers.batis.modelhelper.anno.derive.Blur;
+import com.javaoffers.batis.modelhelper.anno.derive.StringBlur;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfLt;
@@ -76,6 +78,10 @@ public class User {
     private String name;
 
     private String birthday;
+
+    @ColName("money")
+    @StringBlur(blur = Blur.POST_BLUR, percent = 0.5)
+    private String moneyBlur;
 
     @ColName("birthday")
     private Date birthdayDate;

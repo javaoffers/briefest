@@ -85,7 +85,9 @@ public class NamingSelectContent {
         for(String n : ls){
             if(!status){
                 status =  n.equalsIgnoreCase(str);
-                key = n;
+                if(status){
+                    key = n;
+                }
             }
         }
         return key;
@@ -115,7 +117,7 @@ public class NamingSelectContent {
 
     public String getSimpleSingleTable(){
         Assert.isTrue(tableNameMapper.size() == 1, "not single table");
-        return tableNameMapper.keySet().toArray(new String[]{})[0];
+        return tableNameMapper.values().toArray(new String[]{})[0];
     }
 
     public boolean isSubSelct() {

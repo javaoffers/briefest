@@ -729,7 +729,7 @@ Number2DateConvert 表示 number数字转换为date日期 .
      * Configure the tables and fields that need to be decrypted.
      * the key Is the length of 32 hexadecimal;
      */
-    @AesEncryptConfig(key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF", encryptTableColumns = {
+    @AesEncryptConfig(key = "FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA", encryptTableColumns = {
             @EncryptTableColumns(tableName = "encrypt_data", columns = {"encrypt_num"})
     })
     @Configuration
@@ -739,7 +739,7 @@ Number2DateConvert 表示 number数字转换为date日期 .
     EncryptData encryptData = new EncryptData();
     String encryptNum = "1234567890";
     encryptData.setEncryptNum(encryptNum);
-    //encrypt_num的值在表里是： C3F41B512C08D900DBBB74E9379279DD
+    //encrypt_num的值在表里是： 396195EAF65E740AEC39E6FFF0714542
     Id id = this.crudEncryptDataMapper.general().save(encryptData);
     //查询的结果被自动解密
     encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id);

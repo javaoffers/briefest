@@ -722,7 +722,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
      * Configure the tables and fields that need to be decrypted.
      * the key Is the length of 32 hexadecimal;
      */
-    @AesEncryptConfig(key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF", encryptTableColumns = {
+    @AesEncryptConfig(key = "FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA", encryptTableColumns = {
             @EncryptTableColumns(tableName = "encrypt_data", columns = {"encrypt_num"})
     })
     @Configuration
@@ -732,7 +732,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     EncryptData encryptData = new EncryptData();
     String encryptNum = "1234567890";
     encryptData.setEncryptNum(encryptNum);
-     //The value of encrypt_num in the table is C3F41B512C08D900DBBB74E9379279DD
+     //The value of encrypt_num in the table is 396195EAF65E740AEC39E6FFF0714542
     Id id = this.crudEncryptDataMapper.general().save(encryptData);
     //Query will be decrypted automatically
     encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); 

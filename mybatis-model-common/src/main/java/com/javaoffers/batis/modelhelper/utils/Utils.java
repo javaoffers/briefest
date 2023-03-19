@@ -14,6 +14,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -79,7 +80,7 @@ public class Utils {
         }
         Set<Field> result = SOFT_CACHE_CLASS_FIELDS.get(clazz);
         if (result == null) {
-            Set<Field> list = new HashSet<Field>();
+            Set<Field> list = new LinkedHashSet<>();
             if (!clazz.getName().equals("java.lang.Object")) {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field f : fields) {

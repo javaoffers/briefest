@@ -13,6 +13,7 @@
   - Commonly used APIs have been integrated and can be used directly without development.
   - Currently, only mysql syntax standards are supported
   - Table fields automatic encryption and decryption.
+  - Field desensitization (supported in next version)
 
 - Summary
   <p>

@@ -13,7 +13,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>5.1.5.RELEASE</version>
+            <version>${spring.core}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

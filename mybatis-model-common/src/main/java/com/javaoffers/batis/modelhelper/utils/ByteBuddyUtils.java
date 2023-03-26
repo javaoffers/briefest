@@ -62,7 +62,7 @@ public class ByteBuddyUtils {
                 subclass = subclass.method(ElementMatchers.named(p.getMethodName()))
                         .intercept(MethodDelegation.to(p.getExecutorClass()));
             }
-            subclass.suffix(name);
+            //subclass.name(name);
             Class dynamicType = subclass.make()
                     .load(ByteBuddyUtils.class.getClassLoader())
                     .getLoaded();

@@ -259,13 +259,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                             if (!StringUtils.hasLength(name)) {
                                 name = rsmd.getColumnName(i);
                             }
-                            String tableName = rsmd.getTableName(i);
-                            if (tableName == null) {
-                                tableName = "";
-                            } else {
-                                tableName = tableName + "__";
-                            }
-                            mapOfColumnValues.put(tableName + getColumnKey(name), getColumnValue(rs, i));
+                            mapOfColumnValues.put( getColumnKey(name), getColumnValue(rs, i));
                         }
                         return mapOfColumnValues;
                     }

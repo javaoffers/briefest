@@ -1,5 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.spring;
 
+import com.javaoffers.base.modelhelper.sample.spring.blur.SpringSuportCrudUserMapperBlur;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +27,9 @@ public class SpringSupportCrudUserMapperAllOperation {
     SpringSuportCrudUserMapperDelete delete;
     @Resource
     SpringSuportCrudUserMapperGeneral general;
+    @Resource
+    SpringSuportCrudUserMapperBlur blur;
+
 
     public static void main(String[] args) {
         SpringSuportCrudUserMapperSelete.status = false;
@@ -33,6 +37,7 @@ public class SpringSupportCrudUserMapperAllOperation {
         SpringSuportCrudUserMapperUpdate.status = false;
         SpringSuportCrudUserMapperDelete.status = false;
         SpringSuportCrudUserMapperGeneral.status = false;
+        SpringSuportCrudUserMapperBlur.status = false;
         SpringApplication.run(SpringSupportCrudUserMapperAllOperation.class, args);
         System.exit(1);
 

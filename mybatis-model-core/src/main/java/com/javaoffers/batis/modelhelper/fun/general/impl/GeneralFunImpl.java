@@ -19,6 +19,8 @@ import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
 
@@ -58,6 +60,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public Id save(T model) {
+        if(model == null){
+            return Id.EMPTY_ID;
+        }
         Id ex = insertFun.colAll(model).ex();
         if(ex != null){
             return ex;
@@ -67,6 +72,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<Id> saveOrModify(T model) {
+        if(model == null){
+            return Collections.EMPTY_LIST;
+        }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
         List<Id> ids = saveOrModify(models);
@@ -78,6 +86,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<Id> saveOrReplace(T model) {
+        if(model == null){
+            return Collections.EMPTY_LIST;
+        }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
         List<Id> ids = this.saveOrModify(models);
@@ -89,6 +100,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<Id> saveBatch(Collection<T> models) {
+        if(CollectionUtils.isEmpty(models)){
+            return Collections.EMPTY_LIST;
+        }
         List<Id> exs = insertFun.colAll(models).exs();
         if(exs != null){
             return exs;
@@ -98,6 +112,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<Id> saveOrModify(Collection<T> models) {
+        if(CollectionUtils.isEmpty(models)){
+            return Collections.EMPTY_LIST;
+        }
         List<Id> exs = insertFun.colAll(models).dupUpdate().exs();
         if(exs != null){
             return exs;
@@ -107,6 +124,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<Id> saveOrReplace(Collection<T> models) {
+        if(CollectionUtils.isEmpty(models)){
+            return Collections.EMPTY_LIST;
+        }
         List<Id> exs = insertFun.colAll(models).dupReplace().exs();
         if(exs != null){
             return exs;
@@ -116,6 +136,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public int remove(T model) {
+        if(model == null){
+            return 0;
+        }
         DeleteWhereFun<T, GetterFun<T, Object>, Object> where = deleteFun.where();
         AtomicBoolean status = parseWhere(model, where);
         if(status.get()){
@@ -131,12 +154,18 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public int removeByIds(Serializable... ids) {
+        if(ids == null || ids.length == 0){
+            return 0;
+        }
         Set<Serializable> idSet = Arrays.stream(ids).collect(Collectors.toSet());
         return removeByIds(idSet);
     }
 
     @Override
     public int removeByIds(Collection ids) {
+        if(CollectionUtils.isEmpty(ids)){
+            return 0;
+        }
         TableInfo tableInfo = getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
         DeleteWhereFun<T, GetterFun<T, Object>, Object> where = deleteFun.where();
@@ -203,12 +232,18 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<T> query(T model) {
+        if(model == null){
+            return Collections.EMPTY_LIST;
+        }
         WhereSelectFun<T, Object> where = parseQueryWhere(model);
         return where.exs();
     }
 
     @Override
     public List<T> query(T model, int pageNum, int pageSize) {
+        if(model == null){
+            return Collections.EMPTY_LIST;
+        }
         WhereSelectFun<T, Object> where = parseQueryWhere(model);
         where.limitPage(pageNum,pageSize);
         return where.exs();
@@ -231,6 +266,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public T queryById(Serializable id) {
+        if(id == null){
+            return null;
+        }
         List<T> ts = queryByIds(id);
         if(ts == null || ts.size() == 0){
             return null;
@@ -240,12 +278,18 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<T> queryByIds(Serializable... ids) {
+        if(ids==null || ids.length ==0){
+            return Collections.EMPTY_LIST;
+        }
         Set idSet = Arrays.stream(ids).collect(Collectors.toSet());
         return queryByIds(idSet);
     }
 
     @Override
     public List<T> queryByIds(Collection ids) {
+        if(CollectionUtils.isEmpty(ids)){
+            return Collections.EMPTY_LIST;
+        }
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
         Map<String, ColumnInfo> primaryColNames = TableHelper.getTableInfo(mClass).getPrimaryColNames();
         AtomicBoolean status = new AtomicBoolean(false);
@@ -279,6 +323,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public List<T> queryByParam(Map<String, Object> param) {
+        //avoid all table scan
+        if(MapUtils.isEmpty(param)){
+            return Collections.EMPTY_LIST;
+        }
         return queryByParam(param,-1,-1,false);
     }
 
@@ -304,6 +352,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public long count(C c) {
+        Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
         String aliasName = colNameAndAliasName.getRight();
         Field field = TableHelper.getTableInfo(mClass).getFieldNameAndField().get(aliasName);

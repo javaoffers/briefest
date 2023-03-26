@@ -1,6 +1,8 @@
 package com.javaoffers.batis.modelhelper.utils;
 
 import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.NamingStrategy;
+import net.bytebuddy.description.type.TypeDescription;
 import net.bytebuddy.dynamic.DynamicType;
 import net.bytebuddy.implementation.MethodDelegation;
 import net.bytebuddy.matcher.ElementMatchers;
@@ -39,11 +41,28 @@ public class ByteBuddyUtils {
      */
     public static Object makeObject(Class clazz, List<DefaultClass> methodDefault){
         try {
-            DynamicType.Builder subclass = new ByteBuddy().subclass(clazz);
+            String name = clazz.getName()+"Jql";
+            DynamicType.Builder subclass = new ByteBuddy().with(new NamingStrategy() {
+                @Override
+                public String subclass(TypeDescription.Generic generic) {
+                    return name;
+                }
+
+                @Override
+                public String redefine(TypeDescription typeDescription) {
+                    return name+"Redefine";
+                }
+
+                @Override
+                public String rebase(TypeDescription typeDescription) {
+                    return name+"Rebase";
+                }
+            }).subclass(clazz);
             for(DefaultClass p : methodDefault){
                 subclass = subclass.method(ElementMatchers.named(p.getMethodName()))
                         .intercept(MethodDelegation.to(p.getExecutorClass()));
             }
+            subclass.suffix(name);
             Class dynamicType = subclass.make()
                     .load(ByteBuddyUtils.class.getClassLoader())
                     .getLoaded();

@@ -11,6 +11,7 @@ import com.javaoffers.batis.modelhelper.anno.derive.StringBlur;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfLt;
+import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Abs;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Ceil;
 import com.javaoffers.batis.modelhelper.anno.fun.params.math.Floor;
@@ -82,6 +83,12 @@ public class User {
     @ColName("money")
     @StringBlur(blur = Blur.POST_BLUR, percent = 0.5)
     private String moneyBlur;
+
+    @ColName("birthday")
+    @Left(10)
+    @Trim
+    @StringBlur
+    private String birthdayDateBlur;
 
     @ColName("birthday")
     private Date birthdayDate;

@@ -41,7 +41,7 @@ public class SelectColumnCondition implements Condition  {
     }
 
     public SelectColumnCondition( GetterFun colName) {
-        this.colName = TableHelper.getColName(colName);
+        this.colName = TableHelper.getColNameForSelect(colName);
     }
 
     @Override

@@ -108,7 +108,7 @@ public class SmartSelectFunImpl<M, C extends GetterFun<M,Object>, V> implements 
 
     @Override
     public SmartSelectFun<M, C, V> colAll() {
-        List<SelectColumnCondition> cols = TableHelper.getColAll(this.mClass).stream().map(colName ->
+        List<SelectColumnCondition> cols = TableHelper.getColAllForSelect(this.mClass).stream().map(colName ->
                 new SelectColumnCondition(colName)).collect(Collectors.toList());
         this.conditions.addAll(cols);
         return this;

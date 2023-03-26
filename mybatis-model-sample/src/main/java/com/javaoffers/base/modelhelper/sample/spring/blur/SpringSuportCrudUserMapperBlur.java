@@ -1,6 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.blur;
 
 import com.javaoffers.base.modelhelper.sample.spring.SpringSuportCrudUserMapperUpdate;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
@@ -21,6 +22,8 @@ import java.util.List;
 @MapperScan("com.javaoffers.base.modelhelper.sample.spring.mapper")
 public class SpringSuportCrudUserMapperBlur  implements InitializingBean {
 
+    public static boolean status = true;
+
     @Resource
     CrudUserMapper crudUserMapper;
 
@@ -32,6 +35,22 @@ public class SpringSuportCrudUserMapperBlur  implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         List<User> exs = crudUserMapper.select().col(User::getMoneyBlur).where().isNotNull(User::getMoneyBlur).exs();
         LOGUtils.printLog(exs);
-        System.exit(0);
+
+        exs = crudUserMapper.select().colAll().where().isNotNull(User::getMoneyBlur).exs();
+        LOGUtils.printLog(exs);
+
+        exs = crudUserMapper.select().colAll().where().isNotNull(User::getMoneyBlur).isNotNull(User::getBirthdayDateBlur).exs();
+        LOGUtils.printLog(exs);
+
+        exs = crudUserMapper.select().colAll().where().isNotNull(User::getMoneyBlur).isNotNull(User::getBirthdayDateBlur).limitPage(1,1).exs();
+        User user = exs.get(0);
+        user.setWork(Work.JAVA);
+        crudUserMapper.general().saveOrModify(user);
+        LOGUtils.printLog(exs);
+
+
+        if(status)
+            System.exit(0);
+
     }
 }

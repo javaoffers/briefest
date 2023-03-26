@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class ModelParseUtils {
 
-    static final int batch = 10000;
+    static final int batch = 100;
 
     static final ModelParse modelParse = new SmartModelParse();
 

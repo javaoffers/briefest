@@ -142,7 +142,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             if(defaultObj != null){
                 if(method.getModifiers() == 1){
                     return method.invoke(defaultObj,args);
-                } else if(StringUtils.isNotBlank(isMapperMethod.get(method))){
+                } else if(StringUtils.isNotBlank(isMapperMethod.get(method)) && args == null){
                     if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
                         CrudMapper crudMapper = (CrudMapper) defaultObj;
                         return  crudMapper.select();

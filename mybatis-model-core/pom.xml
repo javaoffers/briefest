@@ -12,7 +12,8 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>5.1.5.RELEASE</version>
+            <version>${spring.jdbc}</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>

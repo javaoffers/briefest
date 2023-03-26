@@ -53,7 +53,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     public void testMultThread(){
-        int c = 10;
+        int c = 1;
         CountDownLatch countDownLatch = new CountDownLatch(c);
         ExecutorService executorService = Executors.newFixedThreadPool(5);
         for(int i = 0 ; i < c; ++i){

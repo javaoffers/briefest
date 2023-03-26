@@ -97,7 +97,7 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
 
     @Override
     public JoinFun<M1, M2,  GetterFun<M2,Object>, V> colAll() {
-        List<String> colAll = TableHelper.getColAll(m2Class);
+        List<String> colAll = TableHelper.getColAllForSelect(m2Class);
         for(String col: colAll){
             conditions.add(new SelectColumnCondition(col));
         }

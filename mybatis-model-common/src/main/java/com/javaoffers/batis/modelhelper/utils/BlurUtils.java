@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.anno.derive.StringBlur;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +26,16 @@ public class BlurUtils {
         blurCLASS.add(IdCardBlur.class);
         blurCLASS.add(PhoneNumBlur.class);
         blurCLASS.add(StringBlur.class);
+    }
+
+    public static boolean containsBlurAnno(Field field){
+        Annotation[] declaredAnnotations = field.getDeclaredAnnotations();
+        for(Annotation annotation : declaredAnnotations){
+            if(isBlurAnno(annotation.annotationType())){
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean isBlurAnno(Class clazz){

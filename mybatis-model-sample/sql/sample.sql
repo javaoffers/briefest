@@ -43,3 +43,11 @@ CREATE TABLE `user_teacher` (
 
 INSERT INTO `base`.`user_teacher`(`id`, `user_id`, `teacher_id`) VALUES (1, 1, 1);
 INSERT INTO `base`.`user_teacher`(`id`, `user_id`, `teacher_id`) VALUES (2, 1, 2);
+
+CREATE TABLE `encrypt_data` (
+    `id` int(11) NOT NULL AUTO_INCREMENT,
+    `encrypt_num` varchar(512) COLLATE utf8_bin DEFAULT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+

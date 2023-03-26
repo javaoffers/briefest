@@ -50,7 +50,6 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.modelClass = modelClass;
         //left: colName. right: fieldName
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
-        TableInfo tableInfo = TableHelper.getTableInfo(this.modelClass);
         colAllAndFieldOnly.forEach((colName, fields)->{
             try {
                 Object oValue = null;

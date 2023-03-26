@@ -2,15 +2,16 @@ package com.javaoffers.batis.modelhelper.utils;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
 import com.javaoffers.batis.modelhelper.anno.BaseUnique;
-import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.constants.ModelHelpperConstants;
 import com.javaoffers.batis.modelhelper.exception.BaseException;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.exception.ParseTableException;
+import com.javaoffers.batis.modelhelper.filter.impl.AsSqlFunFilterImpl;
 import com.javaoffers.batis.modelhelper.fun.ConstructorFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
+import com.javaoffers.batis.modelhelper.filter.TableHelperFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
@@ -23,6 +24,7 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,23 +42,31 @@ public class TableHelper {
 
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
+    private final static List<AsSqlFunFilterImpl> interceptors = new ArrayList<>();
+
+    static {
+        interceptors.add(new AsSqlFunFilterImpl());
+    }
+
     /**
      * Get all fields corresponding to Model. for select().colAll() parse
      *
      * @param modelClss
      * @return
      */
-    public static List<String> getColAll(Class<?> modelClss) {
+    public static List<String> getColAllForSelect(Class<?> modelClss) {
         List<String> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         String tableName = tableInfo.getTableName();
         tableInfo.getFieldNameColNameOfModel().forEach((fieldName, colName) -> {
             if (tableInfo.isSqlFun(colName)) {
                 if(!tableInfo.colNameIsExcludeColAll(colName)){
+                    //Because function fields in the query result resolution can't identify which belongs to the table name.
+                    // So you can't to map the Class, so to be like this
                     colAll.add(colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
                 }
             } else if(!tableInfo.fieldNameIsExcludeColAll(fieldName)){
-                colAll.add(tableName + "." + colName + " as " + fieldName);
+                colAll.add(tableName + "." + colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + fieldName);
             }
 
         });
@@ -89,7 +99,7 @@ public class TableHelper {
      * @param myFun
      * @return col info
      */
-    public static String getColName(GetterFun myFun) {
+    public static String getColNameForSelect(GetterFun myFun) {
         SqlColInfo sqlColInfo = getSqlColInfo(myFun);
         String tableName = sqlColInfo.getTableName();
         String colName = sqlColInfo.getColNameNotBlank();
@@ -98,7 +108,7 @@ public class TableHelper {
             colName = colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
         }else{
             // dont append  ModelHelpperConstants.SPLIT_LINE.
-            colName = tableName + "." + colName + " as " + aliasName;
+            colName = tableName + "." + colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
         }
         return colName;
     }
@@ -253,6 +263,7 @@ public class TableHelper {
                             //parse @ColName and @funAnno
                             ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
                             String fieldName = colF.getName();
+                            boolean isFunSql = false;
                             if (parseColName != null) {
                                 colName = parseColName.getSqlFun();
                                 //If it is  the original table field, set isFun to false
@@ -265,7 +276,8 @@ public class TableHelper {
                                     }
                                     parseColName.setExcludeColAll(false);
                                 }
-                                tableInfo.putSqlFun(colName, parseColName.isFun());
+                                isFunSql = parseColName.isFun();
+                                tableInfo.putSqlFun(colName, isFunSql);
                                 tableInfo.putColNameExcludeColAll(colName, parseColName.isExcludeColAll());
                             } else {
                                 // Indicates that this field does not have any annotation information.
@@ -275,6 +287,20 @@ public class TableHelper {
                                     continue;
                                 }
                             }
+
+                            //Avoid save or update operations that affect the database record,
+                            // so we see it as SQL fun
+                            if(!isFunSql){
+                                for(AsSqlFunFilterImpl fieldFilter : interceptors){
+                                    if(fieldFilter.filter(colF)){
+                                        colName = tableName+"."+colName;
+                                        isFunSql = true;
+                                        tableInfo.putSqlFun(colName, true);
+                                        break;
+                                    }
+                                }
+                            }
+
                             // original table fields and sql-fun fields
                             tableInfo.putFieldNameColNameOfModel(fieldName, colName);
                             tableInfo.putColNameAndFieldOfModel(colName, colF);
@@ -282,7 +308,7 @@ public class TableHelper {
                             //fieldName and field
                             tableInfo.putFieldNameAndField(fieldName, colF);
 
-                            if (tableInfo.getColNames().containsKey(colName)) {
+                            if (!isFunSql && tableInfo.getColNames().containsKey(colName)) {
                                 //original table fields
                                 tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
                             }

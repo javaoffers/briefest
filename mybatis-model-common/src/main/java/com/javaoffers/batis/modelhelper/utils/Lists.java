@@ -78,13 +78,32 @@ public final class Lists {
    * @return a list of consecutive sublists
    * @throws IllegalArgumentException if {@code partitionSize} is nonpositive
    */
-  public static <T> List<List<T>> partition(List<T> list, int size) {
+  public static <T> List<ListData<T>> partition(List<T> list, int size) {
     return (list instanceof RandomAccess)
         ? new RandomAccessPartition<T>(list, size)
         : new Partition<T>(list, size);
   }
 
-  private static class Partition<T> extends AbstractList<List<T>> {
+  public static class ListData<T>{
+     List<T> list;
+     int partitionIndex;
+
+    public ListData(List<T> list, int partitionIndex) {
+      this.list = list;
+      this.partitionIndex = partitionIndex;
+    }
+
+    public List<T> getList() {
+      return list;
+    }
+
+    public int getPartitionIndex() {
+      return partitionIndex;
+    }
+
+  }
+
+  private static class Partition<T> extends AbstractList<ListData<T>> {
     final List<T> list;
     final int size;
     volatile int psize;
@@ -95,11 +114,12 @@ public final class Lists {
     }
 
     @Override
-    public List<T> get(int index) {
+    public ListData<T> get(int index) {
       Assert.isTrue( !(index < 0 || index >= size()), " IndexOutOfBoundsException ");
       int start = index * size;
       int end = Math.min(start + size, list.size());
-      return list.subList(start, end);
+      List<T> ts = list.subList(start, end);
+      return new ListData<>(ts, index);
     }
 
     @Override

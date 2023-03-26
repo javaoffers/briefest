@@ -23,13 +23,11 @@ public class ModelParseUtils {
 
     public static <E> List<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
         if (listMap.size() > batch){
-            List<List<Map<String, Object>>> partition = Lists.partition(listMap, batch);
+            List<Lists.ListData<Map<String, Object>>> partition = Lists.partition(listMap, batch);
             List<E>[] slot = new List[partition.size()];
-            AtomicInteger ai = new AtomicInteger();
             LinkedList<E> resutl = new LinkedList<>();
             partition.parallelStream().forEach(list->{
-                Integer key = ai.getAndIncrement();
-                slot[key] = modelParse.converterMap2Model(clazz, list) ;
+                slot[list.getPartitionIndex()] = modelParse.converterMap2Model(clazz, list.getList()) ;
             });
             Arrays.stream(slot).forEach(resutl::addAll);
             return resutl;

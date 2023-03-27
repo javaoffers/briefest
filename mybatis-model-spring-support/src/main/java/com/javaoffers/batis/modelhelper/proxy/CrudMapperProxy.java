@@ -41,11 +41,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private Class clazz;
 
-    private Object defaultObj;
+    private volatile Object defaultObj;
 
-    private Type modelClass;
+    private volatile Type modelClass;
 
-    private JdbcTemplate jdbcTemplate;
+    private volatile JdbcTemplate jdbcTemplate;
 
     private FutureLock<Pair<Boolean, Exception>> status = new FutureLock();
 
@@ -83,10 +83,10 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             ByteBuddyUtils.DefaultClass general = ByteBuddyUtils.buildDefaultClass(
                     "general",CrudMapperMethodExcutor.class);
 
-            defaultObj = ByteBuddyUtils
+            this.defaultObj = ByteBuddyUtils
                     .makeObject(clazz,
                             Arrays.asList(select,insert,update,delete,general));
-            Connection connection = jdbcTemplate.getDataSource().getConnection();
+            Connection connection = this.jdbcTemplate.getDataSource().getConnection();
             try {
                 List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
                 for(Class mc : modelClass){

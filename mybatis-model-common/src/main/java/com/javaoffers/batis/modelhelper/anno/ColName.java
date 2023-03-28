@@ -25,7 +25,12 @@ public @interface ColName  {
     String value();
 
     /**
-     * default false . if as true when execute the select.colAll() will filter out this fields and colName.
+     * default false . if as true when execute the select.colAll(),insert.colAll(Model), update.colAll(Model)
+     * will filter out this fields and colName.
+     * note: fun sql will also filter out this fields and colName when execute the
+     * insert.colAll(Model),
+     * update.colAll(Model). but select.colAll() not .
+     *       .
      * @return
      */
     boolean excludeColAll() default false;

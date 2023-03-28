@@ -264,21 +264,17 @@ public class TableHelper {
                             ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
                             String fieldName = colF.getName();
                             boolean isFunSql = false;
+                            boolean isExcludeColAll = false;
                             if (parseColName != null) {
+                                isExcludeColAll = parseColName.isExcludeColAll();
                                 colName = parseColName.getSqlFun();
-                                //If it is  the original table field, set isFun to false
-                                if (tableInfo.getColNames().containsKey(colName)) {
-                                    parseColName.setFun(false);
-                                    // The original table field is not allowed to exclude colAll.
-                                    // The field of model will to the record excludes colAll
-                                    if( parseColName.isExcludeColAll()){
-                                        tableInfo.putFieldNameExcludeColAll(fieldName, true);
-                                    }
-                                    parseColName.setExcludeColAll(false);
+                                // In select.colAll , insert.colAll, update.colAll will ignore this field.
+                                if(isExcludeColAll){
+                                    tableInfo.putFieldNameExcludeColAll(fieldName, isExcludeColAll);
                                 }
                                 isFunSql = parseColName.isFun();
                                 tableInfo.putSqlFun(colName, isFunSql);
-                                tableInfo.putColNameExcludeColAll(colName, parseColName.isExcludeColAll());
+                                tableInfo.putColNameExcludeColAll(colName, isExcludeColAll);
                             } else {
                                 // Indicates that this field does not have any annotation information.
                                 // then the field must belong to a field in the original table
@@ -308,7 +304,8 @@ public class TableHelper {
                             //fieldName and field
                             tableInfo.putFieldNameAndField(fieldName, colF);
 
-                            if (!isFunSql && tableInfo.getColNames().containsKey(colName)) {
+                            //not funSql and not excludeColAll and is originalColName
+                            if (!isFunSql && !isExcludeColAll && tableInfo.getColNames().containsKey(colName)) {
                                 //original table fields
                                 tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
                             }

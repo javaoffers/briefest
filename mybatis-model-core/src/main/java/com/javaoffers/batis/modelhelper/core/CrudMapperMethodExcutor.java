@@ -13,26 +13,23 @@ import com.javaoffers.batis.modelhelper.fun.general.impl.GeneralFunImpl;
 public class CrudMapperMethodExcutor {
 
 
-    public static SelectFunImpl select(){
+    public static SelectFunImpl select() {
         return new SelectFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
-    public static InsertFunImpl insert(){
+    public static InsertFunImpl insert() {
         return new InsertFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
-    public static UpdateFunImpl update(){
+    public static UpdateFunImpl update() {
         return new UpdateFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
-    public static DeleteFunImpl delete(){
+    public static DeleteFunImpl delete() {
         return new DeleteFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
-    public static GeneralFun general(){
-        Class mClass = CrudMapperMethodThreadLocal.getExcutorModel();
-        GeneralFunImpl generalFun = new GeneralFunImpl(
-                mClass,select(),insert(), update(),  delete());
-        return generalFun;
+    public static GeneralFun general() {
+        return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(), select(), insert(), update(), delete());
     }
 }

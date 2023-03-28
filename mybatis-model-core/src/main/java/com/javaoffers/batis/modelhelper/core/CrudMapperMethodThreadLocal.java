@@ -1,6 +1,7 @@
 package com.javaoffers.batis.modelhelper.core;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.util.Map;
@@ -10,34 +11,32 @@ import java.util.concurrent.ConcurrentHashMap;
  * create by cmj
  */
 public class CrudMapperMethodThreadLocal {
-    /**
-     * Be careful not to use ThreadLocal.
-     */
-    private final static Map<Thread, Class> excutorSelect = new ConcurrentHashMap<Thread, Class>();
-    private final static Map<Thread, JdbcTemplate> excutorJdbcTemplate = new ConcurrentHashMap<Thread, JdbcTemplate>();
+
+    private final static ThreadLocal<Class> excutorSelect = new InheritableThreadLocal<Class>();
+    private final static ThreadLocal< JdbcTemplate> excutorJdbcTemplate = new InheritableThreadLocal< JdbcTemplate>();
 
     public static void addExcutorModel(Class clazz){
-        excutorSelect.put(Thread.currentThread(), clazz);
+        excutorSelect.set(clazz);
     }
 
     public static void delExcutorModel(){
-        excutorSelect.remove(Thread.currentThread());
+        excutorSelect.remove();
     }
 
     public static Class getExcutorModel(){
-        return excutorSelect.get(Thread.currentThread());
+        return excutorSelect.get();
     }
 
     public static void addExcutorJdbcTemplate(JdbcTemplate jdbcTemplate){
-        excutorJdbcTemplate.put(Thread.currentThread(), jdbcTemplate);
+        excutorJdbcTemplate.set(jdbcTemplate);
     }
 
     public static void delExcutorJdbcTemplate(){
-        excutorJdbcTemplate.remove(Thread.currentThread());
+        excutorJdbcTemplate.remove();
     }
 
     public static JdbcTemplate getExcutorJdbcTemplate(){
-       return excutorJdbcTemplate.get(Thread.currentThread());
+       return excutorJdbcTemplate.get();
     }
 
 }

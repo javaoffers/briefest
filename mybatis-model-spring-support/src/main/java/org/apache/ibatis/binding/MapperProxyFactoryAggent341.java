@@ -15,16 +15,13 @@
  */
 package org.apache.ibatis.binding;
 
-import java.lang.reflect.Field;
+import com.javaoffers.batis.modelhelper.proxy.CrudMapperProxy;
+import org.apache.ibatis.session.SqlSession;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.javaoffers.batis.modelhelper.proxy.CrudMapperProxy;
-import org.apache.ibatis.binding.MapperMethod;
-import org.apache.ibatis.binding.MapperProxy;
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author mingjie Revise. Support Mapper interface

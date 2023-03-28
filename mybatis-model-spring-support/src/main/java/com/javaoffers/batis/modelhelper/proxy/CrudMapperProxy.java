@@ -41,7 +41,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private Class clazz;
 
-    private volatile Object defaultObj;
+    private volatile CrudMapper crudMapperJql;
 
     private volatile Type modelClass;
 
@@ -83,7 +83,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             ByteBuddyUtils.DefaultClass general = ByteBuddyUtils.buildDefaultClass(
                     "general",CrudMapperMethodExcutor.class);
 
-            this.defaultObj = ByteBuddyUtils
+            this.crudMapperJql = (CrudMapper) ByteBuddyUtils
                     .makeObject(clazz,
                             Arrays.asList(select,insert,update,delete,general));
             Connection connection = this.jdbcTemplate.getDataSource().getConnection();
@@ -117,6 +117,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     private boolean isReady(){
         return status.isDone();
     }
+
+    /**
+     *  Do not debug inside the proxy class May cause unexpected data loss .
+     *  Debugging can cause repeated calls from the same thread
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         try {
@@ -139,25 +144,20 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);
             CrudMapperMethodThreadLocal.addExcutorJdbcTemplate(this.jdbcTemplate);
             //If defaultObj is null, it means CrudMapper interface is not inherited
-            if(defaultObj != null){
+            if(crudMapperJql != null){
                 if(method.getModifiers() == 1){
-                    return method.invoke(defaultObj,args);
+                    return method.invoke(crudMapperJql,args);
                 } else if(StringUtils.isNotBlank(isMapperMethod.get(method)) && args == null){
                     if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
-                        CrudMapper crudMapper = (CrudMapper) defaultObj;
-                        return  crudMapper.select();
+                        return  crudMapperJql.select();
                     }else if(method.getName().equals(CrudMapperConstant.INSERT.getMethodName())){
-                        CrudMapper crudMapper = (CrudMapper) defaultObj;
-                        return crudMapper.insert();
+                        return crudMapperJql.insert();
                     }else if(method.getName().equals(CrudMapperConstant.UPDATE.getMethodName())){
-                        CrudMapper crudMapper = (CrudMapper) defaultObj;
-                        return crudMapper.update();
+                        return crudMapperJql.update();
                     }else if(method.getName().equals(CrudMapperConstant.DELETE.getMethodName())){
-                        CrudMapper crudMapper = (CrudMapper) defaultObj;
-                        return crudMapper.delete();
+                        return crudMapperJql.delete();
                     }else if(method.getName().equals(CrudMapperConstant.GENERAL.getMethodName())){
-                        CrudMapper crudMapper = (CrudMapper) defaultObj;
-                        return crudMapper.general();
+                        return crudMapperJql.general();
                     }
                     throw new IllegalAccessException("method not found ");
                 }else{

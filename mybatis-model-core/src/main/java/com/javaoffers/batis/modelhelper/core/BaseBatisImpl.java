@@ -35,7 +35,11 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     private JdbcTemplate jdbcTemplate;
 
     public static <T, ID> BaseBatisImpl getInstance(HeadCondition jdbcTemplate) {
-        return new BaseBatisImpl<T, ID>(jdbcTemplate.getTemplate());
+        return getInstance(jdbcTemplate.getTemplate());
+    }
+
+    public static <T, ID> BaseBatisImpl getInstance(JdbcTemplate jdbcTemplate) {
+        return new BaseBatisImpl<T, ID>(jdbcTemplate);
     }
 
     private BaseBatisImpl(JdbcTemplate jdbcTemplate) {

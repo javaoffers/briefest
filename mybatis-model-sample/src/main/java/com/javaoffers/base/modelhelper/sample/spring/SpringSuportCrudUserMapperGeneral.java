@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
+import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.util.DateUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -36,8 +37,9 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testGeneral();
-        testBatchUpdate();
+        //testGeneral();
+        //testBatchUpdate();
+        testCountDistinct();
         if(status){
             System.exit(0);
         }
@@ -45,6 +47,15 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
 
     }
+
+    private void testCountDistinct() throws Exception {
+        long countDistinct = crudUserMapper.general().countDistinct(User::getMoney);
+        print(countDistinct);
+
+        countDistinct = crudUserMapper.general().countDistinct(User::getBirthdayDate);
+        print(countDistinct);
+    }
+
     public void testBatchUpdate(){
         List<User> users = crudUserMapper.queryAll();
         for(User user : users){

@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.general.impl;
 
+import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.exception.FindColException;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
@@ -16,6 +17,8 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
+import com.javaoffers.batis.modelhelper.fun.orgin.OrginFun;
+import com.javaoffers.batis.modelhelper.fun.orgin.impl.OrginFunImpl;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
@@ -36,7 +39,9 @@ import java.util.stream.Collectors;
  * @author create by mingjie
  * @param <T>
  */
-public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements GeneralFun<T,C,V> {
+public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements GeneralFun<T,C,V> {
+
+    static ConvertRegisterSelectorDelegate convert = ConvertRegisterSelectorDelegate.convert;
 
     private AtomicInteger ato = new AtomicInteger(0);
 
@@ -50,12 +55,27 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     private DeleteFunImpl<T> deleteFun;
 
-    public GeneralFunImpl(Class<T> mClass, SelectFunImpl<T> selectFun, InsertFunImpl<T> insertFun, UpdateFunImpl<T, C, V> updateFun, DeleteFunImpl<T> deleteFun) {
+    private OrginFunImpl orginFun;
+
+    private String tableName;
+    
+    private String primaryCon;
+    
+
+    public GeneralFunImpl(Class<T> mClass, SelectFunImpl<T> selectFun,
+                          InsertFunImpl<T> insertFun, UpdateFunImpl<T, C, V> updateFun,
+                          DeleteFunImpl<T> deleteFun, OrginFunImpl orginFun) {
         this.mClass = mClass;
         this.selectFun = selectFun;
         this.insertFun = insertFun;
         this.updateFun = updateFun;
         this.deleteFun = deleteFun;
+        this.orginFun = orginFun;
+        this.tableName = TableHelper.getTableName(mClass);
+        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
+        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        String colNmae = primaryColNames.keySet().iterator().next();
+        tableInfo.getColNameAndFieldOfModel().get(colNmae)
     }
 
     @Override
@@ -337,28 +357,62 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
 
     @Override
     public long count() {
-        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
-        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        if(primaryColNames == null || primaryColNames.size() == 0){
-             throw new FindColException("Please provide primary key field");
-        }
-        Map<String, List<Field>> originalColNameOfModelField = tableInfo.getOriginalColNameOfModelField();
-        String primaryColName = primaryColNames.keySet().iterator().next();
-        Field field = originalColNameOfModelField.get(primaryColName).get(0);
-        String aliasName = field.getName();
-        T ex = this.selectFun.col("count("+primaryColName+") as " + aliasName).where().ex();
-        return getNumber(field, ex);
+       String countSql = "select count(1) as c from " + tableName;
+        return count(countSql);
     }
 
     @Override
     public long count(C c) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
-        String aliasName = colNameAndAliasName.getRight();
-        Field field = TableHelper.getTableInfo(mClass).getFieldNameAndField().get(aliasName);
-        T ex = this.selectFun.col(AggTag.COUNT, c).where().ex();
-        return  getNumber(field,ex);
+        String countSql = "select count(" + colNameAndAliasName.getLeft() +") as c from " + tableName;
+        return count(countSql);
     }
+
+    @Override
+    public long countDistinct(C c) {
+        Assert.isTrue(c != null, " count is null .");
+        Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
+        String countSql = "select count(DISTINCT(" + colNameAndAliasName.getLeft() +")) as c from " + tableName;
+        return count(countSql);
+    }
+
+    @Override
+    public long count(T model) {
+        
+        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        Set<String> primary = primaryColNames.keySet();
+        
+        selectFun.col( "count(1)", "").where();
+        return 0;
+    }
+
+    @Override
+    public long count(C c, T model) {
+        return 0;
+    }
+
+    @Override
+    public long countDistinct(C c, T model) {
+        return 0;
+    }
+
+    private long count(String countSql) {
+        Map<String, Object> one = orginFun.selectOne(countSql);
+        Object c = one.getOrDefault("c", 0L);
+        return getNumber(c);
+    }
+
+    private long getNumber(Object c) {
+        if(c == null){
+            return 0;
+        }else if(c instanceof Number){
+            return ((Number) c).longValue();
+        }else{
+            return Long.parseLong(c.toString());
+        }
+    }
+
 
     private WhereSelectFun<T, Object> parseQueryWhere(T model) {
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
@@ -470,21 +524,5 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>,V> implements Gene
         });
     }
 
-    private long getNumber(Field field, T ex) {
-        if(ex == null){
-            return 0;
-        }
-        Object o = null;
-        try {
-            o = field.get(ex);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return 0;
-        }
-        if(o instanceof Number){
-            return ((Number) o).longValue();
-        }else{
-            return Long.parseLong(o.toString());
-        }
-    }
+
 }

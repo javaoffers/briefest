@@ -2,6 +2,7 @@ package com.javaoffers.batis.modelhelper.fun.general;
 
 import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.core.Id;
+import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.mapper.BaseMapper;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.util.Set;
  * create by cmj
  * @param <T>
  */
-public interface GeneralFun<T,C,V> extends BaseMapper<T> {
+public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMapper<T> {
 
     /**
      * save model
@@ -190,5 +191,32 @@ public interface GeneralFun<T,C,V> extends BaseMapper<T> {
      * @return
      */
     public long count(C c);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c)
+     * @return
+     */
+    public long countDistinct(C c);
+
+
+    /**
+     * The number of statistical tables
+     * @return
+     */
+    public long count(T model);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * @return
+     */
+    public long count(C c,T model);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c)
+     * @return
+     */
+    public long countDistinct(C c,T model);
 
 }

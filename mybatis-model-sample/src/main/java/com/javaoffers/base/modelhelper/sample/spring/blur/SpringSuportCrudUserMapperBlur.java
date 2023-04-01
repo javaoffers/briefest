@@ -44,8 +44,11 @@ public class SpringSuportCrudUserMapperBlur  implements InitializingBean {
 
         exs = crudUserMapper.select().colAll().where().isNotNull(User::getMoneyBlur).isNotNull(User::getBirthdayDateBlur).limitPage(1,1).exs();
         User user = exs.get(0);
+
         user.setWork(Work.JAVA);
-        crudUserMapper.general().saveOrModify(user);
+        user.setBirthday(null);
+        user.setBirthdayDate(null);
+        crudUserMapper.general().saveOrModify(user); //will not birthdayDateBlur inserted into the db
         LOGUtils.printLog(exs);
 
 

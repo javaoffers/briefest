@@ -212,7 +212,7 @@ public class TableHelper {
                 isParse = modelIsParse.getOrDefault(modelClazz, false);
                 if (!isParse) {
                     BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
-                    Assert.isTrue(table != null, " base model is null. please use @BaseModel on class");
+                    Assert.isTrue(table != null, "please use @BaseModel on class " + modelClazz.getName());
                     String tableName = table.value();
                     if (StringUtils.isBlank(tableName)) {
                         String simpleName = modelClazz.getSimpleName();
@@ -252,10 +252,12 @@ public class TableHelper {
                         }
                         tableInfoMap.put(modelClazz, tableInfo);
                         Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
+                        boolean uniqueStatus = false;
                         for (Field colF : colFs) {
                             String colName = conLine(colF.getName());
                             BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
                             if (baseUnique != null) {
+                                uniqueStatus = true;
                                 if (StringUtils.isNotBlank(baseUnique.value())) {
                                     colName = baseUnique.value();
                                 }
@@ -310,6 +312,7 @@ public class TableHelper {
                                 tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
                             }
                         }
+                        Assert.isTrue(uniqueStatus, "Please declare @BaseUnique field in the model "+ modelClazz.getName());
                         tableInfo.unmodifiable();
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -3,6 +3,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
+import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
@@ -49,11 +50,53 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     }
 
     private void testCountDistinct() throws Exception {
-        long countDistinct = crudUserMapper.general().countDistinct(User::getMoney);
-        print(countDistinct);
+        long count = crudUserMapper.general().count();
+        print(count);
 
-        countDistinct = crudUserMapper.general().countDistinct(User::getBirthdayDate);
-        print(countDistinct);
+        count = crudUserMapper.general().count(User::getId);
+        print(count);
+
+        count = crudUserMapper.general().countDistinct(User::getBirthdayDate);
+        print(count);
+
+        User user = new User();
+        count = crudUserMapper.general().count(user);
+        print(count);
+
+        user.setSex(Sex.Boy);
+        count = crudUserMapper.general().count(user);
+        print(count);
+
+        count = crudUserMapper.general().count(User::getName, user);
+        print(count);
+
+        count = crudUserMapper.general().countDistinct(User::getName, user);
+        print(count);
+
+        user.setSex(Sex.Girl);
+        count = crudUserMapper.general().count(user);
+        print(count);
+
+        count = crudUserMapper.general().count(User::getName, user);
+        print(count);
+
+        count = crudUserMapper.general().countDistinct(User::getName, user);
+        print(count);
+
+        user.setSex(Sex.Boy);
+        user.setWork(Work.JAVA);
+        count = crudUserMapper.general().count(user);
+        print(count);
+
+        count = crudUserMapper.general().count(User::getName, user);
+        print(count);
+
+        count = crudUserMapper.general().countDistinct(User::getName, user);
+        print(count);
+
+        count = crudUserMapper.general().countDistinct(User::getWork, user);
+        print(count);
+
     }
 
     public void testBatchUpdate(){

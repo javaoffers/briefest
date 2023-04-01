@@ -1,6 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.model;
 
 import com.javaoffers.batis.modelhelper.anno.BaseModel;
+import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import lombok.Data;
 
 /**
@@ -15,6 +16,7 @@ import lombok.Data;
 @BaseModel
 @Data
 public class UserTeacher {
+    @BaseUnique
     private Integer id;
     private Integer userId;
     private Integer teacherId;

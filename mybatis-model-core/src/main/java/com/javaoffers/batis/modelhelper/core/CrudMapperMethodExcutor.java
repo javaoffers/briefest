@@ -6,7 +6,6 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.batis.modelhelper.fun.general.impl.GeneralFunImpl;
-import com.javaoffers.batis.modelhelper.fun.orgin.impl.OrginFunImpl;
 
 /**
  * create by cmj on 2022-06-22 23:37:17
@@ -31,7 +30,6 @@ public class CrudMapperMethodExcutor {
     }
 
     public static GeneralFun general() {
-        return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(), select(), insert(), update(), delete(),
-                new OrginFunImpl(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(), select(), insert(), update(), delete());
     }
 }

@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 public class BlurUtils {
 
     static final Set<Class> blurCLASS = new HashSet<>();
+    static SoftCache<Field, Boolean> isBlurField =  SoftCache.getInstance();
     static {
         blurCLASS.add(EmailBlur.class);
         blurCLASS.add(IdCardBlur.class);
@@ -29,12 +30,18 @@ public class BlurUtils {
     }
 
     public static boolean containsBlurAnno(Field field){
+        Boolean isBlurField = BlurUtils.isBlurField.get(field);
+        if(isBlurField != null){
+            return isBlurField;
+        }
         Annotation[] declaredAnnotations = field.getDeclaredAnnotations();
         for(Annotation annotation : declaredAnnotations){
             if(isBlurAnno(annotation.annotationType())){
+                BlurUtils.isBlurField.put(field, true);
                 return true;
             }
         }
+        BlurUtils.isBlurField.put(field, false);
         return false;
     }
 

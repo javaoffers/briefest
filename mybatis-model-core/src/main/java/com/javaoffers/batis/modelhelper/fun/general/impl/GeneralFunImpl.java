@@ -14,6 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.batis.modelhelper.fun.general.GeneralFun;
+import com.javaoffers.batis.modelhelper.utils.BlurUtils;
 import com.javaoffers.batis.modelhelper.utils.ColumnInfo;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
@@ -247,7 +248,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
         if(model == null){
             return Collections.EMPTY_LIST;
         }
-        WhereSelectFun<T, Object> where = parseQueryWhere(model);
+        Pair<Boolean,WhereSelectFun<T, Object>> whereInfo = parseQueryWhere(model);
+        //If there is no condition to return directly, the full table will not be queried. Avoid full table scan
+        if(!whereInfo.getLeft()){
+            return Collections.EMPTY_LIST;
+        }
+        WhereSelectFun<T, Object> where = whereInfo.getRight();
         return where.exs();
     }
 
@@ -256,7 +262,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
         if(model == null){
             return Collections.EMPTY_LIST;
         }
-        WhereSelectFun<T, Object> where = parseQueryWhere(model);
+        Pair<Boolean,WhereSelectFun<T, Object>> whereInfo = parseQueryWhere(model);
+        //If there is no condition to return directly, the full table will not be queried. Avoid full table scan
+        if(!whereInfo.getLeft()){
+            return Collections.EMPTY_LIST;
+        }
+        WhereSelectFun<T, Object> where = whereInfo.getRight();
         where.limitPage(pageNum,pageSize);
         return where.exs();
     }
@@ -403,10 +414,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
         return 0L;
     }
 
-    private WhereSelectFun<T, Object> parseQueryWhere(T model) {
+    private Pair<Boolean,WhereSelectFun<T, Object>> parseQueryWhere(T model) {
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
-        parseWhere(model, where);
-        return where;
+        AtomicBoolean isExecute = parseWhere(model, where);
+        return Pair.of(isExecute.get(), where);
     }
 
     private List<T> queryByParam(Map<String, Object> param, int pageNum, int pageSize, boolean isPage) {
@@ -455,6 +466,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
                 try {
                     for(int i=0; fields != null && i<fields.size();i++){
                         Field field = fields.get(i);
+                        if(BlurUtils.containsBlurAnno(field)){
+                            continue;
+                        }
                         o = field.get(model);
                         if(o != null){
                             if(originalColNames.get(colName) !=null
@@ -491,6 +505,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
             Object o = null;
             for (Field field : fields){
                 try {
+                    if(BlurUtils.containsBlurAnno(field)){
+                        continue;
+                    }
                     o = field.get(model);
                     if(o!=null){
                         if(o instanceof Number && colInfo.isAutoincrement() && ((Number) o).longValue() == 0L){

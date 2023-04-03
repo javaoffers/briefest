@@ -107,7 +107,7 @@ public class TableHelper {
         if(sqlColInfo.isSqlFun()){
             colName = colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
         }else{
-            // dont append  ModelHelpperConstants.SPLIT_LINE.
+            // append  ModelHelpperConstants.SPLIT_LINE.
             colName = tableName + "." + colName + " as " + tableName + ModelHelpperConstants.SPLIT_LINE + aliasName;
         }
         return colName;

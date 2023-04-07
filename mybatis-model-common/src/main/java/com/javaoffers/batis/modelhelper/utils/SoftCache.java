@@ -31,7 +31,7 @@ public class SoftCache<T,V> implements Runnable{
 
         SoftCache<T,V> softCache = new SoftCache();
         softCache.referenceQueue = new ReferenceQueue<>();
-        CommonExecutor.oneFixedScheduledThreadPool.scheduleWithFixedDelay(softCache, 10, 10, TimeUnit.SECONDS);
+        CommonExecutor.oneFixedScheduledThreadPool.scheduleWithFixedDelay(softCache, 60, 60, TimeUnit.SECONDS);
         return softCache;
     }
 
@@ -64,17 +64,23 @@ public class SoftCache<T,V> implements Runnable{
     public void run() {
         try {
             long mk = Runtime.getRuntime().freeMemory() >> 20;
+            AtomicBoolean statue = new AtomicBoolean(false);
             if(limitMi < mk){
                 Map<T,SoftData<T,V>> newCache = new ConcurrentHashMap<>(1 << 8);
                 this.cache.forEach((key,value)->{
                     if(value.get() != null){
                         newCache.put(key, value);
+                    }else{
+                        statue.set(true);
                     }
                 });
-                this.cache = newCache;
-                this.referenceQueue = new ReferenceQueue<>();
+
+                if(statue.get()) {
+                    this.cache = newCache;
+                    this.referenceQueue = new ReferenceQueue<>();
+                }
+
             }else{
-                AtomicBoolean statue = new AtomicBoolean(false);
                 this.cache.forEach((key,value)->{
                     if(value.get() == null){
                         this.cache.remove(key);
@@ -84,7 +90,6 @@ public class SoftCache<T,V> implements Runnable{
                 if(statue.get()) {
                     this.referenceQueue = new ReferenceQueue<>();
                 }
-
             }
         }catch (Exception e){
             //ignore

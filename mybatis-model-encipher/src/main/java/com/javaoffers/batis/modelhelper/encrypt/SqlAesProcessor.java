@@ -25,9 +25,9 @@ public class SqlAesProcessor {
     //Encryption suffix
     private static final String ENCRYPT_SUFFIX = "))";
     //Decryption prefix
-    private static final String DECRYPT_PREFIX = "AES_DECRYPT(UNHEX(";
+    private static final String DECRYPT_PREFIX = "CAST(AES_DECRYPT(UNHEX(";
     //Decryption suffix
-    private static final String DECRYPT_SUFFIX = ")";
+    private static final String DECRYPT_SUFFIX = ") as char)";
     //Aes private key. When the real to fill in hexadecimal (32);
     private String key;
     //The SQL parser

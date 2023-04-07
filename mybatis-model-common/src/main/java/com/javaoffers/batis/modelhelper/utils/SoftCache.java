@@ -1,5 +1,7 @@
 package com.javaoffers.batis.modelhelper.utils;
 
+import javafx.util.Pair;
+
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.SoftReference;
 import java.util.Map;
@@ -8,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Released by GC when memory is not enough
@@ -28,7 +31,7 @@ public class SoftCache<T,V> implements Runnable{
 
         SoftCache<T,V> softCache = new SoftCache();
         softCache.referenceQueue = new ReferenceQueue<>();
-        CommonExecutor.oneFixedScheduledThreadPool.scheduleWithFixedDelay(softCache, 10, 10, TimeUnit.MINUTES);
+        CommonExecutor.oneFixedScheduledThreadPool.scheduleWithFixedDelay(softCache, 10, 10, TimeUnit.SECONDS);
         return softCache;
     }
 
@@ -69,12 +72,19 @@ public class SoftCache<T,V> implements Runnable{
                     }
                 });
                 this.cache = newCache;
+                this.referenceQueue = new ReferenceQueue<>();
             }else{
+                AtomicBoolean statue = new AtomicBoolean(false);
                 this.cache.forEach((key,value)->{
                     if(value.get() == null){
                         this.cache.remove(key);
+                        statue.set(true);
                     }
                 });
+                if(statue.get()) {
+                    this.referenceQueue = new ReferenceQueue<>();
+                }
+
             }
         }catch (Exception e){
             //ignore

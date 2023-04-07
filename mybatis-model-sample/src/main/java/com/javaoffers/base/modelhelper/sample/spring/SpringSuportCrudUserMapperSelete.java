@@ -46,10 +46,23 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testMultThread();
+        testAll();
         if (status) {
             System.exit(0);
         }
+    }
+    public void testAll(){
+
+                    testGroupConcat();
+                    testDistinc();
+                    testColAll();
+                    testEnum();
+                    test3Join();
+                    testAsName();
+                    testSelectOp();
+                    testSelect();
+                    testGroupBy();
+
     }
 
     public void testMultThread(){
@@ -82,8 +95,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 
     public void testGroupBy(){

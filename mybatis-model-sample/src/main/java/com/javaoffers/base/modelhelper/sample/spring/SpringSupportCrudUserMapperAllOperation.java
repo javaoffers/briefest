@@ -39,7 +39,7 @@ public class SpringSupportCrudUserMapperAllOperation {
         SpringSuportCrudUserMapperGeneral.status = false;
         SpringSuportCrudUserMapperBlur.status = false;
         SpringApplication.run(SpringSupportCrudUserMapperAllOperation.class, args);
-        System.exit(1);
+        //System.exit(1);
 
     }
 

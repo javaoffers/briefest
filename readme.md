@@ -514,7 +514,38 @@ crudUserMapper.general().removeById(1);
      * @return
      */
     public long count(C c);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c)
+     * @return
+     */
+    public long countDistinct(C c);
+
+
+    /**
+     * The number of statistical tables.  Will use the model as the where condition
+     * @return
+     */
+    public long count(T model);
+
+    /**
+     * The number of statistical tables, through the specified field.
+     * Will use the model as the where condition
+     * @return
+     */
+    public long count(C c,T model);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c).
+     * Will use the model as the where condition
+     * @return
+     */
+    public long countDistinct(C c,T model);
+
 ```
+
 ### Sql function annotation
 <p>
     We can use sql functions by using annotations on the fields of the class. 

@@ -362,7 +362,7 @@ crudUserMapper.general().removeById(1);
      * @param model class
      * @return primary key id
      */
-    public long save(T model);
+    public Id save(T model);
 
     /**
      * save or modify.
@@ -370,7 +370,7 @@ crudUserMapper.general().removeById(1);
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrModify(T model);
+    public List<Id> saveOrModify(T model);
 
     /**
      * save or replace
@@ -378,14 +378,14 @@ crudUserMapper.general().removeById(1);
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrReplace(T model);
+    public List<Id> saveOrReplace(T model);
 
     /**
      * save model
      * @param models class
      * @return primary key id
      */
-    public List<Long> saveBatch(Collection<T> models);
+    public List<Id> saveBatch(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based 

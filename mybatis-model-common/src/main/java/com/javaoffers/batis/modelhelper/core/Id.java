@@ -9,45 +9,45 @@ import java.math.BigInteger;
  * @author create by cmj
  */
 public interface Id extends Serializable{
-
+    byte EMPTY_ID_VALUE = -1;
     Id EMPTY_ID = new Id() {
         @Override
-        public int toByte() {
-            return Integer.MIN_VALUE;
+        public byte toByte() {
+            return EMPTY_ID_VALUE;
         }
 
         @Override
         public int toInt() {
-            return Integer.MIN_VALUE;
+            return EMPTY_ID_VALUE;
         }
 
         @Override
         public long toLong() {
-            return Integer.MIN_VALUE;
+            return EMPTY_ID_VALUE;
         }
 
         @Override
         public BigDecimal toBd() {
-            return new BigDecimal(Integer.MIN_VALUE);
+            return new BigDecimal(EMPTY_ID_VALUE);
         }
 
         @Override
         public BigInteger toBi() {
-            return new BigInteger(String.valueOf(Integer.MIN_VALUE));
+            return new BigInteger(String.valueOf(EMPTY_ID_VALUE));
         }
 
         @Override
         public Number toNumber() {
-            return new Integer(Integer.MIN_VALUE);
+            return new Integer(EMPTY_ID_VALUE);
         }
 
         @Override
         public Serializable value() {
-            return Integer.MIN_VALUE;
+            return EMPTY_ID_VALUE;
         }
     };
 
-    int toByte();
+    byte toByte();
 
     int toInt();
 

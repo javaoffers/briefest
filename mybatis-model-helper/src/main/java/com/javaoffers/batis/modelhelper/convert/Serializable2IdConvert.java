@@ -30,7 +30,7 @@ class IdImpl implements Id {
     Serializable srcValue;
 
     @Override
-    public int toByte() {
+    public byte toByte() {
         return convert.converterObject(byte.class, srcValue);
     }
 

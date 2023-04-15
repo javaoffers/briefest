@@ -11,11 +11,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @description:
@@ -36,12 +32,12 @@ public class InsertConditionParse extends AbstractParseCondition {
         String insertIntoTableSql = insertIntoTableCondition.getSql();
 
         StringBuilder insertColNamesAppender = new StringBuilder();
-        LinkedList<String> moreSql = new LinkedList<>();
+        ArrayList<String> moreSql = new ArrayList<>();
         StringBuilder insertValueAppender = new StringBuilder();
-        LinkedList<Map<String, Object>> paramsList = new LinkedList<>();
+        ArrayList<Map<String, Object>> paramsList = new ArrayList<>();
         HashMap<String, Object> valuesParam = new HashMap<>();
         boolean isColValueCondition = false;
-        List<String> dupUpdateSql = new LinkedList<>();
+        List<String> dupUpdateSql = new ArrayList<>();
         StringBuilder duplicateSqlForColValCondition =
                 new StringBuilder();
         boolean isDupUpdateSql = false;

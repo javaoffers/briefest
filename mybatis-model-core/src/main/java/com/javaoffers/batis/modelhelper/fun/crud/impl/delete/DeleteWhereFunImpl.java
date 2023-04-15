@@ -9,6 +9,7 @@ import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteWhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
+import com.javaoffers.batis.modelhelper.log.JqlLogger;
 
 import java.util.Collection;
 import java.util.Map;
@@ -290,8 +291,8 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     public Integer ex() {
         BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("PAM: "+sqlInfo.getParams());
+        JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
+        JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
         Integer count = instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
         return count;
     }

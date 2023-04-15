@@ -45,6 +45,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testInsertUpdate();
         transactionInsert();
         testBatchInsert();
         testInsert();
@@ -53,6 +54,11 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             System.exit(0);
         }
 
+    }
+
+    public void testInsertUpdate(){
+        crudUserMapper.insert().col(User::getName, "mking").col(User::getSex, Sex.Boy).dupUpdate().ex();
+        crudUserMapper.insert().col(User::getName, "mking").col(User::getSex, Sex.Boy).dupUpdate().ex();
     }
 
     public void transactionInsert(){
@@ -134,6 +140,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             User jom = User.builder().name("Hom"+i).money(i+"").build();
             batchUser.add(jom);
         }
+        LOGUtils.printLog("----------------------------------------");
         long start = System.nanoTime();
         List<Id> exs = crudUserMapper.insert().colAll(batchUser)
                 .exs();

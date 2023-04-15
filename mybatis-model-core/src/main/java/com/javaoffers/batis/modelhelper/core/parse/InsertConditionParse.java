@@ -88,7 +88,6 @@ public class InsertConditionParse extends AbstractParseCondition {
                 moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
                 dupUpdateSql.add(allColValueCondition.getOnDuplicate());
             }else if(condition instanceof OnDuplicateKeyUpdateMark){
-                OnDuplicateKeyUpdateMark dupUpdate = (OnDuplicateKeyUpdateMark) condition;
                 isDupUpdateSql = true;
                 if(duplicateSqlForColValCondition.length() > 0){
                     dupUpdateSql.add(duplicateSqlForColValCondition.toString());

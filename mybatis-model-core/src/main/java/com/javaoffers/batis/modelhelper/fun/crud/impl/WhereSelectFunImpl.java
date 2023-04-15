@@ -22,6 +22,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.batis.modelhelper.log.JqlLogger;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.*;
@@ -426,8 +427,8 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //解析SQL select 并执行。
         BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
-        System.out.println("SQL: "+sqlInfo.getSql());
-        System.out.println("PAM: "+sqlInfo.getParams());
+        JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
+        JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
         List list = instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
         return list;
     }

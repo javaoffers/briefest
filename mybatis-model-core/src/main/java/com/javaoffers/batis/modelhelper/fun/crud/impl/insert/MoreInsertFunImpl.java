@@ -15,6 +15,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCo
 import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
 import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
+import com.javaoffers.batis.modelhelper.log.JqlLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,22 +40,9 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
         List<Id> list = new ArrayList<>(sqlInfosList.size());
         sqlInfosList.forEach(sqlInfo -> {
-            System.out.println("SQL: "+sqlInfo.getSql());
-            System.out.println("PAM: "+sqlInfo.getParams());
-            int batchNum = 1000;
-            if(sqlInfo.getParams().size() > batchNum){
-                int allBatch = sqlInfo.getParams().size() / 2 * 2;
-                int startIndex = 0;
-                for(; startIndex < allBatch; startIndex = startIndex + batchNum ){
-                    if((startIndex + batchNum) > allBatch){
-                        break;
-                    }
-                    list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, startIndex + batchNum)));
-                }
-                list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams().subList(startIndex, sqlInfo.getParams().size())));
-            }else{
-                list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
-            }
+            JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
+            JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
+            list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
         });
         return list;
     }

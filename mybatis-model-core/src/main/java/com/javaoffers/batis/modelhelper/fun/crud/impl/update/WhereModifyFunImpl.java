@@ -14,7 +14,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.AddPatchMarkConditio
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
-import org.springframework.util.Assert;
+import com.javaoffers.batis.modelhelper.log.JqlLogger;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -335,8 +335,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
         }
         AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{
-            System.out.println("SQL: "+sql);
-            System.out.println("PAM: "+params);
+            JqlLogger.log.info("SQL: {}", sql);
+            JqlLogger.log.info("PAM: {}", params);
             Integer integer = instance.batchUpdate(sql, params);
             count.addAndGet(integer);
         });

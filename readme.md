@@ -746,7 +746,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 <dependency>
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-model-encipher</artifactId>
-  <version>3.5.11.9</version>
+  <version>3.5.11.10</version>
 </dependency>
 ```
 
@@ -775,6 +775,19 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     .where().eq(EncryptData::getEncryptNum, encryptNum).ex();
     print(ex);//{"id":10,"encryptNum":"1234567890"}
 ```
+
+### Field desensitization
+<p>
+Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.;
+</p>
+
+```
+   @EmailBlur
+   private String email; // 12345678@outlook.com The encrypted data 12***678@outlook.com
+```  
+<p>
+more examples： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+</p>
 
 #### Code contributions are welcome
 <p>

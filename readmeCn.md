@@ -3,6 +3,7 @@
 ####  欢迎 fork 和 star 鼓励一下
 
 - 特征
+  - 高性能查询和插入,查询30000块数据字段(60)仅在1195毫秒
   - 不必编写本机 SQL。可以按照Java的stream api来写。
   - SQL函数注解，简单易用
   - 新的写法，支持mapper类写默认方法。
@@ -12,6 +13,7 @@
   - 集成了常用的API，无需开发即可直接使用。
   - 目前只支持mysql语法标准
   - 表字段自动加解密.
+  - 字段查询模糊脱敏
   
 - 概要
   <p>
@@ -24,7 +26,7 @@
    <dependency>
        <groupId>com.javaoffers</groupId>
        <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.7</version>
+       <version>3.5.11.10</version>
    </dependency>
 
   ```
@@ -482,6 +484,35 @@ crudUserMapper.general().removeById(1);
      * @return
      */
     public long count(C c);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c)
+     * @return
+     */
+    public long countDistinct(C c);
+
+
+    /**
+     * The number of statistical tables.  Will use the model as the where condition
+     * @return
+     */
+    public long count(T model);
+
+    /**
+     * The number of statistical tables, through the specified field.
+     * Will use the model as the where condition
+     * @return
+     */
+    public long count(C c,T model);
+
+    /**
+     * The number of statistical tables, through the specified field
+     * Statistical results after deduplication. count(DISTINCT c).
+     * Will use the model as the where condition
+     * @return
+     */
+    public long countDistinct(C c,T model);
 ```
 ### sql函数注解
 <p>
@@ -660,19 +691,66 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     String2EnumConvert
 
 ```
-  
-    <p>
-  加解密模块在设计时作为一个独立的模块. 如果业务中需要用到这个功能需要加入mvn引用即可.如下
+
+
+### 支持自动加密和解密
+<p>
+   当我们需要添加一个数据库表中的某些字段进行解密。Mybatis JQL提供了一个简单的配置可以做;
+   我们只需要指定一个关键(长度为32个十六进制)。然后指定表和表中的字段。
+   我们指定一个私钥 “FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA”是关键
+   并给出了encrypt_num加密。在表encrypt_data配置如下: 
+</p>
+  <p>
+  加密和解密模块被设计为一个独立的模块。 
+  使用这个功能服务,您需要添加mvn引用。如下
   </p> 
 
 ```java
 <dependency>
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-model-encipher</artifactId>
-  <version>3.5.11.9</version>
+  <version>3.5.11.10</version>
 </dependency>
 ```
-  
+
+```java
+  /**
+     * Configure the tables and fields that need to be decrypted.
+     * the key Is the length of 32 hexadecimal;
+     */
+    @AesEncryptConfig(key = "FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA", encryptTableColumns = {
+            @EncryptTableColumns(tableName = "encrypt_data", columns = {"encrypt_num"})
+    })
+    @Configuration
+    static class EncryptConfig{ }
+```
+```java
+    EncryptData encryptData = new EncryptData();
+    String encryptNum = "1234567890";
+    encryptData.setEncryptNum(encryptNum);
+     //加密后在db里存储的数据是 396195EAF65E740AEC39E6FFF0714542
+    Id id = this.crudEncryptDataMapper.general().save(encryptData);
+    //查询的时候会自动解密
+    encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); 
+    print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
+    // 查询时直接指定铭文即可. 铭文查询,底部将转换成密文和查询
+    EncryptData ex = this.crudEncryptDataMapper.select().colAll()
+    .where().eq(EncryptData::getEncryptNum, encryptNum).ex();
+    print(ex);//{"id":10,"encryptNum":"1234567890"}
+```
+
+### 字段脱敏
+<p>
+支持字段脱敏. 只需要在model类上加上@EmailBlur注解可可以类。 注意被加上的注解的字段必须是String类型.
+</p>
+
+```
+   @EmailBlur
+   private String email; // 12345678@outlook.com加密后的数据为12***678@outlook.com
+```  
+<p>
+更多案例： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+</p>
 
 #### Code contributions are welcome
 <p>

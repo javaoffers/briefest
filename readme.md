@@ -4,6 +4,7 @@
 ####  Welcome to fork and star for encourage
 
 - Features
+  - High performance query and insertion, querying 30000 pieces of data (60 fields) in only 1195 milliseconds
   - Don't have to write native SQL.  Can write according to the stream api of Java.
   - SQL function annotation, simple and easy to use
   - New form of writing, support mapper class to write the default method.
@@ -13,7 +14,7 @@
   - Commonly used APIs have been integrated and can be used directly without development.
   - Currently, only mysql syntax standards are supported
   - Table fields automatic encryption and decryption.
-  - Field desensitization (supported in next version)
+  - Field desensitization 
 
 - Summary
   <p>

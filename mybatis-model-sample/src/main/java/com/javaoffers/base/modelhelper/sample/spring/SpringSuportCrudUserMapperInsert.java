@@ -173,6 +173,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getOrderId)
                 .where()
+                .orderD(User::getId)
                 .limitPage(1,30000)
                 .exs();
 

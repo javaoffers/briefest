@@ -25,7 +25,7 @@ public class ModelParseUtils {
         if (listMap.size() > batch){
             List<Lists.ListData<Map<String, Object>>> partition = Lists.partition(listMap, batch);
             List<E>[] slot = new List[partition.size()];
-            LinkedList<E> resutl = new LinkedList<>();
+            ArrayList<E> resutl = new ArrayList<>();
             partition.parallelStream().forEach(list->{
                 slot[list.getPartitionIndex()] = modelParse.converterMap2Model(clazz, list.getList()) ;
             });

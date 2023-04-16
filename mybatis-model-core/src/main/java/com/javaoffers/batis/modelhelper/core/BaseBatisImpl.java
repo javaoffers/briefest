@@ -116,7 +116,6 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
     int[] batchUpdate(String sql, final BatchPreparedStatementSetter pss) throws DataAccessException {
 
-
         int[] result = this.jdbcTemplate.execute(sql, (PreparedStatementCallback<int[]>) ps -> {
             try {
                 int batchSize = pss.getBatchSize();

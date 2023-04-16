@@ -8,7 +8,6 @@ import com.javaoffers.batis.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
 import com.javaoffers.batis.modelhelper.fun.Condition;
 import com.javaoffers.batis.modelhelper.fun.ExecutMoreFun;
-import com.javaoffers.batis.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.condition.insert.InsertAllColValueCondition;
@@ -20,6 +19,7 @@ import com.javaoffers.batis.modelhelper.log.JqlLogger;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Object>, Object> {
 

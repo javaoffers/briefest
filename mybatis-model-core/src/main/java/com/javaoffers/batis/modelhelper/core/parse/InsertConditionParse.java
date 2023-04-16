@@ -111,7 +111,7 @@ public class InsertConditionParse extends AbstractParseCondition {
             Map<String, Object> sqlParam = paramsList.get(i);
             SQLInfo sqlInfo = batch.get(sql);
             if(sqlInfo == null){
-                LinkedList parems = new LinkedList();
+                ArrayList parems = new ArrayList<>();
                 parems.add(sqlParam);
                 sqlInfo = SQLInfo.builder()
                         .aClass(insertIntoTableCondition.getModelClass())

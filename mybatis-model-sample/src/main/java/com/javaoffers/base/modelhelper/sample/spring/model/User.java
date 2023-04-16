@@ -95,6 +95,9 @@ public class User {
 
     private String createTime;
 
+    @ColName("create_time")
+    private Date createTimeDate;
+
     private String money;
 
     private Sex sex;

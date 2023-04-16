@@ -32,9 +32,7 @@ public class SQLParse{
     }
 
     public static SQL parseSqlParams(String sql, List<Map<String, Object>> paramMap) {
-
         ArrayList<Object[]> objects = new ArrayList<>(paramMap.size());
-
         ArrayList<String> keys = new ArrayList<>();
         Matcher matcher = compile.matcher(sql);
         while (matcher.find()) {

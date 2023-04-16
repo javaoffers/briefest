@@ -136,14 +136,29 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void testBatchInsert(){
         List<User> batchUser = new LinkedList<>();
 
-        for(int i=0; i < 30000; i++){
-            User jom = User.builder().name("Hom"+i).money(i+"").build();
+        for(int i=0; i < 100000; i++){
+            User jom = User.builder()
+                    .name("HomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHom"+i)
+                    .money(i+"")
+                    .birthdayDate(new Date())
+                    .work(Work.JAVA)
+                    .createTimeDate(new Date())
+                    .month(Month.April)
+                    .build();
             batchUser.add(jom);
         }
         LOGUtils.printLog("----------------------------------------");
         long start = System.nanoTime();
         List<Id> exs = crudUserMapper.insert().colAll(batchUser)
                 .exs();
+//        exs.addAll(crudUserMapper.insert().colAll(batchUser)
+//                .exs());
+//        exs.addAll(crudUserMapper.insert().colAll(batchUser)
+//                .exs());
+//        exs.addAll(crudUserMapper.insert().colAll(batchUser)
+//                .exs());
+//        exs.addAll(crudUserMapper.insert().colAll(batchUser)
+//                .exs());
         long end = System.nanoTime();
         //insert cost time： 5s, 30000 pieces of data
         LOGUtils.printLog("insert cost time： "+TimeUnit.NANOSECONDS.toSeconds(end - start));

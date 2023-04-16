@@ -136,7 +136,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void testBatchInsert(){
         List<User> batchUser = new LinkedList<>();
 
-        for(int i=0; i < 100000; i++){
+        for(int i=0; i < 30000; i++){
             User jom = User.builder()
                     .name("HomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHom"+i)
                     .money(i+"")
@@ -173,11 +173,11 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
                 .on()
                 .oeq(User::getId, UserOrder::getOrderId)
                 .where()
-                .limitPage(1,100000)
+                .limitPage(1,30000)
                 .exs();
 
         end = System.nanoTime();
-        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start));//100000 cost 1.2s
+        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start));//30000 cost 1.2s
         LOGUtils.printLog(exs1.size());
 
         Integer ex = crudUserMapper.delete().where().in(User::getId, exs).ex();

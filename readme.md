@@ -4,7 +4,7 @@
 ###  Welcome to fork and star for encourage thanks
 
 - Features
-  - High performance query and insertion, querying 30000 pieces of data (60 fields) in only 1195 milliseconds
+  - High performance query and insertion
   - Don't have to write native SQL.  Can write according to the stream api of Java.
   - SQL function annotation, simple and easy to use
   - New form of writing, support mapper class to write the default method.

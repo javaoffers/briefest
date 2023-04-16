@@ -37,7 +37,7 @@
    <dependency>
        <groupId>com.javaoffers</groupId>
        <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.10</version>
+       <version>3.5.11.11</version>
    </dependency>
 
   ```
@@ -746,7 +746,7 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 <dependency>
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-model-encipher</artifactId>
-  <version>3.5.11.10</version>
+  <version>3.5.11.11</version>
 </dependency>
 ```
 

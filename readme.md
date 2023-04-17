@@ -778,7 +778,8 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 ### Field desensitization
 <p>
-Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.;
+Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.
+Fields annotated with the @Blur tag will not be inserted or updated.
 </p>
 
 ```

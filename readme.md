@@ -784,6 +784,13 @@ Support field desensitization. Only need a model class with @ EmailBlur annotati
 ```
    @EmailBlur
    private String email; // 12345678@outlook.com The encrypted data 12***678@outlook.com
+   
+   @PhoneNumBlur
+   private String phoneNum; //12***678
+   
+   //Fuzzy percentage
+   @StringBlur(percent = 0.5)
+   private String strName;  //hulm The encrypt data h**m
 ```  
 <p>
 more examples： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur

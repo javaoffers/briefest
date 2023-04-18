@@ -5,6 +5,8 @@
 
 - Features
   - High performance query and insertion
+  - SQL Inject defense
+  - Out-of-the-box interfaces for operate database
   - Don't have to write native SQL.  Can write according to the stream api of Java.
   - SQL function annotation, simple and easy to use
   - New form of writing, support mapper class to write the default method.

@@ -15,7 +15,7 @@
   - Multi-table queries do not require additional configuration. Automatic mapping classes
   - Commonly used APIs have been integrated and can be used directly without development.
   - Currently, only mysql syntax standards are supported
-  - Table fields automatic encryption and decryption.
+  - Table fields automatic encryption and decryption in DB.
   - Field desensitization 
 
 - Summary

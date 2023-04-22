@@ -1,10 +1,12 @@
 
 ## mybatis model helper
 <a href="./readmeCn.md">中文<a/> &nbsp; <a href="./wiki.md">wiki<a/>
-###  Welcome to fork and star for encourage thanks
+###  Welcome to fork OR star for encourage thanks
 
 - Features
   - High performance query and insertion
+  - SQL Inject defense
+  - Out-of-the-box interfaces for operate database
   - Don't have to write native SQL.  Can write according to the stream api of Java.
   - SQL function annotation, simple and easy to use
   - New form of writing, support mapper class to write the default method.
@@ -13,7 +15,7 @@
   - Multi-table queries do not require additional configuration. Automatic mapping classes
   - Commonly used APIs have been integrated and can be used directly without development.
   - Currently, only mysql syntax standards are supported
-  - Table fields automatic encryption and decryption.
+  - Table fields automatic encryption and decryption in DB.
   - Field desensitization 
 
 - Summary
@@ -778,12 +780,20 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 ### Field desensitization
 <p>
-Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.;
+Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.
+Fields annotated with the @Blur tag will not be inserted or updated.
 </p>
 
 ```
    @EmailBlur
    private String email; // 12345678@outlook.com The encrypted data 12***678@outlook.com
+   
+   @PhoneNumBlur
+   private String phoneNum; //12***678
+   
+   //Fuzzy percentage
+   @StringBlur(percent = 0.5)
+   private String strName;  //hulm The encrypt data h**m
 ```  
 <p>
 more examples： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur

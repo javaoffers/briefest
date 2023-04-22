@@ -30,7 +30,7 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         if(!ascOrDesc){
             order = " desc ";
         }
-        return tag.getTag() + String.join("," , cs) + order;
+        return tag.getTag() + String.join(order + "," , cs) + order;
     }
 
     @Override

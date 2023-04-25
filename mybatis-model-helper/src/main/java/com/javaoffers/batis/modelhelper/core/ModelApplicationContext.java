@@ -16,7 +16,7 @@ public class  ModelApplicationContext implements SelectorRegister {
 
     @Override
     public void registerConvert(Descriptor descriptor, Convert convert) {
-        registers.put(descriptor.getUniqueMark(),convert);
+        registers.putIfAbsent(descriptor.getUniqueMark(),convert);
     }
 
 

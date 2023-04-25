@@ -291,8 +291,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .exs();
 
         long end = System.nanoTime();
-        LOGUtils.printLog("query cost time： " + TimeUnit.NANOSECONDS.toMillis(end - start));//10000 cost 688ms
-        LOGUtils.printLog(exs1.size());
+        LOGUtils.printLog("query cost time： " + TimeUnit.NANOSECONDS.toMillis(end - start) + " ms");//10000 cost 688ms
+        LOGUtils.printLog("query size : " + exs1.size());
     }
 
     public void testSelect() {

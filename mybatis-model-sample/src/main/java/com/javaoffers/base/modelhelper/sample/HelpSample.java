@@ -77,6 +77,9 @@ public class HelpSample {
         date = delegate.converterObject(Date.class, new Date().getTime());
         LOGUtils.printLog(date);
 
+        date = delegate.converterObject(Date.class, new Date().getTime());
+        LOGUtils.printLog(date);
+
         LocalDate localDate = delegate.converterObject(LocalDate.class, new Date().getTime());
         LOGUtils.printLog(localDate.getYear());
 

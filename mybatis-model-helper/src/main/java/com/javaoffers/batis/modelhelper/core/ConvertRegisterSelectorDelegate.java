@@ -22,7 +22,7 @@ import java.util.Set;
  */
 public class ConvertRegisterSelectorDelegate {
 
-    private SelectorRegister applicationContext = new ModelApplicationContext();
+    private ModelApplicationContext applicationContext = new ModelApplicationContext();
 
     public final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
 
@@ -67,16 +67,23 @@ public class ConvertRegisterSelectorDelegate {
             for(Class srcc : srcSupers){
                 convert =  selector(srcc, des);
                 if(convert!=null){
-                    return convert;
+                    break;
                 }
             }
             //dec 降级
-            Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
-            for(Class dess : desSupers){
-                convert = selector(src,dess);
-                if(convert!=null){
-                    return convert;
+            if(convert == null){
+                Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
+                for(Class dess : desSupers){
+                    convert = selector(src,dess);
+                    if(convert != null) {
+                        break;
+                    }
                 }
+            }
+
+            //Avoid Upgrading or Downgrading Query Transformers Next Time
+            if(convert != null){
+                applicationContext.registerConvert(new ConverDescriptor(src, des), convert);
             }
         }
         return convert;

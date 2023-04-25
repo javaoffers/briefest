@@ -161,8 +161,8 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 //                .exs());
         long end = System.nanoTime();
         //insert cost time： 10s, 100000 pieces of data
-        LOGUtils.printLog("insert cost time： "+TimeUnit.NANOSECONDS.toSeconds(end - start));
-        LOGUtils.printLog(exs.size());
+        LOGUtils.printLog("insert cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start) +" ms");
+        LOGUtils.printLog("insert size: "+exs.size());
 
         start = System.nanoTime();
         List<User> exs1 = crudUserMapper
@@ -178,7 +178,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
                 .exs();
 
         end = System.nanoTime();
-        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start));//30000 cost 1.2s
+        LOGUtils.printLog("query cost time： "+TimeUnit.NANOSECONDS.toMillis(end - start) +" ms");//30000 cost 1.2s
         LOGUtils.printLog(exs1.size());
 
         Integer ex = crudUserMapper.delete().where().in(User::getId, exs).ex();

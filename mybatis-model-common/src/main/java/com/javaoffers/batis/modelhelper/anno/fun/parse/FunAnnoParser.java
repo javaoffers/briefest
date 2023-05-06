@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.CurrentTime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Curtime;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.UnixTimestamp;
+import com.javaoffers.batis.modelhelper.anno.fun.params.CaseWhen;
 import com.javaoffers.batis.modelhelper.anno.fun.params.If;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
@@ -89,6 +90,7 @@ public class FunAnnoParser {
         String coreSql = null;
         boolean isFunSql = false;
         boolean isExcludeColAll = false;
+        CaseWhen caseWhen = null;
         for(Annotation anno : allAnno){
             if(anno instanceof ColName){
                 colNameAnno = (ColName) anno;
@@ -96,6 +98,9 @@ public class FunAnnoParser {
                 continue;
             }else if(anno instanceof GroupConcat){
                 isExcludeColAll = ((GroupConcat) anno).excludeColAll();
+            }else if(anno instanceof CaseWhen){
+                caseWhen = (CaseWhen)anno;
+                continue;
             }
             //This will be optimized for strategy mode later. to avoid a lot of if statements
             isFunSql =
@@ -107,6 +112,20 @@ public class FunAnnoParser {
             parseNoneParamMath(appender, anno) || isFunSql;
 
         }
+        //case when check. It is not allowed to have other Sql Functions or @ColName at the same time
+        if(caseWhen != null){
+            Assert.isTrue(!(isFunSql || colNameAnno != null),
+                    "case when check. It is not allowed to be used together other Sql Functions Or @ColName at the same time");{
+
+                CaseWhen.When[] whens = caseWhen.whens();
+                for(CaseWhen.When when : whens){
+                    String ep = when.ep1();
+                    String then = when.then();
+                }
+
+            }
+        }
+
         if(colNameAnno != null){
             coreSql = colNameAnno.value();
             //a and b cannot be used together

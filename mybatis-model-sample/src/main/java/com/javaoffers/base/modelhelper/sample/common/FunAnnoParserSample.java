@@ -4,6 +4,7 @@ import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.math.Rand;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
+import com.javaoffers.batis.modelhelper.anno.fun.params.CaseWhen;
 import com.javaoffers.batis.modelhelper.anno.fun.params.If;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfEq;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
@@ -18,6 +19,7 @@ import com.javaoffers.batis.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.batis.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
+import org.apache.ibatis.annotations.Case;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockedStatic;
@@ -162,6 +164,14 @@ public class FunAnnoParserSample {
     @ConcatWs(separator = " '-' ", value = {"age","'hello'"}, position = 1)
     private String colName29;
 
+    @CaseWhen(whens = {
+            @CaseWhen.When(ep1 = "score > 80", then = "Grand"),
+            @CaseWhen.When(ep1 = "score < 80 and score > 50", then = "General"),
+            @CaseWhen.When(ep1 = "score < 50 and score > 10", then = "noGood"),
+    }, elseEnd = @CaseWhen.Else("VeryBad"))
+    private String scoreDescription;
+
+
     static TableInfo tableHelper;
     @Before
     public void before(){
@@ -216,13 +226,20 @@ public class FunAnnoParserSample {
         testColNameN(27);
         testColNameN(28);
         testColNameN(29);
-
+        testColNameN("scoreDescription");
     }
 
 
     public void testColNameN(int n) throws Exception{
         Class<FunAnnoParserSample> modelClass = FunAnnoParserSample.class;
         String colName = "colName"+n;
+        Field colField = modelClass.getDeclaredField(colName);
+        ParseSqlFunResult parse = FunAnnoParser.parse(tableHelper,modelClass, colField, colName);
+        LOGUtils.printLog(parse.getSqlFun());
+    }
+
+    public void testColNameN( String colName) throws Exception{
+        Class<FunAnnoParserSample> modelClass = FunAnnoParserSample.class;
         Field colField = modelClass.getDeclaredField(colName);
         ParseSqlFunResult parse = FunAnnoParser.parse(tableHelper,modelClass, colField, colName);
         LOGUtils.printLog(parse.getSqlFun());

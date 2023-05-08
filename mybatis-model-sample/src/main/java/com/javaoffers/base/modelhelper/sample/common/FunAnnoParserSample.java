@@ -165,9 +165,9 @@ public class FunAnnoParserSample {
     private String colName29;
 
     @CaseWhen(whens = {
-            @CaseWhen.When(ep1 = "score > 80", then = "Grand"),
-            @CaseWhen.When(ep1 = "score < 80 and score > 50", then = "General"),
-            @CaseWhen.When(ep1 = "score < 50 and score > 10", then = "noGood"),
+            @CaseWhen.When(when = "score > 80", then = "Grand"),
+            @CaseWhen.When(when = "score < 80 and score > 50", then = "General"),
+            @CaseWhen.When(when = "score < 50 and score > 10", then = "noGood"),
     }, elseEnd = @CaseWhen.Else("VeryBad"))
     private String scoreDescription;
 

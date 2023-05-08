@@ -46,7 +46,7 @@ public @interface CaseWhen {
         /**
          * when ep1
          */
-        String ep1();
+        String when();
 
         /**
          * then xxx

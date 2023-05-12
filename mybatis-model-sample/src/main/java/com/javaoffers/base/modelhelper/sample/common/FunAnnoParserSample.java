@@ -165,11 +165,19 @@ public class FunAnnoParserSample {
     private String colName29;
 
     @CaseWhen(whens = {
-            @CaseWhen.When(when = "score > 80", then = "Grand"),
-            @CaseWhen.When(when = "score < 80 and score > 50", then = "General"),
-            @CaseWhen.When(when = "score < 50 and score > 10", then = "noGood"),
-    }, elseEnd = @CaseWhen.Else("VeryBad"))
+            @CaseWhen.When(when = "score > 80", then = "'Grand'"),
+            @CaseWhen.When(when = "score < 80 and score > 50", then = "'General'"),
+            @CaseWhen.When(when = "score < 50 and score > 10", then = "'noGood'"),
+    }, elseEnd = @CaseWhen.Else("'VeryBad'"))
     private String scoreDescription;
+
+    @CaseWhen(whens = {
+            @CaseWhen.When(when = "score > 80", then = "'Grand'"),
+            @CaseWhen.When(when = "score < 80 and score > 50", then = "'General'"),
+            @CaseWhen.When(when = "score < 50 and score > 10", then = "'noGood'"),
+    }, elseEnd = @CaseWhen.Else("'VeryBad'"))
+    @Left(10)
+    private String scoreDescription2;
 
 
     static TableInfo tableHelper;
@@ -227,6 +235,7 @@ public class FunAnnoParserSample {
         testColNameN(28);
         testColNameN(29);
         testColNameN("scoreDescription");
+        testColNameN("scoreDescription2");
     }
 
 

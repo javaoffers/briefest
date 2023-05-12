@@ -100,6 +100,7 @@ public class FunAnnoParser {
                 isExcludeColAll = ((GroupConcat) anno).excludeColAll();
             }else if(anno instanceof CaseWhen){
                 caseWhen = (CaseWhen)anno;
+                isFunSql = true;
                 continue;
             }
             //This will be optimized for strategy mode later. to avoid a lot of if statements
@@ -114,29 +115,40 @@ public class FunAnnoParser {
         }
         //case when check. It is not allowed to have other Sql Functions or @ColName at the same time
         if(caseWhen != null){
-            Assert.isTrue(!(isFunSql || colNameAnno != null),
-                    "case when check. It is not allowed to be used together other Sql Functions Or @ColName at the same time");{
+            Assert.isTrue(colNameAnno == null,
+                    "@CaseWhen and @ColName cannot be used together ");
+            Assert.isTrue(!appender.isNoneParam,
+                    "@CaseWhen and" +
+                            " "+appender.getNoParamFunName() + " cannot be used together");
 
-                CaseWhen.When[] whens = caseWhen.whens();
-                for(CaseWhen.When when : whens){
-                    String ep = when.ep1();
+            CaseWhen.When[] whens = caseWhen.whens();
+            StringBuilder caseWhenStr = new StringBuilder(CaseWhen.CASE);
+            for(CaseWhen.When when : whens){
+                    String whenExp = when.when();
                     String then = when.then();
-                }
-
+                    caseWhenStr.append(CaseWhen.WHEN);
+                    caseWhenStr.append(whenExp);
+                    caseWhenStr.append(CaseWhen.THEN);
+                    caseWhenStr.append(then);
             }
+            CaseWhen.Else elseEnd = caseWhen.elseEnd();
+            caseWhenStr.append(CaseWhen.ELSE);
+            caseWhenStr.append(elseEnd.value());
+            caseWhenStr.append(CaseWhen.END);
+            coreSql = caseWhenStr.toString();
         }
-
-        if(colNameAnno != null){
+        if(colNameAnno != null) {
             coreSql = colNameAnno.value();
             //a and b cannot be used together
             Assert.isTrue(colNameAnno != null && !appender.isNoneParam, "@ColName and" +
                     " "+appender.getNoParamFunName() + " cannot be used together");
         }
+
         if(isFunSql && tableInfo.getColNames().containsKey(coreSql)){
             coreSql = tableInfo.getTableName()+"."+coreSql;
         }
         String finishSql = appender.toSqlString(coreSql);
-        // only one @ColName(" 'xxx' ")  on field
+        // only one @ColName(" 'xxx' ") or @ColName( funExp ) on field
         if(!isFunSql && !tableInfo.getColNames().containsKey(finishSql)){
             isFunSql = true;
         }

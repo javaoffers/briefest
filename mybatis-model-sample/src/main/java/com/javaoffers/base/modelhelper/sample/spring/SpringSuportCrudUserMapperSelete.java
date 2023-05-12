@@ -51,18 +51,24 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
             System.exit(0);
         }
     }
-    public void testAll(){
 
-                    testGroupConcat();
-                    testDistinc();
-                    testColAll();
-                    testEnum();
-                    test3Join();
-                    testAsName();
-                    testSelectOp();
-                    testSelect();
-                    testGroupBy();
+    public void testAll() {
+        testCaseWhen();
+        testGroupConcat();
+        testDistinc();
+        testColAll();
+        testEnum();
+        test3Join();
+        testAsName();
+        testSelectOp();
+        testSelect();
+        testGroupBy();
 
+    }
+
+    public void testCaseWhen(){
+        List<User> query = this.crudUserMapper.general().query(1, 1);
+        LOGUtils.printLog(query);
     }
 
     public void testMultThread(){

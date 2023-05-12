@@ -9,6 +9,7 @@ import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.derive.Blur;
 import com.javaoffers.batis.modelhelper.anno.derive.StringBlur;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
+import com.javaoffers.batis.modelhelper.anno.fun.params.CaseWhen;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfLt;
 import com.javaoffers.batis.modelhelper.anno.fun.params.Left;
@@ -261,6 +262,13 @@ public class User {
     @ColName("'abcd'")
     @Upper
     private String upperCN;
+
+    @CaseWhen(whens = {
+            @CaseWhen.When(when = "money < 10", then = "'pool'"),
+            @CaseWhen.When(when = "money > 10000", then = "'rich'")},
+            elseEnd = @CaseWhen.Else("'civilian'")
+    )
+    private String moneyDes;
 
     private List<UserOrder> orders;
 

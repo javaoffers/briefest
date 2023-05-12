@@ -29,6 +29,12 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface CaseWhen {
 
+    public static final String CASE = "(CASE";
+    public static final String WHEN = " WHEN ";
+    public static final String THEN = " THEN ";
+    public static final String ELSE = " ELSE ";
+    public static final String END =  " END)";
+
     /**
      * when epx then xxx ....
      */

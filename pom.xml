@@ -5,7 +5,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-modelhelper</artifactId>
   <packaging>pom</packaging>
-    <version>3.5.11.12-SNAPSHOT</version>
+  <version>3.5.11.12-SNAPSHOT</version>
   <modules>
     <module>mybatis-model-helper</module>
     <module>mybatis-model-sample</module>
@@ -124,19 +124,19 @@
             </configuration>
           </plugin>
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-gpg-plugin</artifactId>-->
-<!--            <version>1.6</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>verify</phase>-->
-<!--                <goals>-->
-<!--                  <goal>sign</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--          </plugin>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
 
@@ -156,24 +156,24 @@
 
   <build>
     <plugins>
-<!--      <plugin>-->
-<!--        <artifactId>maven-compiler-plugin</artifactId>-->
-<!--        <configuration>-->
-<!--          <source>1.8</source>-->
-<!--          <target>1.8</target>-->
-<!--          <encoding>UTF-8</encoding>-->
-<!--          <compilerArguments>-->
-<!--            <extdirs>libs</extdirs>-->
-<!--            &lt;!&ndash;  rt包没有打到项目中去 &ndash;&gt;-->
-<!--            <verbose />-->
-<!--            &lt;!&ndash; C:/Program Files/Java/jdk1.8.0_201 是我本地安装的jdk家目录，rt.jar等jar 我在 jdk家目录下的 /jre/lib/ 目录中有发现存在，你们需要注意确认自己的实际情况,Windows分隔符英文分号,linux分隔符英文冒号  &ndash;&gt;-->
-<!--            &lt;!&ndash; 这个配置很特殊：windows下使用分号（;）分隔，linux/mac下使用冒号（:）分隔 &ndash;&gt;-->
-<!--            <bootclasspath>-->
-<!--              /home/cmj/soft/jdk8/jre/lib/rt.jar:/home/cmj/soft/jdk8/jre/lib/jce.jar:/home/cmj/soft/jdk8/jre/lib/jsse.jar-->
-<!--            </bootclasspath>-->
-<!--          </compilerArguments>-->
-<!--        </configuration>-->
-<!--      </plugin>-->
+      <!--      <plugin>-->
+      <!--        <artifactId>maven-compiler-plugin</artifactId>-->
+      <!--        <configuration>-->
+      <!--          <source>1.8</source>-->
+      <!--          <target>1.8</target>-->
+      <!--          <encoding>UTF-8</encoding>-->
+      <!--          <compilerArguments>-->
+      <!--            <extdirs>libs</extdirs>-->
+      <!--            &lt;!&ndash;  rt包没有打到项目中去 &ndash;&gt;-->
+      <!--            <verbose />-->
+      <!--            &lt;!&ndash; C:/Program Files/Java/jdk1.8.0_201 是我本地安装的jdk家目录，rt.jar等jar 我在 jdk家目录下的 /jre/lib/ 目录中有发现存在，你们需要注意确认自己的实际情况,Windows分隔符英文分号,linux分隔符英文冒号  &ndash;&gt;-->
+      <!--            &lt;!&ndash; 这个配置很特殊：windows下使用分号（;）分隔，linux/mac下使用冒号（:）分隔 &ndash;&gt;-->
+      <!--            <bootclasspath>-->
+      <!--              /home/cmj/soft/jdk8/jre/lib/rt.jar:/home/cmj/soft/jdk8/jre/lib/jce.jar:/home/cmj/soft/jdk8/jre/lib/jsse.jar-->
+      <!--            </bootclasspath>-->
+      <!--          </compilerArguments>-->
+      <!--        </configuration>-->
+      <!--      </plugin>-->
       <!-- maven-release-plugin插件配置 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

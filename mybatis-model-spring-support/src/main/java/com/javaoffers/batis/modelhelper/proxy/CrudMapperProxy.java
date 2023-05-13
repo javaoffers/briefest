@@ -49,6 +49,8 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private FutureLock<Pair<Boolean, Exception>> status = new FutureLock();
 
+    private volatile boolean isReady = false;
+
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
         this.mapperProxy = mapperProxy;
         this.clazz = clazz;
@@ -115,7 +117,11 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     }
 
     private boolean isReady(){
-        return status.isDone();
+        return this.isReady;
+    }
+
+    private void setReadyOk(){
+        this.isReady = true;
     }
 
     /**
@@ -132,12 +138,14 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                     try {
                         parseTableInfo(this.mapperProxy, this.clazz);
                         this.status.unlock(Pair.of(true, null));
+                        this.setReadyOk();
                     }catch (Exception e){
                         this.status.unlock(Pair.of(false, e));
                         e.printStackTrace();
+                        this.status.reset();
                         throw new ParseTableInfoException("parse table info exception", e);
                     }
-                }else if(!this.status.get().getLeft()){
+                }else if(!this.status.getOrOld().getLeft()){
                     throw new ParseTableInfoException("parse table info exception", this.status.get().getRight());
                 }
             }

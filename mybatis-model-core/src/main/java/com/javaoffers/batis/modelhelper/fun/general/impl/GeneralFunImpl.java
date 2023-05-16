@@ -359,13 +359,13 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public long count() {
+    public Number count() {
         T ex = selectFun.col("count(1) as " + primaryField.getName()).where().ex();
         return getNumber(primaryField, ex);
     }
 
     @Override
-    public long count(C c) {
+    public Number count(C c) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
         T ex = selectFun.col("count("+colNameAndAliasName.getLeft()+") as " + primaryField.getName()).where().ex();
@@ -373,7 +373,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public long countDistinct(C c) {
+    public Number countDistinct(C c) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
         T ex = selectFun.col("count(Distinct("+colNameAndAliasName.getLeft()+")) as " + primaryField.getName()).where().ex();
@@ -381,7 +381,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public long count(T model) {
+    public Number count(T model) {
         WhereSelectFun<T, Object> where = selectFun.col("count(1) as " + primaryField.getName()).where();
         if(parseWhere(model, where).get()){
             T ex = where.ex();
@@ -391,7 +391,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public long count(C c, T model) {
+    public Number count(C c, T model) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
         WhereSelectFun<T, Object> where = selectFun.col("count(" + colNameAndAliasName.getLeft() + ") as " + primaryField.getName()).where();
@@ -403,7 +403,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public long countDistinct(C c, T model) {
+    public Number countDistinct(C c, T model) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
         WhereSelectFun<T, Object> where = selectFun.col("count(Distinct(" + colNameAndAliasName.getLeft() + ")) as " + primaryField.getName()).where();

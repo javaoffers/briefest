@@ -182,43 +182,43 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
 
     /**
      * The number of statistical tables
-     * @return
+     * @return not null
      */
-    public long count();
+    public Number count();
 
     /**
      * The number of statistical tables, through the specified field
-     * @return
+     * @return not null
      */
-    public long count(C c);
+    public Number count(C c);
 
     /**
      * The number of statistical tables, through the specified field
      * Statistical results after deduplication. count(DISTINCT c)
-     * @return
+     * @return not null
      */
-    public long countDistinct(C c);
+    public Number countDistinct(C c);
 
 
     /**
      * The number of statistical tables.  Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long count(T model);
+    public Number count(T model);
 
     /**
      * The number of statistical tables, through the specified field.
      * Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long count(C c,T model);
+    public Number count(C c,T model);
 
     /**
      * The number of statistical tables, through the specified field
      * Statistical results after deduplication. count(DISTINCT c).
      * Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long countDistinct(C c,T model);
+    public Number countDistinct(C c,T model);
 
 }

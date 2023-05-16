@@ -50,7 +50,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     }
 
     private void testCountDistinct() throws Exception {
-        long count = crudUserMapper.general().count();
+        Number count = crudUserMapper.general().count();
         print(count);
 
         count = crudUserMapper.general().count(User::getId);
@@ -150,10 +150,10 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         users = crudUserMapper.general().query(user);
         print(users);
 
-        long count = this.crudUserMapper.general().count();
+        long count = this.crudUserMapper.general().count().longValue();
         print(count);
 
-        long moneyCount = this.crudUserMapper.general().count(User::getMoney);
+        long moneyCount = this.crudUserMapper.general().count(User::getMoney).longValue();
         print(moneyCount);
     }
 

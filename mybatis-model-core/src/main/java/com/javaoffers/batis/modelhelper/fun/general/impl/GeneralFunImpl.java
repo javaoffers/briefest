@@ -85,31 +85,31 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public List<Id> saveOrModify(T model) {
+    public Id saveOrModify(T model) {
         if(model == null){
-            return Collections.EMPTY_LIST;
+            return Id.EMPTY_ID;
         }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
         List<Id> ids = saveOrModify(models);
-        if(ids!=null){
-            return ids;
+        if(ids!=null && ids.size() > 0){
+            return ids.get(0);
         }
-        return Collections.EMPTY_LIST;
+        return Id.EMPTY_ID;
     }
 
     @Override
-    public List<Id> saveOrReplace(T model) {
+    public Id saveOrReplace(T model) {
         if(model == null){
-            return Collections.EMPTY_LIST;
+            return Id.EMPTY_ID;
         }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
         List<Id> ids = this.saveOrModify(models);
-        if(ids!=null){
-            return ids;
+        if(ids!=null && ids.size() > 0){
+            return ids.get(0);
         }
-        return Collections.EMPTY_LIST;
+        return Id.EMPTY_ID;
     }
 
     @Override

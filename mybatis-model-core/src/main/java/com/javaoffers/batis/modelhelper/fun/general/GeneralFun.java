@@ -28,22 +28,22 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * save or modify.
      * sql :  insert into on duplicate key update
      * @param model class
-     * @return primary key id
+     * @return  primary key id. or modify count num.
      */
-    public List<Id> saveOrModify(T model);
+    public Id saveOrModify(T model);
 
     /**
      * save or replace
      * sql: replace into
      * @param model class
-     * @return primary key id
+     * @return   primary key id. or modify count num.
      */
-    public List<Id> saveOrReplace(T model);
+    public Id saveOrReplace(T model);
 
     /**
      * save model
      * @param models class
-     * @return primary key id
+     * @return primary key ids
      */
     public List<Id> saveBatch(Collection<T> models);
 
@@ -51,7 +51,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * save or modify.
      * sql :  insert into on duplicate key update
      * @param models class
-     * @return primary key id
+     * @return primary key id. or modify count num.
      */
     public List<Id> saveOrModify(Collection<T> models);
 
@@ -59,7 +59,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * save or replace
      * sql: replace into
      * @param models class
-     * @return primary key id
+     * @return primary key id. or modify count num.
      */
     public List<Id> saveOrReplace(Collection<T> models);
 

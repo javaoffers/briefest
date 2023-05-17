@@ -91,7 +91,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             }
             ex.setMonth(Month.values()[(int)(Math.random()*10.0)]);
             ex.setWork(Work.values()[(int)(System.nanoTime() & 1)]);
-            List<Id> ids = this.crudUserMapper.general().saveOrModify(ex);
+            Id ids = this.crudUserMapper.general().saveOrModify(ex);
             LOGUtils.printLog(ids);
             User user = this.crudUserMapper
                     .select()

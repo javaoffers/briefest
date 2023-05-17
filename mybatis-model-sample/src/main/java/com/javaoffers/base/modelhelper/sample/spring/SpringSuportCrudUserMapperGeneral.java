@@ -7,6 +7,7 @@ import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
+import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.util.DateUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -40,11 +41,30 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         //testGeneral();
         //testBatchUpdate();
-        testCountDistinct();
+//        testCountDistinct();
+        testSaveModify();
         if(status){
             System.exit(0);
         }
 
+
+
+    }
+
+    public void testSaveModify(){
+        List<User> query = this.crudUserMapper.general().query(1, 1);
+        User user = query.get(0);
+        LOGUtils.printLog(user);
+        if(user.getWork() == Work.JAVA){
+            user.setWork(Work.PYTHON);
+        }else{
+            user.setWork(Work.JAVA);
+        }
+
+        this.crudUserMapper.general().saveOrModify(user);
+        user.setId(null);
+        user.setIdImpl(null);
+        crudUserMapper.general().saveOrModify(user);
 
 
     }

@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.general.impl;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
+import com.javaoffers.batis.modelhelper.exception.ParseParamException;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
@@ -85,31 +86,70 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public Id saveOrModify(T model) {
+    public void saveOrModify(T model) {
         if(model == null){
-            return Id.EMPTY_ID;
+            return;
         }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
-        List<Id> ids = saveOrModify(models);
-        if(ids!=null && ids.size() > 0){
-            return ids.get(0);
-        }
-        return Id.EMPTY_ID;
+        saveOrModify(models);
     }
 
     @Override
-    public Id saveOrReplace(T model) {
+    public void saveOrUpdate(T model) {
         if(model == null){
-            return Id.EMPTY_ID;
+            return;
+        }
+
+        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
+        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        if(MapUtils.isEmpty(primaryColNames)){
+            return;
+        }
+        AtomicBoolean status = new AtomicBoolean(false);
+        WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
+        Map<String, List<Field>> originalColNameOfModelField = tableInfo.getOriginalColNameOfModelField();
+        primaryColNames.keySet().forEach(uniqueIdColName->{
+            List<Field> uniqueIdField = originalColNameOfModelField.get(uniqueIdColName);
+            List<Object> values = uniqueIdField.stream().map(field -> {
+                try {
+                    return field.get(model);
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                    throw new ParseParamException(e.getMessage());
+                }
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+
+            if(CollectionUtils.isNotEmpty(values)){
+                HashMap<String, Object> param = new HashMap<>();
+                String newColNameTag = getNewColNameTag();
+                param.put(newColNameTag, values);
+                where.condSQL(uniqueIdColName +" in ( #{"+newColNameTag+"} )", param);
+                status.set(true);
+            }
+
+        });
+
+        if(status.get()){
+            //query by unique ids
+            T ex = where.ex();
+            if(ex == null){
+                this.save(model);
+            } else {
+                this.updateById(model);
+            }
+        }
+
+    }
+
+    @Override
+    public void saveOrReplace(T model) {
+        if(model == null){
+            return ;
         }
         ArrayList<T> models = new ArrayList<>();
         models.add(model);
-        List<Id> ids = this.saveOrModify(models);
-        if(ids!=null && ids.size() > 0){
-            return ids.get(0);
-        }
-        return Id.EMPTY_ID;
+        this.saveOrModify(models);
     }
 
     @Override
@@ -125,27 +165,20 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public List<Id> saveOrModify(Collection<T> models) {
+    public void saveOrModify(Collection<T> models) {
         if(CollectionUtils.isEmpty(models)){
-            return Collections.EMPTY_LIST;
+            return ;
         }
-        List<Id> exs = insertFun.colAll(models).dupUpdate().exs();
-        if(exs != null){
-            return exs;
-        }
-        return Collections.EMPTY_LIST;
+        insertFun.colAll(models).dupUpdate().exs();
+
     }
 
     @Override
-    public List<Id> saveOrReplace(Collection<T> models) {
+    public void saveOrReplace(Collection<T> models) {
         if(CollectionUtils.isEmpty(models)){
-            return Collections.EMPTY_LIST;
+            return ;
         }
-        List<Id> exs = insertFun.colAll(models).dupReplace().exs();
-        if(exs != null){
-            return exs;
-        }
-        return Collections.EMPTY_LIST;
+        insertFun.colAll(models).dupReplace().exs();
     }
 
     @Override
@@ -210,36 +243,22 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
     }
 
     @Override
-    public int modifyBatchById(Collection<T> models) {
-        if(models == null || models.size() == 0){
+    public int updateById(T model) {
+        if(model == null){
             return 0;
         }
-        models = models.stream().filter(Objects::nonNull).collect(Collectors.toList());
-        WhereModifyFun<T, V> where = null;
-        AtomicBoolean status = new AtomicBoolean(false);
-        SmartUpdateFun<T, C, V> npdateNull = this.updateFun.npdateNull();
-        int i = 0;
-        for( T model : models){
-            if(i==0){
-                where = npdateNull.colAll(model).where();
-            }else{
-                where.addBatch().colAll(model).where();
-                //Where participation should be consistent otherwise it will affect batch processing
-                ato = new AtomicInteger(0);
-            }
-            i++;
-            AtomicBoolean status_ = new AtomicBoolean(false);
-            parseWhereById(where, status_, model);
-            if(!status_.get()){
-                //This statement should be ignored and should not execute successfully
-                where.condSQL(" 1 = 2 ");
-            }else{
-                status.set(true);
-            }
-        }
-        if(status.get()){
-            return where.ex().intValue();
-        }
+        ArrayList<T> list = new ArrayList<>();
+        list.add(model);
+        return renovateBatchById(list, true);
+    }
+
+    @Override
+    public int modifyBatchById(Collection<T> models) {
+        return renovateBatchById(models, false);
+    }
+
+    @Override
+    public int updateBatchById(Collection<T> models) {
         return 0;
     }
 
@@ -547,4 +566,38 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object> ,V> implements Gen
             return Long.parseLong(o.toString());
         }
     }
+
+    private int renovateBatchById(Collection<T> models, boolean updateNull) {
+        if(models == null || models.size() == 0){
+            return 0;
+        }
+        models = models.stream().filter(Objects::nonNull).collect(Collectors.toList());
+        WhereModifyFun<T, V> where = null;
+        AtomicBoolean status = new AtomicBoolean(false);
+        SmartUpdateFun<T, C, V> npdateNull = updateNull ? this.updateFun.updateNull() : this.updateFun.npdateNull();
+        int i = 0;
+        for( T model : models){
+            if(i==0){
+                where = npdateNull.colAll(model).where();
+            }else{
+                where.addBatch().colAll(model).where();
+                //Where participation should be consistent otherwise it will affect batch processing
+                ato = new AtomicInteger(0);
+            }
+            i++;
+            AtomicBoolean status_ = new AtomicBoolean(false);
+            parseWhereById(where, status_, model);
+            if(!status_.get()){
+                //This statement should be ignored and should not execute successfully
+                where.condSQL(" 1 = 2 ");
+            }else{
+                status.set(true);
+            }
+        }
+        if(status.get()){
+            return where.ex().intValue();
+        }
+        return 0;
+    }
+
 }

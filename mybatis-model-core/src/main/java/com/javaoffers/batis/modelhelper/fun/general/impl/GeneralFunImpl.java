@@ -137,9 +137,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public void saveOrUpdate(Collection<T> models) {
+
         if (CollectionUtils.isEmpty(models)) {
             return;
         }
+        //copy
+        models = new ArrayList<>(models);
         TableInfo tableInfo = TableHelper.getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
         if (MapUtils.isEmpty(primaryColNames)) {
@@ -176,11 +179,11 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             status.set(true);
         }
 
-
+        List<T> needUpdate = new ArrayList<>();
+        //Divide data into update/insert
         if (status.get()) {
             //query by unique ids
             List<T> exs = where.exs();
-            List<T> needUpdate = new ArrayList<>();
             exs.forEach(model -> {
                 try {
                     Object o = primaryField.get(model);
@@ -195,9 +198,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             });
             // need save
             models.removeAll(needUpdate);
-            this.saveBatch(models);
-            this.updateBatchById(needUpdate);
         }
+        this.saveBatch(models);
+        this.updateBatchById(needUpdate);
     }
 
     @Override

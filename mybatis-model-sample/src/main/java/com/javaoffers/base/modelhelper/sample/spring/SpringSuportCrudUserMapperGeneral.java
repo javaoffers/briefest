@@ -42,13 +42,33 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         //testGeneral();
         //testBatchUpdate();
 //        testCountDistinct();
-        testSaveModify();
+        //testSaveModify();
+        testSaveUpdate();
         if(status){
             System.exit(0);
         }
 
 
 
+    }
+
+    public void testSaveUpdate(){
+        List<User> query = this.crudUserMapper.general().query(1, 2);
+        User user = query.get(0);
+        Long id = user.getId();
+        this.crudUserMapper.general().saveOrUpdate(user);
+        user.setWork(null);
+        this.crudUserMapper.general().saveOrUpdate(user);
+        user.setWork(Work.JAVA);
+        user.setIdImpl(null);
+        user.setId(null);
+        this.crudUserMapper.general().saveOrUpdate(user);
+        this.crudUserMapper.general().saveOrUpdate(query);
+
+        this.crudUserMapper.general().updateById(user);// not update, because id has no value
+        user.setId(id);
+        user.setWork(null);
+        this.crudUserMapper.general().updateById(user);// will update
     }
 
     public void testSaveModify(){

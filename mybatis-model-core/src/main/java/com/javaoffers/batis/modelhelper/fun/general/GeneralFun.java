@@ -64,6 +64,14 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public void saveOrModify(Collection<T> models);
 
     /**
+     * save or update.
+     * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+     * @param models class
+     * @return  primary key id. or modify count num. so return void
+     */
+    public void saveOrUpdate(Collection<T> models);
+
+    /**
      * save or replace
      * sql: replace into
      * @param models class

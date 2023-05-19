@@ -48,6 +48,19 @@ public final class Lists {
     return new ArrayList<E>();
   }
 
+  // ArrayList
+  public static <E> ArrayList<E> newArrayList(E... es) {
+    ArrayList<E> list = new ArrayList<>();
+    if(es != null){
+      for(E e : es){
+        if (e != null){
+          list.add(e);
+        }
+      }
+    }
+    return list;
+  }
+
 
   // LinkedList
   public static <E> LinkedList<E> newLinkedList() {

@@ -156,16 +156,18 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         for (T model : models) {
             primaryColNames.keySet().forEach(uniqueIdColName -> {
                 List<Field> uniqueIdField = originalColNameOfModelField.get(uniqueIdColName);
-                List<Object> values = uniqueIdField.stream().map(field -> {
+                List<Object> values = new ArrayList<>();
+                 uniqueIdField.forEach(field -> {
                     try {
-                        return field.get(model);
+                        Object uniqueValue = field.get(model);
+                        if(uniqueValue != null){
+                            values.add(uniqueValue);
+                            uniqueKeyMap.put(uniqueValue.toString(), model);
+                        }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                         throw new ParseParamException(e.getMessage());
                     }
-                }).filter(Objects::nonNull).collect(Collectors.toList());
-                values.forEach(uniqueKey -> {
-                    uniqueKeyMap.put(uniqueKey.toString(), model);
                 });
                 uniqueKeyValues.addAll(values);
             });

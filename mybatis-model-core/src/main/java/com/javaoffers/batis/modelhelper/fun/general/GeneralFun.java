@@ -28,22 +28,30 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * save or modify.
      * sql :  insert into on duplicate key update
      * @param model class
-     * @return primary key id
+     * @return  primary key id. or modify count num. so return void
      */
-    public List<Id> saveOrModify(T model);
+    public void saveOrModify(T model);
+
+    /**
+     * save or update.
+     * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+     * @param model class
+     * @return  primary key id. or modify count num. so return void
+     */
+    public void saveOrUpdate(T model);
 
     /**
      * save or replace
      * sql: replace into
      * @param model class
-     * @return primary key id
+     * @return   primary key id. or modify count num. so return void
      */
-    public List<Id> saveOrReplace(T model);
+    public void saveOrReplace(T model);
 
     /**
      * save model
      * @param models class
-     * @return primary key id
+     * @return primary key ids
      */
     public List<Id> saveBatch(Collection<T> models);
 
@@ -51,17 +59,25 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * save or modify.
      * sql :  insert into on duplicate key update
      * @param models class
-     * @return primary key id
+     * @return primary key id. or modify count num. so return void
      */
-    public List<Id> saveOrModify(Collection<T> models);
+    public void saveOrModify(Collection<T> models);
+
+    /**
+     * save or update.
+     * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+     * @param models class
+     * @return  primary key id. or modify count num. so return void
+     */
+    public void saveOrUpdate(Collection<T> models);
 
     /**
      * save or replace
      * sql: replace into
      * @param models class
-     * @return primary key id
+     * @return primary key id. or modify count num. so return void
      */
-    public List<Id> saveOrReplace(Collection<T> models);
+    public void saveOrReplace(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based on properties of the model
@@ -96,11 +112,28 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public int modifyById(T model);
 
     /**
-     * batch update
+     * Update the model, note that the update condition is the property marked with the Unique annotation.
+     * Only properties with values ​​are updated.
+     * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+     * generate a set statement
+     * @param model model
+     * @return The number of bars affected by the update
+     */
+    public int updateById(T model);
+
+    /**
+     * batch update. Empty fields will not be able to update the database.
      * @param models models
      * @return Affect the number of bars
      */
     public int modifyBatchById(Collection<T> models);
+
+    /**
+     * batch update ,Will update the database if the field is empty.
+     * @param models models
+     * @return Affect the number of bars
+     */
+    public int updateBatchById(Collection<T> models);
 
     /**
      * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
@@ -182,43 +215,43 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
 
     /**
      * The number of statistical tables
-     * @return
+     * @return not null
      */
-    public long count();
+    public Number count();
 
     /**
      * The number of statistical tables, through the specified field
-     * @return
+     * @return not null
      */
-    public long count(C c);
+    public Number count(C c);
 
     /**
      * The number of statistical tables, through the specified field
      * Statistical results after deduplication. count(DISTINCT c)
-     * @return
+     * @return not null
      */
-    public long countDistinct(C c);
+    public Number countDistinct(C c);
 
 
     /**
      * The number of statistical tables.  Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long count(T model);
+    public Number count(T model);
 
     /**
      * The number of statistical tables, through the specified field.
      * Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long count(C c,T model);
+    public Number count(C c,T model);
 
     /**
      * The number of statistical tables, through the specified field
      * Statistical results after deduplication. count(DISTINCT c).
      * Will use the model as the where condition
-     * @return
+     * @return not null
      */
-    public long countDistinct(C c,T model);
+    public Number countDistinct(C c,T model);
 
 }

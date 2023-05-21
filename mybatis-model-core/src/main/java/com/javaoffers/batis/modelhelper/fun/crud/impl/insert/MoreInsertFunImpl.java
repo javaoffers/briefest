@@ -18,6 +18,7 @@ import com.javaoffers.batis.modelhelper.log.JqlLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +39,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         MoreSQLInfo sqlInfos = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
-        List<Id> list = new ArrayList<>(sqlInfosList.size());
+        List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {
             JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
             JqlLogger.log.info("PAM: {}", sqlInfo.getParams());

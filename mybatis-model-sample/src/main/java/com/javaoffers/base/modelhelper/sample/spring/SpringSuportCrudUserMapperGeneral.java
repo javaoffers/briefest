@@ -7,6 +7,7 @@ import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
+import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.util.DateUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -38,9 +39,11 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        //testGeneral();
-        //testBatchUpdate();
+        testGeneral();
+        testBatchUpdate();
         testCountDistinct();
+        testSaveModify();
+        testSaveUpdate();
         if(status){
             System.exit(0);
         }
@@ -49,8 +52,45 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     }
 
+    public void testSaveUpdate(){
+        List<User> query = this.crudUserMapper.general().query(1, 2);
+        User user = query.get(0);
+        Long id = user.getId();
+        this.crudUserMapper.general().saveOrUpdate(user);
+        user.setWork(null);
+        this.crudUserMapper.general().saveOrUpdate(user);
+        user.setWork(Work.JAVA);
+        user.setIdImpl(null);
+        user.setId(null);
+        this.crudUserMapper.general().saveOrUpdate(user);
+        this.crudUserMapper.general().saveOrUpdate(query);
+
+        this.crudUserMapper.general().updateById(user);// not update, because id has no value
+        user.setId(id);
+        user.setWork(null);
+        this.crudUserMapper.general().updateById(user);// will update
+    }
+
+    public void testSaveModify(){
+        List<User> query = this.crudUserMapper.general().query(1, 1);
+        User user = query.get(0);
+        LOGUtils.printLog(user);
+        if(user.getWork() == Work.JAVA){
+            user.setWork(Work.PYTHON);
+        }else{
+            user.setWork(Work.JAVA);
+        }
+
+        this.crudUserMapper.general().saveOrModify(user);
+        user.setId(null);
+        user.setIdImpl(null);
+        crudUserMapper.general().saveOrModify(user);
+
+
+    }
+
     private void testCountDistinct() throws Exception {
-        long count = crudUserMapper.general().count();
+        Number count = crudUserMapper.general().count();
         print(count);
 
         count = crudUserMapper.general().count(User::getId);
@@ -150,10 +190,10 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         users = crudUserMapper.general().query(user);
         print(users);
 
-        long count = this.crudUserMapper.general().count();
+        long count = this.crudUserMapper.general().count().longValue();
         print(count);
 
-        long moneyCount = this.crudUserMapper.general().count(User::getMoney);
+        long moneyCount = this.crudUserMapper.general().count(User::getMoney).longValue();
         print(moneyCount);
     }
 

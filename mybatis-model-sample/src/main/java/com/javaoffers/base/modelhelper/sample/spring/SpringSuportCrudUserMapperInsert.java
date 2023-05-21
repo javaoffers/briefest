@@ -91,8 +91,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             }
             ex.setMonth(Month.values()[(int)(Math.random()*10.0)]);
             ex.setWork(Work.values()[(int)(System.nanoTime() & 1)]);
-            List<Id> ids = this.crudUserMapper.general().saveOrModify(ex);
-            LOGUtils.printLog(ids);
+            this.crudUserMapper.general().saveOrModify(ex);
             User user = this.crudUserMapper
                     .select()
                     .col(User::getId)
@@ -136,7 +135,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void testBatchInsert(){
         List<User> batchUser = new LinkedList<>();
 
-        for(int i=0; i < 30000; i++){
+        for(int i=0; i < 100000; i++){
             User jom = User.builder()
                     .name("HomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHom"+i)
                     .money(i+"")

@@ -177,7 +177,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     public List<Serializable> batchInsert(String sql, List<Map<String, Object>> paramMap) {
 
         SQL pss = SQLParse.parseSqlParams(sql, paramMap);
-        LinkedList<Serializable> ids = new LinkedList<>();
+        List<Serializable> ids = new ArrayList<>();
         jdbcTemplate.execute(new InsertPreparedStatementCreator(pss.getSql()), (PreparedStatementCallback<List<Serializable>>) ps -> {
             try {
                 int batchSize = pss.getBatchSize();

@@ -39,10 +39,10 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        //testGeneral();
-        //testBatchUpdate();
-//        testCountDistinct();
-        //testSaveModify();
+        testGeneral();
+        testBatchUpdate();
+        testCountDistinct();
+        testSaveModify();
         testSaveUpdate();
         if(status){
             System.exit(0);

@@ -135,7 +135,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void testBatchInsert(){
         List<User> batchUser = new LinkedList<>();
 
-        for(int i=0; i < 30000; i++){
+        for(int i=0; i < 100000; i++){
             User jom = User.builder()
                     .name("HomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHom"+i)
                     .money(i+"")

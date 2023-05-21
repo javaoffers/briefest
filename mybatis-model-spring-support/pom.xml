@@ -3,24 +3,24 @@
     <parent>
         <artifactId>mybatis-modelhelper</artifactId>
         <groupId>com.javaoffers</groupId>
-          <version>3.5.11.12-SNAPSHOT</version>
+          <version>3.5.11.12</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mybatis-model-spring-support</artifactId>
-      <version>3.5.11.12-SNAPSHOT</version>
+      <version>3.5.11.12</version>
     <!--Version numbers are aligned with Mybatis compatible versions-->
     <dependencies>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-core</artifactId>
-             <version>3.5.11.12-SNAPSHOT</version>
+             <version>3.5.11.12</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>mybatis-model-helper</artifactId>
-              <version>3.5.11.12-SNAPSHOT</version>
+              <version>3.5.11.12</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->

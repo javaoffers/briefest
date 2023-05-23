@@ -1,5 +1,6 @@
 
-## mybatis model helper
+## mybatis jql
+### 让复杂的sql消失，让项目的维护成本降到最低. 让开发效率最大化. 这是我写mybatis-jql的核心目标. 
 ####  欢迎 fork 和 star 鼓励一下
 
 - 特征
@@ -17,8 +18,30 @@
   
 - 概要
   <p>
-简化mybatis开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，因此 JQL 旨在支持最多 3 个表的关联查询。我们不建议加入超过 3 个表。这降低了 SQL 的可读性和可维护性。 modelhelper 支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。集成了常用的crud操作，可以直接使用thoese api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
+ 简化mybatis开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。
+ JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发mybatis-jql的核心。我们不建议加入超过 3 个表。
+ 这降低了 SQL 的可读性和可维护性。 mybatis-jql支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
+ 集成了常用的crud操作，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 </p>
+
+- 对比市面上流行的框架
+
+|框架|优点|缺点|
+|---|---|---|
+|mybatis|需要编写原生sql,自由度非常高|半orm, 配置比较多|
+|mybatis-plus|集成常用的api， 函数时编程|不支持join查询, 函数式编程需要太多new. 不方便集中管理，在service层会出现大量sql函数表达式|
+|mybatis-jql|集成常用的api， 函数时编程, 支持join. 支持在default方法中编写jql. 方便集中管理 | 不支持复杂sql的编写，目前只支持mysql语法|
+|fluent-sql|支持函数式编程，支持join，| 需要生成额外的mapper. 函数式需要new.  不能集中管理，在service层会出现大量sql函数表达式|
+
+<p>
+mybatis, mybatis-plus, fluent-sql都是比较优秀的框架。我在设计mybatis-jql时也借鉴了他们的优点同时又做了一些取舍。mybatis-jql的核心目标是
+写更少的代码， 消除复杂的sql. 提高项目的可维护性。所以mybatis-jql没有任何学习成本。 mybatis-jql不会重复造轮子。比如分库分表这些功能市面上已经有了
+（比如：ShardingSphere ）。因此mybatis-jql将不会提供这些重复的功能。
+</p>
+ 
+- 项目实战，已在内部进行了使用。效果非常好.
+ ![](note-doc/img/4802093496798.png)
+
  
 - maven
   ```java
@@ -26,7 +49,7 @@
    <dependency>
        <groupId>com.javaoffers</groupId>
        <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.11</version>
+       <version>3.5.11.12</version>
    </dependency>
 
   ```
@@ -289,7 +312,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
 ```
 
-####   通用API
+####  通用API
 
 <p>
     我封装了一些常用的功能，使用起来非常简单。而且代码也非常简洁明了。例如通过 id 查询或更改。
@@ -327,12 +350,13 @@ crudUserMapper.general().removeById(1);
 </p>
 
 ```java
+
     /**
      * save model
      * @param model class
      * @return primary key id
      */
-    public long save(T model);
+    public Id save(T model);
 
     /**
      * save or modify.
@@ -340,7 +364,7 @@ crudUserMapper.general().removeById(1);
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrModify(T model);
+    public List<Id> saveOrModify(T model);
 
     /**
      * save or replace
@@ -348,14 +372,14 @@ crudUserMapper.general().removeById(1);
      * @param model class
      * @return primary key id
      */
-    public List<Long> saveOrReplace(T model);
+    public List<Id> saveOrReplace(T model);
 
     /**
      * save model
      * @param models class
      * @return primary key id
      */
-    public List<Long> saveBatch(Collection<T> models);
+    public List<Id> saveBatch(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based 
@@ -513,6 +537,7 @@ crudUserMapper.general().removeById(1);
      * @return
      */
     public long countDistinct(C c,T model);
+
 ```
 ### sql函数注解
 <p>

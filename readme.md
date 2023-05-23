@@ -667,6 +667,13 @@ public class FunAnnoParserSample {
     @Concat("age")
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
     private String colName27;//GROUP_CONCAT( distinct CONCAT(name,age)  order by age DESC separator '-')
+    
+    @CaseWhen(whens = {
+            @CaseWhen.When(when = "score > 80", then = "'Grand'"),
+            @CaseWhen.When(when = "score < 80 and score > 50", then = "'General'"),
+            @CaseWhen.When(when = "score < 50 and score > 10", then = "'noGood'"),
+    }, elseEnd = @CaseWhen.Else("'VeryBad'"))
+    private String scoreDescription;
 
 }
 ```

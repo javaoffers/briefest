@@ -1,11 +1,11 @@
 
-## mybatis jql
-### 让复杂的sql消失，让项目的维护成本降到最低. 让开发效率最大化. 这是我写mybatis-jql的核心目标. 
+## brief jql
+### 让复杂的sql消失，让项目的维护成本降到最低. 让开发效率最大化. 这是我写brief-jql的核心目标. 
 ####  欢迎 fork 和 star 鼓励一下让我继续做下去
 ##### QQ群  310283131 技术交流，欢迎提供宝贵的意见。
 
 - 特征
-  - 高性能查询和插入,查询30000块数据字段(60)仅在1195毫秒
+  - 高性能查询和插入,查询30000条数据(表60个字段)仅在1195毫秒
   - 不必编写本机 SQL。可以按照Java的stream api来写。
   - SQL函数注解，简单易用
   - 新的写法，支持mapper类写默认方法。
@@ -19,9 +19,9 @@
   
 - 概要
   <p>
- 简化mybatis开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。
- JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发mybatis-jql的核心。我们不建议加入超过 3 个表。
- 这降低了 SQL 的可读性和可维护性。 mybatis-jql支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
+ 简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。
+ JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief-jql的核心。我们不建议加入超过 3 个表。
+ 这降低了 SQL 的可读性和可维护性。 brief-jql支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
  集成了常用的crud操作，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 </p>
 
@@ -31,7 +31,7 @@
 |---|---|---|
 |mybatis|需要编写原生sql,自由度非常高|半orm, 配置比较多|
 |mybatis-plus|集成常用的api， 函数时编程|不支持join查询, 函数式编程需要太多new. 不方便集中管理，在service层会出现大量sql函数表达式|
-|mybatis-jql|集成常用的api， 函数时编程, 支持join. 支持在default方法中编写jql. 方便集中管理 | 不支持复杂sql的编写，目前只支持mysql语法|
+|brief-jql|集成常用的api， 函数时编程, 支持join. 支持在default方法中编写jql. 方便集中管理 | 不支持复杂sql的编写，目前只支持mysql语法|
 |fluent-sql|支持函数式编程，支持join，| 需要生成额外的mapper. 函数式需要new.  不能集中管理，在service层会出现大量sql函数表达式|
 
 <p>

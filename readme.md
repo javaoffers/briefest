@@ -1,8 +1,7 @@
 
 ## mybatis-jql
 <p>
-让复杂的sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>mybatis-jql</code>的核心目标.
-
+让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>mybatis-jql</code>的核心目标.
 </p>
 
 ## mybatis-jql 和 mybatis的关系

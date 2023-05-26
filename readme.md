@@ -1,11 +1,17 @@
 
 ## mybatis-jql
+<p>
+让复杂的sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>mybatis-jql</code>的核心目标.
 
-让复杂的sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写***mybatis-jql***的核心目标. 
+</p>
 
+## mybatis-jql 和 mybatis的关系
+<p>
+<code>mybatis-jql</code> 是在 <code>mybatis</code> 之上进行开发. 只做增强不破坏mybaits源码。 所以<code>mybatis-jql</code> 完全兼容 <code>mybatis</code>.
+如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>mybatis-jql</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
+</p>
 
-
-##### QQ群  310283131 技术交流，欢迎提供宝贵的意见。
+##### QQ群  310283131 技术交流，欢迎提供宝贵的意见。点击star鼓励一下
 
 - 特征
   - 高性能查询和插入,查询30000条数据(表60个字段)仅在1195毫秒

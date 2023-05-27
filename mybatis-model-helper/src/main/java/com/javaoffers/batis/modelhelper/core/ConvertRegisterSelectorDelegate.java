@@ -3,7 +3,7 @@ package com.javaoffers.batis.modelhelper.core;
 import com.javaoffers.batis.modelhelper.anno.internal.NotNull;
 import com.javaoffers.batis.modelhelper.convert.AbstractConver;
 import com.javaoffers.batis.modelhelper.convert.Convert;
-import com.javaoffers.batis.modelhelper.util.ReflectionUtils;
+import com.javaoffers.batis.modelhelper.utils.ReflectionUtils;
 import com.javaoffers.batis.modelhelper.utils.BlurUtils;
 import com.javaoffers.batis.modelhelper.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
@@ -13,6 +13,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class ConvertRegisterSelectorDelegate {
     private ConvertRegisterSelectorDelegate() { }
 
     {
-        Set<Class<? extends Convert>> converts = ReflectionUtils.getChildOfConvert();
+        Set<Class<? extends Convert>> converts = ReflectionUtils.getChilds(Convert.class);
         for (Class c : converts) {
             if(Modifier.isAbstract(c.getModifiers())){
                 continue;

@@ -1,6 +1,5 @@
-package com.javaoffers.batis.modelhelper.util;
+package com.javaoffers.batis.modelhelper.utils;
 
-import com.javaoffers.batis.modelhelper.convert.Convert;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.MethodParameterNamesScanner;
@@ -27,14 +26,9 @@ public class ReflectionUtils {
             )
     );
 
-    public static Set<Class<? extends Convert>> getChildOfConvert(){
-        Set<Class<? extends Convert>> subTypesOf = reflections.getSubTypesOf(Convert.class);
-        return new HashSet<>(subTypesOf);
-    }
-
-    public static Set<Class<?>> getChilds(Class c){
-        Set<Class<?>> subTypesOf = reflections.getSubTypesOf(c);
-        return new HashSet<Class<?>>(subTypesOf);
+    public static<T> Set<Class<? extends T>> getChilds(Class<T> c){
+        Set<Class<? extends T>> subTypesOf = reflections.getSubTypesOf(c);
+        return new HashSet<Class<? extends T>>(subTypesOf);
     }
 
 

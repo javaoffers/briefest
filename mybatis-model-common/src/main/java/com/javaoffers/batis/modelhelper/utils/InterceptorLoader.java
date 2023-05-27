@@ -11,15 +11,30 @@ import java.util.ServiceLoader;
  */
 public class InterceptorLoader {
 
-    private static final  ArrayList<JqlInterceptor> jqlInterceptorsList = Lists.newArrayList();
+    private static final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
-    public static synchronized List<JqlInterceptor> loadJqlInterceptor(){
+    public static final ArrayList<JqlInterceptor> customInterceptorsList = Lists.newArrayList();
+
+    static {
         ServiceLoader<JqlInterceptor> load = ServiceLoader.load(JqlInterceptor.class);
-        if(load != null && jqlInterceptorsList.size() == 0){
+        if(load != null && coreInterceptorsList.size() == 0){
             for(JqlInterceptor jqlInterceptor : load){
-                jqlInterceptorsList.add(jqlInterceptor);
+                coreInterceptorsList.add(jqlInterceptor);
             }
         }
-        return jqlInterceptorsList;
+    }
+
+    public static synchronized List<JqlInterceptor> loadJqlInterceptor(){
+        ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
+        jqlInterceptors.addAll(coreInterceptorsList);
+        jqlInterceptors.addAll(customInterceptorsList);
+        return jqlInterceptors;
+    }
+
+    public static synchronized void init(List<JqlInterceptor> jqlInterceptorList){
+        //Initialization allows only once
+        if(jqlInterceptorList != null && customInterceptorsList.size() == 0 ){
+            customInterceptorsList.addAll(jqlInterceptorList);
+        }
     }
 }

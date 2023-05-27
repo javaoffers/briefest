@@ -41,6 +41,15 @@
             <version>1.9.10</version>
         </dependency>
 
+        <!--reflections 反射-->
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>0.9.12</version>
+            <scope>compile</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>

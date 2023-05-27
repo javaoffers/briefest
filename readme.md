@@ -733,6 +733,19 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
 
 ```
 
+### 拦截器模式
+<p>
+sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的拦截器中进行二次处理。 自定义拦截器非常简单，你只需要实现接口
+<code>JqlInterceptor</code>，然后调用 <code>InterceptorLoader.init()</code> 进行初始化自己的拦截器即可。
+</p>
+
+```java
+ LogInterceptor logInterceptor = new LogInterceptor();
+ ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
+ jqlInterceptors.add(logInterceptor);
+ InterceptorLoader.init(jqlInterceptors);
+```
+
 
 ### 支持自动加密和解密
 <p>

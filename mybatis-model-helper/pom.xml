@@ -19,14 +19,6 @@
             <scope>compile</scope>
         </dependency>
 
-        <!--reflections 反射-->
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.12</version>
-            <scope>compile</scope>
-        </dependency>
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>

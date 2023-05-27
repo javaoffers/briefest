@@ -62,6 +62,9 @@ public class SpringSuportCrudEncryptMapperEncryptData implements InitializingBea
         // Inscription query, the bottom will be converted into ciphertext and query.
         EncryptData ex = this.crudEncryptDataMapper.select().colAll().where().eq(EncryptData::getEncryptNum, encryptNum).ex();
         print(ex);
+        //Support like queries
+        EncryptData ex1 = this.crudEncryptDataMapper.select().colAll().where().like(EncryptData::getEncryptNum, encryptNum).ex();
+        print(ex1);
 
     }
 

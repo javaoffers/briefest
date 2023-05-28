@@ -1,13 +1,11 @@
-package com.javaoffers.batis.modelhelper.log.time;
+package com.javaoffers.batis.modelhelper.log.slowsql;
 
 import com.javaoffers.batis.modelhelper.constants.ConfigPropertiesConstants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Properties;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class CostTimeLogger{
@@ -21,14 +19,14 @@ public class CostTimeLogger{
         }
     }
 
-    public static Object info(Supplier function){
+    public static Object info(Supplier<SlowSqlInfo> function){
         long cost = 0;
         long startTime = System.currentTimeMillis();
-        Object o = function.get();
+        SlowSqlInfo o = function.get();
         long endTime = System.currentTimeMillis();
         if((cost = endTime - startTime) > time){
             log.info("COST TIME : {}" , cost );
         }
-        return o;
+        return o.getResult();
     }
 }

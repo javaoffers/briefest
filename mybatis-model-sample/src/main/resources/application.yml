@@ -20,4 +20,5 @@ mybatis:
 # mybatis-jql 配置
 mybatis-jql:
   # 慢sql超过10毫秒打印慢sql
-  slow-log-time: 10
+  slow-sql:
+    time : 10

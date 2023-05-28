@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatis;
 import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
 import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.Id;
@@ -15,13 +16,11 @@ import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
-import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
+import com.javaoffers.batis.modelhelper.log.slowsql.CostTimeLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Object>, Object> {
 
@@ -37,16 +36,14 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         MoreSQLInfo sqlInfos = (MoreSQLInfo)ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
         List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {
             JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
             JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-            list.addAll((List)CostTimeLogger.info(()->{
-                return instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
-            }));
+            list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
         });
         return list;
     }

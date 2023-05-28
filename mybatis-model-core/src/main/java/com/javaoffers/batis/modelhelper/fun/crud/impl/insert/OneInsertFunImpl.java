@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl.insert;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatis;
 import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
 import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.Id;
@@ -15,7 +16,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.OneInsertFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
-import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
+import com.javaoffers.batis.modelhelper.log.slowsql.CostTimeLogger;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -28,13 +29,11 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ((MoreSQLInfo)ConditionParse.conditionParse(conditions)).getSqlInfos().get(0);
         JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
         JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-        List<Id> list = (List)CostTimeLogger.info(()->{
-            return instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
-        });
+        List<Id> list = instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
         if(CollectionUtils.isEmpty(list)){
             return Id.EMPTY_ID;
         }

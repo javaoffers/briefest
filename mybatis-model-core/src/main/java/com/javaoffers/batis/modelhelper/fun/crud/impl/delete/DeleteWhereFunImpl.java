@@ -10,6 +10,7 @@ import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteWhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
+import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
 
 import java.util.Collection;
 import java.util.Map;
@@ -293,7 +294,9 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
         SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
         JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
         JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-        Integer count = instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
+        Integer count = (Integer)CostTimeLogger.info(()->{
+            return  instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
+        });
         return count;
     }
 }

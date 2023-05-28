@@ -16,3 +16,8 @@ mybatis:
   configuration:
     #sql打印
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# mybatis-jql 配置
+mybatis-jql:
+  # 慢sql超过10毫秒打印慢sql
+  slow-log-time: 10

@@ -15,6 +15,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.batis.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.batis.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
+import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,7 +44,9 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         sqlInfosList.forEach(sqlInfo -> {
             JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
             JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-            list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
+            list.addAll((List)CostTimeLogger.info(()->{
+                return instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
+            }));
         });
         return list;
     }

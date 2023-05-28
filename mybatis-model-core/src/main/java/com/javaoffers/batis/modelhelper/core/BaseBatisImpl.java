@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.core;
 import com.javaoffers.batis.modelhelper.convert.Serializable2IdConvert;
 import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.parse.ModelParseUtils;
+import com.javaoffers.batis.modelhelper.utils.JdkProxyUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -34,12 +35,12 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
     private JdbcTemplate jdbcTemplate;
 
-    public static <T, ID> BaseBatisImpl getInstance(HeadCondition jdbcTemplate) {
-        return getInstance(jdbcTemplate.getTemplate());
+    public static <T, ID> BaseBatisImpl getInstance(HeadCondition headCondition) {
+        return getInstance(headCondition.getTemplate());
     }
 
-    public static <T, ID> BaseBatisImpl getInstance(JdbcTemplate jdbcTemplate) {
-        return new BaseBatisImpl<T, ID>(jdbcTemplate);
+    private static <T, ID> BaseBatisImpl getInstance(JdbcTemplate jdbcTemplate) {
+        return new BaseBatisImpl<>(jdbcTemplate);
     }
 
     private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
@@ -112,65 +113,6 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
         AtomicInteger countSuccess = new AtomicInteger();
         Arrays.stream(is).forEach(countSuccess::addAndGet);
         return Integer.valueOf(countSuccess.get());
-    }
-
-    int[] batchUpdate(String sql, final BatchPreparedStatementSetter pss) throws DataAccessException {
-
-        int[] result = this.jdbcTemplate.execute(sql, (PreparedStatementCallback<int[]>) ps -> {
-            try {
-                int batchSize = pss.getBatchSize();
-                InterruptibleBatchPreparedStatementSetter ipss =
-                        (pss instanceof InterruptibleBatchPreparedStatementSetter ?
-                                (InterruptibleBatchPreparedStatementSetter) pss : null);
-                Connection connection = ps.getConnection();
-                if (JdbcUtils.supportsBatchUpdates(connection)) {
-                    boolean oldAutoCommit = connection.getAutoCommit();
-                    connection.setAutoCommit(false);
-                    try {
-                        for (int i = 0; i < batchSize; i++) {
-                            pss.setValues(ps, i);
-                            if (ipss != null && ipss.isBatchExhausted(i)) {
-                                break;
-                            }
-                            ps.addBatch();
-                        }
-                        int[] ints = ps.executeBatch();
-                        //Avoid transactional inconsistencies
-                        if(oldAutoCommit){
-                            connection.commit();
-                        }
-                        return ints;
-                    }catch (Exception e){
-                        throw e;
-                    }finally {
-                        connection.setAutoCommit(oldAutoCommit);
-                    }
-                }
-                else {
-                    List<Integer> rowsAffected = new ArrayList<>();
-                    for (int i = 0; i < batchSize; i++) {
-                        pss.setValues(ps, i);
-                        if (ipss != null && ipss.isBatchExhausted(i)) {
-                            break;
-                        }
-                        rowsAffected.add(ps.executeUpdate());
-                    }
-                    int[] rowsAffectedArray = new int[rowsAffected.size()];
-                    for (int i = 0; i < rowsAffectedArray.length; i++) {
-                        rowsAffectedArray[i] = rowsAffected.get(i);
-                    }
-                    return rowsAffectedArray;
-                }
-            }
-            finally {
-                if (pss instanceof ParameterDisposer) {
-                    ((ParameterDisposer) pss).cleanupParameters();
-                }
-            }
-        });
-
-        Assert.state(result != null, "No result array");
-        return result;
     }
 
     @Override
@@ -268,6 +210,65 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                     }
                 });
         return this.jdbcTemplate.query(nativeSql, param, rowMapperResultSetExtractorPlus);
+    }
+
+   private int[] batchUpdate(String sql, final BatchPreparedStatementSetter pss) throws DataAccessException {
+
+        int[] result = this.jdbcTemplate.execute(sql, (PreparedStatementCallback<int[]>) ps -> {
+            try {
+                int batchSize = pss.getBatchSize();
+                InterruptibleBatchPreparedStatementSetter ipss =
+                        (pss instanceof InterruptibleBatchPreparedStatementSetter ?
+                                (InterruptibleBatchPreparedStatementSetter) pss : null);
+                Connection connection = ps.getConnection();
+                if (JdbcUtils.supportsBatchUpdates(connection)) {
+                    boolean oldAutoCommit = connection.getAutoCommit();
+                    connection.setAutoCommit(false);
+                    try {
+                        for (int i = 0; i < batchSize; i++) {
+                            pss.setValues(ps, i);
+                            if (ipss != null && ipss.isBatchExhausted(i)) {
+                                break;
+                            }
+                            ps.addBatch();
+                        }
+                        int[] ints = ps.executeBatch();
+                        //Avoid transactional inconsistencies
+                        if(oldAutoCommit){
+                            connection.commit();
+                        }
+                        return ints;
+                    }catch (Exception e){
+                        throw e;
+                    }finally {
+                        connection.setAutoCommit(oldAutoCommit);
+                    }
+                }
+                else {
+                    List<Integer> rowsAffected = new ArrayList<>();
+                    for (int i = 0; i < batchSize; i++) {
+                        pss.setValues(ps, i);
+                        if (ipss != null && ipss.isBatchExhausted(i)) {
+                            break;
+                        }
+                        rowsAffected.add(ps.executeUpdate());
+                    }
+                    int[] rowsAffectedArray = new int[rowsAffected.size()];
+                    for (int i = 0; i < rowsAffectedArray.length; i++) {
+                        rowsAffectedArray[i] = rowsAffected.get(i);
+                    }
+                    return rowsAffectedArray;
+                }
+            }
+            finally {
+                if (pss instanceof ParameterDisposer) {
+                    ((ParameterDisposer) pss).cleanupParameters();
+                }
+            }
+        });
+
+        Assert.state(result != null, "No result array");
+        return result;
     }
 
 }

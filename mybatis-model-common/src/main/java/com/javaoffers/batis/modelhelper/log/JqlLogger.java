@@ -6,4 +6,6 @@ import org.slf4j.LoggerFactory;
 public class JqlLogger {
     public static Logger log = LoggerFactory.getLogger(JqlLogger.class);
 
+
+
 }

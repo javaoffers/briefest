@@ -23,6 +23,7 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
+import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
 import java.util.*;
@@ -429,7 +430,8 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
         JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
         JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-        List list = instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
-        return list;
+        return (List)CostTimeLogger.info(()->{
+            return instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
+        });
     }
 }

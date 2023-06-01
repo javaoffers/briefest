@@ -18,8 +18,11 @@ public class HeadCondition implements Condition {
 
     private AtomicLong nextTag = new AtomicLong(0);
 
-    public HeadCondition(JdbcTemplate template) {
+    private Class modelClass;
+
+    public HeadCondition(JdbcTemplate template, Class modelClass) {
         this.template = template;
+        this.modelClass = modelClass;
     }
 
     public JdbcTemplate getTemplate() {
@@ -50,7 +53,7 @@ public class HeadCondition implements Condition {
     }
 
     public HeadCondition clone(){
-        return new HeadCondition(this.template);
+        return new HeadCondition(this.template, this.modelClass);
     }
 
     public static Connection getNewConnection(HeadCondition condition) {
@@ -65,5 +68,9 @@ public class HeadCondition implements Condition {
 
     public DataSource getDataSource(){
        return this.getTemplate().getDataSource();
+    }
+
+    public Class getModelClass() {
+        return modelClass;
     }
 }

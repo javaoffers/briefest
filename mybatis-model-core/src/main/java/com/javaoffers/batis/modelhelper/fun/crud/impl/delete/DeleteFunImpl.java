@@ -18,7 +18,7 @@ public class DeleteFunImpl<M> implements DeleteFun<M, GetterFun<M,Object>,Object
 
     public DeleteFunImpl(Class modelClass) {
         this.modelClass = modelClass;
-        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate(), modelClass));
         this.conditions.add(new DeleteFromCondition(modelClass));
     }
 

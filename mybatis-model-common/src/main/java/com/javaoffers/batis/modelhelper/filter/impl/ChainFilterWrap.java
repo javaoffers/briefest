@@ -48,7 +48,7 @@ public class ChainFilterWrap<R,S> implements Chain<R,S>{
 
     @Override
     public R doChain() {
-        return nextChain.getChainFilter().filter(nextChain.getNextChain());
+        return chainFilter.filter(nextChain);
     }
 
     @Override

@@ -11,8 +11,6 @@ import com.javaoffers.batis.modelhelper.fun.HeadCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.delete.DeleteWhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
-import com.javaoffers.batis.modelhelper.log.slowsql.CostTimeLogger;
-import com.javaoffers.batis.modelhelper.log.slowsql.SlowSqlInfo;
 
 import java.util.Collection;
 import java.util.Map;

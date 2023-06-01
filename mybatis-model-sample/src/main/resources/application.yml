@@ -22,3 +22,5 @@ mybatis-jql:
   # 慢sql超过10毫秒打印慢sql
   slow-sql:
     time : 10
+  filter:
+    jql-filter: com.javaoffers.base.modelhelper.sample.spring.filter.JqlSampleFilter

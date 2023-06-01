@@ -18,15 +18,4 @@ public class CostTimeLogger{
             time = Long.parseLong(mls.trim());
         }
     }
-
-    public static Object info(Supplier<SlowSqlInfo> function){
-        long cost = 0;
-        long startTime = System.currentTimeMillis();
-        SlowSqlInfo o = function.get();
-        long endTime = System.currentTimeMillis();
-        if((cost = endTime - startTime) > time){
-            log.info("COST TIME : {}" , cost );
-        }
-        return o.getResult();
-    }
 }

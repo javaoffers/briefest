@@ -42,7 +42,7 @@
 |---|---|---|
 |mybatis|需要编写原生sql,自由度非常高|半orm, 配置比较多|
 |mybatis-plus|集成常用的api， 函数时编程|不支持join查询, 函数式编程需要太多new. 不方便集中管理，在service层会出现大量sql函数表达式|
-|mybatis-jql|集成常用的api， 函数时编程, 支持join. 支持在default方法中编写jql. 方便集中管理 | 不支持复杂sql的编写，目前只支持mysql语法|
+|mybatis-jql|集成常用的api， 函数时编程, 支持join. 支持在default方法中编写jql. 方便集中管理 | 目前只支持mysql语法|
 |fluent-sql|支持函数式编程，支持join，| 需要生成额外的mapper. 函数式需要new.  不能集中管理，在service层会出现大量sql函数表达式|
 
 <p>

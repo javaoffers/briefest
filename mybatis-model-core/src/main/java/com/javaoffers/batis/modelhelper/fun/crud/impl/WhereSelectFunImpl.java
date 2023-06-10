@@ -1,5 +1,6 @@
 package com.javaoffers.batis.modelhelper.fun.crud.impl;
 
+import com.javaoffers.batis.modelhelper.core.BaseBatis;
 import com.javaoffers.batis.modelhelper.core.BaseBatisImpl;
 import com.javaoffers.batis.modelhelper.core.ConditionParse;
 import com.javaoffers.batis.modelhelper.core.SQLInfo;
@@ -23,10 +24,13 @@ import com.javaoffers.batis.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.batis.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
-import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
 import com.javaoffers.batis.modelhelper.utils.TableHelper;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -426,12 +430,10 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public List<M> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
         JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
         JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-        return (List)CostTimeLogger.info(()->{
-            return instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
-        });
+        return instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
     }
 }

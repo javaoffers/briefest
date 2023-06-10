@@ -36,7 +36,7 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
-        HeadCondition headCondition = new HeadCondition(jdbcTemplate);
+        HeadCondition headCondition = new HeadCondition(jdbcTemplate,mClass);
         this.conditions.add(headCondition);
         this.conditions.add(new UpdateCondtionMark(mClass,headCondition));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);

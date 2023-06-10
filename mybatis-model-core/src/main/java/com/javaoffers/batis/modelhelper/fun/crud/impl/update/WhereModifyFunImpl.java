@@ -15,7 +15,7 @@ import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.batis.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.batis.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.batis.modelhelper.log.JqlLogger;
-import com.javaoffers.batis.modelhelper.log.time.CostTimeLogger;
+import com.javaoffers.batis.modelhelper.log.slowsql.CostTimeLogger;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -315,7 +315,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
 
     @Override
     public Integer ex() {
-        BaseBatisImpl instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         MoreSQLInfo moreSqlInfo = (MoreSQLInfo) ConditionParse.conditionParse(conditions);
         List<SQLInfo> sqlInfos = moreSqlInfo.getSqlInfos();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
@@ -338,9 +338,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V>  {
         sqlbatch.forEach((sql, params) ->{
             JqlLogger.log.info("SQL: {}", sql);
             JqlLogger.log.info("PAM: {}", params);
-            Integer integer = (Integer) CostTimeLogger.info(()->{
-                return instance.batchUpdate(sql, params);
-            });
+            Integer integer = instance.batchUpdate(sql, params);
             count.addAndGet(integer);
         });
 

@@ -63,7 +63,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         testSelectOp();
         testSelect();
         testGroupBy();
-
+        Number count = this.crudUserMapper.general().count();
+        print("total count : "+ count);
     }
 
     public void testCaseWhen(){

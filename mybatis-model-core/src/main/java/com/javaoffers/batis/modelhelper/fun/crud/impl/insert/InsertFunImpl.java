@@ -31,7 +31,7 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
 
     public InsertFunImpl(Class<M> mClass) {
         this.mClass = mClass;
-        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate()));
+        this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorJdbcTemplate(), mClass));
         this.conditions.add(new InsertIntoCondition(mClass));
         this.oneInsertFun = new OneInsertFunImpl(mClass, conditions);
         this.moreInsertFun = new SmartMoreInsertFunImpl(mClass, conditions);

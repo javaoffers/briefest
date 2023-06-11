@@ -1,9 +1,13 @@
 package com.javaoffers.batis.modelhelper.fun.general.impl;
 
+import com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveFlag;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
 import com.javaoffers.batis.modelhelper.exception.ParseParamException;
+import com.javaoffers.batis.modelhelper.exception.UpdateFieldsException;
 import com.javaoffers.batis.modelhelper.fun.GetterFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.batis.modelhelper.fun.crud.WhereModifyFun;
@@ -22,6 +26,7 @@ import com.javaoffers.batis.modelhelper.utils.TableHelper;
 import com.javaoffers.batis.modelhelper.utils.TableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;
 
@@ -60,6 +65,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private Field primaryField;
 
+    private TableInfo tableInfo;
+
     public GeneralFunImpl(Class<T> mClass, SelectFunImpl<T> selectFun,
                           InsertFunImpl<T> insertFun, UpdateFunImpl<T, C, V> updateFun,
                           DeleteFunImpl<T> deleteFun) {
@@ -69,10 +76,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.updateFun = updateFun;
         this.deleteFun = deleteFun;
         this.tableName = TableHelper.getTableName(mClass);
-        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
-        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        primaryColNmae = primaryColNames.keySet().iterator().next();
-        primaryField = tableInfo.getColNameAndFieldOfModel().get(primaryColNmae).get(0);
+        this.tableInfo = TableHelper.getTableInfo(mClass);
+        Map<String, ColumnInfo> primaryColNames = this.tableInfo.getPrimaryColNames();
+        this.primaryColNmae = primaryColNames.keySet().iterator().next();
+        this.primaryField = this.tableInfo.getColNameAndFieldOfModel().get(this.primaryColNmae).get(0);
     }
 
     @Override
@@ -157,10 +164,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             primaryColNames.keySet().forEach(uniqueIdColName -> {
                 List<Field> uniqueIdField = originalColNameOfModelField.get(uniqueIdColName);
                 List<Object> values = new ArrayList<>();
-                 uniqueIdField.forEach(field -> {
+                uniqueIdField.forEach(field -> {
                     try {
                         Object uniqueValue = field.get(model);
-                        if(uniqueValue != null){
+                        if (uniqueValue != null) {
                             values.add(uniqueValue);
                             uniqueKeyMap.put(uniqueValue.toString(), model);
                         }
@@ -238,6 +245,50 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
         Set<Serializable> idSet = Arrays.stream(ids).collect(Collectors.toSet());
         return removeByIds(idSet);
+    }
+
+    @Override
+    public int logicRemove(T model) {
+        if (model == null) {
+            return 0;
+        }
+
+        T newModel = getLogicRemoveModel();
+        WhereModifyFun<T, V> where = this.updateFun.npdateNull().colAll(newModel).where();
+        if (parseWhere(model, where).get()) {
+            return where.ex();
+        }
+        return 0;
+    }
+
+    @Override
+    public int logicRemoveById(Serializable id) {
+        HashSet<Serializable> ids = new HashSet<>();
+        ids.add(id);
+        return logicRemoveByIds(ids);
+    }
+
+    @Override
+    public int logicRemoveByIds(Serializable... ids) {
+        if(ArrayUtils.isEmpty(ids)){
+            return 0;
+        }
+        Set<Serializable> idsSet = Arrays.stream(ids).filter(Objects::nonNull).collect(Collectors.toSet());
+        return logicRemoveByIds(idsSet);
+    }
+
+    @Override
+    public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids) {
+        if (CollectionUtils.isEmpty(ids)) {
+            return 0;
+        }
+        T logicRemoveModel = getLogicRemoveModel();
+        WhereModifyFun<T, V> where = this.updateFun.npdateNull().colAll(logicRemoveModel).where();
+        Map<String, Object> param = new HashMap<>();
+        String newColNameTag = getNewColNameTag();
+        param.putIfAbsent(newColNameTag, ids);
+        where.condSQL( tableName+"."+this.primaryColNmae + " in (#{" +newColNameTag+ "})", param);
+        return where.ex();
     }
 
     @Override
@@ -626,6 +677,19 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return where.ex().intValue();
         }
         return 0;
+    }
+
+    private T getLogicRemoveModel() {
+        try {
+            T newModel = (T) mClass.newInstance();
+            TableInfo tableInfo = TableHelper.getTableInfo(mClass);
+            DeriveInfo deriveColName = tableInfo.getDeriveColName(DeriveFlag.IS_DEL);
+            deriveColName.getField().set(newModel, IsDel.YES);
+            Assert.isTrue(deriveColName != null, "no  logic del col, please use IsDel to declaration");
+            return newModel;
+        } catch (Exception e) {
+            throw new UpdateFieldsException(e.getMessage());
+        }
     }
 
 }

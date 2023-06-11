@@ -15,4 +15,12 @@ public class DeriveInfo {
         this.colName = colName;
         this.field = field;
     }
+
+    public String getColName() {
+        return colName;
+    }
+
+    public Field getField() {
+        return field;
+    }
 }

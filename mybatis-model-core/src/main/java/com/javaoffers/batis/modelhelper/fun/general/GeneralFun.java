@@ -102,6 +102,28 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public <ID extends Serializable> int removeByIds(Collection<ID> ids);
 
     /**
+     * logic delete model.Where conditions will be generated based on properties of the model
+     * class for which there is a value.
+     * @param model
+     */
+    public int logicRemove(T model);
+
+    /**
+     * logic delete model by id
+     */
+    public int logicRemoveById(Serializable id );
+
+    /**
+     * logic delete model by ids
+     */
+    public int logicRemoveByIds(Serializable... ids );
+
+    /**
+     * logic delete model by ids
+     */
+    public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids);
+
+    /**
      * Update the model, note that the update condition is the property marked with the Unique annotation.
      * Only properties with values ​​are updated.
      * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will

@@ -247,7 +247,7 @@ public class TableInfo {
         this.deriveColName.put(deriveFlag, colName);
     }
 
-    DeriveInfo getDeriveColName(DeriveFlag deriveFlag){
+    public DeriveInfo getDeriveColName(DeriveFlag deriveFlag){
         return this.deriveColName.get(deriveFlag);
     }
 

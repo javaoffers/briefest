@@ -1,4 +1,4 @@
-package com.javaoffers.batis.modelhelper.anno.derive;
+package com.javaoffers.batis.modelhelper.anno.derive.flag;
 
 import com.javaoffers.batis.modelhelper.anno.EnumValue;
 

@@ -299,6 +299,10 @@ public class TableHelper {
                                 }
                             }
 
+                            //derive flag process
+                            DeriveProcess.processDerive(tableInfo, colF, colName);
+
+
                             // original table fields and sql-fun fields
                             tableInfo.putFieldNameColNameOfModel(fieldName, colName);
                             tableInfo.putColNameAndFieldOfModel(colName, colF);

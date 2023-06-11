@@ -1,5 +1,7 @@
 package com.javaoffers.batis.modelhelper.utils;
 
+import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveFlag;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveInfo;
 import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
@@ -83,6 +85,12 @@ public class TableInfo {
      * fieldName mapping anno info
      */
     private Map<String, FieldNameAnnoInfo> fieldNameAnnoInfos = new HashMap<>();
+
+    /**
+     * derive info.
+     * string: colName info
+     */
+    private Map<DeriveFlag, DeriveInfo> deriveColName = new HashMap<>();
 
 
     /***************************************************************/
@@ -235,6 +243,14 @@ public class TableInfo {
         colNameAnnoInfo.setExcludeColAll(isFunGroup);
     }
 
+    void putDeriveColName(DeriveFlag deriveFlag, DeriveInfo colName){
+        this.deriveColName.put(deriveFlag, colName);
+    }
+
+    DeriveInfo getDeriveColName(DeriveFlag deriveFlag){
+        return this.deriveColName.get(deriveFlag);
+    }
+
     public void unmodifiable() {
         this.colNames = Collections.unmodifiableMap(colNames);
         this.fieldNameMappingcolNameOfModel = Collections.unmodifiableMap(fieldNameMappingcolNameOfModel);
@@ -242,6 +258,7 @@ public class TableInfo {
         this.primaryColNames = Collections.unmodifiableMap(primaryColNames);
         this.originalColNameOfModelField = Collections.unmodifiableMap(originalColNameOfModelField);
         this.fieldNameAndFields = Collections.unmodifiableMap(this.fieldNameAndFields);
+        this.deriveColName = Collections.unmodifiableMap(this.deriveColName);
     }
 
 

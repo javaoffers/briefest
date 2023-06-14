@@ -8,6 +8,7 @@ import com.javaoffers.batis.modelhelper.anno.BaseUnique;
 import com.javaoffers.batis.modelhelper.anno.ColName;
 import com.javaoffers.batis.modelhelper.anno.derive.Blur;
 import com.javaoffers.batis.modelhelper.anno.derive.StringBlur;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel;
 import com.javaoffers.batis.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.batis.modelhelper.anno.fun.params.CaseWhen;
 import com.javaoffers.batis.modelhelper.anno.fun.params.IfGt;
@@ -106,6 +107,8 @@ public class User {
     private com.javaoffers.base.modelhelper.sample.spring.constant.Month  month;
 
     private Work work;
+
+    private IsDel isDel;
 
     @ColName("name")
     @ConcatWs(separator = "':'", value = "id", position = 1)

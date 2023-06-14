@@ -39,6 +39,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testIsDel();
         testGeneral();
         testBatchUpdate();
         testCountDistinct();
@@ -49,6 +50,17 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         }
 
 
+
+    }
+
+    public void testIsDel() throws JsonProcessingException {
+        User user = this.crudUserMapper.general().query(1, 1).get(0);
+        User logicUser = new User();
+        logicUser.setId(user.getId());
+        int i = this.crudUserMapper.general().logicRemove(logicUser);
+        User newUser = crudUserMapper.general().query(logicUser).get(0);
+        print(user);
+        print(newUser);
 
     }
 

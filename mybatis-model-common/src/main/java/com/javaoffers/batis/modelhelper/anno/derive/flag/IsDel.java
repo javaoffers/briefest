@@ -13,9 +13,9 @@ import java.lang.annotation.Target;
  * @author: create by cmj on 2023/6/11 01:39
  */
 public enum IsDel {
-    //Have deleted
+    //Data is logically deleted
     YES(1),
-    //Not be deleted
+    //data is valid, there is not be logically deleted
     NO(0),
     ;
     @EnumValue

@@ -82,44 +82,56 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     /**
      * delete model.Where conditions will be generated based on properties of the model
      * class for which there is a value.
+     * Note that this is a physical deletion
      * @param model
      */
     public int remove(T model);
 
     /**
      * delete model by id
+     * Note that this is a physical deletion
      */
     public int removeById(Serializable id );
 
     /**
      * delete model by ids
+     * Note that this is a physical deletion
      */
     public int removeByIds(Serializable... ids );
 
     /**
      * delete model by ids
+     * Note that this is a physical deletion
      */
     public <ID extends Serializable> int removeByIds(Collection<ID> ids);
 
     /**
      * logic delete model.Where conditions will be generated based on properties of the model
      * class for which there is a value.
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel}
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus}
      * @param model
      */
     public int logicRemove(T model);
 
     /**
      * logic delete model by id
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel}
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus}
      */
     public int logicRemoveById(Serializable id );
 
     /**
      * logic delete model by ids
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel}
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus}
      */
     public int logicRemoveByIds(Serializable... ids );
 
     /**
      * logic delete model by ids
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel}
+     * {@link com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus}
      */
     public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids);
 

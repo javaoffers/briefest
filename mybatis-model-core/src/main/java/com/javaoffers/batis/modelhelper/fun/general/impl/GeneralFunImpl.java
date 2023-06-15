@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.fun.general.impl;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveInfo;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.batis.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.exception.GetColValueException;
@@ -684,8 +685,14 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             T newModel = (T) mClass.newInstance();
             TableInfo tableInfo = TableHelper.getTableInfo(mClass);
             DeriveInfo deriveColName = tableInfo.getDeriveColName(DeriveFlag.IS_DEL);
-            deriveColName.getField().set(newModel, IsDel.YES);
-            Assert.isTrue(deriveColName != null, "no  logic del col, please use IsDel to declaration");
+            Field logicRemoveField = null;
+            Assert.isTrue(deriveColName != null && (logicRemoveField = deriveColName.getField()) != null,
+                    "no  logic del col, please use IsDel to declaration");
+            if (deriveColName.isDelField()) {
+                logicRemoveField.set(newModel, IsDel.YES);
+            } else {
+                logicRemoveField.set(newModel, RowStatus.ABSENT);
+            }
             return newModel;
         } catch (Exception e) {
             throw new UpdateFieldsException(e.getMessage());

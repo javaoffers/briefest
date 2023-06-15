@@ -7,6 +7,10 @@ package com.javaoffers.batis.modelhelper.anno.derive.flag;
 public enum DeriveFlag {
     //Version of the function
     VERSION,
+    /**
+     * {@link IsDel}
+     * {@link RowStatus}
+     */
     IS_DEL,
     ;
 }

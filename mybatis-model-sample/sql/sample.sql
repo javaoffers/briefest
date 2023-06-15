@@ -30,6 +30,7 @@ INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `i
 CREATE TABLE `teacher` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `status` int(2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 

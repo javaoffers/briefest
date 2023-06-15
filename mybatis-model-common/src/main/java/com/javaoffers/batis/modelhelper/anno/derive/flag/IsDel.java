@@ -14,9 +14,9 @@ import java.lang.annotation.Target;
  */
 public enum IsDel {
     //Have deleted
-    YES(0),
+    YES(1),
     //Not be deleted
-    NO(1),
+    NO(0),
     ;
     @EnumValue
     private int code;

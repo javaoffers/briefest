@@ -3,6 +3,7 @@ package com.javaoffers.batis.modelhelper.utils;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.IsDel;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.batis.modelhelper.anno.derive.flag.Version;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
@@ -30,6 +31,16 @@ public class DeriveProcess {
         }
         //isDel
         if(IsDel.class.isAssignableFrom(colF.getType())){
+            Assert.isTrue(tableInfo.getDeriveColName(DeriveFlag.IS_DEL) == null ,"Repeated tombstone fields, " +
+                    "IsDel or RowStatus cannot be used multiple times at the same time, and cannot be reused");
+            tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
+
+        }
+
+        //isDel
+        if(RowStatus.class.isAssignableFrom(colF.getType())){
+            Assert.isTrue(tableInfo.getDeriveColName(DeriveFlag.IS_DEL) == null ,"Repeated tombstone fields, " +
+                    "IsDel or RowStatus cannot be used multiple times at the same time, and cannot be reused");
             tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
         }
     }

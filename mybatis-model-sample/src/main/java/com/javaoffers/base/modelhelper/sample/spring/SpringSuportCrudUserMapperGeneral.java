@@ -4,9 +4,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudTeacherMapper;
 import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
+import com.javaoffers.batis.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.batis.modelhelper.core.Id;
 import com.javaoffers.batis.modelhelper.util.DateUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -32,6 +35,9 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     @Resource
     CrudUserMapper crudUserMapper;
 
+    @Resource
+    CrudTeacherMapper crudTeacherMapper;
+
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperGeneral.class, args);
 
@@ -54,6 +60,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     }
 
     public void testIsDel() throws JsonProcessingException {
+        //IsDel sample
         User user = this.crudUserMapper.general().query(1, 1).get(0);
         User logicUser = new User();
         logicUser.setId(user.getId());
@@ -61,6 +68,17 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         User newUser = crudUserMapper.general().query(logicUser).get(0);
         print(user);
         print(newUser);
+
+        //RowStatus sample
+        Teacher teacher = crudTeacherMapper.general().query(1, 1).get(0);
+        print(teacher);
+        teacher.setStatus(RowStatus.PRESENCE);
+        crudTeacherMapper.general().updateById(teacher);
+        Teacher teacher1 = crudTeacherMapper.general().queryById(teacher.getId());
+        print(teacher1);
+        crudTeacherMapper.general().logicRemoveById(teacher.getId());
+        Teacher teacher2 = crudTeacherMapper.general().queryById(teacher.getId());
+        print(teacher2);
 
     }
 

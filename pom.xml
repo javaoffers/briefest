@@ -3,19 +3,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.javaoffers</groupId>
-  <artifactId>mybatis-modelhelper</artifactId>
+  <artifactId>brief</artifactId>
   <packaging>pom</packaging>
   <version>3.5.11.13-SNAPSHOT</version>
   <modules>
-    <module>mybatis-model-helper</module>
-    <module>mybatis-model-sample</module>
-    <module>mybatis-model-spring-support</module>
-    <module>mybatis-model-core</module>
-    <module>mybatis-model-common</module>
-    <module>mybatis-model-encipher</module>
+    <module>brief-helper</module>
+    <module>brief-sample</module>
+    <module>brief-mybatis</module>
+    <module>brief-core</module>
+    <module>brief-common</module>
+    <module>brief-encipher</module>
   </modules>
 
-  <name>mybatis-modelhelper</name>
+  <name>brief</name>
   <!-- FIXME change it to the project's website -->
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -124,19 +124,19 @@
             </configuration>
           </plugin>
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-            <executions>
-              <execution>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
+<!--          <plugin>-->
+<!--            <groupId>org.apache.maven.plugins</groupId>-->
+<!--            <artifactId>maven-gpg-plugin</artifactId>-->
+<!--            <version>1.6</version>-->
+<!--            <executions>-->
+<!--              <execution>-->
+<!--                <phase>verify</phase>-->
+<!--                <goals>-->
+<!--                  <goal>sign</goal>-->
+<!--                </goals>-->
+<!--              </execution>-->
+<!--            </executions>-->
+<!--          </plugin>-->
         </plugins>
       </build>
 

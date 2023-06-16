@@ -1,13 +1,13 @@
 
-## mybatis-jql
+## brief
 <p>
-让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>mybatis-jql</code>的核心目标.
+让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>brief</code>的核心目标.
 </p>
 
-## mybatis-jql 和 mybatis的关系
+## brief 和 mybatis的关系
 <p>
-<code>mybatis-jql</code> 是在 <code>mybatis</code> 之上进行开发. 只做增强不破坏mybaits源码。 所以<code>mybatis-jql</code> 完全兼容 <code>mybatis</code>.
-如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>mybatis-jql</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
+<code>brief</code> 是在 <code>mybatis</code> 之上进行开发. 只做增强不破坏mybaits源码。 所以<code>brief</code> 完全兼容 <code>mybatis</code>.
+如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
 </p>
 
 ##### QQ群  310283131 技术交流，欢迎提供宝贵的意见。点击star鼓励一下
@@ -31,8 +31,8 @@
 - 概要
   <p>
  简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。
- JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发mybatis-jql的核心。我们不建议加入超过 3 个表。
- 这降低了 SQL 的可读性和可维护性。 mybatis-jql支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
+ JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief的核心。我们不建议加入超过 3 个表。
+ 这降低了 SQL 的可读性和可维护性。 brief支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了crudmapper）。
  集成了常用的crud操作，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 </p>
 
@@ -42,13 +42,13 @@
 |---|---|---|
 |mybatis|需要编写原生sql,自由度非常高|半orm, 配置比较多|
 |mybatis-plus|集成常用的api， 函数时编程|不支持join查询, 函数式编程需要太多new. 不方便集中管理，在service层会出现大量sql函数表达式|
-|mybatis-jql|集成常用的api， 函数时编程, sql函数注解化. 支持join. 支持在default方法中编写jql. 方便集中管理 | 目前只支持mysql语法|
+|brief|集成常用的api， 函数时编程, sql函数注解化. 支持join. 支持在default方法中编写jql. 方便集中管理 | 目前只支持mysql语法|
 |fluent-sql|支持函数式编程，支持join，| 需要生成额外的mapper. 函数式需要new.  不能集中管理，在service层会出现大量sql函数表达式|
 
 <p>
-mybatis, mybatis-plus, fluent-sql都是比较优秀的框架。我在设计mybatis-jql时也借鉴了他们的优点同时又做了一些取舍。mybatis-jql的核心目标是
-写更少的代码， 消除复杂的sql. 提高项目的可维护性。所以mybatis-jql没有任何学习成本。 mybatis-jql不会重复造轮子。比如分库分表这些功能市面上已经有了
-（比如：ShardingSphere ）。因此mybatis-jql将不会提供这些重复的功能。
+mybatis, mybatis-plus, fluent-sql都是比较优秀的框架。我在设计brief时也借鉴了他们的优点同时又做了一些取舍。brief的核心目标是
+写更少的代码， 消除复杂的sql. 提高项目的可维护性。所以brief没有任何学习成本。 brief不会重复造轮子。比如分库分表这些功能市面上已经有了
+（比如：ShardingSphere ）。因此brief将不会提供这些重复的功能。
 </p>
  
 - 项目实战，已在内部进行了使用。效果非常好. 
@@ -692,7 +692,7 @@ public class FunAnnoParserSample {
 ### Powerful type converter
 <p>
 内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
-https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+https://github.com/caomingjie-code/brief/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 ). 
 </p>
 
@@ -806,7 +806,7 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
    private String email; // 12345678@outlook.com加密后的数据为12***678@outlook.com
 ```  
 <p>
-更多案例： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+更多案例： https://github.com/javaoffers/brief/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
 </p>
 
 #### Code contributions are welcome

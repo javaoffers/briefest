@@ -3,11 +3,11 @@
     <parent>
         <artifactId>brief</artifactId>
         <groupId>com.javaoffers</groupId>
-          <version>3.5.11.13-SNAPSHOT</version>
+          <version>3.6.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-core</artifactId>
-     <version>3.5.11.13-SNAPSHOT</version>
+     <version>3.6.0-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -18,13 +18,13 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-helper</artifactId>
-              <version>3.5.11.13-SNAPSHOT</version>
+              <version>3.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-              <version>3.5.11.13-SNAPSHOT</version>
+              <version>3.6.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

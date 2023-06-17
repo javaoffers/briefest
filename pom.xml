@@ -5,7 +5,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>brief</artifactId>
   <packaging>pom</packaging>
-  <version>3.5.11.13-SNAPSHOT</version>
+  <version>3.6.0-SNAPSHOT</version>
   <modules>
     <module>brief-helper</module>
     <module>brief-sample</module>

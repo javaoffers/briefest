@@ -1,13 +1,12 @@
 package com.javaoffers.brief.modelhelper.proxy;
 
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
-import com.javaoffers.brief.modelhelper.core.CrudMapperMethodExcutor;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.exception.ParseDataSourceException;
-import com.javaoffers.brief.modelhelper.exception.ParseTableInfoException;
+import com.javaoffers.brief.modelhelper.exception.ParseTableException;
 import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
 import com.javaoffers.brief.modelhelper.util.HelperUtils;
-import com.javaoffers.brief.modelhelper.utils.ByteBuddyUtils;
+import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.FutureLock;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -20,12 +19,13 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.sql.Connection;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 /**
  * @Description: 解析CrudMapper
@@ -37,7 +37,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private static final Class crudClass = CrudMapper.class;
 
-    private static HashMap<Method,String> isMapperMethod = new HashMap<>();
+    private static Map<Method,String> isMapperMethod = BriefUtils.getMapperMethod();
 
     private Class clazz;
 
@@ -74,20 +74,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
             Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
             this.modelClass = modelclass;
-            ByteBuddyUtils.DefaultClass select = ByteBuddyUtils.buildDefaultClass(
-                    "select", CrudMapperMethodExcutor.class);
-            ByteBuddyUtils.DefaultClass insert = ByteBuddyUtils.buildDefaultClass(
-                    "insert",CrudMapperMethodExcutor.class);
-            ByteBuddyUtils.DefaultClass update = ByteBuddyUtils.buildDefaultClass(
-                    "update",CrudMapperMethodExcutor.class);
-            ByteBuddyUtils.DefaultClass delete = ByteBuddyUtils.buildDefaultClass(
-                    "delete",CrudMapperMethodExcutor.class);
-            ByteBuddyUtils.DefaultClass general = ByteBuddyUtils.buildDefaultClass(
-                    "general",CrudMapperMethodExcutor.class);
-
-            this.crudMapperJql = (CrudMapper) ByteBuddyUtils
-                    .makeObject(clazz,
-                            Arrays.asList(select,insert,update,delete,general));
+            this.crudMapperJql = BriefUtils.newCrudMapper(clazz);
             Connection connection = this.jdbcTemplate.getDataSource().getConnection();
             try {
                 List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
@@ -96,7 +83,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                 }
 
             }catch (Exception e){
-                throw new ParseTableInfoException("parse table info exception", e);
+                throw new ParseTableException("parse table info exception", e);
             }finally {
                 if(!connection.isClosed()){
                     connection.close();
@@ -105,15 +92,6 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
         }catch (Exception e){
             throw new ParseDataSourceException("parse datasource exception", e);
         }
-    }
-
-    static {
-        Stream.of(
-                CrudMapper.class.getDeclaredMethods()
-        ).flatMap(Stream::of).forEach(method -> {
-            method.setAccessible(true);
-            isMapperMethod.put(method,method.getName());
-        });
     }
 
     private boolean isReady(){
@@ -143,10 +121,10 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
                         this.status.unlock(Pair.of(false, e));
                         e.printStackTrace();
                         this.status.reset();
-                        throw new ParseTableInfoException("parse table info exception", e);
+                        throw new ParseTableException("parse table info exception", e);
                     }
                 }else if(!this.status.getOrOld().getLeft()){
-                    throw new ParseTableInfoException("parse table info exception", this.status.get().getRight());
+                    throw new ParseTableException("parse table info exception", this.status.get().getRight());
                 }
             }
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);

@@ -13,6 +13,7 @@
     <module>brief-core</module>
     <module>brief-common</module>
     <module>brief-encipher</module>
+    <module>brief-speedier</module>
   </modules>
 
   <name>brief</name>

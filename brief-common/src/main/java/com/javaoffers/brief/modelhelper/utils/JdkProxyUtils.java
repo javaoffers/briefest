@@ -24,5 +24,9 @@ public class JdkProxyUtils {
         });
     }
 
+    public static <T> T createProxy(Class<T> interfaces, InvocationHandler invocationHandler){
+        return (T) Proxy.newProxyInstance(JdkProxyUtils.class.getClassLoader(), new Class[]{interfaces}, invocationHandler);
+    }
+
 
 }

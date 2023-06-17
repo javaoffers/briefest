@@ -4,6 +4,19 @@
 让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>brief</code>的核心目标.
 </p>
 
+## brief-speedier
+<p>
+brief 可以单独使用. 不依赖任何环境. 
+使用案例： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
+</p>
+
+```java
+    BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
+    CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
+    userList = userCrudMapper.select().colAll().where().limitPage(1, 10).exs();
+    print(userList);
+```
+
 ## 支持mybatis
 <p>
 <code>brief-mybatis</code> 是对 <code>mybatis</code>增强,让 <code>mybatis</code> 拥有brief能力。 所以<code>brief-mybatis</code> 完全兼容 <code>mybatis</code>.

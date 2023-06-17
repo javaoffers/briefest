@@ -38,6 +38,7 @@ public class BriefSpeedierSample {
     public void testBriefSpeedier(){
 
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
+        //Using custom mapper
         CrudUserMapper crudUserMapper = speedier.newCustomCrudMapper(CrudUserMapper.class);
         List<User> userList = crudUserMapper.select().colAll().where().limitPage(1, 10).exs();
         print(userList);
@@ -49,6 +50,7 @@ public class BriefSpeedierSample {
         Id save = crudUserMapper.general().save(user);
         print(save.toLong());
 
+        //Use the default mapper
         CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
         userList = userCrudMapper.select().colAll().where().limitPage(1, 10).exs();
         print(userList);

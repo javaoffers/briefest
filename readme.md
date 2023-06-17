@@ -6,7 +6,7 @@
 
 ## brief-speedier
 <p>
-brief 可以单独使用. 不依赖任何环境. 
+<code>brief-speedier</code> 可以单独使用. 不依赖任何环境. 
 使用案例： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 

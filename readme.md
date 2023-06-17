@@ -17,7 +17,7 @@
     print(userList);
 ```
 
-## 支持mybatis
+## brief-mybatis
 <p>
 <code>brief-mybatis</code> 是对 <code>mybatis</code>增强,让 <code>mybatis</code> 拥有brief能力。 所以<code>brief-mybatis</code> 完全兼容 <code>mybatis</code>.
 如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief-mybatis</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。

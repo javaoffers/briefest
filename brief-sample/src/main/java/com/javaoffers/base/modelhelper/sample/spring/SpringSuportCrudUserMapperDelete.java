@@ -2,7 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.util.Date;
-import java.util.List;
 
 @SpringBootApplication
 @RequestMapping
@@ -22,7 +20,7 @@ public class SpringSuportCrudUserMapperDelete implements InitializingBean {
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperDelete.class, args);

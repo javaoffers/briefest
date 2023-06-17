@@ -1,7 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
@@ -35,7 +35,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     public static boolean status = true;
 
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperSelete.class, args);

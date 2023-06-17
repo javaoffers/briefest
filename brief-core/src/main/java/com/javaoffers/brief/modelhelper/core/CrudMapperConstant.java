@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
 /**
- * @Description: About CrudMapper interface method description
+ * @Description: About BriefMapper interface method description
  * @Auther: create by cmj on 2022/5/3 13:31
  */
 public enum  CrudMapperConstant {

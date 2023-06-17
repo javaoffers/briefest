@@ -4,7 +4,7 @@ import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
-import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
@@ -15,7 +15,7 @@ import java.util.List;
  * @Description: sample
  * @Auther: create by cmj on 2022/5/2 22:30
  */
-public interface CrudUserMapper extends CrudMapper<User> {
+public interface BriefUserMapper extends BriefMapper<User> {
 
     default List<User> queryAll(){
         return select()

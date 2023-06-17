@@ -3,7 +3,7 @@ package com.javaoffers.brief.modelhelper.speedier;
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.exception.ParseTableException;
-import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.util.HelperUtils;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.FutureLock;
@@ -16,7 +16,6 @@ import javax.sql.DataSource;
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,7 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
 
     private static final Map<Method, String> objectMethod = BriefUtils.getObjectMethod();
 
-    private CrudMapper crudMapperJql;
+    private BriefMapper briefMapperJql;
 
     private volatile Class modelClass;
 
@@ -71,22 +70,22 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
             CrudMapperMethodThreadLocal.addExcutorJdbcTemplate(this.jdbcTemplate);
 
             if(method.getModifiers() == 1){
-                return method.invoke(crudMapperJql,args);
+                return method.invoke(briefMapperJql,args);
             } else if(StringUtils.isNotBlank(mapperMethod.get(method)) && args == null){
                 if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
-                    return  crudMapperJql.select();
+                    return  briefMapperJql.select();
                 }else if(method.getName().equals(CrudMapperConstant.INSERT.getMethodName())){
-                    return crudMapperJql.insert();
+                    return briefMapperJql.insert();
                 }else if(method.getName().equals(CrudMapperConstant.UPDATE.getMethodName())){
-                    return crudMapperJql.update();
+                    return briefMapperJql.update();
                 }else if(method.getName().equals(CrudMapperConstant.DELETE.getMethodName())){
-                    return crudMapperJql.delete();
+                    return briefMapperJql.delete();
                 }else if(method.getName().equals(CrudMapperConstant.GENERAL.getMethodName())){
-                    return crudMapperJql.general();
+                    return briefMapperJql.general();
                 }
                 throw new IllegalAccessException("method not found ");
             }else if(StringUtils.isNotBlank(objectMethod.get(method))){
-                return method.invoke(crudMapperJql, args);
+                return method.invoke(briefMapperJql, args);
             }
             throw new IllegalAccessException("method not support ");
         }catch (Exception e){
@@ -98,8 +97,8 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
         }
     }
 
-    SpeedierMapperProxy(CrudMapper crudMapperJql, DataSource dataSource, Class modelClass) {
-        this.crudMapperJql = crudMapperJql;
+    SpeedierMapperProxy(BriefMapper briefMapperJql, DataSource dataSource, Class modelClass) {
+        this.briefMapperJql = briefMapperJql;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.modelClass = modelClass;
     }

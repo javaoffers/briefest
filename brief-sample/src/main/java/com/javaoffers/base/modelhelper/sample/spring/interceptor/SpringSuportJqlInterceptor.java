@@ -2,7 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring.interceptor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.InterceptorLoader;
@@ -24,7 +24,7 @@ public class SpringSuportJqlInterceptor implements InitializingBean {
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportJqlInterceptor.class, args);

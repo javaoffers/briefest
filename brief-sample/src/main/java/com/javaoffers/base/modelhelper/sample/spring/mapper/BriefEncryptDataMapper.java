@@ -1,7 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.mapper;
 
 import com.javaoffers.base.modelhelper.sample.spring.model.EncryptData;
-import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 
 /**
  * @description:
@@ -12,5 +12,5 @@ import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
  * ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
  * @author: create by cmj on 2022/10/15 00:55
  */
-public interface CrudEncryptDataMapper extends CrudMapper<EncryptData> {
+public interface BriefEncryptDataMapper extends BriefMapper<EncryptData> {
 }

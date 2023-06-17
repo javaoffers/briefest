@@ -1,8 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.blur;
 
-import com.javaoffers.base.modelhelper.sample.spring.SpringSuportCrudUserMapperUpdate;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import org.mybatis.spring.annotation.MapperScan;
@@ -25,7 +24,7 @@ public class SpringSuportCrudUserMapperBlur  implements InitializingBean {
     public static boolean status = true;
 
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperBlur.class, args);

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Month;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserOrderMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserOrderMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.spring.model.UserOrder;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
@@ -33,10 +33,10 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     @Resource
-    CrudUserOrderMapper crudUserOrderMapper;
+    BriefUserOrderMapper crudUserOrderMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperInsert.class, args);

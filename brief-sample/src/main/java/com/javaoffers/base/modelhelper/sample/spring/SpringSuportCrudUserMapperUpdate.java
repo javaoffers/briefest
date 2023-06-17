@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -24,7 +24,7 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperUpdate.class, args);

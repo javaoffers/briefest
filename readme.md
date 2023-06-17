@@ -2,14 +2,14 @@
 ## brief
 <p>
 <code>brief</code> 是一款高性能、轻量级、简单易用, 零配置的orm框架. 让复杂的屎山sql消失、开发效率最大化、代码量更少且阅读性更高、维护性可持续。 
-这是<code>brief</code>存在的原因. 让你体验前所未有的的丝滑开发.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
+这是<code>brief</code>存在的原因. <code>brief</code>带你你体验前所未有的丝滑开发.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
 </p>
 
 ### 简介
 <p>
  简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief的核心。
-  <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。默认方法可以写在java接口中，内部可以直接操作JQL API（前提是继承了<code>Crudmapper</code>）。 
-  集成了常用的crud操作，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
+  <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。在<code>Mapper</code> default方法中可以直接操作JQL API（前提是继承了<code>CrudMapper</code>）。 
+  集成了brief功能，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 
 </p>
 
@@ -21,8 +21,8 @@
 
 ```java
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
-    CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
-    userList = userCrudMapper.select().colAll().where().limitPage(1, 10).exs();
+    CrudMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+    userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
     print(userList);
 ```
 

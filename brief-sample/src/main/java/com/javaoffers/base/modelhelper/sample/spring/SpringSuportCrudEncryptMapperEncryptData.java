@@ -2,7 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudEncryptDataMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefEncryptDataMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.EncryptData;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.encrypt.anno.AesEncryptConfig;
@@ -27,7 +27,7 @@ public class SpringSuportCrudEncryptMapperEncryptData implements InitializingBea
     ObjectMapper objectMapper = new ObjectMapper();
 
     @Resource
-    CrudEncryptDataMapper crudEncryptDataMapper;
+    BriefEncryptDataMapper crudEncryptDataMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudEncryptMapperEncryptData.class, args);

@@ -14,7 +14,7 @@ import java.io.Serializable;
  *
  * @param <T>
  */
-public interface CrudMapper<T> extends BaseMapper<T> {
+public interface BriefMapper<T> extends BaseMapper<T> {
 
     /**
      * select sql

@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudTeacherMapper;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefTeacherMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
@@ -31,10 +31,10 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
     @Resource
-    CrudUserMapper crudUserMapper;
+    BriefUserMapper crudUserMapper;
 
     @Resource
-    CrudTeacherMapper crudTeacherMapper;
+    BriefTeacherMapper crudTeacherMapper;
 
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperGeneral.class, args);

@@ -2,13 +2,12 @@ package com.javaoffers.base.modelhelper.sample.speedier;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.spring.constant.Work;
-import com.javaoffers.base.modelhelper.sample.spring.mapper.CrudUserMapper;
+import com.javaoffers.base.modelhelper.sample.spring.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.spring.model.User;
 import com.javaoffers.brief.modelhelper.core.Id;
-import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedierDataSource;
-import com.javaoffers.brief.modelhelper.utils.Utils;
 import org.junit.Test;
 
 import java.util.Date;
@@ -27,11 +26,11 @@ public class BriefSpeedierSample {
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
         BriefSpeedier speedier2 = BriefSpeedier.getInstance(dataSource);
 
-        CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
-        CrudMapper<User> userCrudMapper2 = speedier2.newDefaultCrudMapper(User.class);
+        BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+        BriefMapper<User> userBriefMapper2 = speedier2.newDefaultCrudMapper(User.class);
 
-        print(userCrudMapper.hashCode());
-        print(userCrudMapper2.hashCode());
+        print(userBriefMapper.hashCode());
+        print(userBriefMapper2.hashCode());
     }
 
     @Test
@@ -39,7 +38,7 @@ public class BriefSpeedierSample {
 
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
         //Using custom mapper
-        CrudUserMapper crudUserMapper = speedier.newCustomCrudMapper(CrudUserMapper.class);
+        BriefUserMapper crudUserMapper = speedier.newCustomCrudMapper(BriefUserMapper.class);
         List<User> userList = crudUserMapper.select().colAll().where().limitPage(1, 10).exs();
         print(userList);
 
@@ -54,11 +53,11 @@ public class BriefSpeedierSample {
             print(user);
         }
         //Use the default mapper
-        CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
-        userList = userCrudMapper.select().colAll().where().limitPage(1, 10).exs();
+        BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+        userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
         print(userList);
 
-        Number count = userCrudMapper.general().count();
+        Number count = userBriefMapper.general().count();
         print(count);
 
     }

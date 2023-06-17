@@ -4,7 +4,7 @@ import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.exception.ParseDataSourceException;
 import com.javaoffers.brief.modelhelper.exception.ParseTableException;
-import com.javaoffers.brief.modelhelper.mapper.CrudMapper;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.util.HelperUtils;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.FutureLock;
@@ -35,13 +35,13 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
 
     private MapperProxy<T> mapperProxy;
 
-    private static final Class crudClass = CrudMapper.class;
+    private static final Class crudClass = BriefMapper.class;
 
     private static Map<Method,String> isMapperMethod = BriefUtils.getMapperMethod();
 
     private Class clazz;
 
-    private volatile CrudMapper crudMapperJql;
+    private volatile BriefMapper briefMapperJql;
 
     private volatile Type modelClass;
 
@@ -74,7 +74,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
             Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
             this.modelClass = modelclass;
-            this.crudMapperJql = BriefUtils.newCrudMapper(clazz);
+            this.briefMapperJql = BriefUtils.newCrudMapper(clazz);
             Connection connection = this.jdbcTemplate.getDataSource().getConnection();
             try {
                 List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
@@ -129,21 +129,21 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             }
             CrudMapperMethodThreadLocal.addExcutorModel((Class) this.modelClass);
             CrudMapperMethodThreadLocal.addExcutorJdbcTemplate(this.jdbcTemplate);
-            //If defaultObj is null, it means CrudMapper interface is not inherited
-            if(crudMapperJql != null){
+            //If defaultObj is null, it means BriefMapper interface is not inherited
+            if(briefMapperJql != null){
                 if(method.getModifiers() == 1){
-                    return method.invoke(crudMapperJql,args);
+                    return method.invoke(briefMapperJql,args);
                 } else if(StringUtils.isNotBlank(isMapperMethod.get(method)) && args == null){
                     if(method.getName().equals(CrudMapperConstant.SELECT.getMethodName())){
-                        return  crudMapperJql.select();
+                        return  briefMapperJql.select();
                     }else if(method.getName().equals(CrudMapperConstant.INSERT.getMethodName())){
-                        return crudMapperJql.insert();
+                        return briefMapperJql.insert();
                     }else if(method.getName().equals(CrudMapperConstant.UPDATE.getMethodName())){
-                        return crudMapperJql.update();
+                        return briefMapperJql.update();
                     }else if(method.getName().equals(CrudMapperConstant.DELETE.getMethodName())){
-                        return crudMapperJql.delete();
+                        return briefMapperJql.delete();
                     }else if(method.getName().equals(CrudMapperConstant.GENERAL.getMethodName())){
-                        return crudMapperJql.general();
+                        return briefMapperJql.general();
                     }
                     throw new IllegalAccessException("method not found ");
                 }else{

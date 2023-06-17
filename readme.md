@@ -1,7 +1,7 @@
 
 ## brief
 <p>
-让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>brief</code>的核心目标.
+一个简单的orm框架. 让复杂的屎山sql消失, 让开发效率最大化. 让代码量更少， 让代码的阅读性更高。 让项目的维护性可持续。 这是我写<code>brief</code>的核心目标.
 </p>
 
 ## brief-speedier
@@ -21,13 +21,15 @@
 <p>
 <code>brief-mybatis</code> 是对 <code>mybatis</code>增强,让 <code>mybatis</code> 拥有brief能力。 所以<code>brief-mybatis</code> 完全兼容 <code>mybatis</code>.
 如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief-mybatis</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
+只需要让你的 <code>Mapper</code>类继承<code>CrudMapper</code>即可使用brief特性. 
 </p>
 
 ## brief-spring-boot-start
 <p>
-brief支持spring-boot. 待支持
+待支持，支持<code>spring-boot</code>. 如果你的spring-boot项目引用了 <code>mybatis</code> 框架， 那么你只需要引入 <code>brief-mybatis</code> 即可.
 </p>
 
+## brief 功能介绍
 ##### QQ群  310283131 技术交流，欢迎提供宝贵的意见。点击star鼓励一下
 
 - 特征

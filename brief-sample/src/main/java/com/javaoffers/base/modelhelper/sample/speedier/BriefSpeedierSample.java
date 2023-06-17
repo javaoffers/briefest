@@ -49,7 +49,10 @@ public class BriefSpeedierSample {
         user.setWork(Work.JAVA);
         Id save = crudUserMapper.general().save(user);
         print(save.toLong());
-
+        for(int i=0; i<1000; i++) {
+            List<User> users = crudUserMapper.queryAll();
+            print(user);
+        }
         //Use the default mapper
         CrudMapper<User> userCrudMapper = speedier.newDefaultCrudMapper(User.class);
         userList = userCrudMapper.select().colAll().where().limitPage(1, 10).exs();

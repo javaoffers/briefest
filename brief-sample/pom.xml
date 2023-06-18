@@ -3,29 +3,29 @@
     <parent>
         <artifactId>brief</artifactId>
         <groupId>com.javaoffers</groupId>
-         <version>3.6.0</version>
+         <version>3.6.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-sample</artifactId>
-     <version>3.6.0</version>
+     <version>3.6.1-SNAPSHOT</version>
     <dependencies>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-encipher</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-mybatis</artifactId>
-             <version>3.6.0</version>
+             <version>3.6.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-speedier</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1-SNAPSHOT</version>
         </dependency>
 
         <!-- junit -->
@@ -131,6 +131,6 @@
 
 
     <scm>
-        <tag>v3.6.0</tag>
+        <tag>vy</tag>
     </scm>
 </project>

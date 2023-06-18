@@ -1,60 +1,93 @@
 
-## mybatis model helper
-<a href="./readmeCn.md">中文<a/> &nbsp; <a href="./wiki.md">wiki<a/>
-###  Welcome to fork OR star for encourage thanks
-
-- Features
-  - High performance query and insertion
-  - SQL Inject defense
-  - Out-of-the-box interfaces for operate database
-  - Don't have to write native SQL.  Can write according to the stream api of Java.
-  - SQL function annotation, simple and easy to use
-  - New form of writing, support mapper class to write the default method.
-  - Powerful type conversion functions.
-  - Insert/update automatic recognition optimized for batch execution
-  - Multi-table queries do not require additional configuration. Automatic mapping classes
-  - Commonly used APIs have been integrated and can be used directly without development.
-  - Currently, only mysql syntax standards are supported
-  - Table fields automatic encryption and decryption in DB.
-  - Field desensitization 
-
-- Summary
-  <p>
- Simplify mybatis development. Make writing SQL like writing java code. 
- Here we call it JQL. And form a set of JQL API process to reduce the SQL error rate.
- JQL is designed to decompose complex SQL into simple SQL, 
- so JQL is designed to support up to 3 table associated queries.
- We do not recommend joining more than 3 tables. 
- This reduces the readability and maintainability of SQL.
- And new writing formats are supported in modelhelper.
- The default method can be written in the java interface,
- and the JQL API can be directly manipulated internally (provided that crudmapper is inherited). 
- Common crud operations have been integrated, so you can directly use thoese api.
- Let me write JQL in Java stream to improve development efficiency. Less code and smoother writing.
+# Brief
+<p>
+<code>brief</code> Is a high-performance, lightweight, easy to use, zero configuration orm framework. Let complex SQL disappear, development efficiency maximization of shit and less amount of code and sustainable higher readability and maintainability.
+This is the reason for the existence of the <code>brief</code>. <code>brief</code>Take you to experience unprecedented silky.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
 </p>
- 
+
+### Introduction
+<p>
+ Simplify the development. To write SQL like writing Java code. Here we call JQL. And form a set of JQL API process to reduce the SQL error rate. JQL aimed at the complex SQL is decomposed into simple SQL, this is the core of the development brief.
+  <code>brief</code> Support for multiple table joins and does not require any mapping configuration. brief Support the new writing style.在<code>Mapper</code> The default method can directly manipulate JQL API（The premise is extends <code>BriefMapper</code>）。 
+  Integrates the function of brief, can directly use the API. Let me written in Java streams JQL, improve the development efficiency. Less code and more smooth writing.
+
+</p>
+
+## Lightweight machine version
+<p>
+<code>brief-speedier</code> Can be used alone. Do not rely on any environment.
+sample ： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
+</p>
+
+```java
+    BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
+    BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
+    userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
+    print(userList);
+```
+
+## Enhance mybatis
+<p>
+The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> has brief ability. So <code>brief-mybatis</code> is fully compatible with <code>mybatis</code>. If your project is used in the <code>mybatis</code> so you can directly introduced <code>brief-mybatis</code> dependence. Do change, enhance not only introduce it won't affect the existing engineering, silky smooth. Without any configuration. Just need to let your Mapper class inheritance <code>BriefMapper</code> can be used in the feature.
+</p>
+
+## Brief-spring-boot-start
+<p>
+Later will support，support<code>spring-boot</code>. If your spring - the boot project cited mybatis framework, Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enhanced..
+</p>
+
+## Function is introduced
+- feature
+  - High performance queries and insert
+  - Don't have to write the native SQL. Can according to the stream of Java API to write.
+  - SQL function annotation, simple and easy to use
+  - New, supporting the mapper interface class write default default method.
+  - Powerful automatic type conversion functions.
+  - The optimization of the automatic identification of insert/update batch execution
+  - Multi-table query does not need to be configured. Automatically map one-to-one, one-to-many, many-to-many.
+  - Supports logical deletion, optimistic locking.
+  - Integrated with the commonly used API, to directly using the need for development.
+  - Support mysql grammar standard
+  - Table fields automatic decryption (support like fuzzy query).
+  - Field query fuzzy desensitization
+  - SQL interceptors, are free to customize
+  - SQL filter, are free to customize
+  - Slow slow SQL monitor. Customizable SQL standard.
+
+  
+- Project of actual combat, which has been used internally. The effect is very good.
+![](note-doc/img/2220967059897.png)
+
+
 - maven
-  ```java
-    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.10 -->
+  ```
+    <properties>
+         <brief.version>3.6.0</brief.version>
+    </properties>
+  
+    
+   <!--Brief, lightweight doesn't depend on any framework-->
+     <dependency>
+         <groupId>com.javaoffers</groupId>
+         <artifactId>brief-speedier</artifactId>
+         <version>${brief.version}</version>
+     </dependency>
+  
+   <!--The brief-mybatis increased-->
    <dependency>
        <groupId>com.javaoffers</groupId>
-       <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.11</version>
+       <artifactId>brief-mybatis</artifactId>
+       <version>${brief.version}</version>
    </dependency>
 
   ```
-
-### Basic use      
-- Basic Usage Tutorial 
+### Based on using    
+#### Query operation
  <p>
-    A Normal Query
- </p>
- <p>
-    Before looking at the operation, let's take a look at the data structure: there are two key annotations here.
-     @BaseModel is used to indicate that the class belongs to the model class (the class name is the same as the table name,
-      ModelHelp will eventually convert the camel case class name into an underscore table name, and the attributes are the same), 
-      @BaseUnique indicates the only attribute in the class (corresponding to A unique attribute in a table, which can be multiple 
-      when a federated primary key is used in the table). We will explain the use of annotations in detail at the end. Here is the basic use
+Before we see operation, we first look at the data structure: there are two key annotation.
+ @BaseModelUsed to represent the class belongs to the Model classes (class name is the same as the table name, the Model will Help the camel class name converted to underline the name of the table, attribute the same),
+ @BaseUniqueIndicates the only class attributes (corresponding to A unique attribute in A table, when the primary key used in the table that can be more).
+ We will be in the final detailed explanation of the use of annotations. The following is the basic use
  </p>
  
  ```java
@@ -67,10 +100,40 @@ public class User {
     private String name;
 
     private String birthday;
+    
+    private Work work;
+    
+    private IsDel isDel;
+    
+    private Version version;  
+
+    @CaseWhen(whens = {
+            @CaseWhen.When(when = "money < 10", then = "'pool'"),
+            @CaseWhen.When(when = "money > 10000", then = "'rich'")},
+            elseEnd = @CaseWhen.Else("'civilian'")
+    )
+    private String moneyDes;    
+
+    private List<UserOrder> orders;
+
     // .... getter setter
 }
+
+@BaseModel
+public class UserOrder {
+
+    @BaseUnique
+    private int id;
+    private String orderName;
+    private String orderMoney;
+      
+    //getter, setter  methods  
+} 
+
+
 ```
 
+##### A full table query
  ```java
 
  List<User>  users = crudUserMapper 
@@ -78,12 +141,13 @@ public class User {
                     .colAll() 
                     .where() 
                     .exs(); 
+
  ```
  
   <p>
-This JQL will eventually be translated as select * from user. Here, colall means to query all table   fields. If you want to query the specified fields, such as the name and birthday fields, you can do this: 
- </p>
- 
+The JQL will eventually be translated into the select id, name, XXX.. From the user. Query all the table fields colall mean here. If you want to query the specified fields, such as your name and birthday field, can do it:</p>
+
+##### The query specified table fields 
  ```java
  List<User> users = crudusermapper
                     .select()
@@ -93,9 +157,9 @@ This JQL will eventually be translated as select * from user. Here, colall means
                     .exs();
  ```
  
+##### The query specified conditions 
  <p>
- You can specify the field you want to query through col(). The where() here is the same as the keyword where in SQL. For example, if you want to query a user whose ID value is 1, you can write this: 
- </p>
+By col () specifies fields to query. Here's where the where keyword in the () and SQL is the same. Such as to query a user id value is 1, you can write like this: </p>
  
  ```java
  User user = crudusermapper
@@ -105,17 +169,58 @@ This JQL will eventually be translated as select * from user. Here, colall means
              .eq(User::getId, 1) 
              .ex();
  ```
- <p>
- In these three cases, you will find that there are two special functions exs(), ex() These two functions represent trigger execution. exs() is usually used to query more data, and the returned result is list, while ex() is used to return only one result T; JQL have to pass to trigger the where and ex/exs . In most work scenarios, filter conditions will be added after WHERE, in addition to the special count all table data, this design is also a good reminder to remember to fill in the WHERE conditions, of course, if you do not need to add any WHERE conditions in order to query all table data, you can use where().ex(), where().exs()
- </p>  
- <p>
+
+##### Paging query
+
+```java
+ int pageNum = 1;
+ int pageSize = 10;
+ List<User> users = crudusermapper
+                    .select()
+                    .col (user:: getbirthday)
+                    .col (user:: getname)
+                    .where()
+                    .limitPage(1, 10)//  1: the first page, query 10 data
+                    .exs();
  
-   More query cases：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+```
+
+##### Statistical query
+```java
+List<User> users = this.crudUserMapper
+                       .select()
+                       .col(User::getId)
+                       .innerJoin(UserTeacher::new)
+                       .col(UserTeacher::getTeacherId)
+                       .on()
+                       .oeq(User::getId, UserTeacher::getId)
+                       .innerJoin(Teacher::new)
+                       .col(Teacher::getId)
+                       .col(AggTag.MAX, Teacher::getName)
+                       .on()
+                       .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                       .where()
+                       .gt(User::getId, 0)
+                       .groupBy(Teacher::getId)
+                       .groupBy(UserTeacher::getTeacherId)
+                       .groupBy(User::getId)
+                       .having()
+                       .gt(AggTag.MAX, User::getId, 0)
+                       .gt(AggTag.MAX, UserTeacher::getId, 0)
+                       .gt(AggTag.MAX, Teacher::getId, 0)
+                       .orderA(User::getId)
+                       .orderA(UserTeacher::getId)
+                       .orderA(Teacher::getId)
+                       .exs();
+```
+
+ <p>
+You will find that there are two special function of exs (), the ex () these two functions on behalf of the trigger. Exs () is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE () the ex (), WHERE () exs () </p>  
+ <p>
+  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
-<p>
-  A Normal Insert Operation
-</p> 
+#### The insert
 
 ```java
 Id exOne = crudUserMapper
@@ -125,36 +230,37 @@ Id exOne = crudUserMapper
                 .ex();
 ```
 <p>
-    A simple insert statement that returns a wrapper class Id, which is usually the primary key of the newly inserted data. An insert operation is so simple.
-    There is also a simpler way to insert data. Insert object. and supports multiple. Formation logic is optimized for batch processing. 
-    For example the following case
+A simple insert statement, returns a wrapper class Id, are usually the primary key of the newly inserted data. An insert it's as simple as that. There's a more simple way to insert the data. Insert the object. And support multiple. The formation logic for batch is optimized. For example, the following case
 </p>
 
 ```java
         User user = User.builder().name("Jom1").birthday(date).build();
         
-        Id id = crudUserMapper
+        List<Id> ex = crudUserMapper
                       .insert()
                       .colAll(user)
                       .ex();
-        print(id);
+        print(ex);
 ```
 
 <p>
 
-  We can insert the entire model object, indicating that all fields are to be queried, and the stratum is batched. Performance is very good.
-  For more cases, please refer to：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+  We can insert the whole model object, said to query all of the fields, for batch layer. Performance is very good.
+  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+
 </p>
 
+#### The update operation
 <p>
-Update operation, update operation has two modes, allowing to update null value updateNull and not allowing to update null value npdateNull, please see the following case
+Allows you to update the Null update npdate Null Null, are not allowed to update the Null values, there is update or insert, optimistic locking version update, batch updates,
+Please see the following case
 </p>
 
 ```java
 crudUserMapper
         .update().npdateNull()
                  .col(User::getBirthday, new Date())
-                 //name not will update . because its npdateNull
+                 //The name does not update. Because of its npdate Null
                  .col(User::getName,null)
                  .where()
                  .eq(User::getId, id)
@@ -163,52 +269,60 @@ crudUserMapper
 crudUserMapper
         .update().updateNull()
                  .col(User::getBirthday, new Date())
-                 //name  will update . because its updateNull
+                 //The name will be updated. Because it is the update of the Null
                  .col(User::getName,null)
                  .where()
                  .eq(User::getId, id)
                  .ex();
 
-```
+this.crudUserMapper.general().saveOrModify(user);
 
-<p>
-   This method is very useful for model object instances. For example, some properties in a User object have values ​​(not null) and some properties have no value (null), so should the properties without values ​​be updated? You can pass npdateNull (do not update) updateNull (update property is null), such as the following case
-</p>
+this.crudUserMapper.general().saveOrUpdate(user);
 
-```java
-    public void testUpdateUser(){
-        
-        User user = User.builder().name("Jom").birthday(null).build();
-        //npdateNull, birday null will not be updated to the database
-        crudUserMapper.update().npdateNull()
-                .colAll(user)
-                .where()
-                .eq(User::getId,1)
-                .ex();
-        
-        //updateNull， birday null will be updated to the database, the value of birday will be changed to null
-        crudUserMapper.update().updateNull()
-                .colAll(user)
-                .where()
-                .eq(User::getId, 1)
-                .ex();
-    }
+this.crudUserMapper.general().vsModifyById(user);
+
+this.crudUserMapper.general().modifyBatchById(user);
+
+this.crudUserMapper.general().updateBatchById(user);
 
 ```
 
 <p>
- Through the above case, we can control the update of the field very well in the business. When I use the model class.
+Through the above case, we can very good control in the business field of updates.
 </p>
 
 
-
+#### Delete operation
 <p>
-A new way of encoding. We can write default method in Mapper interface. For example the following case
-We recommend using this style
+<code>brief</code>Support rich delete functions. At the same time also delete support logic. 
+Use logic to delete need use <code>IsDel/RowStatus</code> in the <code>User</code>  enumeration.
 </p>
 
 ```java
-public interface CrudUserMapper extends CrudMapper<User> {
+ 
+crudUserMapper.delete()
+               .where()
+               .eq(User::getId, id)
+               .eq(User::getName, 'xxx')
+               .ex();   
+this.crudUserMapper.general().remove(user);
+this.crudUserMapper.general().removeById(id);
+this.crudUserMapper.general().removeByIds(id1,id2,id3);
+this.crudUserMapper.general().removeByIds(idList);
+this.crudUserMapper.general().logicRemove(user);
+this.crudUserMapper.general().logicRemoveById(id);
+```
+
+
+#### Support the default write JQL/SQL Mapper interfaces
+<p>
+A new kind of coding style. We can in <code>Mapper</code> Write the default method in the interface.
+Used for centralized management JQL/SQL. Prevent project in JQL/SQL are everywhere.
+For example, the following case (we recommend this kind of style).
+</p>
+
+```java
+public interface CrudUserMapper extends BriefMapper<User> {
 
     default User queryUserById(Number id){
         return select()
@@ -217,38 +331,31 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .eq(User::getId, id)
                 .ex();
     }
+   
 }
 ```
 
 <p>
-When my interface inherits the CrudMapper interface, we can write our JQL logic in default. This avoids the traditional method of writing native SQL statements on the Mapper interface.
-. For more cases, please see:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
+When we interface inheritance <code>BriefMapper</code>  ，
+We can write our JQL logic by default。
+Please see more cases:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
-- demo crud:
+- sample crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
-#### Advanced Advanced
-- This part mainly describes how to use JQL to express some complex query statements
+#### Multi-table join 
+- This part mainly introduces how to use JQL to express complex query. Does not require any configuration to join multiple tables (zero configuration).
 <p>
-   In the basic part above, we explained some common and most basic uses. Next, 
-   we will introduce some scenarios in real projects. Some slightly more complex use cases. 
-   It mainly includes join query, group query, statistical query, and common general operations.
+On the basis of the above section, we explained some of the common and the most basic purpose. Next, we will introduce some scenes in the actual project. Some of the slightly more complicated cases. Mainly includes the join query, grouping query, statistic query and commonly used common operations.
 </p>
 
 <p>
-    JQL provides a wealth of commonly used APIs. For example >= , <= , in , between, like,  
-    likeLeft, likeRight, exists, etc. There is also a combination unite that mainly combines  
-    multiple conditions into one, such as (xx > xx or xx < xx ) treats two association conditions 
-    as one. At the same time, we let you write the entry of native sql, such as col(sql), 
-    condSQL(sql), although we usually do not recommend using native sql. Because try not to 
-    use sql for complex logic processing , such as the interception of some strings.  
-    Or splicing, etc. It is recommended that these operations be handled at the business layer. 
-    Let's first look at a simple join JQL case: We recommend writing JQL in an interface class
+The commonly used API JQL provides rich. For example, > =, =, and in between, like, like Left, like Right, exists, and so on. There is also a combination unite, mainly is the combined into a multiple conditions, such as xx or xx (xx > xx) for a two associated conditions. At the same time we let you write native SQL entry, such as col (SQL), cond SQL (SQL), although we usually don't recommend to use native SQL. Because as far as possible do not use SQL for complex logical processing, such as capture some string. Or etc, these actions suggested in the business layer. Start with a simple join JQL case: write JQL recommended in the interface class
 </p>
 
 ```java
-public interface CrudUserMapper extends CrudMapper<User> {
+public interface CrudUserMapper extends BriefMapper<User> {
     
     default List<User> queryAllAndOrder(){
         return   select()
@@ -262,44 +369,10 @@ public interface CrudUserMapper extends CrudMapper<User> {
     }
 }
 ```
-<p>
- This JQL is to query the data that user and userOrder satisfy the relationship,And it automatically maps one-to-many relationships. The structure of the User class is as follows：
-</p>
 
-```java
- @BaseModel     
- public class User {
 
-    @BaseUnique
-    private Long id;
-
-    private String name;
-
-    private String birthday;
-
-    private String createTime;
-
-    private List<UserOrder> orders; //It will automatically map the data into it
-      
-    //getter, setter methods 
-  }
-      
- @BaseModel
- public class UserOrder {
-
-    @BaseUnique
-    private int id;
-    private String orderName;
-    private String orderMoney;
-      
-    //getter, setter  methods  
- }     
-      
-```   
-
-<p>
-    use left join , group by , limitPage  
-</p>   
+##### use left join , group by , limitPage  
+  
       
 ```java
  crudUserMapper.select()
@@ -320,16 +393,14 @@ public interface CrudUserMapper extends CrudMapper<User> {
 
 ```
 
-
-####   Common APIs 
+####  Generic API
 
 <p>
-    I encapsulate some commonly used functions, which are very simple to use. 
-    And the code is also very concise and clear. Such as query or change by id .
+I enclosed some of the commonly used functions, use rise very simple. And the code is very concise and clear. For example, by id query or change.
 </p>
 
 <p>
-    Commonly used apis only need to be used by calling the general() method. For example, query data by id
+  Commonly used API just call the general () method can be used. Such as through the id data
 </p>
 
 ```java
@@ -338,7 +409,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    save api，save an object to the database
+   Save the API, to save an object to the database
 </p>
 
 ```java
@@ -348,7 +419,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    Delete the specified data by id
+    By id delete specified data
 </p>
 
 ```java
@@ -356,255 +427,325 @@ crudUserMapper.general().removeById(1);
 ```
 
 <p>
-    More simple and commonly used APIs are as follows. 
+  Commonly used simple API is as follows
 </p>
 
 ```java
-  
-    /**
-       * save model
-       * @param model class
-       * @return primary key id
-       */
-      public Id save(T model);
-  
-      /**
-       * save or modify.
-       * sql :  insert into on duplicate key update
-       * @param model class
-       * @return  primary key id. or modify count num. so return void
-       */
-      public void saveOrModify(T model);
-  
-      /**
-       * save or update.
-       * By the @UniqueId field to query data, if the query not null then to update, or to insert.
-       * @param model class
-       * @return  primary key id. or modify count num. so return void
-       */
-      public void saveOrUpdate(T model);
-  
-      /**
-       * save or replace
-       * sql: replace into
-       * @param model class
-       * @return   primary key id. or modify count num. so return void
-       */
-      public void saveOrReplace(T model);
-  
-      /**
-       * save model
-       * @param models class
-       * @return primary key ids
-       */
-      public List<Id> saveBatch(Collection<T> models);
-  
-      /**
-       * save or modify.
-       * sql :  insert into on duplicate key update
-       * @param models class
-       * @return primary key id. or modify count num. so return void
-       */
-      public void saveOrModify(Collection<T> models);
-  
-      /**
-       * save or update.
-       * By the @UniqueId field to query data, if the query not null then to update, or to insert.
-       * @param models class
-       * @return  primary key id. or modify count num. so return void
-       */
-      public void saveOrUpdate(Collection<T> models);
-  
-      /**
-       * save or replace
-       * sql: replace into
-       * @param models class
-       * @return primary key id. or modify count num. so return void
-       */
-      public void saveOrReplace(Collection<T> models);
-  
-      /**
-       * delete model.Where conditions will be generated based on properties of the model
-       * class for which there is a value.
-       * @param model
-       */
-      public int remove(T model);
-  
-      /**
-       * delete model by id
-       */
-      public int removeById(Serializable id );
-  
-      /**
-       * delete model by ids
-       */
-      public int removeByIds(Serializable... ids );
-  
-      /**
-       * delete model by ids
-       */
-      public <ID extends Serializable> int removeByIds(Collection<ID> ids);
-  
-      /**
-       * Update the model, note that the update condition is the property marked with the Unique annotation.
-       * Only properties with values ​​are updated.
-       * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
-       * generate a set statement
-       * @param model model
-       * @return The number of bars affected by the update
-       */
-      public int modifyById(T model);
-  
-      /**
-       * Update the model, note that the update condition is the property marked with the Unique annotation.
-       * Only properties with values ​​are updated.
-       * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
-       * generate a set statement
-       * @param model model
-       * @return The number of bars affected by the update
-       */
-      public int updateById(T model);
-  
-      /**
-       * batch update. Empty fields will not be able to update the database.
-       * @param models models
-       * @return Affect the number of bars
-       */
-      public int modifyBatchById(Collection<T> models);
-  
-      /**
-       * batch update ,Will update the database if the field is empty.
-       * @param models models
-       * @return Affect the number of bars
-       */
-      public int updateBatchById(Collection<T> models);
-  
-      /**
-       * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
-       * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
-       * @param model model
-       * @return return query result
-       */
-      public List<T> query(T model);
-  
-      /**
-       * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
-       * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
-       * @param model model
-       * @param pageNum page number
-       * @param pageSize Number of bars displayed per page
-       * @return return query result
-       */
-      public List<T> query(T model,int pageNum,int pageSize);
-  
-      /**
-       * Paging query full table data
-       * @param pageNum page number, If the parameter is less than 1, it defaults to 1
-       * @param pageSize Number of bars displayed per page， If the parameter is less than 1, it defaults to 10
-       * @return return query result
-       */
-      public List<T> query(int pageNum,int pageSize);
-  
-      /**
-       * query by id
-       * @param id primary key id
-       * @return model
-       */
-      public T queryById(Serializable id);
-  
-      /**
-       * query by id
-       * @param ids primary key id
-       * @return model
-       */
-      public List<T> queryByIds(Serializable... ids);
-  
-      /**
-       * query by id
-       * @param ids primary key id
-       * @return model
-       */
-      public <ID extends Serializable>  List<T> queryByIds(Collection<ID> ids);
-  
-      /**
-       * query by id
-       * @param ids primary key id
-       * @return model
-       */
-      public <ID extends Serializable> List<T> queryByIds(List<ID> ids);
-  
-      /**
-       * query by id
-       * @param ids primary key id
-       * @return model
-       */
-      public <ID extends Serializable> List<T> queryByIds(Set<ID> ids);
-  
-  
-      /**
-       * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
-       * @param param Parameters. key database field name, value field value
-       * @return model
-       */
-      public List<T> queryByParam(Map<String,Object> param);
-  
-      /**
-       * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
-       * @param param Parameters. key database field name, value field value
-       * @param pageNum page number
-       * @param pageSize Number of bars displayed per page
-       * @return model
-       */
-      public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
-  
-      /**
-       * The number of statistical tables
-       * @return not null
-       */
-      public Number count();
-  
-      /**
-       * The number of statistical tables, through the specified field
-       * @return not null
-       */
-      public Number count(C c);
-  
-      /**
-       * The number of statistical tables, through the specified field
-       * Statistical results after deduplication. count(DISTINCT c)
-       * @return not null
-       */
-      public Number countDistinct(C c);
-  
-  
-      /**
-       * The number of statistical tables.  Will use the model as the where condition
-       * @return not null
-       */
-      public Number count(T model);
-  
-      /**
-       * The number of statistical tables, through the specified field.
-       * Will use the model as the where condition
-       * @return not null
-       */
-      public Number count(C c,T model);
-  
-      /**
-       * The number of statistical tables, through the specified field
-       * Statistical results after deduplication. count(DISTINCT c).
-       * Will use the model as the where condition
-       * @return not null
-       */
-      public Number countDistinct(C c,T model);  
 
+     /**
+         * save model
+         * @param model class
+         * @return primary key id
+         */
+        public Id save(T model);
+    
+        /**
+         * save or modify.
+         * sql :  insert into on duplicate key update
+         * @param model class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrModify(T model);
+    
+        /**
+         * save or update.
+         * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+         * @param model class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrUpdate(T model);
+    
+        /**
+         * save or replace
+         * sql: replace into
+         * @param model class
+         * @return   primary key id. or modify count num. so return void
+         */
+        public void saveOrReplace(T model);
+    
+        /**
+         * save model
+         * @param models class
+         * @return primary key ids
+         */
+        public List<Id> saveBatch(Collection<T> models);
+    
+        /**
+         * save or modify.
+         * sql :  insert into on duplicate key update
+         * @param models class
+         * @return primary key id. or modify count num. so return void
+         */
+        public void saveOrModify(Collection<T> models);
+    
+        /**
+         * save or update.
+         * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+         * @param models class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrUpdate(Collection<T> models);
+    
+        /**
+         * save or replace
+         * sql: replace into
+         * @param models class
+         * @return primary key id. or modify count num. so return void
+         */
+        public void saveOrReplace(Collection<T> models);
+    
+        /**
+         * delete model.Where conditions will be generated based on properties of the model
+         * class for which there is a value.
+         * Note that this is a physical deletion
+         * @param model
+         */
+        public int remove(T model);
+    
+        /**
+         * delete model by id
+         * Note that this is a physical deletion
+         */
+        public int removeById(Serializable id );
+    
+        /**
+         * delete model by ids
+         * Note that this is a physical deletion
+         */
+        public int removeByIds(Serializable... ids );
+    
+        /**
+         * delete model by ids
+         * Note that this is a physical deletion
+         */
+        public <ID extends Serializable> int removeByIds(Collection<ID> ids);
+    
+        /**
+         * logic delete model.Where conditions will be generated based on properties of the model
+         * class for which there is a value.
+         * {@link IsDel}
+         * {@link RowStatus}
+         * @param model
+         */
+        public int logicRemove(T model);
+    
+        /**
+         * logic delete model by id
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public int logicRemoveById(Serializable id );
+    
+        /**
+         * logic delete model by ids
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public int logicRemoveByIds(Serializable... ids );
+    
+        /**
+         * logic delete model by ids
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids);
+    
+        /**
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+         * generate a set statement.
+         * 支持版本更新
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int modifyById(T model);
+    
+        /**
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+         * generate a set statement
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int updateById(T model);
+    
+        /**
+         * batch update. Empty fields will not be able to update the database.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int modifyBatchById(Collection<T> models);
+    
+        /**
+         * batch update ,Will update the database if the field is empty.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int updateBatchById(Collection<T> models);
+        
+        /**
+         * Support version update.
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+         * generate a set statement.
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int vsModifyById(T model);
+    
+        /**
+         * Support version update.
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+         * generate a set statement
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int vsUpdateById(T model);
+    
+        /**
+         * Support version update.
+         * batch update. Empty fields will not be able to update the database.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int vsModifyByIds(Collection<T> models);
+    
+        /**
+         * Support version update.
+         * batch update ,Will update the database if the field is empty.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int vsUpdateByIds(Collection<T> models);
+    
+        /**
+         * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+         * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+         * @param model model
+         * @return return query result
+         */
+        public List<T> query(T model);
+    
+        /**
+         * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+         * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+         * @param model model
+         * @param pageNum page number
+         * @param pageSize Number of bars displayed per page
+         * @return return query result
+         */
+        public List<T> query(T model,int pageNum,int pageSize);
+    
+        /**
+         * Paging query full table data
+         * @param pageNum page number, If the parameter is less than 1, it defaults to 1
+         * @param pageSize Number of bars displayed per page， If the parameter is less than 1, it defaults to 10
+         * @return return query result
+         */
+        public List<T> query(int pageNum,int pageSize);
+    
+        /**
+         * query by id
+         * @param id primary key id
+         * @return model
+         */
+        public T queryById(Serializable id);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public List<T> queryByIds(Serializable... ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable>  List<T> queryByIds(Collection<ID> ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable> List<T> queryByIds(List<ID> ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable> List<T> queryByIds(Set<ID> ids);
+    
+    
+        /**
+         * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+         * @param param Parameters. key database field name, value field value
+         * @return model
+         */
+        public List<T> queryByParam(Map<String,Object> param);
+    
+        /**
+         * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+         * @param param Parameters. key database field name, value field value
+         * @param pageNum page number
+         * @param pageSize Number of bars displayed per page
+         * @return model
+         */
+        public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
+    
+        /**
+         * The number of statistical tables
+         * @return not null
+         */
+        public Number count();
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * @return not null
+         */
+        public Number count(C c);
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * Statistical results after deduplication. count(DISTINCT c)
+         * @return not null
+         */
+        public Number countDistinct(C c);
+    
+    
+        /**
+         * The number of statistical tables.  Will use the model as the where condition
+         * @return not null
+         */
+        public Number count(T model);
+    
+        /**
+         * The number of statistical tables, through the specified field.
+         * Will use the model as the where condition
+         * @return not null
+         */
+        public Number count(C c,T model);
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * Statistical results after deduplication. count(DISTINCT c).
+         * Will use the model as the where condition
+         * @return not null
+         */
+        public Number countDistinct(C c,T model);
 
 ```
-
-### Sql function annotation
+#### SQL function annotation
 <p>
-    We can use sql functions by using annotations on the fields of the class. 
-    Here are some use cases：
+  We can pass on the field of class use annotations to use SQL functions. Here are some use cases:
 </p>
 
 ```java
@@ -730,7 +871,7 @@ public class FunAnnoParserSample {
     @Concat("age")
     @GroupConcat(distinct = true, orderBy = @GroupConcat.OrderBy(colName = "age",sort = GroupConcat.Sort.DESC) ,separator = "-")
     private String colName27;//GROUP_CONCAT( distinct CONCAT(name,age)  order by age DESC separator '-')
-
+    
     @CaseWhen(whens = {
             @CaseWhen.When(when = "score > 80", then = "'Grand'"),
             @CaseWhen.When(when = "score < 80 and score > 50", then = "'General'"),
@@ -738,16 +879,15 @@ public class FunAnnoParserSample {
     }, elseEnd = @CaseWhen.Else("'VeryBad'"))
     private String scoreDescription;
 
-
 }
 ```
-### Powerful type converter
+#### Automatic type conversion
 <p>
-Built a large number of commonly used type converter.
-Such as a database field birthday is a datetime/int,
-Number/varchar and the conversion between enumeration class conversion .
-Enumeration classes are usually used together with @EnumValue to identify the unique attribute of the enumeration class, which will be automatically associated with the fields in the table(sample of enum : 
-https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+Built a large number of commonly used types of converters.
+Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
+Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
+(sample of enum : 
+https://github.com/caomingjie-code/brief/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 ). 
 </p>
 
@@ -788,27 +928,41 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     Number2LocalDateTimeConvert
     Number2EnumConvert
     String2EnumConvert
-    xxxx...
 
 ```
 
-### Supports automatic encryption and decryption
+#### The interceptor pattern
 <p>
-   When we need to add certain fields in a database table for decryption. Mybatis JQL provides a simple configuration can be done; 
-   We only need to specify a key (length is 32 hexadecimal). Then specify tables and the fields in the table. Encryption is to frame to do it. Let's for example.
-   We specify a private key is' FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA '.
-   And give the encrypt_num encryption. In table encrypt_data configuration is as follows: 
+SQL and parameters before the real execution will be interceptor intercepts. Can the interceptor defined in their secondary processing.
+Custom interceptors is very simple, you only need to implement the interface
+<code>JqlInterceptor</code>，And then perform <code>InterceptorLoader.init()</code> Initialize your interceptor.
+</p>
+
+```java
+ LogInterceptor logInterceptor = new LogInterceptor();
+ ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
+ jqlInterceptors.add(logInterceptor);
+ InterceptorLoader.init(jqlInterceptors);
+```
+
+
+#### Support automatic encryption and decryption
+<p>
+When we need to add some fields in a database table. Mybatis JQL provides a simple configuration can be done;
+We only need to specify a key (length is 32 hexadecimal). And then specify tables and the fields in the table.
+"FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA" we specify a private key to encrypt the num encryption.
+In table encrypt data configuration is as follows:
 </p>
   <p>
-  The encryption and decryption module is designed as an independent module. 
-  To use this function in services, you need to add mvn references. As follows
+Encryption and decryption module is designed as an independent module.
+Using this feature service, you need to add the MVN references. The following
   </p> 
 
 ```java
 <dependency>
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-model-encipher</artifactId>
-  <version>3.5.11.11</version>
+  <version>${brief.version}</version>
 </dependency>
 ```
 
@@ -827,43 +981,31 @@ https://github.com/caomingjie-code/mybatis-jql/blob/master/mybatis-model-sample/
     EncryptData encryptData = new EncryptData();
     String encryptNum = "1234567890";
     encryptData.setEncryptNum(encryptNum);
-     //The value of encrypt_num in the table is 396195EAF65E740AEC39E6FFF0714542
+     //The data stored in the db is after encryption 396195EAF65E740AEC39E6FFF0714542
     Id id = this.crudEncryptDataMapper.general().save(encryptData);
-    //Query will be decrypted automatically
+    //The query will automatically declassified
     encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); 
     print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
-    // Inscription query, the bottom will be converted into ciphertext and query.
+    //Query, query is specified directly inscriptions. Inscriptions will convert ciphertext and at the bottom of the query
     EncryptData ex = this.crudEncryptDataMapper.select().colAll()
     .where().eq(EncryptData::getEncryptNum, encryptNum).ex();
     print(ex);//{"id":10,"encryptNum":"1234567890"}
 ```
 
-### Field desensitization
+#### Field desensitization
 <p>
-Support field desensitization. Only need a model class with @ EmailBlur annotations to class. Note by plus annotation fields must be a String type.
-Fields annotated with the @Blur tag will not be inserted or updated.
+Support field desensitization. Only need a model class with @ Email can Blur annotations can be class. Note by plus annotation fields must be a String type.
 </p>
 
 ```
    @EmailBlur
-   private String email; // 12345678@outlook.com The encrypted data 12***678@outlook.com
-   
-   @PhoneNumBlur
-   private String phoneNum; //12***678
-   
-   //Fuzzy percentage
-   @StringBlur(percent = 0.5)
-   private String strName;  //hulm The encrypt data h**m
+   private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
 ```  
 <p>
-more examples： https://github.com/javaoffers/mybatis-jql/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+sample： https://github.com/javaoffers/brief/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
 </p>
 
 #### Code contributions are welcome
 <p>
-The project is already in use internally. Development efficiency and code cleanliness have been greatly improved.
-If you think it's good, please click the little star to encourage it
+This project has used internally. Greatly improves the development efficiency and code cleanliness. If you feel good, please point a little encouragement
 </p>
-
-### Please see the wiki more tutorial
-<a href="./wiki.md">中文<a/>

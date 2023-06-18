@@ -125,19 +125,19 @@
             </configuration>
           </plugin>
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
-<!--          <plugin>-->
-<!--            <groupId>org.apache.maven.plugins</groupId>-->
-<!--            <artifactId>maven-gpg-plugin</artifactId>-->
-<!--            <version>1.6</version>-->
-<!--            <executions>-->
-<!--              <execution>-->
-<!--                <phase>verify</phase>-->
-<!--                <goals>-->
-<!--                  <goal>sign</goal>-->
-<!--                </goals>-->
-<!--              </execution>-->
-<!--            </executions>-->
-<!--          </plugin>-->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
         </plugins>
       </build>
 

@@ -63,11 +63,23 @@
 
 - maven
   ```java
-    <!-- https://mvnrepository.com/artifact/com.javaoffers/mybatis-model-spring-support/3.5.11.4 -->
+    <properties>
+         <brief.version>3.6.0</brief.version>
+    </properties>
+  
+    
+   <!--brief轻量级不依赖任何框架-->
+     <dependency>
+         <groupId>com.javaoffers</groupId>
+         <artifactId>brief-speedier</artifactId>
+         <version>${brief.version}</version>
+     </dependency>
+  
+   <!--brief对mybatis增强-->
    <dependency>
        <groupId>com.javaoffers</groupId>
-       <artifactId>mybatis-model-spring-support</artifactId>
-       <version>3.5.11.12</version>
+       <artifactId>brief-mybatis</artifactId>
+       <version>${brief.version}</version>
    </dependency>
 
   ```
@@ -946,7 +958,7 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
 <dependency>
   <groupId>com.javaoffers</groupId>
   <artifactId>mybatis-model-encipher</artifactId>
-  <version>3.5.11.11</version>
+  <version>${brief.version}</version>
 </dependency>
 ```
 

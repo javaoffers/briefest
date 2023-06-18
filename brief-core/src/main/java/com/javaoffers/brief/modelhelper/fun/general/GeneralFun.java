@@ -140,7 +140,8 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * Update the model, note that the update condition is the property marked with the Unique annotation.
      * Only properties with values ​​are updated.
      * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
-     * generate a set statement
+     * generate a set statement.
+     * 支持版本更新
      * @param model model
      * @return The number of bars affected by the update
      */
@@ -169,6 +170,45 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @return Affect the number of bars
      */
     public int updateBatchById(Collection<T> models);
+
+
+    /**
+     * Support version update.
+     * Update the model, note that the update condition is the property marked with the Unique annotation.
+     * Only properties with values ​​are updated.
+     * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+     * generate a set statement.
+     * @param model model
+     * @return The number of bars affected by the update
+     */
+    public int vsModifyById(T model);
+
+    /**
+     * Support version update.
+     * Update the model, note that the update condition is the property marked with the Unique annotation.
+     * Only properties with values ​​are updated.
+     * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+     * generate a set statement
+     * @param model model
+     * @return The number of bars affected by the update
+     */
+    public int vsUpdateById(T model);
+
+    /**
+     * Support version update.
+     * batch update. Empty fields will not be able to update the database.
+     * @param models models
+     * @return Affect the number of bars
+     */
+    public int vsModifyByIds(Collection<T> models);
+
+    /**
+     * Support version update.
+     * batch update ,Will update the database if the field is empty.
+     * @param models models
+     * @return Affect the number of bars
+     */
+    public int vsUpdateByIds(Collection<T> models);
 
     /**
      * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.

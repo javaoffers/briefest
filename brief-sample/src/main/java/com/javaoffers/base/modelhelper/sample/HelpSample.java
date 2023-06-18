@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.aggent.InstallModelHelper;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.core.Id;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
@@ -55,6 +56,10 @@ public class HelpSample {
     @Test
     public void test() throws Exception {
         ConvertRegisterSelectorDelegate delegate =  ConvertRegisterSelectorDelegate.convert;
+
+        Version version = delegate.converterObject(Version.class, 10000);
+        LOGUtils.printLog(version);
+
         String s = delegate.converterObject(String.class, new Short((short) 1));
         LOGUtils.printLog(s);
 

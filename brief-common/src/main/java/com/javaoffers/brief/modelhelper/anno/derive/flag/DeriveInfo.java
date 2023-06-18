@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  * @author: create by cmj on 2023/6/11 19:48
  */
 public class DeriveInfo {
-
+    //col name of db
     private String colName;
     private Field field;
     private boolean isDelField;

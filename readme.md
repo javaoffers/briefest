@@ -72,10 +72,7 @@
 
   ```
 ### 基础使用    
-- 基本使用教程 
- <p>
-    一个普通的查询
- </p>
+#### 查询
  <p>
 在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
  </p>
@@ -136,9 +133,7 @@ public class User {
    更多查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
-<p>
- 正常的插入操作
-</p> 
+#### 插入操作
 
 ```java
 Id exOne = crudUserMapper
@@ -169,8 +164,11 @@ Id exOne = crudUserMapper
 
 </p>
 
+#### 更新操作
 <p>
-更新操作，更新操作有两种模式，允许更新空值updateNull和不允许更新空值npdateNull，请看下面的案例</p>
+允许更新空值updateNull、不允许更新空值npdateNull、存在则更新否则插入，乐观锁版本更新、
+请看下面的案例
+</p>
 
 ```java
 crudUserMapper
@@ -213,6 +211,11 @@ crudUserMapper
                 .where()
                 .eq(User::getId, 1)
                 .ex();
+        
+        this.crudUserMapper.general().saveOrModify(user);
+        
+        this.crudUserMapper.general().saveOrUpdate(user);
+
     }
 
 ```
@@ -557,7 +560,7 @@ crudUserMapper.general().removeById(1);
     public long countDistinct(C c,T model);
 
 ```
-### sql函数注解
+#### sql函数注解
 <p>
     我们可以通过在类的字段上使用注解来使用sql函数。以下是一些用例：
 </p>
@@ -695,7 +698,7 @@ public class FunAnnoParserSample {
 
 }
 ```
-### Powerful type converter
+#### 自动类型转换
 <p>
 内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
 https://github.com/caomingjie-code/brief/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
@@ -742,7 +745,7 @@ https://github.com/caomingjie-code/brief/blob/master/mybatis-model-sample/src/ma
 
 ```
 
-### 拦截器模式
+#### 拦截器模式
 <p>
 sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的拦截器中进行二次处理。 自定义拦截器非常简单，你只需要实现接口
 <code>JqlInterceptor</code>，然后调用 <code>InterceptorLoader.init()</code> 进行初始化自己的拦截器即可。
@@ -756,7 +759,7 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
 ```
 
 
-### 支持自动加密和解密
+#### 支持自动加密和解密
 <p>
    当我们需要添加一个数据库表中的某些字段进行解密。Mybatis JQL提供了一个简单的配置可以做;
    我们只需要指定一个关键(长度为32个十六进制)。然后指定表和表中的字段。
@@ -802,7 +805,7 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
     print(ex);//{"id":10,"encryptNum":"1234567890"}
 ```
 
-### 字段脱敏
+#### 字段脱敏
 <p>
 支持字段脱敏. 只需要在model类上加上@EmailBlur注解可可以类。 注意被加上的注解的字段必须是String类型.
 </p>

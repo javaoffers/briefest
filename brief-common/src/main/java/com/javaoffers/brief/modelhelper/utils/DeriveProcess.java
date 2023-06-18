@@ -22,8 +22,8 @@ public class DeriveProcess {
         Assert.isTrue(StringUtils.isNotBlank(colName), "colName is null");
         DeriveInfo deriveInfo = new DeriveInfo(colName, colF);
         //version
-        Version annotation = colF.getAnnotation(Version.class);
-        if(annotation != null){
+        Class type = colF.getType();
+        if(type != null && Version.class.isAssignableFrom(type)){
             tableInfo.putDeriveColName(DeriveFlag.VERSION, deriveInfo);
             Assert.isTrue(Number.class.isAssignableFrom(colF.getType()),"version col name " +
                     colF.getDeclaringClass() +"."+colF.getName()

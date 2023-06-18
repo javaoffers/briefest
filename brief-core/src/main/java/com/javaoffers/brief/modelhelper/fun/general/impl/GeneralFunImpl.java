@@ -1,9 +1,6 @@
 package com.javaoffers.brief.modelhelper.fun.general.impl;
 
-import com.javaoffers.brief.modelhelper.anno.derive.flag.IsDel;
-import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
-import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
-import com.javaoffers.brief.modelhelper.anno.derive.flag.RowStatus;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.*;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.exception.GetColValueException;
@@ -343,6 +340,38 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
+    public int vsModifyById(T model) {
+        if (model == null) {
+            return 0;
+        }
+        return renovateByIdWithVersion(Lists.newArrayList(model), false);
+    }
+
+    @Override
+    public int vsUpdateById(T model) {
+        if (model == null) {
+            return 0;
+        }
+        return renovateByIdWithVersion(Lists.newArrayList(model), true);
+    }
+
+    @Override
+    public int vsModifyByIds(Collection<T> models) {
+        if(CollectionUtils.isEmpty(models)){
+            return 0;
+        }
+        return renovateByIdWithVersion(models, false);
+    }
+
+    @Override
+    public int vsUpdateByIds(Collection<T> models) {
+        if(CollectionUtils.isEmpty(models)){
+            return 0;
+        }
+        return renovateByIdWithVersion(models, true);
+    }
+
+    @Override
     public List<T> query(T model) {
         if (model == null) {
             return Collections.EMPTY_LIST;
@@ -647,7 +676,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
     }
 
-    private int renovateBatchById(Collection<T> models, boolean updateNull) {
+    private int renovateBatchById(Collection<T> models, boolean updateNull){
         if (models == null || models.size() == 0) {
             return 0;
         }
@@ -678,6 +707,54 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return where.ex().intValue();
         }
         return 0;
+    }
+
+    //Is not  batch
+    private int renovateByIdWithVersion(Collection<T> models, boolean updateNull) {
+        if (models == null || models.size() == 0) {
+            return 0;
+        }
+
+        DeriveInfo deriveColName = tableInfo.getDeriveColName(DeriveFlag.VERSION);
+        if (deriveColName == null) {
+            throw new ParseParamException(this.mClass.getName() + " no version field");
+        }
+        Field versionField = deriveColName.getField();
+        String versionColName = deriveColName.getColName();
+        int modifyCount = 0;
+
+        for (T model : models) {
+            if(model == null){
+                continue;
+            }
+            SmartUpdateFun<T, C, V> npdateNull = updateNull ? this.updateFun.updateNull() : this.updateFun.npdateNull();
+            WhereModifyFun<T, V>  where = npdateNull.colAll(model).where();
+            AtomicBoolean status_ = new AtomicBoolean(false);
+            parseWhereById(where, status_, model);
+            if (status_.get()) {
+                try {
+                    Version version = (Version)versionField.get(model);
+                    if(version == null){
+                        version = new Version(0);
+                    }
+                    where.condSQL(tableName+"."+versionColName +" in ("+version.get()+")");
+                    //After the success of the updated version plus one automatically.
+                    version.incrementAndGet();
+                    int i1 = where.ex().intValue();
+                    if(i1 == 0){
+                        //Update failed restore version number.
+                        version.decrementAndGet();
+                    }else{
+                        modifyCount = modifyCount +i1;
+                    }
+
+                } catch (IllegalAccessException e) {
+                    throw new ParseParamException("Parsing the version information failure");
+                }
+            }
+        }
+
+        return modifyCount;
     }
 
     private T getLogicRemoveModel() {

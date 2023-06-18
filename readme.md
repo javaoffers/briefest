@@ -8,12 +8,12 @@
 ### 简介
 <p>
  简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief的核心。
-  <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。在<code>Mapper</code> default方法中可以直接操作JQL API（前提是继承了<code>CrudMapper</code>）。 
+  <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。在<code>Mapper</code> default方法中可以直接操作JQL API（前提是继承了<code>BriefMapper</code>）。 
   集成了brief功能，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
 
 </p>
 
-## brief-speedier
+## 单独使用brief
 <p>
 <code>brief-speedier</code> 可以单独使用. 不依赖任何环境. 
 使用案例： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
@@ -21,21 +21,21 @@
 
 ```java
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
-    CrudMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+    BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
     userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
     print(userList);
 ```
 
-## brief-mybatis
+## brief增强mybatis
 <p>
 <code>brief-mybatis</code> 是对 <code>mybatis</code>增强,让 <code>mybatis</code> 拥有brief能力。 所以<code>brief-mybatis</code> 完全兼容 <code>mybatis</code>.
 如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief-mybatis</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
-只需要让你的 <code>Mapper</code>类继承<code>CrudMapper</code>即可使用brief特性. 
+只需要让你的 <code>Mapper</code>类继承<code>BriefMapper</code>即可使用brief特性. 
 </p>
 
 ## brief-spring-boot-start
 <p>
-待支持，支持<code>spring-boot</code>. 如果你的spring-boot项目引用了 <code>mybatis</code> 框架， 那么你只需要引入 <code>brief-mybatis</code> 即可.
+待支持，支持<code>spring-boot</code>. 如果你的spring-boot项目引用了 <code>mybatis</code> 框架， 那么你只需要引入 <code>brief-mybatis</code> 对mybatis增强即可.
 </p>
 
 ## brief 功能介绍
@@ -72,7 +72,7 @@
 
   ```
 ### 基础使用    
-#### 查询
+#### 查询操作
  <p>
 在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
  </p>
@@ -87,10 +87,40 @@ public class User {
     private String name;
 
     private String birthday;
+    
+    private Work work;
+    
+    private IsDel isDel;
+    
+    private Version version;  
+
+    @CaseWhen(whens = {
+            @CaseWhen.When(when = "money < 10", then = "'pool'"),
+            @CaseWhen.When(when = "money > 10000", then = "'rich'")},
+            elseEnd = @CaseWhen.Else("'civilian'")
+    )
+    private String moneyDes;    
+
+    private List<UserOrder> orders;
+
     // .... getter setter
 }
+
+@BaseModel
+public class UserOrder {
+
+    @BaseUnique
+    private int id;
+    private String orderName;
+    private String orderMoney;
+      
+    //getter, setter  methods  
+} 
+
+
 ```
 
+##### 全表查询
  ```java
 
  List<User>  users = crudUserMapper 
@@ -98,12 +128,14 @@ public class User {
                     .colAll() 
                     .where() 
                     .exs(); 
+
  ```
  
   <p>
-这个 JQL 最终会被翻译为 select * from user。这里的colall是查询所有表字段的意思。如果要查询指定的字段，比如姓名和生日字段，可以这样做： 
+这个 JQL 最终会被翻译为 select id, name, xxx..  from user。这里的colall是查询所有表字段的意思。如果要查询指定的字段，比如姓名和生日字段，可以这样做： 
 </p>
- 
+
+##### 查询指定的表字段 
  ```java
  List<User> users = crudusermapper
                     .select()
@@ -113,6 +145,7 @@ public class User {
                     .exs();
  ```
  
+##### 指定条件查询 
  <p>
 可以通过col()指定要查询的字段。这里的where()和SQL中的关键字where是一样的。比如要查询一个id值为1的用户，可以这样写：
  </p>
@@ -125,12 +158,56 @@ public class User {
              .eq(User::getId, 1) 
              .ex();
  ```
+
+##### 分页查询
+
+```java
+ int pageNum = 1;
+ int pageSize = 10;
+ List<User> users = crudusermapper
+                    .select()
+                    .col (user:: getbirthday)
+                    .col (user:: getname)
+                    .where()
+                    .limitPage(1, 10)// 1: 第一页， 查询10条数据
+                    .exs();
+ 
+```
+
+##### 统计查询
+```java
+List<User> users = this.crudUserMapper
+                       .select()
+                       .col(User::getId)
+                       .innerJoin(UserTeacher::new)
+                       .col(UserTeacher::getTeacherId)
+                       .on()
+                       .oeq(User::getId, UserTeacher::getId)
+                       .innerJoin(Teacher::new)
+                       .col(Teacher::getId)
+                       .col(AggTag.MAX, Teacher::getName)
+                       .on()
+                       .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                       .where()
+                       .gt(User::getId, 0)
+                       .groupBy(Teacher::getId)
+                       .groupBy(UserTeacher::getTeacherId)
+                       .groupBy(User::getId)
+                       .having()
+                       .gt(AggTag.MAX, User::getId, 0)
+                       .gt(AggTag.MAX, UserTeacher::getId, 0)
+                       .gt(AggTag.MAX, Teacher::getId, 0)
+                       .orderA(User::getId)
+                       .orderA(UserTeacher::getId)
+                       .orderA(Teacher::getId)
+                       .exs();
+```
+
  <p>
-在这三种情况下，你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
+你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
  </p>  
  <p>
- 
-   更多查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+  更多复杂查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
 #### 插入操作
@@ -166,7 +243,7 @@ Id exOne = crudUserMapper
 
 #### 更新操作
 <p>
-允许更新空值updateNull、不允许更新空值npdateNull、存在则更新否则插入，乐观锁版本更新、
+允许更新空值updateNull、不允许更新空值npdateNull、存在则更新否则插入，乐观锁版本更新、batch更新、
 请看下面的案例
 </p>
 
@@ -189,49 +266,52 @@ crudUserMapper
                  .eq(User::getId, id)
                  .ex();
 
-```
+this.crudUserMapper.general().saveOrModify(user);
 
-<p>
-此方法对于模型对象实例非常有用。比如一个User对象中有些属性有值（not null）有些属性没有值（null），那么没有值的属性是否应该更新呢？可以通过npdateNull（不更新）updateNull（更新属性为null），比如下面这种情况</p>
+this.crudUserMapper.general().saveOrUpdate(user);
 
-```java
-    public void testUpdateUser(){
-        
-        User user = User.builder().name("Jom").birthday(null).build();
-        //npdateNull, birday null will not be updated to the database
-        crudUserMapper.update().npdateNull()
-                .colAll(user)
-                .where()
-                .eq(User::getId,1)
-                .ex();
-        
-        //updateNull， birday null will be updated to the database, the value of birday will be changed to null
-        crudUserMapper.update().updateNull()
-                .colAll(user)
-                .where()
-                .eq(User::getId, 1)
-                .ex();
-        
-        this.crudUserMapper.general().saveOrModify(user);
-        
-        this.crudUserMapper.general().saveOrUpdate(user);
+this.crudUserMapper.general().vsModifyById(user);
 
-    }
+this.crudUserMapper.general().modifyBatchById(user);
+
+this.crudUserMapper.general().updateBatchById(user);
 
 ```
 
 <p>
-通过上面的案例，我们可以在业务中很好的控制字段的更新。当我使用模型类时。
+通过上面的案例，我们可以在业务中很好的控制字段的更新。
 </p>
 
 
-
+#### 删除操作
 <p>
-一种新的编码方式。我们可以在 Mapper 接口中编写默认方法。例如下面的案例我们推荐使用这种风格
+<code>brief</code>支持丰富的删除功能. 同时还支持逻辑删除. 使用逻辑删除需要在<code>User</code>中使用IsDel 枚举即可.
+
 </p>
 
 ```java
-public interface CrudUserMapper extends CrudMapper<User> {
+ 
+crudUserMapper.delete()
+               .where()
+               .eq(User::getId, id)
+               .eq(User::getName, 'xxx')
+               .ex();   
+this.crudUserMapper.general().remove(user);
+this.crudUserMapper.general().removeById(id);
+this.crudUserMapper.general().removeByIds(id1,id2,id3);
+this.crudUserMapper.general().removeByIds(idList);
+
+```
+
+
+#### Mapper接口中支持default编写jql/sql
+<p>
+一种新的编码方式。我们可以在 <code>Mapper</code> 接口中编写默认方法。用于集中管理 jql/sql. 防止项目中出现到处都是jql/sql.
+例如下面的案例(我们推荐使用这种风格).
+</p>
+
+```java
+public interface CrudUserMapper extends BriefMapper<User> {
 
     default User queryUserById(Number id){
         return select()
@@ -240,19 +320,20 @@ public interface CrudUserMapper extends CrudMapper<User> {
                 .eq(User::getId, id)
                 .ex();
     }
+   
 }
 ```
 
 <p>
-当我的接口继承了CrudMapper接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 Mapper 接口上编写原生 SQL 语句的方法。.
+当我的接口继承了<code>BriefMapper</code>  接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 <code>Mapper</code> 接口上编写原生 SQL 语句的方法。.
 更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
 - 演示 crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
-#### 进阶 
-- 这部分主要介绍如何使用JQL来表达一些复杂的查询语句
+#### 多表join 
+- 这部分主要介绍如何使用JQL来表达一些复杂的查询语句. 多表进行join不需要任何配置（零配置）. 
 <p>
   在上面的基础部分，我们解释了一些常见和最基本的用途。接下来，我们将介绍一些实际项目中的场景。一些稍微复杂的用例。主要包括连接查询、分组查询、统计查询和常用的通用操作。
 </p>
@@ -262,7 +343,7 @@ public interface CrudUserMapper extends CrudMapper<User> {
 </p>
 
 ```java
-public interface CrudUserMapper extends CrudMapper<User> {
+public interface CrudUserMapper extends BriefMapper<User> {
     
     default List<User> queryAllAndOrder(){
         return   select()
@@ -276,43 +357,10 @@ public interface CrudUserMapper extends CrudMapper<User> {
     }
 }
 ```
-<p>
-这个JQL就是查询user和userOrder满足关系的数据，并且自动映射一对多关系。 User类的结构如下：</p>
 
-```java
- @BaseModel     
- public class User {
 
-    @BaseUnique
-    private Long id;
-
-    private String name;
-
-    private String birthday;
-
-    private String createTime;
-
-    private List<UserOrder> orders; //它会自动将数据映射到其中
-      
-    //getter, setter methods 
-  }
-      
- @BaseModel
- public class UserOrder {
-
-    @BaseUnique
-    private int id;
-    private String orderName;
-    private String orderMoney;
-      
-    //getter, setter  methods  
- }     
-      
-```   
-
-<p>
-    use left join , group by , limitPage  
-</p>   
+##### use left join , group by , limitPage  
+  
       
 ```java
  crudUserMapper.select()
@@ -372,192 +420,315 @@ crudUserMapper.general().removeById(1);
 
 ```java
 
-    /**
-     * save model
-     * @param model class
-     * @return primary key id
-     */
-    public Id save(T model);
-
-    /**
-     * save or modify.
-     * sql :  insert into on duplicate key update
-     * @param model class
-     * @return primary key id
-     */
-    public List<Id> saveOrModify(T model);
-
-    /**
-     * save or replace
-     * sql: replace into
-     * @param model class
-     * @return primary key id
-     */
-    public List<Id> saveOrReplace(T model);
-
-    /**
-     * save model
-     * @param models class
-     * @return primary key id
-     */
-    public List<Id> saveBatch(Collection<T> models);
-
-    /**
-     * delete model.Where conditions will be generated based 
-        on properties of the model
-     * class for which there is a value.
-     * @param model
-     */
-    public int remove(T model);
-
-    /**
-     * delete model by id
-
-
-     */
-    public int removeById(Serializable id );
-
-    /**
-     * delete model by ids
-     */
-    public int removeByIds(Serializable... ids );
-
-    /**
-     * delete model by ids
-     */
-    public int removeByIds(Collection<Serializable> ids);
-
-    /**
-     * Update the model, note that the update condition is 
-        the property marked with the Unique annotation.
-     * Only properties with values ​​are updated.
-     * In other words, the @BaseUnique annotation will generate 
-        a Where condition, and other non-null properties will
-     * generate a set statement
-     * @param model model
-     * @return The number of bars affected by the update
-     */
-    public int modifyById(T model);
-
-    /**
-     * batch update
-     * @param models models
-     * @return Affect the number of bars
-     */
-    public int modifyBatchById(Collection<T> models);
-
-    /**
-     * Query the main model, be careful not to include child models. 
-        Non-null properties will generate a where statement.
-     * <>Note that properties such as Collection<Model> will be ignored, 
-        even if they are not null </>
-     * @param model model
-     * @return return query result
-     */
-    public List<T> query(T model);
-
-    /**
-     * Query the main model, be careful not to include child models. 
-        Non-null properties will generate a where statement.
-     * <>Note that properties such as Collection<Model> will be ignored, 
-        even if they are not null </>
-     * @param model model
-     * @param pageNum page number
-     * @param pageSize Number of bars displayed per page
-     * @return return query result
-     */
-    public List<T> query(T model,int pageNum,int pageSize);
-
-    /**
-     * Paging query full table data
-     * @param pageNum page number, If the parameter is less than 1, 
-        it defaults to 1
-     * @param pageSize Number of bars displayed per page， 
-        If the parameter is less than 1, it defaults to 10
-     * @return return query result
-     */
-    public List<T> query(int pageNum,int pageSize);
-
-    /**
-     * query by id
-     * @param id primary key id
-     * @return model
-     */
-    public T queryById(Serializable id);
-
-    /**
-     * query by id
-     * @param ids primary key id
-     * @return model
-     */
-    public List<T> queryByIds(Serializable... ids);
-
-    /**
-     * query by id
-     * @param ids primary key id
-     * @return model
-     */
-    public List<T> queryByIds(Collection<Serializable> ids);
-
-    /**
-     * Map<String,Object>. String: Field names of the table. 
-        The value corresponding to the Object field
-     * @param param Parameters. key database field name, value field value
-     * @return model
-     */
-    public List<T> queryByParam(Map<String,Object> param);
-
-    /**
-     * Map<String,Object>. String: Field names of the table. 
-        The value corresponding to the Object field
-     * @param param Parameters. key database field name, value field value
-     * @param pageNum page number
-     * @param pageSize Number of bars displayed per page
-     * @return model
-     */
-    public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
-
-
-   /**
-     * The number of statistical tables
-     * @return
-     */
-    public long count();
-
-    /**
-     * The number of statistical tables, through the specified field
-     * @return
-     */
-    public long count(C c);
-
-    /**
-     * The number of statistical tables, through the specified field
-     * Statistical results after deduplication. count(DISTINCT c)
-     * @return
-     */
-    public long countDistinct(C c);
-
-
-    /**
-     * The number of statistical tables.  Will use the model as the where condition
-     * @return
-     */
-    public long count(T model);
-
-    /**
-     * The number of statistical tables, through the specified field.
-     * Will use the model as the where condition
-     * @return
-     */
-    public long count(C c,T model);
-
-    /**
-     * The number of statistical tables, through the specified field
-     * Statistical results after deduplication. count(DISTINCT c).
-     * Will use the model as the where condition
-     * @return
-     */
-    public long countDistinct(C c,T model);
+     /**
+         * save model
+         * @param model class
+         * @return primary key id
+         */
+        public Id save(T model);
+    
+        /**
+         * save or modify.
+         * sql :  insert into on duplicate key update
+         * @param model class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrModify(T model);
+    
+        /**
+         * save or update.
+         * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+         * @param model class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrUpdate(T model);
+    
+        /**
+         * save or replace
+         * sql: replace into
+         * @param model class
+         * @return   primary key id. or modify count num. so return void
+         */
+        public void saveOrReplace(T model);
+    
+        /**
+         * save model
+         * @param models class
+         * @return primary key ids
+         */
+        public List<Id> saveBatch(Collection<T> models);
+    
+        /**
+         * save or modify.
+         * sql :  insert into on duplicate key update
+         * @param models class
+         * @return primary key id. or modify count num. so return void
+         */
+        public void saveOrModify(Collection<T> models);
+    
+        /**
+         * save or update.
+         * By the @UniqueId field to query data, if the query not null then to update, or to insert.
+         * @param models class
+         * @return  primary key id. or modify count num. so return void
+         */
+        public void saveOrUpdate(Collection<T> models);
+    
+        /**
+         * save or replace
+         * sql: replace into
+         * @param models class
+         * @return primary key id. or modify count num. so return void
+         */
+        public void saveOrReplace(Collection<T> models);
+    
+        /**
+         * delete model.Where conditions will be generated based on properties of the model
+         * class for which there is a value.
+         * Note that this is a physical deletion
+         * @param model
+         */
+        public int remove(T model);
+    
+        /**
+         * delete model by id
+         * Note that this is a physical deletion
+         */
+        public int removeById(Serializable id );
+    
+        /**
+         * delete model by ids
+         * Note that this is a physical deletion
+         */
+        public int removeByIds(Serializable... ids );
+    
+        /**
+         * delete model by ids
+         * Note that this is a physical deletion
+         */
+        public <ID extends Serializable> int removeByIds(Collection<ID> ids);
+    
+        /**
+         * logic delete model.Where conditions will be generated based on properties of the model
+         * class for which there is a value.
+         * {@link IsDel}
+         * {@link RowStatus}
+         * @param model
+         */
+        public int logicRemove(T model);
+    
+        /**
+         * logic delete model by id
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public int logicRemoveById(Serializable id );
+    
+        /**
+         * logic delete model by ids
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public int logicRemoveByIds(Serializable... ids );
+    
+        /**
+         * logic delete model by ids
+         * {@link IsDel}
+         * {@link RowStatus}
+         */
+        public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids);
+    
+        /**
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+         * generate a set statement.
+         * 支持版本更新
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int modifyById(T model);
+    
+        /**
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+         * generate a set statement
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int updateById(T model);
+    
+        /**
+         * batch update. Empty fields will not be able to update the database.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int modifyBatchById(Collection<T> models);
+    
+        /**
+         * batch update ,Will update the database if the field is empty.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int updateBatchById(Collection<T> models);
+        
+        /**
+         * Support version update.
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and other non-null properties will
+         * generate a set statement.
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int vsModifyById(T model);
+    
+        /**
+         * Support version update.
+         * Update the model, note that the update condition is the property marked with the Unique annotation.
+         * Only properties with values ​​are updated.
+         * In other words, the @BaseUnique annotation will generate a Where condition, and the field will
+         * generate a set statement
+         * @param model model
+         * @return The number of bars affected by the update
+         */
+        public int vsUpdateById(T model);
+    
+        /**
+         * Support version update.
+         * batch update. Empty fields will not be able to update the database.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int vsModifyByIds(Collection<T> models);
+    
+        /**
+         * Support version update.
+         * batch update ,Will update the database if the field is empty.
+         * @param models models
+         * @return Affect the number of bars
+         */
+        public int vsUpdateByIds(Collection<T> models);
+    
+        /**
+         * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+         * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+         * @param model model
+         * @return return query result
+         */
+        public List<T> query(T model);
+    
+        /**
+         * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+         * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+         * @param model model
+         * @param pageNum page number
+         * @param pageSize Number of bars displayed per page
+         * @return return query result
+         */
+        public List<T> query(T model,int pageNum,int pageSize);
+    
+        /**
+         * Paging query full table data
+         * @param pageNum page number, If the parameter is less than 1, it defaults to 1
+         * @param pageSize Number of bars displayed per page， If the parameter is less than 1, it defaults to 10
+         * @return return query result
+         */
+        public List<T> query(int pageNum,int pageSize);
+    
+        /**
+         * query by id
+         * @param id primary key id
+         * @return model
+         */
+        public T queryById(Serializable id);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public List<T> queryByIds(Serializable... ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable>  List<T> queryByIds(Collection<ID> ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable> List<T> queryByIds(List<ID> ids);
+    
+        /**
+         * query by id
+         * @param ids primary key id
+         * @return model
+         */
+        public <ID extends Serializable> List<T> queryByIds(Set<ID> ids);
+    
+    
+        /**
+         * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+         * @param param Parameters. key database field name, value field value
+         * @return model
+         */
+        public List<T> queryByParam(Map<String,Object> param);
+    
+        /**
+         * Map<String,Object>. String: Field names of the table. The value corresponding to the Object field
+         * @param param Parameters. key database field name, value field value
+         * @param pageNum page number
+         * @param pageSize Number of bars displayed per page
+         * @return model
+         */
+        public List<T> queryByParam(Map<String,Object> param,int pageNum,int pageSize);
+    
+        /**
+         * The number of statistical tables
+         * @return not null
+         */
+        public Number count();
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * @return not null
+         */
+        public Number count(C c);
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * Statistical results after deduplication. count(DISTINCT c)
+         * @return not null
+         */
+        public Number countDistinct(C c);
+    
+    
+        /**
+         * The number of statistical tables.  Will use the model as the where condition
+         * @return not null
+         */
+        public Number count(T model);
+    
+        /**
+         * The number of statistical tables, through the specified field.
+         * Will use the model as the where condition
+         * @return not null
+         */
+        public Number count(C c,T model);
+    
+        /**
+         * The number of statistical tables, through the specified field
+         * Statistical results after deduplication. count(DISTINCT c).
+         * Will use the model as the where condition
+         * @return not null
+         */
+        public Number countDistinct(C c,T model);
 
 ```
 #### sql函数注解

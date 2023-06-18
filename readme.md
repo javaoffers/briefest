@@ -1,5 +1,5 @@
 
-## brief
+# brief
 <p>
 <code>brief</code> 是一款高性能、轻量级、简单易用, 零配置的orm框架. 让复杂的屎山sql消失、开发效率最大化、代码量更少且阅读性更高、维护性可持续。 
 这是<code>brief</code>存在的原因. <code>brief</code>带你你体验前所未有的丝滑开发.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">

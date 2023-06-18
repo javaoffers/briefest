@@ -62,7 +62,7 @@
 
 
 - maven
-  ```java
+  ```
     <properties>
          <brief.version>3.6.0</brief.version>
     </properties>
@@ -312,7 +312,8 @@ this.crudUserMapper.general().remove(user);
 this.crudUserMapper.general().removeById(id);
 this.crudUserMapper.general().removeByIds(id1,id2,id3);
 this.crudUserMapper.general().removeByIds(idList);
-
+this.crudUserMapper.general().logicRemove(user);
+this.crudUserMapper.general().logicRemoveById(id);
 ```
 
 

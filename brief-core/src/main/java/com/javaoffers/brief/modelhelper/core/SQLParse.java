@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
 import com.javaoffers.brief.modelhelper.utils.InterceptorLoader;
@@ -59,6 +60,8 @@ public class SQLParse{
                         o = ((Id) o).value();
                     } else if (o instanceof Enum) {
                         o = EnumValueUtils.getEnumValue(((Enum) o));
+                    } else if(o instanceof Version){
+                        o = ((Version) o).longValue();
                     }
                     params[k] = o;
                 }
@@ -76,6 +79,8 @@ public class SQLParse{
                         oLeft = ((Id) oLeft).value();
                     } else if (oLeft instanceof Enum) {
                         oLeft = EnumValueUtils.getEnumValue(((Enum) oLeft));
+                    }else if(oLeft instanceof Version){
+                        oLeft = ((Version) oLeft).longValue();
                     }
                     paramsLeft[k] = oLeft;
 
@@ -84,6 +89,8 @@ public class SQLParse{
                         oRight = ((Id) oRight).value();
                     } else if (oRight instanceof Enum) {
                         oRight = EnumValueUtils.getEnumValue(((Enum) oRight));
+                    }else if(oRight instanceof Version){
+                        oRight = ((Version) oRight).longValue();
                     }
                     paramsRight[k] = oRight;
 

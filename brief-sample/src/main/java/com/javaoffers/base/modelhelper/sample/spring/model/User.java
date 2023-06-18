@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.anno.ColName;
 import com.javaoffers.brief.modelhelper.anno.derive.Blur;
 import com.javaoffers.brief.modelhelper.anno.derive.StringBlur;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.IsDel;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.anno.fun.noneparam.time.Now;
 import com.javaoffers.brief.modelhelper.anno.fun.params.CaseWhen;
 import com.javaoffers.brief.modelhelper.anno.fun.params.IfGt;
@@ -107,6 +108,8 @@ public class User {
     private Work work;
 
     private IsDel isDel;
+
+    private Version version;
 
     @ColName("name")
     @ConcatWs(separator = "':'", value = "id", position = 1)

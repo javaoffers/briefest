@@ -268,7 +268,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public int logicRemoveByIds(Serializable... ids) {
-        if(ArrayUtils.isEmpty(ids)){
+        if (ArrayUtils.isEmpty(ids)) {
             return 0;
         }
         Set<Serializable> idsSet = Arrays.stream(ids).filter(Objects::nonNull).collect(Collectors.toSet());
@@ -285,7 +285,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         Map<String, Object> param = new HashMap<>();
         String newColNameTag = getNewColNameTag();
         param.putIfAbsent(newColNameTag, ids);
-        where.condSQL( tableName+"."+this.primaryColNmae + " in (#{" +newColNameTag+ "})", param);
+        where.condSQL(tableName + "." + this.primaryColNmae + " in (#{" + newColNameTag + "})", param);
         return where.ex();
     }
 
@@ -357,7 +357,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public int vsModifyByIds(Collection<T> models) {
-        if(CollectionUtils.isEmpty(models)){
+        if (CollectionUtils.isEmpty(models)) {
             return 0;
         }
         return renovateByIdWithVersion(models, false);
@@ -365,7 +365,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public int vsUpdateByIds(Collection<T> models) {
-        if(CollectionUtils.isEmpty(models)){
+        if (CollectionUtils.isEmpty(models)) {
             return 0;
         }
         return renovateByIdWithVersion(models, true);
@@ -676,7 +676,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
     }
 
-    private int renovateBatchById(Collection<T> models, boolean updateNull){
+    private int renovateBatchById(Collection<T> models, boolean updateNull) {
         if (models == null || models.size() == 0) {
             return 0;
         }
@@ -724,33 +724,46 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         int modifyCount = 0;
 
         for (T model : models) {
-            if(model == null){
+            if (model == null) {
                 continue;
             }
             SmartUpdateFun<T, C, V> npdateNull = updateNull ? this.updateFun.updateNull() : this.updateFun.npdateNull();
-            WhereModifyFun<T, V>  where = npdateNull.colAll(model).where();
+            boolean versionIsNull = false;
+            Version version = null;
+            try {
+                version = (Version) versionField.get(model);
+                // If the version does not exist that version of the current version is 0,
+                // the update is successful after the latest version of 1
+                if(version == null){
+                    version = new Version(0);
+                    versionField.set(model, version);
+                    versionIsNull = true;
+                }
+            } catch (Exception e) {
+                throw new ParseParamException("Parsing the version information failure");
+            }
+
+
+            WhereModifyFun<T, V> where = npdateNull.colAll(model).where();
             AtomicBoolean status_ = new AtomicBoolean(false);
             parseWhereById(where, status_, model);
             if (status_.get()) {
-                try {
-                    Version version = (Version)versionField.get(model);
-                    if(version == null){
-                        version = new Version(0);
-                    }
-                    where.condSQL(tableName+"."+versionColName +" in ("+version.get()+")");
-                    //After the success of the updated version plus one automatically.
-                    version.incrementAndGet();
-                    int i1 = where.ex().intValue();
-                    if(i1 == 0){
-                        //Update failed restore version number.
-                        version.decrementAndGet();
-                    }else{
-                        modifyCount = modifyCount +i1;
-                    }
-
-                } catch (IllegalAccessException e) {
-                    throw new ParseParamException("Parsing the version information failure");
+                if (versionIsNull) {
+                    where.condSQL(tableName + "." + versionColName + " is null");
+                } else {
+                    where.condSQL(tableName + "." + versionColName + " in (" + version.get() + ")");
                 }
+                //After the success of the updated version plus one automatically.
+                version.incrementAndGet();
+                int i1 = where.ex().intValue();
+                if (i1 == 0) {
+                    //Update failed restore version number.
+                    version.decrementAndGet();
+                } else {
+                    modifyCount = modifyCount + i1;
+                }
+
+
             }
         }
 

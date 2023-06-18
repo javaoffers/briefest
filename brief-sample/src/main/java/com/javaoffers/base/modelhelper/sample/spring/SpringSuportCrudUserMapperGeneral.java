@@ -43,6 +43,8 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+
+        testVsModify();
         testIsDel();
         testGeneral();
         testBatchUpdate();
@@ -55,6 +57,23 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
 
 
+    }
+    public void testVsModify() throws JsonProcessingException {
+        User user = this.crudUserMapper.general().query(1, 1).get(0);
+        user.setWork(Work.JAVA);
+        this.crudUserMapper.general().vsModifyById(user);
+        user = this.crudUserMapper.general().queryById(user.getId());
+        User user2 = this.crudUserMapper.general().queryById(user.getId());
+
+        user.setBirthdayDate(new Date());
+        user2.setWork(Work.PYTHON);
+
+
+        boolean ok = this.crudUserMapper.general().vsModifyById(user) == 1;
+        print(ok);
+
+        ok = this.crudUserMapper.general().vsModifyById(user2) == 1;
+        print(ok);
     }
 
     public void testIsDel() throws JsonProcessingException {

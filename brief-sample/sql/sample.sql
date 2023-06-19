@@ -1,17 +1,16 @@
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `name` varchar(1024) COLLATE utf8_bin DEFAULT NULL,
   `birthday` datetime DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `money` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `sex` int(2) DEFAULT NULL,
-  `month` int(2) DEFAULT NULL,
+  `sex` int(255) DEFAULT NULL,
+  `month` tinyint(10) DEFAULT NULL,
   `work` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `update_time` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `is_del` int(2) DEFAULT NULL,
+  `version` int(12) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 INSERT INTO `user` VALUES (1, 'ling', '2022-07-05 00:30:31', '2022-09-09 03:51:23','1000', '1','8', 'JAVA');
 
 CREATE TABLE `user_order` (

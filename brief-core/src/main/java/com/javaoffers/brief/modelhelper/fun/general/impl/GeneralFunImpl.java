@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.exception.GetColValueException;
 import com.javaoffers.brief.modelhelper.exception.ParseParamException;
+import com.javaoffers.brief.modelhelper.exception.PrimaryKeyNotFoundException;
 import com.javaoffers.brief.modelhelper.exception.UpdateFieldsException;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereFun;
@@ -76,6 +77,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.tableName = TableHelper.getTableName(mClass);
         this.tableInfo = TableHelper.getTableInfo(mClass);
         Map<String, ColumnInfo> primaryColNames = this.tableInfo.getPrimaryColNames();
+        if(MapUtils.isEmpty(primaryColNames)){
+            throw new PrimaryKeyNotFoundException(this.tableName + " not primary key ");
+        }
         this.primaryColNmae = primaryColNames.keySet().iterator().next();
         this.primaryField = this.tableInfo.getColNameAndFieldOfModel().get(this.primaryColNmae).get(0);
     }

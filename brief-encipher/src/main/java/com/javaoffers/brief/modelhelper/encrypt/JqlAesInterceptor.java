@@ -11,10 +11,10 @@ import java.util.List;
 
 public class JqlAesInterceptor implements JqlInterceptor {
 
-    private static  List<SqlAesProcessor> sqlAesProcessors;
+    private static volatile List<SqlAesProcessor> sqlAesProcessors;
 
     public void setSqlAesProcessors(List<SqlAesProcessor> sqlAesProcessors){
-        if(sqlAesProcessors == null){
+        if(JqlAesInterceptor.sqlAesProcessors == null){
             JqlAesInterceptor.sqlAesProcessors = Collections.unmodifiableList(sqlAesProcessors);
         }
     }

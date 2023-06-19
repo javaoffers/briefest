@@ -219,7 +219,7 @@ List<User> users = this.crudUserMapper
  <p>
 You will find that there are two special function of exs (), the ex () these two functions on behalf of the trigger. Exs () is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE () the ex (), WHERE () exs () </p>  
  <p>
-  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportBriefUserMapperSelete.java
+  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
 #### The insert
@@ -248,7 +248,7 @@ A simple insert statement, returns a wrapper class Id, are usually the primary k
 <p>
 
   We can insert the whole model object, said to query all of the fields, for batch layer. Performance is very good.
-  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportBriefUserMapperInsert.java
+  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 
 </p>
 
@@ -324,7 +324,7 @@ For example, the following case (we recommend this kind of style).
 </p>
 
 ```java
-public interface BriefUserMapper extends BriefMapper<User> {
+public interface CrudUserMapper extends BriefMapper<User> {
 
     default User queryUserById(Number id){
         return select()
@@ -357,7 +357,7 @@ The commonly used API JQL provides rich. For example, > =, =, and in between, li
 </p>
 
 ```java
-public interface BriefUserMapper extends BriefMapper<User> {
+public interface CrudUserMapper extends BriefMapper<User> {
     
     default List<User> queryAllAndOrder(){
         return   select()
@@ -889,7 +889,7 @@ Built a large number of commonly used types of converters.
 Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
 Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
 (sample of enum : 
-https://github.com/caomingjie-code/brief/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportBriefUserMapperInsert.java
+https://github.com/caomingjie-code/brief/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 ). 
 </p>
 

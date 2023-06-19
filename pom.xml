@@ -14,8 +14,9 @@
     <module>brief-common</module>
     <module>brief-encipher</module>
     <module>brief-speedier</module>
-    <module>brieft-db-sharding</module>
-    <module>brief-db-router</module>
+    <module>brief-sharding</module>
+    <module>brief-router</module>
+    <module>brief-spring-boot</module>
   </modules>
 
   <name>brief</name>

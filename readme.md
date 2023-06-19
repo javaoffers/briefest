@@ -39,6 +39,8 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
 ## Function is introduced
 - feature
   - High performance queries and insert
+  - Support sub-database sub-table
+  - Support multiple data source switching
   - Don't have to write the native SQL. Can according to the stream of Java API to write.
   - SQL function annotation, simple and easy to use
   - New, supporting the mapper interface class write default default method.
@@ -52,7 +54,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - Field query fuzzy desensitization
   - SQL interceptors, are free to customize
   - SQL filter, are free to customize
-  - Slow slow SQL monitor. Customizable SQL standard.
+  - Slow slow SQL monitor. Allow customizable handling of slow SQL.
 
   
 - Project of actual combat, which has been used internally. The effect is very good.
@@ -217,7 +219,7 @@ List<User> users = this.crudUserMapper
  <p>
 You will find that there are two special function of exs (), the ex () these two functions on behalf of the trigger. Exs () is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE () the ex (), WHERE () exs () </p>  
  <p>
-  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
 #### The insert
@@ -246,7 +248,7 @@ A simple insert statement, returns a wrapper class Id, are usually the primary k
 <p>
 
   We can insert the whole model object, said to query all of the fields, for batch layer. Performance is very good.
-  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 
 </p>
 
@@ -338,11 +340,11 @@ public interface CrudUserMapper extends BriefMapper<User> {
 <p>
 When we interface inheritance <code>BriefMapper</code>  ，
 We can write our JQL logic by default。
-Please see more cases:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
+Please see more cases:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
 </p>
 
 - sample crud:
-  - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
+  - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
 #### Multi-table join 
 - This part mainly introduces how to use JQL to express complex query. Does not require any configuration to join multiple tables (zero configuration).
@@ -887,7 +889,7 @@ Built a large number of commonly used types of converters.
 Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
 Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
 (sample of enum : 
-https://github.com/caomingjie-code/brief/blob/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+https://github.com/caomingjie-code/brief/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 ). 
 </p>
 
@@ -961,7 +963,7 @@ Using this feature service, you need to add the MVN references. The following
 ```java
 <dependency>
   <groupId>com.javaoffers</groupId>
-  <artifactId>mybatis-model-encipher</artifactId>
+  <artifactId>brief-encipher</artifactId>
   <version>${brief.version}</version>
 </dependency>
 ```
@@ -1002,7 +1004,7 @@ Support field desensitization. Only need a model class with @ Email can Blur ann
    private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
 ```  
 <p>
-sample： https://github.com/javaoffers/brief/tree/master/mybatis-model-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+sample： https://github.com/javaoffers/brief/tree/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
 </p>
 
 #### Code contributions are welcome

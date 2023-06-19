@@ -46,6 +46,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - New, supporting the mapper interface class write default default method.
   - Powerful automatic type conversion functions.
   - The optimization of the automatic identification of insert/update batch execution
+  - Provide optional automatic identification of difference data real-time update capability (supported in the next version)
   - Multi-table query does not need to be configured. Automatically map one-to-one, one-to-many, many-to-many.
   - Supports logical deletion, optimistic locking.
   - Integrated with the commonly used API, to directly using the need for development.

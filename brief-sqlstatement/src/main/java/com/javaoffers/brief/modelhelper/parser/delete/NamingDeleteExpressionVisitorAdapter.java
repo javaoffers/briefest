@@ -1,10 +1,10 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser.delete;
+package com.javaoffers.brief.modelhelper.parser.delete;
 
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.ColNameProcessorInfo;
-import com.javaoffers.brief.modelhelper.encrypt.parser.ConditionName;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectContent;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
+import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectContent;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectVisitorAdapter;
 import com.javaoffers.thrid.jsqlparser.expression.ExpressionVisitorAdapter;
 import com.javaoffers.thrid.jsqlparser.schema.Column;
 import com.javaoffers.thrid.jsqlparser.statement.select.SelectBody;

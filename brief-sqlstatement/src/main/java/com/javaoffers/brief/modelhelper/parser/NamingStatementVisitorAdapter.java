@@ -1,9 +1,9 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser;
+package com.javaoffers.brief.modelhelper.parser;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.delete.NamingDeleteExpressionVisitorAdapter;
-import com.javaoffers.brief.modelhelper.encrypt.parser.insert.NamingInsertItemsListVisitorAdapter;
-import com.javaoffers.brief.modelhelper.encrypt.parser.insert.NamingInsertVisitorAdapter;
-import com.javaoffers.brief.modelhelper.encrypt.parser.update.NamingUpdateExpressionVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.delete.NamingDeleteExpressionVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.insert.NamingInsertItemsListVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.insert.NamingInsertVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.update.NamingUpdateExpressionVisitorAdapter;
 import com.javaoffers.thrid.jsqlparser.expression.Expression;
 import com.javaoffers.thrid.jsqlparser.expression.operators.relational.ItemsList;
 import com.javaoffers.thrid.jsqlparser.schema.Column;

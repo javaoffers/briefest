@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser;
+package com.javaoffers.brief.modelhelper.parser;
 import com.javaoffers.thrid.jsqlparser.parser.CCJSqlParserUtil;
 import com.javaoffers.thrid.jsqlparser.statement.Statement;
 import org.apache.commons.lang3.tuple.Pair;

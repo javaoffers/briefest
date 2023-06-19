@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
+import com.javaoffers.brief.modelhelper.parser.TableColumns;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.springframework.util.Assert;
 
@@ -15,28 +16,6 @@ import java.util.stream.Collectors;
 public class EncryptConfigContext {
     //key: 私钥, list: table信息(包含要加解密的字段信息)
     private static final Map<String, List<TableColumns>> keyTableColumns = new ConcurrentHashMap<>();
-
-
-    public static class TableColumns{
-        private String tableName;
-        private Set<String> columns = new HashSet<>();
-
-        public String getTableName() {
-            return tableName;
-        }
-
-        public void setTableName(String tableName) {
-            this.tableName = tableName;
-        }
-
-        public Set<String> getColumns() {
-            return columns;
-        }
-
-        public void setColumns(Set<String> columns) {
-            this.columns = columns;
-        }
-    }
 
     public synchronized static void put(String key, String tableName, String[] columns){
         //log.info("aes key : {}, tableName : {}, columns: {}", key, tableName, columns);

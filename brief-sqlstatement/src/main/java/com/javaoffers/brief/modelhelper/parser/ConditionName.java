@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser;
+package com.javaoffers.brief.modelhelper.parser;
 
 /**
  * @author cmj

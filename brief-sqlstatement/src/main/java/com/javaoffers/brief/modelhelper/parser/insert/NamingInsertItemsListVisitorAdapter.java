@@ -1,6 +1,6 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser.insert;
+package com.javaoffers.brief.modelhelper.parser.insert;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectContent;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectContent;
 import com.javaoffers.thrid.jsqlparser.expression.operators.relational.ExpressionList;
 import com.javaoffers.thrid.jsqlparser.expression.operators.relational.ItemsListVisitorAdapter;
 

@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser;
+package com.javaoffers.brief.modelhelper.parser;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.util.Assert;

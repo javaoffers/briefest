@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser;
+package com.javaoffers.brief.modelhelper.parser;
 
 import com.javaoffers.thrid.jsqlparser.expression.Expression;
 import com.javaoffers.thrid.jsqlparser.statement.select.*;

@@ -40,6 +40,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-encipher</artifactId>
+            <version>3.6.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -1,8 +1,8 @@
 package com.javaoffers.base.modelhelper.sample.spring.encipher;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.ColNameProcessorInfo;
-import com.javaoffers.brief.modelhelper.encrypt.parser.ConditionName;
-import com.javaoffers.brief.modelhelper.encrypt.parser.SqlParserProcessor;
+import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
+import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.parser.SqlParserProcessor;
 import com.javaoffers.thrid.jsqlparser.JSQLParserException;
 import com.javaoffers.thrid.jsqlparser.schema.Column;
 import com.javaoffers.thrid.jsqlparser.schema.Table;

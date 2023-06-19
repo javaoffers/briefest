@@ -1,8 +1,8 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser.insert;
+package com.javaoffers.brief.modelhelper.parser.insert;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.ColNameProcessorInfo;
-import com.javaoffers.brief.modelhelper.encrypt.parser.ConditionName;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectContent;
+import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
+import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectContent;
 import com.javaoffers.thrid.jsqlparser.expression.ExpressionVisitorAdapter;
 import com.javaoffers.thrid.jsqlparser.expression.JdbcParameter;
 import com.javaoffers.thrid.jsqlparser.schema.Column;

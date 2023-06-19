@@ -1,9 +1,9 @@
-package com.javaoffers.brief.modelhelper.encrypt.parser.insert;
+package com.javaoffers.brief.modelhelper.parser.insert;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.ConditionName;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingFromItemVisitorAdapter;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectContent;
-import com.javaoffers.brief.modelhelper.encrypt.parser.NamingSelectExpressionVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.parser.NamingFromItemVisitorAdapter;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectContent;
+import com.javaoffers.brief.modelhelper.parser.NamingSelectExpressionVisitorAdapter;
 import com.javaoffers.thrid.jsqlparser.expression.Expression;
 import com.javaoffers.thrid.jsqlparser.statement.select.*;
 import org.apache.commons.collections4.CollectionUtils;

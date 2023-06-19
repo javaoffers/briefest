@@ -1,8 +1,9 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
-import com.javaoffers.brief.modelhelper.encrypt.parser.ColNameProcessorInfo;
-import com.javaoffers.brief.modelhelper.encrypt.parser.ConditionName;
-import com.javaoffers.brief.modelhelper.encrypt.parser.SqlParserProcessor;
+import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
+import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.parser.SqlParserProcessor;
+import com.javaoffers.brief.modelhelper.parser.TableColumns;
 import com.javaoffers.thrid.jsqlparser.schema.Column;
 import com.javaoffers.thrid.jsqlparser.schema.Table;
 
@@ -78,8 +79,8 @@ public class SqlAesProcessor {
 
         this.key = key;
         SqlParserProcessor.SqlParserProcessorBuild builder = SqlParserProcessor.builder();
-        List<EncryptConfigContext.TableColumns> tableColums = EncryptConfigContext.getTableColumsByKey(key);
-        for (EncryptConfigContext.TableColumns tableColumns : tableColums) {
+        List<TableColumns> tableColums = EncryptConfigContext.getTableColumsByKey(key);
+        for (TableColumns tableColumns : tableColums) {
             String tableName = tableColumns.getTableName();
             Set<String> columns = tableColumns.getColumns();
             builder.addProcessor(tableName, processor);

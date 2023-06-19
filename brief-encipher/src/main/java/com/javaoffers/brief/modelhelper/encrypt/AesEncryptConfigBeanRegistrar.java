@@ -1,7 +1,6 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
 import com.javaoffers.brief.modelhelper.encrypt.anno.AesEncryptConfig;
-import com.javaoffers.brief.modelhelper.encrypt.batis.MybatisEncryptInterceptorConfig;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
@@ -10,7 +9,9 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.Ordered;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.Assert;
 
@@ -20,7 +21,10 @@ import java.util.ArrayList;
  * @author mingJie
  */
 //@Slf4j
+@Order(Ordered.LOWEST_PRECEDENCE-1)
 public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegistrar , BeanFactoryPostProcessor {
+
+    static  volatile boolean isOpenAseEncrpt = false;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -43,7 +47,7 @@ public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegist
                 String[] columns = encryptTableColumn.getStringArray(EncryptConfigConst.COLUMNS);
                 //将解析的信息缓存起来
                 EncryptConfigContext.put(key, tableName, columns);
-                status = true;
+                isOpenAseEncrpt = status = true;
             }
             if(status){
                 String beanName = "SqlAesProcessor#"+key;
@@ -51,12 +55,6 @@ public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegist
                     BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(SqlAesProcessor.class);
                     beanDefinitionBuilder.addConstructorArgValue(key);
                     registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
-                }
-
-                //注册mybatis拦截器AES加密
-                if(!registry.containsBeanDefinition(MybatisEncryptInterceptorConfig.class.getName())){
-                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(MybatisEncryptInterceptorConfig.class);
-                    registry.registerBeanDefinition(MybatisEncryptInterceptorConfig.class.getName(), beanDefinitionBuilder.getBeanDefinition());
                 }
                 //注册JqlAesInterceptor
                 if(!registry.containsBeanDefinition(JqlAesInterceptor.class.getName())){

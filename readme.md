@@ -888,9 +888,7 @@ public class FunAnnoParserSample {
 Built a large number of commonly used types of converters.
 Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
 Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
-(sample of enum : 
-https://github.com/caomingjie-code/brief/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
-). 
+(sample of enum :https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java ). 
 </p>
 
 ```

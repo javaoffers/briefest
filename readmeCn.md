@@ -341,7 +341,7 @@ public interface CrudUserMapper extends BriefMapper<User> {
 
 <p>
 当我的接口继承了<code>BriefMapper</code>  接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 <code>Mapper</code> 接口上编写原生 SQL 语句的方法。.
-更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/CrudUserMapper.java
+更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/BriefUserMapper.java
 </p>
 
 - 演示 crud:
@@ -887,7 +887,9 @@ public class FunAnnoParserSample {
 #### 自动类型转换
 <p>
 内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
-https://github.com/caomingjie-code/brief/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+
+https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+
 ). 
 </p>
 

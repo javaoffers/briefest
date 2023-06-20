@@ -721,7 +721,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
         DeriveInfo deriveColName = tableInfo.getDeriveColName(DeriveFlag.VERSION);
         if (deriveColName == null) {
-            throw new ParseParamException(this.mClass.getName() + " no version field");
+            throw new ParseParamException(this.mClass.getName() + " no version field or col name");
         }
         Field versionField = deriveColName.getField();
         String versionColName = deriveColName.getColName();

@@ -19,12 +19,26 @@
 使用案例： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
-```java
+- maven
+
+  ```java
+    <properties>
+         <brief.version>3.6.0</brief.version>
+    </properties>
+   <!--brief轻量级不依赖任何框架-->
+     <dependency>
+         <groupId>com.javaoffers</groupId>
+         <artifactId>brief-speedier</artifactId>
+         <version>${brief.version}</version>
+     </dependency>
+   ```
+
+   ```java
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
     BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
     userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
     print(userList);
-```
+   ```
 
 ## brief增强mybatis
 <p>
@@ -32,6 +46,18 @@
 如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief-mybatis</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
 只需要让你的 <code>Mapper</code>类继承<code>BriefMapper</code>即可使用brief特性. 
 </p>
+
+- maven
+
+  ```
+   <!--brief对mybatis增强-->
+   <dependency>
+       <groupId>com.javaoffers</groupId>
+       <artifactId>brief-mybatis</artifactId>
+       <version>${brief.version}</version>
+   </dependency>
+
+  ```
 
 ## brief-spring-boot-start
 <p>
@@ -64,28 +90,6 @@
 ![](note-doc/img/2220967059897.png)
 
 
-- maven
-  ```
-    <properties>
-         <brief.version>3.6.0</brief.version>
-    </properties>
-  
-    
-   <!--brief轻量级不依赖任何框架-->
-     <dependency>
-         <groupId>com.javaoffers</groupId>
-         <artifactId>brief-speedier</artifactId>
-         <version>${brief.version}</version>
-     </dependency>
-  
-   <!--brief对mybatis增强-->
-   <dependency>
-       <groupId>com.javaoffers</groupId>
-       <artifactId>brief-mybatis</artifactId>
-       <version>${brief.version}</version>
-   </dependency>
-
-  ```
 ### 基础使用    
 #### 查询操作
  <p>

@@ -19,17 +19,43 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 sample ： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
-```java
+- maven
+
+  ```java
+    <properties>
+         <brief.version>3.6.0</brief.version>
+    </properties>
+   <!--brief轻量级不依赖任何框架-->
+     <dependency>
+         <groupId>com.javaoffers</groupId>
+         <artifactId>brief-speedier</artifactId>
+         <version>${brief.version}</version>
+   </dependency>
+   ```
+  
+   ```java
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
     BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
     userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
     print(userList);
-```
+    ```
 
 ## Enhance mybatis
 <p>
 The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> has brief ability. So <code>brief-mybatis</code> is fully compatible with <code>mybatis</code>. If your project is used in the <code>mybatis</code> so you can directly introduced <code>brief-mybatis</code> dependence. Do change, enhance not only introduce it won't affect the existing engineering, silky smooth. Without any configuration. Just need to let your Mapper class inheritance <code>BriefMapper</code> can be used in the feature.
 </p>
+
+- maven
+  ```
+  
+   <!--The brief-mybatis increased-->
+   <dependency>
+       <groupId>com.javaoffers</groupId>
+       <artifactId>brief-mybatis</artifactId>
+       <version>${brief.version}</version>
+   </dependency>
+
+  ```
 
 ## Brief-spring-boot-start
 <p>
@@ -61,29 +87,6 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
 - Project of actual combat, which has been used internally. The effect is very good.
 ![](note-doc/img/2220967059897.png)
 
-
-- maven
-  ```
-    <properties>
-         <brief.version>3.6.0</brief.version>
-    </properties>
-  
-    
-   <!--Brief, lightweight doesn't depend on any framework-->
-     <dependency>
-         <groupId>com.javaoffers</groupId>
-         <artifactId>brief-speedier</artifactId>
-         <version>${brief.version}</version>
-     </dependency>
-  
-   <!--The brief-mybatis increased-->
-   <dependency>
-       <groupId>com.javaoffers</groupId>
-       <artifactId>brief-mybatis</artifactId>
-       <version>${brief.version}</version>
-   </dependency>
-
-  ```
 ### Based on using    
 #### Query operation
  <p>

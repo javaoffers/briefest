@@ -25,7 +25,7 @@ sample ： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/mai
     <properties>
          <brief.version>3.6.0</brief.version>
     </properties>
-   <!--brief轻量级不依赖任何框架-->
+   <!--brief Lightweight and can be used alone-->
      <dependency>
          <groupId>com.javaoffers</groupId>
          <artifactId>brief-speedier</artifactId>

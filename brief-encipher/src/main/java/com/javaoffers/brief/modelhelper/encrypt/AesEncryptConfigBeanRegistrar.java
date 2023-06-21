@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
+import com.javaoffers.brief.modelhelper.briefstate.BriefCommonComponentStates;
 import com.javaoffers.brief.modelhelper.encrypt.anno.AesEncryptConfig;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 @Order(Ordered.LOWEST_PRECEDENCE-1)
 public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegistrar , BeanFactoryPostProcessor {
 
-    static  volatile boolean isOpenAseEncrpt = false;
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
@@ -47,12 +47,12 @@ public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegist
                 String[] columns = encryptTableColumn.getStringArray(EncryptConfigConst.COLUMNS);
                 //将解析的信息缓存起来
                 EncryptConfigContext.put(key, tableName, columns);
-                isOpenAseEncrpt = status = true;
+                BriefCommonComponentStates.ENCRYPT_STATE = status = true;
             }
             if(status){
                 String beanName = "SqlAesProcessor#"+key;
                 if(!registry.containsBeanDefinition(beanName)){
-                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(SqlAesProcessor.class);
+                    BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(SqlAesProcessorImpl.class);
                     beanDefinitionBuilder.addConstructorArgValue(key);
                     registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
                 }
@@ -70,11 +70,11 @@ public class AesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegist
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-        String[] beanNamesForType = configurableListableBeanFactory.getBeanNamesForType(SqlAesProcessor.class);
-        ArrayList<SqlAesProcessor> sqlAesProcessors = Lists.newArrayList();
+        String[] beanNamesForType = configurableListableBeanFactory.getBeanNamesForType(SqlAesProcessorImpl.class);
+        ArrayList<SqlAesProcessorImpl> sqlAesProcessors = Lists.newArrayList();
         if(beanNamesForType != null){
             for(String beanName : beanNamesForType){
-                sqlAesProcessors.add((SqlAesProcessor)configurableListableBeanFactory.getBean(beanName));
+                sqlAesProcessors.add((SqlAesProcessorImpl)configurableListableBeanFactory.getBean(beanName));
             }
         }
         JqlAesInterceptor jqlAesInterceptor = (JqlAesInterceptor)configurableListableBeanFactory.getBean(JqlAesInterceptor.class.getName());

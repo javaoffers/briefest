@@ -11,9 +11,9 @@ import java.util.List;
 
 public class JqlAesInterceptor implements JqlInterceptor {
 
-    private static volatile List<SqlAesProcessor> sqlAesProcessors;
+    private static volatile List<SqlAesProcessorImpl> sqlAesProcessors;
 
-    public void setSqlAesProcessors(List<SqlAesProcessor> sqlAesProcessors){
+    public synchronized void setSqlAesProcessors(List<SqlAesProcessorImpl> sqlAesProcessors){
         if(JqlAesInterceptor.sqlAesProcessors == null){
             JqlAesInterceptor.sqlAesProcessors = Collections.unmodifiableList(sqlAesProcessors);
         }
@@ -22,7 +22,7 @@ public class JqlAesInterceptor implements JqlInterceptor {
     @Override
     public void handler(BaseSQLInfo baseSQLInfo) {
         if(CollectionUtils.isNotEmpty(sqlAesProcessors) && baseSQLInfo != null && StringUtils.isNotBlank(baseSQLInfo.getSql())){
-            for(SqlAesProcessor sqlAesProcessor : sqlAesProcessors){
+            for(SqlAesProcessorImpl sqlAesProcessor : sqlAesProcessors){
                 try {
                     String newSql = sqlAesProcessor.parseSql(baseSQLInfo.getSql());
                     baseSQLInfo.resetSql(newSql);

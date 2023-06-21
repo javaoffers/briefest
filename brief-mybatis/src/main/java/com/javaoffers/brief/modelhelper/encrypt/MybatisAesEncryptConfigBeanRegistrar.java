@@ -1,29 +1,26 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
-import com.javaoffers.brief.modelhelper.encrypt.anno.AesEncryptConfig;
+import com.javaoffers.brief.modelhelper.briefstate.BriefCommonComponentStates;
 import com.javaoffers.brief.modelhelper.encrypt.batis.MybatisEncryptInterceptorConfig;
+import com.javaoffers.brief.modelhelper.exception.SqlAesProcessException;
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.Lists;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
-import org.springframework.core.annotation.AnnotationAttributes;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.type.AnnotationMetadata;
-import org.springframework.util.Assert;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 /**
  * @author mingJie
  */
 //@Slf4j
-@ConditionalOnBean(AesEncryptConfigBeanRegistrar.class)
 @Order
 public class MybatisAesEncryptConfigBeanRegistrar implements ImportBeanDefinitionRegistrar , BeanFactoryPostProcessor {
 
@@ -39,7 +36,7 @@ public class MybatisAesEncryptConfigBeanRegistrar implements ImportBeanDefinitio
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-        if(AesEncryptConfigBeanRegistrar.isOpenAseEncrpt){
+        if(BriefCommonComponentStates.ENCRYPT_STATE){
             //注册mybatis拦截器AES加密
             if(!registry.containsBeanDefinition(MybatisEncryptInterceptorConfig.class.getName())){
                 BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(MybatisEncryptInterceptorConfig.class);
@@ -53,8 +50,30 @@ public class MybatisAesEncryptConfigBeanRegistrar implements ImportBeanDefinitio
                     sqlAesProcessors.add((SqlAesProcessor)configurableListableBeanFactory.getBean(beanName));
                 }
             }
-            JqlAesInterceptor jqlAesInterceptor = (JqlAesInterceptor)configurableListableBeanFactory.getBean(JqlAesInterceptor.class.getName());
-            jqlAesInterceptor.setSqlAesProcessors(sqlAesProcessors);
+            try {
+                String jqlAesInterceptorClassName = "com.javaoffers.brief.modelhelper.encrypt.JqlAesInterceptor";
+                Class<?> jqlAesInterceptorClass = Class.forName(jqlAesInterceptorClassName);
+                Method[] declaredMethods = jqlAesInterceptorClass.getDeclaredMethods();
+                Method setSqlAesProcessors = null;
+                for(Method method : declaredMethods){
+                    boolean ok = method.getName().equalsIgnoreCase("setSqlAesProcessors");
+                    if(ok){
+                        method.setAccessible(true);
+                        setSqlAesProcessors = method;
+                        break;
+                    }
+                }
+                JqlInterceptor jqlAesInterceptor = (JqlInterceptor)configurableListableBeanFactory.getBean(jqlAesInterceptorClass);
+                setSqlAesProcessors.invoke(jqlAesInterceptor, sqlAesProcessors);
+            }catch (Exception e){
+                if(e instanceof ClassNotFoundException){
+                    //ignore
+                }else{
+                    e.printStackTrace();
+                    throw new SqlAesProcessException(e.getMessage());
+                }
+
+            }
         }
     }
 }

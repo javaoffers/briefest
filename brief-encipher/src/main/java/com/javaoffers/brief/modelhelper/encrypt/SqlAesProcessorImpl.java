@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
+import com.javaoffers.brief.modelhelper.exception.SqlAesProcessException;
 import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
 import com.javaoffers.brief.modelhelper.parser.ConditionName;
 import com.javaoffers.brief.modelhelper.parser.SqlParserProcessor;
@@ -19,7 +20,7 @@ import java.util.function.Consumer;
  * @author mingJie
  */
 
-public class SqlAesProcessor {
+public class SqlAesProcessorImpl implements SqlAesProcessor{
 
     //Encrypted into hexadecimal, encryption prefix;
     private static final String ENCRYPT_PREFIX = "HEX(AES_ENCRYPT(";
@@ -64,18 +65,23 @@ public class SqlAesProcessor {
      * @param sql Raw SQL
      * @return The parsed SQL
      */
-    public String parseSql(String sql) throws Exception {
+    public String parseSql(String sql)  {
         String tempSql = sql.toLowerCase();
         Set<String> needParseTables = sqlParserProcessor.getNeedParseTables();
         for (String tableName : needParseTables) {
             if (tempSql.contains(tableName.toLowerCase())) {
-                return sqlParserProcessor.parseSql(sql);
+                try {
+                    return sqlParserProcessor.parseSql(sql);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    throw new SqlAesProcessException(e.getMessage());
+                }
             }
         }
         return sql;
     }
 
-    public SqlAesProcessor(String key) {
+    public SqlAesProcessorImpl(String key) {
 
         this.key = key;
         SqlParserProcessor.SqlParserProcessorBuild builder = SqlParserProcessor.builder();

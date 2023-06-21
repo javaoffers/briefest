@@ -6,7 +6,6 @@ import com.javaoffers.brief.modelhelper.anno.derive.flag.IsDel;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
 

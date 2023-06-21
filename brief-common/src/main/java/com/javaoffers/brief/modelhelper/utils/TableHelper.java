@@ -13,7 +13,6 @@ import com.javaoffers.brief.modelhelper.fun.ConstructorFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;

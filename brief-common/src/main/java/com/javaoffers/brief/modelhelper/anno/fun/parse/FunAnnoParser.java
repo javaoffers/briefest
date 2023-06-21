@@ -57,9 +57,10 @@ import com.javaoffers.brief.modelhelper.anno.fun.params.varchar.Strcmp;
 import com.javaoffers.brief.modelhelper.anno.fun.params.varchar.SubString;
 import com.javaoffers.brief.modelhelper.anno.fun.params.varchar.Trim;
 import com.javaoffers.brief.modelhelper.anno.fun.params.varchar.Upper;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

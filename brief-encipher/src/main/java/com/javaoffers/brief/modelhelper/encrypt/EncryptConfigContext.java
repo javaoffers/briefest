@@ -57,8 +57,9 @@ public class EncryptConfigContext {
             }).forEach(tableColumns -> {
                 Integer c = count.getOrDefault(tableColumns.getTableName(), 0);
                 c = c+1;
-                Assert.isTrue(c == 1, "同一张"+tableColumns.getTableName()
-                        +"表不允许配置多个KEY.(一个table对应一个key, 不支持多key配置)");
+                Assert.isTrue(c == 1, "the-same "+tableColumns.getTableName()
+                        +"The database table does not allow multiple KEYs to be configured. " +
+                        "(One table corresponds to one key, and multiple key configurations are not supported)");
                 count.put(tableColumns.getTableName(), c );
             });
 

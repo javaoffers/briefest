@@ -2,7 +2,6 @@ package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
-import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
 import java.util.*;

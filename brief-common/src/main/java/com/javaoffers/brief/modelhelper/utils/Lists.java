@@ -16,7 +16,6 @@
 
 package com.javaoffers.brief.modelhelper.utils;
 
-import org.springframework.util.Assert;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Collection;

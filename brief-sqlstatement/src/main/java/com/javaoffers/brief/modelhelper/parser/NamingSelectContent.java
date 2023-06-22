@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.parser;
 
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.Assert;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;

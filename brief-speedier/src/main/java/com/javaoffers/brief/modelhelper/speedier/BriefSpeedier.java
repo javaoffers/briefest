@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.speedier;
 
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
-import com.javaoffers.brief.modelhelper.speedier.config.BriefConfigProperties;
+import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
 import org.springframework.util.Assert;
@@ -71,7 +71,7 @@ public class BriefSpeedier {
         return proxy;
     }
 
-    public static BriefSpeedier getInstance(BriefConfigProperties briefConfigProperties){
+    public static BriefSpeedier getInstance(BriefSpeedierConfigProperties briefConfigProperties){
         return getInstance(briefConfigProperties.getDataSource());
     }
 

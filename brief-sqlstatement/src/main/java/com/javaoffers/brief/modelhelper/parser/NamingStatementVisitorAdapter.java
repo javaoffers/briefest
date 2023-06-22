@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.parser.delete.NamingDeleteExpressionVisi
 import com.javaoffers.brief.modelhelper.parser.insert.NamingInsertItemsListVisitorAdapter;
 import com.javaoffers.brief.modelhelper.parser.insert.NamingInsertVisitorAdapter;
 import com.javaoffers.brief.modelhelper.parser.update.NamingUpdateExpressionVisitorAdapter;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.thrid.jsqlparser.expression.Expression;
 import com.javaoffers.thrid.jsqlparser.expression.operators.relational.ItemsList;
 import com.javaoffers.thrid.jsqlparser.schema.Column;
@@ -16,7 +17,6 @@ import com.javaoffers.thrid.jsqlparser.statement.update.Update;
 import com.javaoffers.thrid.jsqlparser.statement.update.UpdateSet;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.javaoffers.brief.modelhelper.parser;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.thrid.jsqlparser.parser.CCJSqlParserUtil;
 import com.javaoffers.thrid.jsqlparser.statement.Statement;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 import com.javaoffers.thrid.jsqlparser.*;
 import java.util.*;
 import java.util.function.Consumer;

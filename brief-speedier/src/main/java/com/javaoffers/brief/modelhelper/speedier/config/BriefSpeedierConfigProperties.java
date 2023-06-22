@@ -5,15 +5,15 @@ import javax.sql.DataSource;
 /**
  * @author mingJie
  */
-public class BriefConfigProperties {
+public class BriefSpeedierConfigProperties {
 
     /**
      * 数据源
      */
     private DataSource dataSource;
 
-    public static BriefConfigProperties getInstance(DataSource dataSource){
-        BriefConfigProperties briefConfigProperties = new BriefConfigProperties();
+    public static BriefSpeedierConfigProperties getInstance(DataSource dataSource){
+        BriefSpeedierConfigProperties briefConfigProperties = new BriefSpeedierConfigProperties();
         briefConfigProperties.dataSource = dataSource;
         return briefConfigProperties;
     }

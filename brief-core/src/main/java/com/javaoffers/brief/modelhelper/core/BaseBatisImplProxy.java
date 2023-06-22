@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
 import com.javaoffers.brief.modelhelper.filter.SqlMetaInfo;
 import com.javaoffers.brief.modelhelper.filter.impl.ChainFilterWrap;
 import com.javaoffers.brief.modelhelper.filter.impl.ChainProcessor;
+import com.javaoffers.brief.modelhelper.utils.JqlChainFilterUtils;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -25,37 +26,7 @@ public class BaseBatisImplProxy<T, ID> implements BaseBatis<T,ID> {
     static List<JqlChainFilter> jqlChainFilterList = new ArrayList<>();
 
     static {
-        Properties properties = System.getProperties();
-        Object o = properties.get(ConfigPropertiesConstants.JQL_FILTER);
-
-        ChainFilterWrap chainFilterWrap = null;
-        ChainFilterWrap headChainFilter = null;
-        if(o != null){
-            String jqlFilters = String.valueOf(o);
-            String[] jqlFilterArray = jqlFilters.replaceAll(" ", "").split(",");
-            for(String jqlFilterClassName : jqlFilterArray){
-                try {
-                    Class<?> jqlFilterClass = Class.forName(jqlFilterClassName);
-                    JqlChainFilter jqlChainFilter = (JqlChainFilter)jqlFilterClass.newInstance();
-                    jqlChainFilterList.add(jqlChainFilter);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
-        Set<Class<? extends JqlChainFilter>> childs = ReflectionUtils.getChilds(JqlChainFilter.class);
-        if(CollectionUtils.isNotEmpty(childs)){
-            for(Class clazz : childs){
-                try {
-                    JqlChainFilter o1 = (JqlChainFilter)clazz.newInstance();
-                    jqlChainFilterList.add(o1);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-
+        jqlChainFilterList = JqlChainFilterUtils.getJqlChainFilter();
     }
 
     private BaseBatis baseBatis;

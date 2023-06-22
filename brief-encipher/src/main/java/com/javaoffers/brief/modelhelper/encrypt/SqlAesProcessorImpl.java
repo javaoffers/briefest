@@ -81,11 +81,10 @@ public class SqlAesProcessorImpl implements SqlAesProcessor{
         return sql;
     }
 
-    public SqlAesProcessorImpl(String key) {
-
+    public SqlAesProcessorImpl(String key, EncryptConfigContext configContext) {
         this.key = key;
         SqlParserProcessor.SqlParserProcessorBuild builder = SqlParserProcessor.builder();
-        List<TableColumns> tableColums = EncryptConfigContext.getTableColumsByKey(key);
+        List<TableColumns> tableColums = configContext.getTableColumsByKey(key);
         for (TableColumns tableColumns : tableColums) {
             String tableName = tableColumns.getTableName();
             Set<String> columns = tableColumns.getColumns();

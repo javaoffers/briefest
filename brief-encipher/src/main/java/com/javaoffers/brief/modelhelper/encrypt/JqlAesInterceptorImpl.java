@@ -6,17 +6,18 @@ import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JqlAesInterceptor implements JqlInterceptor {
+public class JqlAesInterceptorImpl implements JqlAesInterceptor {
 
-    private static volatile List<SqlAesProcessorImpl> sqlAesProcessors;
+    private static volatile List<SqlAesProcessorImpl> sqlAesProcessors = new ArrayList<>();
 
     public synchronized void setSqlAesProcessors(List<SqlAesProcessorImpl> sqlAesProcessors){
-        if(JqlAesInterceptor.sqlAesProcessors == null){
-            JqlAesInterceptor.sqlAesProcessors = Collections.unmodifiableList(sqlAesProcessors);
-        }
+        ArrayList<SqlAesProcessorImpl> newSqlAesProcessors = new ArrayList<>(sqlAesProcessors);
+        newSqlAesProcessors.addAll(sqlAesProcessors);
+        JqlAesInterceptorImpl.sqlAesProcessors = Collections.unmodifiableList(newSqlAesProcessors);
     }
 
     @Override

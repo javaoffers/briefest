@@ -1,8 +1,8 @@
 package com.javaoffers.brief.modelhelper.encrypt;
 
 import com.javaoffers.brief.modelhelper.parser.TableColumns;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.Lists;
-import org.springframework.util.Assert;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 
 public class EncryptConfigContext {
     //key: 私钥, list: table信息(包含要加解密的字段信息)
-    private static final Map<String, List<TableColumns>> keyTableColumns = new ConcurrentHashMap<>();
+    private final Map<String, List<TableColumns>> keyTableColumns = new ConcurrentHashMap<>();
 
-    public synchronized static void put(String key, String tableName, String[] columns){
+    public EncryptConfigContext addEncryptConfig(String key, String tableName, String[] columns){
         //log.info("aes key : {}, tableName : {}, columns: {}", key, tableName, columns);
         List<TableColumns> tableColumnsList = keyTableColumns.get(key);
         //如果list为空,则进行初始化
@@ -64,9 +64,10 @@ public class EncryptConfigContext {
             });
 
         }
+        return this;
     }
 
-    public synchronized static List<TableColumns> getTableColumsByKey(String key){
+    public List<TableColumns> getTableColumsByKey(String key){
         List<TableColumns> tableColumns = keyTableColumns.get(key);
         if(tableColumns == null){
             tableColumns = Lists.newArrayList();

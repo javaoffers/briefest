@@ -40,10 +40,10 @@ public class TableHelper {
 
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
-    private final static List<AsSqlFunFilterImpl> interceptors = new ArrayList<>();
+    private final static List<AsSqlFunFilterImpl> TABLE_HELPER_FILTER = new ArrayList<>();
 
     static {
-        interceptors.add(new AsSqlFunFilterImpl());
+        TABLE_HELPER_FILTER.add(new AsSqlFunFilterImpl());
     }
 
     /**
@@ -287,7 +287,7 @@ public class TableHelper {
                             //Avoid save or update operations that affect the database record,
                             // so we see it as SQL fun
                             if(!isFunSql){
-                                for(AsSqlFunFilterImpl fieldFilter : interceptors){
+                                for(AsSqlFunFilterImpl fieldFilter : TABLE_HELPER_FILTER){
                                     if(fieldFilter.filter(colF)){
                                         colName = tableName+"."+colName;
                                         isFunSql = true;

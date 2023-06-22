@@ -1,5 +1,0 @@
-# Auto Configure
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.javaoffers.brief.modelhelper.install.InstallAgent,\
-com.javaoffers.brief.modelhelper.encrypt.MybatisAesEncryptConfigBeanRegistrar\
-  

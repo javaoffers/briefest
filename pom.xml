@@ -8,8 +8,6 @@
   <version>3.6.1-SNAPSHOT</version>
   <modules>
     <module>brief-helper</module>
-    <module>brief-sample</module>
-    <module>brief-mybatis</module>
     <module>brief-core</module>
     <module>brief-common</module>
     <module>brief-encipher</module>

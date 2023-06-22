@@ -14,8 +14,7 @@
     <module>brief-speedier</module>
     <module>brief-sharding</module>
     <module>brief-router</module>
-    <module>brief-spring-boot</module>
-      <module>brief-sqlstatement</module>
+    <module>brief-sqlstatement</module>
   </modules>
 
   <name>brief</name>

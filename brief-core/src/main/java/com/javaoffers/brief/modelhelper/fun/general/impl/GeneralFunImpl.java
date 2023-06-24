@@ -18,11 +18,7 @@ import com.javaoffers.brief.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.general.GeneralFun;
-import com.javaoffers.brief.modelhelper.utils.BlurUtils;
-import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
-import com.javaoffers.brief.modelhelper.utils.Lists;
-import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import com.javaoffers.brief.modelhelper.utils.TableInfo;
+import com.javaoffers.brief.modelhelper.utils.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
@@ -587,79 +583,31 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     private AtomicBoolean parseWhere(T model, WhereFun where) {
-        TableInfo tableInfo = getTableInfo(model.getClass());
-        Map<String, ColumnInfo> originalColNames = tableInfo.getColNames();
-        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
         AtomicBoolean status = new AtomicBoolean(false);
-
-        if (colNameOfModelField != null && colNameOfModelField.size() > 0) {
-            colNameOfModelField.forEach((colName, fields) -> {
-                Object o = null;
-                try {
-                    for (int i = 0; fields != null && i < fields.size(); i++) {
-                        Field field = fields.get(i);
-                        if (BlurUtils.containsBlurAnno(field)) {
-                            continue;
-                        }
-                        o = field.get(model);
-                        if (o != null) {
-                            if (originalColNames.get(colName) != null
-                                    && originalColNames.get(colName).isAutoincrement()
-                                    && o instanceof Number
-                                    && ((Number) o).longValue() == 0L) {
-                                return;
-                            }
-                            break;
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                if (o != null) {
-                    HashMap<String, Object> param = new HashMap<>();
-                    String newColNameTag = getNewColNameTag();
-                    param.putIfAbsent(newColNameTag, o);
-                    where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
-                    status.set(true);
-                }
+        Map<String, Object> colNameAndColValue = ColNameAndColValueUtils.parseColNameAndColValue(model, this.mClass);
+        if(MapUtils.isNotEmpty(colNameAndColValue)){
+            status.set(true);
+            colNameAndColValue.forEach((colName, colValue)->{
+                HashMap<String, Object> param = new HashMap<>();
+                String newColNameTag = getNewColNameTag();
+                param.putIfAbsent(newColNameTag, colValue);
+                where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
             });
         }
         return status;
     }
 
     private void parseWhereById(WhereModifyFun<T, V> where, AtomicBoolean status, T model) {
-        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
-        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
-        WhereModifyFun<T, V> finalWhere = where;
-        primaryColNames.forEach((colName, colInfo) -> {
-            List<Field> fields = colNameOfModelField.get(colName);
-            Object o = null;
-            for (Field field : fields) {
-                try {
-                    if (BlurUtils.containsBlurAnno(field)) {
-                        continue;
-                    }
-                    o = field.get(model);
-                    if (o != null) {
-                        if (o instanceof Number && colInfo.isAutoincrement() && ((Number) o).longValue() == 0L) {
-                            continue;
-                        }
-                        break;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    throw new GetColValueException(e.getMessage());
-                }
-            }
-            if (o != null) {
+        Map<String, Object> coNameAndColValue = ColNameAndColValueUtils.parseUniqueCoNameAndUniqueColValue(model, mClass);
+        if(MapUtils.isNotEmpty(coNameAndColValue)){
+            status.set(true);
+            coNameAndColValue.forEach((uniqueColName, uniqueColValue)->{
                 Map<String, Object> param = new HashMap<>();
                 String newColNameTag = getNewColNameTag();
-                param.put(newColNameTag, o);
-                finalWhere.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
-                status.set(true);
-            }
-        });
+                param.put(newColNameTag, uniqueColValue);
+                where.condSQL(uniqueColName + " in ( #{" + newColNameTag + "} ) ", param);
+            });
+        }
     }
 
     private long getNumber(Field field, T ex) {

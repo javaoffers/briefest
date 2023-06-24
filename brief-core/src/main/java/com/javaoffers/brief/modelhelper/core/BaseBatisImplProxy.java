@@ -39,6 +39,7 @@ public class BaseBatisImplProxy<T, ID> implements BaseBatis<T,ID> {
     }
 
     private <R> R doProxy(SqlMetaInfo sqlMetaInfo, Supplier<R> supplier){
+        sqlMetaInfo.setBaseBatis(this);
         ChainFilterWrap<R, SqlMetaInfo> head = null;
         ChainFilterWrap<R, SqlMetaInfo> next = null;
         for(JqlChainFilter jqlChainFilter : jqlChainFilterList){

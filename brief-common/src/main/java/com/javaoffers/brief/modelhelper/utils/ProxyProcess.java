@@ -3,7 +3,7 @@ package com.javaoffers.brief.modelhelper.utils;
 import java.lang.reflect.Method;
 
 /**
- * @description:
+ * @description: for jdk proxy process
  * @author: create by cmj on 2023/5/28 00:40
  */
 @FunctionalInterface

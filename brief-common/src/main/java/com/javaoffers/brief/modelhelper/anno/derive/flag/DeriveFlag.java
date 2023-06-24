@@ -12,5 +12,10 @@ public enum DeriveFlag {
      * {@link RowStatus}
      */
     IS_DEL,
+
+    /**
+     * model auto update where call setter methods
+     */
+    AUTO_UPDATE,
     ;
 }

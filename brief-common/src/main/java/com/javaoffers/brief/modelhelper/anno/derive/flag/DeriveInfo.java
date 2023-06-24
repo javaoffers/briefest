@@ -13,6 +13,7 @@ public class DeriveInfo {
     private boolean isDelField;
     private boolean isRowStatusField;
 
+
     public DeriveInfo(String colName, Field field) {
         this.colName = colName;
         this.field = field;

@@ -16,7 +16,6 @@ public class JqlAesInterceptorImpl implements JqlAesInterceptor {
 
     public synchronized void setSqlAesProcessors(List<SqlAesProcessorImpl> sqlAesProcessors){
         ArrayList<SqlAesProcessorImpl> newSqlAesProcessors = new ArrayList<>(sqlAesProcessors);
-        newSqlAesProcessors.addAll(sqlAesProcessors);
         JqlAesInterceptorImpl.sqlAesProcessors = Collections.unmodifiableList(newSqlAesProcessors);
     }
 

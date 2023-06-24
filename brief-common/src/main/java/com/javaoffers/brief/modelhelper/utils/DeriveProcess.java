@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.IsDel;
@@ -42,5 +43,12 @@ public class DeriveProcess {
                     "IsDel or RowStatus cannot be used multiple times at the same time, and cannot be reused");
             tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
         }
+
+        //isAutoUpdate
+        BaseModel baseModel = colF.getDeclaringClass().getDeclaredAnnotation(BaseModel.class);
+        if(baseModel.autoUpdate()){
+            tableInfo.putDeriveColName(DeriveFlag.AUTO_UPDATE, deriveInfo);
+        }
+
     }
 }

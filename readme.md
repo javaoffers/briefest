@@ -23,7 +23,7 @@ sample ： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/mai
 
   ```java
     <properties>
-         <brief.version>3.6.0</brief.version>
+         <brief.version>3.6.1</brief.version>
     </properties>
    <!--brief Lightweight and can be used alone-->
      <dependency>
@@ -72,7 +72,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - New, supporting the mapper interface class write default default method.
   - Powerful automatic type conversion functions.
   - The optimization of the automatic identification of insert/update batch execution
-  - Provide optional automatic identification of difference data real-time update capability (supported in the next version)
+  - Provide optional automatic identification of difference data real-time update capability 
   - Multi-table query does not need to be configured. Automatically map one-to-one, one-to-many, many-to-many.
   - Supports logical deletion, optimistic locking.
   - Integrated with the commonly used API, to directly using the need for development.
@@ -296,6 +296,48 @@ this.crudUserMapper.general().updateBatchById(user);
 <p>
 Through the above case, we can very good control in the business field of updates.
 </p>
+
+#### Update tracking difference
+<p>
+    Differences can real-time tracking updates. When data change model for automatic updates.
+    Want to use this feature only needs to be  <code>@BaseModel</code> autoUpdate = true.
+    After open the query each with a primary key id data are able to provide a different update.
+    In the process of operation if the primary key id is set to null, 
+    The differences will lose the ability to update the model data and not reply even if you restore the primary key id.
+    
+</p>
+
+```java
+
+   @Data
+   @BaseModel(value = "encrypt_data",autoUpdate = true)
+   public class EncryptDataAutoUpdate {
+   
+       @BaseUnique
+       private Integer id;
+   
+       private String encryptNum;
+   }
+   EncryptDataAutoUpdate encryptData = new EncryptDataAutoUpdate();
+   encryptData.setEncryptNum("12345678");
+   Id id = autoUpdateBriefMapper.general().save(encryptData);
+
+   EncryptDataAutoUpdate autoUpdate = autoUpdateBriefMapper.general().queryById(id);
+   print(autoUpdate);
+   //Not updated, because there is no difference
+   autoUpdate.setEncryptNum("12345678");
+   //Will be updated
+   autoUpdate.setEncryptNum("87654321900");
+   print(autoUpdate);
+   
+   encryptData = this.autoUpdateBriefMapper.general().queryById(id);
+   print(encryptData);
+   //Cancel the differences to update
+   encryptData.setId(null);
+   //Not updated, as has already been canceled difference update functionality;
+   encryptData.setEncryptNum("098712345");
+
+```
 
 
 #### Delete operation

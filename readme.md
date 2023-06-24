@@ -23,7 +23,7 @@ sample ： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/mai
 
   ```java
     <properties>
-         <brief.version>3.6.1</brief.version>
+         <brief.version>3.6.2</brief.version>
     </properties>
    <!--brief Lightweight and can be used alone-->
      <dependency>

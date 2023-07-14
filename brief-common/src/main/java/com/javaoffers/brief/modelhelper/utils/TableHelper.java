@@ -16,11 +16,13 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -219,35 +221,33 @@ public class TableHelper {
 
                     try {
                         TableInfo tableInfo = new TableInfo(tableName);
-                        DatabaseMetaData metaData = connection.getMetaData();
-
-                        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableName, null);
-                        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableName);
-                        LinkedList<String> primaryKeyList = new LinkedList<>();
-                        while (primaryKeys.next()) {
-                            String primaryColName = primaryKeys.getString(ColumnLabel.COLUMN_NAME);
-                            primaryKeyList.add(primaryColName);
-                        }
-                        while (tableResultSet.next()) {
-                            // Get table field structure
-                            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
-                            while (columnResultSet.next()) {
-                                // Col Name
-                                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
-                                // type of data
-                                String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
-                                //the default value of the field
-                                Object defaultValue = columnResultSet.getString(ColumnLabel.COLUMN_DEF);
-                                //Whether to auto increment
-                                boolean isAutoincrement = "YES".equalsIgnoreCase(columnResultSet.getString(ColumnLabel.IS_AUTOINCREMENT));
+                        String connName = connection.getClass().getName();
+                        if(connName.contains("h2")){
+                            System.getProperty("IgnoreCase", "NO");
+                            Object md = connection.prepareStatement("  show columns from tb_account; ").executeQuery().getMetaData();
+                            Field resultF = md.getClass().getDeclaredField("result");
+                            resultF.setAccessible(true);
+                            Object result  = resultF.get(md);
+                            Field rowsF = result.getClass().getDeclaredField("rows");
+                            rowsF.setAccessible(true);
+                            List<Object> rows = (List)rowsF.get(result);
+                            rows.forEach(row->{
+                                String columnName = String.valueOf(Array.get(row,0)).replaceAll("'","");
+                                String columnType = String.valueOf(Array.get(row,1)).replaceAll("'","");
+                                String defaultValue = null;
+                                boolean isAutoincrement = String.valueOf(Array.get(row,4)).contains("SYSTEM_SEQUENCE");
+                                boolean isPrimary = String.valueOf(Array.get(row,3)).contains("PRI");
                                 ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
                                 tableInfo.getColumnInfos().add(columnInfo);
                                 tableInfo.putColNames(columnName, columnInfo);
-                                if (primaryKeyList.contains(columnName)) {
+                                if(isPrimary){
                                     tableInfo.putPrimaryColNames(columnName, columnInfo);
                                 }
-                            }
+                            });
+                        }else{
+                            parseMysqlTableInfo(connection, tableName, tableInfo);
                         }
+
                         tableInfoMap.put(modelClazz, tableInfo);
                         Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
                         boolean uniqueStatus = false;
@@ -326,6 +326,38 @@ public class TableHelper {
         }
     }
 
+    private static void parseMysqlTableInfo(Connection connection, String tableName, TableInfo tableInfo) throws SQLException {
+        DatabaseMetaData metaData = connection.getMetaData();
+
+        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableName, null);
+        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableName);
+        LinkedList<String> primaryKeyList = new LinkedList<>();
+        while (primaryKeys.next()) {
+            String primaryColName = primaryKeys.getString(ColumnLabel.COLUMN_NAME);
+            primaryKeyList.add(primaryColName);
+        }
+        while (tableResultSet.next()) {
+            // Get table field structure
+            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
+            while (columnResultSet.next()) {
+                // Col Name
+                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
+                // type of data
+                String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
+                //the default value of the field
+                Object defaultValue = columnResultSet.getString(ColumnLabel.COLUMN_DEF);
+                //Whether to auto increment
+                boolean isAutoincrement = "YES".equalsIgnoreCase(columnResultSet.getString(ColumnLabel.IS_AUTOINCREMENT));
+                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
+                tableInfo.getColumnInfos().add(columnInfo);
+                tableInfo.putColNames(columnName, columnInfo);
+                if (primaryKeyList.contains(columnName)) {
+                    tableInfo.putPrimaryColNames(columnName, columnInfo);
+                }
+            }
+        }
+    }
+
     /**
      * turn underscore
      *
@@ -351,10 +383,14 @@ public class TableHelper {
             last = s;
         }
         info = builder.toString();
-        String defaultIgnoreCase = "YES";
-        String ignoreCase = System.getProperty("IgnoreCase", defaultIgnoreCase);
-        if (defaultIgnoreCase.equalsIgnoreCase(ignoreCase)) {
+        String defaultCase = "NO";
+        String YES = "YES";
+        String ignoreCase = System.getProperty("IgnoreCase", defaultCase);
+        String upperCase = System.getProperty("UpperCase", defaultCase);
+        if (YES.equalsIgnoreCase(ignoreCase)) {
             info = info.toLowerCase();
+        }else if(YES.equalsIgnoreCase(upperCase)){
+            info = info.toUpperCase();
         }
         return info;
     }

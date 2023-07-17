@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -98,8 +99,13 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
     @Override
     public <E> List<E> queryDataForT4(String sql, Map<String, Object> paramMap, Class<E> clazz) {
+        long start1 = System.nanoTime();
         List<Map<String, Object>> maps = queryData(sql, paramMap);
+        long start = System.nanoTime();
+        System.out.println("A耗时："+ TimeUnit.NANOSECONDS.toMillis(start - start1));
         List<E> es = ModelParseUtils.converterMap2Model(clazz, maps);
+        long end = System.nanoTime();
+        System.out.println("B耗时："+ TimeUnit.NANOSECONDS.toMillis(end - start));
         return es;
     }
 
@@ -203,7 +209,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
                             if (!StringUtils.hasLength(name)) {
                                 name = rsmd.getColumnName(i);
                             }
-                            mapOfColumnValues.put( getColumnKey(name), getColumnValue(rs, i));
+                            mapOfColumnValues.put( name, getColumnValue(rs, i));
                         }
                         return mapOfColumnValues;
                     }

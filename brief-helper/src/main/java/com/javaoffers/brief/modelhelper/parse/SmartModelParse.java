@@ -52,9 +52,9 @@ public class SmartModelParse implements ModelParse {
      * @throws SecurityException
      */
     private static <E> List<E> buildModel(Class<E> clazz, List<Map<String, Object>> list_map) throws Exception {
-        LinkedList<E> linkedList = new LinkedList<E>();
+        List<E> resultList = new ArrayList<>();
         if(clazz==null||list_map==null||list_map.size()==0) {
-            return linkedList;
+            return resultList;
         }
         Map<String, List<Map<String, Object>>> map_ = new LinkedHashMap<>();//存放切分后的数据（根据唯一字段的值分组）
         Set<Field> fields = HelperUtils.getFields(clazz);
@@ -80,12 +80,12 @@ public class SmartModelParse implements ModelParse {
         ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//Stores fields that can determine a piece of main table data (main model)
         HelperUtils.getUniqueFieldNames(clazz, tableName,  dbType, ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
         if(uniqueFieldNameList==null || uniqueFieldNameList.size()==0){
-            return linkedList;
+            return resultList;
         }
         HelperUtils.inciseData(list_map, map_, uniqueFieldNameList);//Cutting data
         List<E> list = buildData(tableName, dbType, clazz,map_,ones,arrays,list_,set_);
-        linkedList.addAll(list);
-        return linkedList;
+        resultList.addAll(list);
+        return resultList;
     }
 
 
@@ -100,7 +100,7 @@ public class SmartModelParse implements ModelParse {
             ArrayList<Field> arrays,
             ArrayList<Field> list_,
             ArrayList<Field> set_) throws Exception {
-        LinkedList<E> linkedList = new LinkedList<E>();
+        List<E> resultList = new ArrayList<>();
 
         try {
             Set<Map.Entry<String,List<Map<String,Object>>>> entrySet = map_.entrySet();
@@ -148,7 +148,7 @@ public class SmartModelParse implements ModelParse {
                         }
                     }else {
                         String name = HelperUtils.getSpecialColName(tableName,dbType, fd.getName());
-                        LinkedList<Object> arrayData = new LinkedList<Object>();
+                        ArrayList<Object> arrayData = new ArrayList<Object>();
                         for(Map<String, Object> map : list) {
                             Object object = map.get(name);
                             if(object == null){
@@ -231,7 +231,7 @@ public class SmartModelParse implements ModelParse {
                     }
                 }
                 if(model.isStatus()) {
-                    linkedList.add(model.getModel());
+                    resultList.add(model.getModel());
                 }
 
             }
@@ -239,13 +239,13 @@ public class SmartModelParse implements ModelParse {
         }catch(Exception ex) {
             throw ex;
         }
-        return linkedList;
+        return resultList;
     }
 
     private static List getList(Class mClass, String tableName , DBType dbType,List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
         List ls;
         Class gClass = HelperUtils.getGenericityClassOfCollect(fd);//泛型类型
-        ls = new LinkedList();
+        ls = new ArrayList();
         List finalLs = ls;
         list.forEach(map->{
             Object o = map.get(HelperUtils.getSpecialColName(tableName, dbType, fd.getName()));

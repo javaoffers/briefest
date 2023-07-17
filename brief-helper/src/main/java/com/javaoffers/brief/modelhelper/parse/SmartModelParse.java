@@ -4,7 +4,9 @@ import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.util.HelperUtils;
 import com.javaoffers.brief.modelhelper.util.Model;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Array;
@@ -72,14 +74,16 @@ public class SmartModelParse implements ModelParse {
                 ones.add(fd);
             }
         }
-        String tableName = TableHelper.getTableName(clazz);
+        TableInfo tableInfo = TableHelper.getTableInfo(clazz);
+        String tableName = tableInfo.getTableName();
+        DBType dbType = tableInfo.getDbType();
         ArrayList<String> uniqueFieldNameList = new ArrayList<String>();//Stores fields that can determine a piece of main table data (main model)
-        HelperUtils.getUniqueFieldNames(clazz, tableName, ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
+        HelperUtils.getUniqueFieldNames(clazz, tableName,  dbType, ones, uniqueFieldNameList,list_map.get(0));//Get the fields that can determine a piece of main table data (main model)
         if(uniqueFieldNameList==null || uniqueFieldNameList.size()==0){
             return linkedList;
         }
         HelperUtils.inciseData(list_map, map_, uniqueFieldNameList);//Cutting data
-        List<E> list = buildData(tableName, clazz,map_,ones,arrays,list_,set_);
+        List<E> list = buildData(tableName, dbType, clazz,map_,ones,arrays,list_,set_);
         linkedList.addAll(list);
         return linkedList;
     }
@@ -89,6 +93,7 @@ public class SmartModelParse implements ModelParse {
     @SuppressWarnings("unchecked")
     private static <E> List<E> buildData(
             String tableName,
+            DBType dbType,
             Class<E> clazz,Map<String,
             List<Map<String, Object>>> map_,
             ArrayList<Field> ones,
@@ -117,7 +122,7 @@ public class SmartModelParse implements ModelParse {
                         }
                         continue;
                     }
-                    String name = HelperUtils.getSpecialColName(tableName,fd.getName());
+                    String name = HelperUtils.getSpecialColName(tableName,dbType, fd.getName());
                     Object o = null;
                     if((o = mp.get(name)) !=null || (o = mp.get(fd.getName())) !=  null
                             || (o = mp.get(HelperUtils.getSpecialColName(clazz,fd))) != null) {
@@ -142,7 +147,7 @@ public class SmartModelParse implements ModelParse {
                             }
                         }
                     }else {
-                        String name = HelperUtils.getSpecialColName(tableName,fd.getName());
+                        String name = HelperUtils.getSpecialColName(tableName,dbType, fd.getName());
                         LinkedList<Object> arrayData = new LinkedList<Object>();
                         for(Map<String, Object> map : list) {
                             Object object = map.get(name);
@@ -175,13 +180,13 @@ public class SmartModelParse implements ModelParse {
                         if(HelperUtils.isBaseModel(fd)){
                             ls = buildModel(HelperUtils.getModelClass(fd), list);
                         }else{
-                            ls = getList(clazz, tableName,list, fd);
+                            ls = getList(clazz, tableName,dbType, list, fd);
                         }
                     }else {
                         if(HelperUtils.isBaseModel(fd)){
                             ls = buildModel(HelperUtils.getModelClass(fd), list);
                         }else{
-                            ls = getList(clazz, tableName, list, fd);
+                            ls = getList(clazz, tableName,dbType, list, fd);
                         }
                         List newInstance = (List)fd.get(model.getModelAndSetStatusIsTrue());
                         if(newInstance==null){
@@ -205,7 +210,7 @@ public class SmartModelParse implements ModelParse {
                         if(HelperUtils.isBaseModel(fd)){
                             ls = buildModel(HelperUtils.getModelClass(fd), list);
                         }else {
-                            ls = getList(clazz, tableName, list, fd);
+                            ls = getList(clazz, tableName, dbType, list, fd);
                         }
                         newInstance = new HashSet();
                         newInstance.addAll(ls);
@@ -213,7 +218,7 @@ public class SmartModelParse implements ModelParse {
                         if(HelperUtils.isBaseModel(fd)){
                             ls = buildModel(HelperUtils.getModelClass(fd), list);
                         }else {
-                            ls = getList(clazz, tableName, list, fd);
+                            ls = getList(clazz, tableName, dbType, list, fd);
                         }
                         newInstance = (Set)fd.get(model.getModelAndSetStatusIsTrue());
                         if(newInstance == null){
@@ -237,13 +242,13 @@ public class SmartModelParse implements ModelParse {
         return linkedList;
     }
 
-    private static List getList(Class mClass, String tableName , List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
+    private static List getList(Class mClass, String tableName , DBType dbType,List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {
         List ls;
         Class gClass = HelperUtils.getGenericityClassOfCollect(fd);//泛型类型
         ls = new LinkedList();
         List finalLs = ls;
         list.forEach(map->{
-            Object o = map.get(HelperUtils.getSpecialColName(tableName, fd.getName()));
+            Object o = map.get(HelperUtils.getSpecialColName(tableName, dbType, fd.getName()));
             if(o == null){
                 o = map.get(fd.getName());
             }

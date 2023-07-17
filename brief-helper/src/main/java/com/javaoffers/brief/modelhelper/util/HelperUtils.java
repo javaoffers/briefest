@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.util;
 
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
+import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -116,7 +118,9 @@ public class HelperUtils {
      * @throws Exception
      * @throws SecurityException
      */
-    public static void getUniqueFieldNames(Class mClass, String tableName, ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_, Map<String, Object> standardClumMap) throws SecurityException, Exception {
+    public static void getUniqueFieldNames(Class mClass, String tableName,DBType dbType,
+                                           ArrayList<Field> ones, ArrayList<String> uniqueFieldNameList_,
+                                           Map<String, Object> standardClumMap) throws SecurityException, Exception {
         //String prefix = modelClassName + modelSeparation;
         Set<String> hashSet = new HashSet<String>();
         //The framework does not allow to query only the subtable fields without querying the main table fields.
@@ -129,7 +133,7 @@ public class HelperUtils {
                     BaseUnique[] uniques = bmf.getAnnotationsByType(BaseUnique.class);
                     if (uniques != null && uniques.length > 0) {
                         String name = bmf.getName();
-                        String uniqueFieldName = getSpecialColName(tableName, name);
+                        String uniqueFieldName = getSpecialColName(tableName, dbType, name);
                         if (standardClumMap.containsKey(uniqueFieldName)) {
                             hashSet.add( uniqueFieldName);
                         }else if(standardClumMap.containsKey(name)){
@@ -143,7 +147,7 @@ public class HelperUtils {
             }
             if (isBaseUnique(fd)) {
                 String name = fd.getName();
-                String uniqueFieldName = getSpecialColName(tableName, name);
+                String uniqueFieldName = getSpecialColName(tableName,dbType, name);
                 if (standardClumMap.containsKey(uniqueFieldName)) {
                     hashSet.add(uniqueFieldName);
                 }else if(standardClumMap.containsKey(name)){
@@ -159,7 +163,7 @@ public class HelperUtils {
             hashSet = ones.stream()
                     .map(field -> {
                                 String name = field.getName();
-                                String uniqueFieldName = getSpecialColName(tableName, name);
+                                String uniqueFieldName = getSpecialColName(tableName,dbType, name);
                                 if (standardClumMap.containsKey(uniqueFieldName)) {
                                     return uniqueFieldName;
                                 } else if (standardClumMap.containsKey(name)) {
@@ -175,7 +179,13 @@ public class HelperUtils {
         uniqueFieldNameList_.addAll(hashSet);
     }
 
-    public static String getSpecialColName(String tableName, String colName){
+    public static String getSpecialColName(String tableName, DBType dbType, String colName){
+        switch (dbType){
+            case MYSQL:
+                return tableName + "__" + colName;
+            case H2:
+                return tableName.toUpperCase() + "__" + colName.toUpperCase();
+        }
         return tableName + "__" + colName;
     }
 

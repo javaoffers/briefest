@@ -97,7 +97,12 @@ public class TableInfo {
     private Map<DeriveFlag, DeriveInfo> deriveColName = new HashMap<>();
 
 
+
     /***************************************************************/
+    public DBType getDbType() {
+        return dbType;
+    }
+
     public String getTableName() {
         return tableName;
     }
@@ -261,8 +266,7 @@ public class TableInfo {
 
     public void unmodifiable() {
         if(DBType.H2 == this.dbType){
-            processH2(colNames,fieldNameMappingcolNameOfModel, colNameMappingModelFields, primaryColNames
-            ,originalColNameOfModelField, fieldNameAndFields, deriveColName);
+            processH2();
         }
 
         this.colNames = Collections.unmodifiableMap(colNames);
@@ -274,13 +278,7 @@ public class TableInfo {
         this.deriveColName = Collections.unmodifiableMap(this.deriveColName);
     }
 
-    private void processH2(Map<String, ColumnInfo> colNames,
-                           Map<String, String> fieldNameMappingcolNameOfModel,
-                           Map<String, List<Field>> colNameMappingModelFields,
-                           Map<String, ColumnInfo> primaryColNames,
-                           Map<String, List<Field>> originalColNameOfModelField,
-                           Map<String, Field> fieldNameAndFields,
-                           Map<DeriveFlag, DeriveInfo> deriveColName) {
+    private void processH2() {
         HashMap<String, ColumnInfo> colNamesTmp = new HashMap<>();
         colNames.forEach((colName, colInfo)->{
             colNamesTmp.put(colName.toUpperCase(), new ColumnInfo(colInfo.getColNamme().toUpperCase(),
@@ -324,7 +322,7 @@ public class TableInfo {
             deriveColNameTmp.put(key, new DeriveInfo(value.getColName(), value.getField()));
         });
         deriveColName.putAll(deriveColNameTmp);
-
+        this.tableName = this.tableName.toUpperCase();
     }
 
 

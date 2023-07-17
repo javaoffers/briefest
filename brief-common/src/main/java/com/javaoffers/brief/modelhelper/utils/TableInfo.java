@@ -14,6 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TableInfo {
 
     /**
+     * database type
+     */
+    private DBType dbType;
+
+    /**
      * table name
      */
     private String tableName;
@@ -111,6 +116,10 @@ public class TableInfo {
 
     public TableInfo(String tableName) {
         this.tableName = tableName;
+    }
+
+    public void setDbType(DBType dbType){
+        this.dbType = dbType;
     }
 
     public Map<String, String> getFieldNameColNameOfModel() {
@@ -251,6 +260,11 @@ public class TableInfo {
     }
 
     public void unmodifiable() {
+        if(DBType.H2 == this.dbType){
+            processH2(colNames,fieldNameMappingcolNameOfModel, colNameMappingModelFields, primaryColNames
+            ,originalColNameOfModelField, fieldNameAndFields, deriveColName);
+        }
+
         this.colNames = Collections.unmodifiableMap(colNames);
         this.fieldNameMappingcolNameOfModel = Collections.unmodifiableMap(fieldNameMappingcolNameOfModel);
         this.colNameMappingModelFields = Collections.unmodifiableMap(colNameMappingModelFields);
@@ -258,6 +272,59 @@ public class TableInfo {
         this.originalColNameOfModelField = Collections.unmodifiableMap(originalColNameOfModelField);
         this.fieldNameAndFields = Collections.unmodifiableMap(this.fieldNameAndFields);
         this.deriveColName = Collections.unmodifiableMap(this.deriveColName);
+    }
+
+    private void processH2(Map<String, ColumnInfo> colNames,
+                           Map<String, String> fieldNameMappingcolNameOfModel,
+                           Map<String, List<Field>> colNameMappingModelFields,
+                           Map<String, ColumnInfo> primaryColNames,
+                           Map<String, List<Field>> originalColNameOfModelField,
+                           Map<String, Field> fieldNameAndFields,
+                           Map<DeriveFlag, DeriveInfo> deriveColName) {
+        HashMap<String, ColumnInfo> colNamesTmp = new HashMap<>();
+        colNames.forEach((colName, colInfo)->{
+            colNamesTmp.put(colName.toUpperCase(), new ColumnInfo(colInfo.getColNamme().toUpperCase(),
+                    colInfo.getColType(), colInfo.isAutoincrement(), colInfo.getDefaultValue()));
+        });
+        colNames.putAll(colNamesTmp);
+
+        HashMap<String, String> fieldNameMappingcolNameOfModelTmp = new HashMap<>();
+        fieldNameMappingcolNameOfModel.forEach((key, value)->{
+            fieldNameMappingcolNameOfModelTmp.put(key.toUpperCase(), value.toUpperCase());
+        });
+        fieldNameMappingcolNameOfModel.putAll(fieldNameMappingcolNameOfModelTmp);
+
+        Map<String, List<Field>> colNameMappingModelFieldsTmp = new HashMap<>();
+        colNameMappingModelFields.forEach((key,value)->{
+            colNameMappingModelFieldsTmp.put(key.toUpperCase(), value);
+        });
+        colNameMappingModelFields.putAll(colNameMappingModelFieldsTmp);
+
+        Map<String, ColumnInfo> primaryColNamesTmp = new HashMap<>();
+        primaryColNames.forEach((colName, colInfo)->{
+            primaryColNamesTmp.put(colName.toUpperCase(), new ColumnInfo(colInfo.getColNamme().toUpperCase(),
+                    colInfo.getColType(), colInfo.isAutoincrement(), colInfo.getDefaultValue()));
+        });
+        primaryColNames.putAll(primaryColNamesTmp);
+
+        Map<String, List<Field>> originalColNameOfModelFieldTmp = new HashMap<>();
+        originalColNameOfModelField.forEach((key,value)->{
+            originalColNameOfModelFieldTmp.put(key.toUpperCase(), value);
+        });
+        originalColNameOfModelField.putAll(originalColNameOfModelFieldTmp);
+
+        Map<String, Field> fieldNameAndFieldsTmp = new HashMap<>();
+        fieldNameAndFields.forEach((key,value)->{
+            fieldNameAndFieldsTmp.put(key.toUpperCase(), value);
+        });
+        fieldNameAndFields.putAll(fieldNameAndFieldsTmp);
+
+        Map<DeriveFlag, DeriveInfo> deriveColNameTmp = new HashMap<>();
+        deriveColName.forEach((key, value)->{
+            deriveColNameTmp.put(key, new DeriveInfo(value.getColName(), value.getField()));
+        });
+        deriveColName.putAll(deriveColNameTmp);
+
     }
 
 

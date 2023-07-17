@@ -223,27 +223,7 @@ public class TableHelper {
                         TableInfo tableInfo = new TableInfo(tableName);
                         String connName = connection.getClass().getName();
                         if(connName.contains("h2")){
-                            System.getProperty("IgnoreCase", "NO");
-                            Object md = connection.prepareStatement("  show columns from tb_account; ").executeQuery().getMetaData();
-                            Field resultF = md.getClass().getDeclaredField("result");
-                            resultF.setAccessible(true);
-                            Object result  = resultF.get(md);
-                            Field rowsF = result.getClass().getDeclaredField("rows");
-                            rowsF.setAccessible(true);
-                            List<Object> rows = (List)rowsF.get(result);
-                            rows.forEach(row->{
-                                String columnName = String.valueOf(Array.get(row,0)).replaceAll("'","");
-                                String columnType = String.valueOf(Array.get(row,1)).replaceAll("'","");
-                                String defaultValue = null;
-                                boolean isAutoincrement = String.valueOf(Array.get(row,4)).contains("SYSTEM_SEQUENCE");
-                                boolean isPrimary = String.valueOf(Array.get(row,3)).contains("PRI");
-                                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
-                                tableInfo.getColumnInfos().add(columnInfo);
-                                tableInfo.putColNames(columnName, columnInfo);
-                                if(isPrimary){
-                                    tableInfo.putPrimaryColNames(columnName, columnInfo);
-                                }
-                            });
+                            parseH2TableInfo(connection, tableInfo);
                         }else{
                             parseMysqlTableInfo(connection, tableName, tableInfo);
                         }
@@ -300,7 +280,6 @@ public class TableHelper {
                             //derive flag process
                             DeriveProcess.processDerive(tableInfo, colF, colName);
 
-
                             // original table fields and sql-fun fields
                             tableInfo.putFieldNameColNameOfModel(fieldName, colName);
                             tableInfo.putColNameAndFieldOfModel(colName, colF);
@@ -326,9 +305,33 @@ public class TableHelper {
         }
     }
 
-    private static void parseMysqlTableInfo(Connection connection, String tableName, TableInfo tableInfo) throws SQLException {
-        DatabaseMetaData metaData = connection.getMetaData();
+    private static void parseH2TableInfo(Connection connection, TableInfo tableInfo) throws SQLException, NoSuchFieldException, IllegalAccessException {
+        tableInfo.setDbType(DBType.H2);
+        Object md = connection.prepareStatement("  show columns from tb_account; ").executeQuery().getMetaData();
+        Field resultF = md.getClass().getDeclaredField("result");
+        resultF.setAccessible(true);
+        Object result  = resultF.get(md);
+        Field rowsF = result.getClass().getDeclaredField("rows");
+        rowsF.setAccessible(true);
+        List<Object> rows = (List)rowsF.get(result);
+        rows.forEach(row->{
+            String columnName = String.valueOf(Array.get(row,0)).replaceAll("'","").toLowerCase();
+            String columnType = String.valueOf(Array.get(row,1)).replaceAll("'","");
+            String defaultValue = null;
+            boolean isAutoincrement = String.valueOf(Array.get(row,4)).contains("SYSTEM_SEQUENCE");
+            boolean isPrimary = String.valueOf(Array.get(row,3)).contains("PRI");
+            ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
+            tableInfo.getColumnInfos().add(columnInfo);
+            tableInfo.putColNames(columnName, columnInfo);
+            if(isPrimary){
+                tableInfo.putPrimaryColNames(columnName, columnInfo);
+            }
+        });
+    }
 
+    private static void parseMysqlTableInfo(Connection connection, String tableName, TableInfo tableInfo) throws SQLException {
+        tableInfo.setDbType(DBType.MYSQL);
+        DatabaseMetaData metaData = connection.getMetaData();
         ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableName, null);
         ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableName);
         LinkedList<String> primaryKeyList = new LinkedList<>();
@@ -341,7 +344,7 @@ public class TableHelper {
             ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
             while (columnResultSet.next()) {
                 // Col Name
-                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME);
+                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME).toLowerCase();
                 // type of data
                 String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
                 //the default value of the field

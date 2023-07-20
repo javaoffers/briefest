@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.ParameterDisposer;
 import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * @Description: core implementation class
@@ -44,6 +46,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     }
 
     private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
+        jdbcTemplate.setFetchSize(10000);
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -86,7 +89,10 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     @Override
     public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
         SQL batchSQL = SQLParse.getSQL(sql, map);
+        long start = System.currentTimeMillis();
         List<Map<String, Object>> result = queryData(batchSQL.getSql(), batchSQL.getArgsParam().get(0));
+        long end = System.currentTimeMillis();
+        System.out.println("C耗时 : "+(end-start));
         return result;
     }
 
@@ -103,7 +109,9 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
         List<Map<String, Object>> maps = queryData(sql, paramMap);
         long start = System.nanoTime();
         System.out.println("A耗时："+ TimeUnit.NANOSECONDS.toMillis(start - start1));
-        List<E> es = ModelParseUtils.converterMap2Model(clazz, maps);
+        List<Map<String, Object>> tmp =  new ArrayList<>();
+        tmp.add(maps.get(0));
+        List<E> es = ModelParseUtils.converterMap2Model(clazz, tmp);
         long end = System.nanoTime();
         System.out.println("B耗时："+ TimeUnit.NANOSECONDS.toMillis(end - start));
         return es;
@@ -199,18 +207,34 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     private List<Map<String, Object>> queryData(String nativeSql, Object[] param) {
         RowMapperResultSetExtractorPlus<Map<String, Object>> rowMapperResultSetExtractorPlus =
                 new RowMapperResultSetExtractorPlus(new ColumnMapRowMapper() {
+                    String[] names = null;
+                    int columnCount = 0;
                     @Override
                     public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        ResultSetMetaData rsmd = rs.getMetaData();
-                        int columnCount = rsmd.getColumnCount();
                         Map<String, Object> mapOfColumnValues = new HashMap<>(columnCount);
-                        for (int i = 1; i <= columnCount; i++) {
-                            String name = rsmd.getColumnLabel(i);
-                            if (!StringUtils.hasLength(name)) {
-                                name = rsmd.getColumnName(i);
+                        if(rowNum == 0){
+                            ResultSetMetaData rsmd = rs.getMetaData();
+                            columnCount = rsmd.getColumnCount();
+                            names = new String[columnCount];
+                            for (int i = 1, j = 0; i <= columnCount; i++, j++) {
+                                String name = rsmd.getColumnLabel(i);
+                                names[j] = name;
+                                mapOfColumnValues.put( name, getColumnValue(rs, i));
                             }
-                            mapOfColumnValues.put( name, getColumnValue(rs, i));
+                            return mapOfColumnValues;
+                        }else{
+//                            if(rowNum > 2){
+//                                return new HashMap<>();
+//                            }
+                            for (int i = 1, j = 0 ; i <= columnCount; i++,j++) {
+                                String name = names[j];
+                                Object columnValue = rs.getObject(i);
+                                //mapOfColumnValues.put( names[j], rs.getObject(i));
+                            }
                         }
+
+
+
                         return mapOfColumnValues;
                     }
                 });

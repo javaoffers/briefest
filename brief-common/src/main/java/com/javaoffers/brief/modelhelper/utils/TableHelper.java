@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -35,6 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Auther: create by cmj on 2022/5/2 02:05
  */
 public class TableHelper {
+
+    private final  static Map<Class, TableInfo> modelInfoMap = new ConcurrentHashMap<>();
 
     private final  static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
@@ -213,96 +216,129 @@ public class TableHelper {
                 if (!isParse) {
                     BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
                     Assert.isTrue(table != null, "please use @BaseModel on class " + modelClazz.getName());
-                    String tableName = table.value();
-                    if (StringUtils.isBlank(tableName)) {
-                        String simpleName = modelClazz.getSimpleName();
-                        tableName = conLine(simpleName);
-                    }
-
-                    try {
-                        TableInfo tableInfo = new TableInfo(tableName);
-                        String connName = connection.getClass().getName();
-                        if(connName.contains("h2")){
-                            parseH2TableInfo(connection, tableInfo);
-                        }else{
-                            parseMysqlTableInfo(connection, tableName, tableInfo);
-                        }
-
-                        tableInfoMap.put(modelClazz, tableInfo);
-                        Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
-                        boolean uniqueStatus = false;
-                        for (Field colF : colFs) {
-                            String colName = conLine(colF.getName());
-                            BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
-                            if (baseUnique != null) {
-                                uniqueStatus = true;
-                                if (StringUtils.isNotBlank(baseUnique.value())) {
-                                    colName = baseUnique.value();
-                                }
-                            }
-                            //parse @ColName and @funAnno
-                            ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
-                            String fieldName = colF.getName();
-                            boolean isFunSql = false;
-                            boolean isExcludeColAll = false;
-                            if (parseColName != null) {
-                                isExcludeColAll = parseColName.isExcludeColAll();
-                                colName = parseColName.getSqlFun();
-                                // In select.colAll , insert.colAll, update.colAll will ignore this field.
-                                if(isExcludeColAll){
-                                    tableInfo.putFieldNameExcludeColAll(fieldName, isExcludeColAll);
-                                }
-                                isFunSql = parseColName.isFun();
-                                tableInfo.putSqlFun(colName, isFunSql);
-                                tableInfo.putColNameExcludeColAll(colName, isExcludeColAll);
-                            } else {
-                                // Indicates that this field does not have any annotation information.
-                                // then the field must belong to a field in the original table
-                                // Otherwise skip parsing of this field
-                                if (!tableInfo.getColNames().containsKey(colName)) {
-                                    continue;
-                                }
-                            }
-
-                            //Avoid save or update operations that affect the database record,
-                            // so we see it as SQL fun
-                            if(!isFunSql){
-                                for(AsSqlFunFilterImpl fieldFilter : TABLE_HELPER_FILTER){
-                                    if(fieldFilter.filter(colF)){
-                                        colName = tableName+"."+colName;
-                                        isFunSql = true;
-                                        tableInfo.putSqlFun(colName, true);
-                                        break;
-                                    }
-                                }
-                            }
-
-                            //derive flag process
-                            DeriveProcess.processDerive(tableInfo, colF, colName);
-
-                            // original table fields and sql-fun fields
-                            tableInfo.putFieldNameColNameOfModel(fieldName, colName);
-                            tableInfo.putColNameAndFieldOfModel(colName, colF);
-
-                            //fieldName and field
-                            tableInfo.putFieldNameAndField(fieldName, colF);
-
-                            //not funSql and not excludeColAll and is originalColName
-                            if (!isFunSql && !isExcludeColAll && tableInfo.getColNames().containsKey(colName)) {
-                                //original table fields
-                                tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
-                            }
-                        }
-                        Assert.isTrue(uniqueStatus, "Please declare @BaseUnique field in the model "+ modelClazz.getName());
-                        tableInfo.unmodifiable();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        throw new ParseTableException(e.getMessage(), e);
-                    }
-                    modelIsParse.put(modelClazz, true);
+                    parseTableInfo(modelClazz, connection, table);
+                    parseModelInfo(modelClazz, table);
                 }
             }
         }
+    }
+
+    private static void parseModelInfo(Class<?> modelClazz, BaseModel table) {
+        ArrayList<Field> ones = new ArrayList<Field>();//非数组或集合model,一对一
+        ArrayList<Field> arrays = new ArrayList<Field>();//存放数组model
+        ArrayList<Field> list_ = new ArrayList<Field>();//存放list集合model
+        ArrayList<Field> set_ = new ArrayList<Field>();//存放set集合model
+        Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
+        for(Field fd : colFs) {
+            if(fd.getType().isArray()) {
+                arrays.add(fd);
+            }else if(List.class.isAssignableFrom(fd.getType())) {
+                list_.add(fd);
+            }else if(Set.class.isAssignableFrom(fd.getType())) {
+                set_.add(fd);
+            }else {
+                ones.add(fd);
+            }
+        }
+
+
+
+
+    }
+
+    //解析table info. 和数据库表做关联关系.
+    private static void parseTableInfo(Class<?> modelClazz, Connection connection, BaseModel table) {
+        String tableName = table.value();
+        if (StringUtils.isBlank(tableName)) {
+            String simpleName = modelClazz.getSimpleName();
+            tableName = conLine(simpleName);
+        }
+
+        try {
+            TableInfo tableInfo = new TableInfo(tableName);
+            String connName = connection.getClass().getName();
+            if(connName.contains("h2")){
+                parseH2TableInfo(connection, tableInfo);
+            }else{
+                parseMysqlTableInfo(connection, tableName, tableInfo);
+            }
+
+            tableInfoMap.put(modelClazz, tableInfo);
+            Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
+            boolean uniqueStatus = false;
+            for (Field colF : colFs) {
+                String colName = conLine(colF.getName());
+                BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
+                if (baseUnique != null) {
+                    uniqueStatus = true;
+                    if (StringUtils.isNotBlank(baseUnique.value())) {
+                        colName = baseUnique.value();
+                    }
+
+                }
+                //parse @ColName and @funAnno
+                ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
+                String fieldName = colF.getName();
+                boolean isFunSql = false;
+                boolean isExcludeColAll = false;
+                if (parseColName != null) {
+                    isExcludeColAll = parseColName.isExcludeColAll();
+                    colName = parseColName.getSqlFun();
+                    // In select.colAll , insert.colAll, update.colAll will ignore this field.
+                    if(isExcludeColAll){
+                        tableInfo.putFieldNameExcludeColAll(fieldName, isExcludeColAll);
+                    }
+                    isFunSql = parseColName.isFun();
+                    tableInfo.putSqlFun(colName, isFunSql);
+                    tableInfo.putColNameExcludeColAll(colName, isExcludeColAll);
+                } else {
+                    // Indicates that this field does not have any annotation information (not a sqlFun).
+                    // then the field must belong to a colName in the original table
+                    // Otherwise skip parsing of this field
+                    if (!tableInfo.getColNames().containsKey(colName)) {
+                        continue;
+                    }
+                }
+
+                //Avoid save or update operations that affect the database record,
+                // so we see it as SQL fun
+                if(!isFunSql){
+                    for(AsSqlFunFilterImpl fieldFilter : TABLE_HELPER_FILTER){
+                        if(fieldFilter.filter(colF)){
+                            colName = tableName+"."+colName;
+                            isFunSql = true;
+                            tableInfo.putSqlFun(colName, true);
+                            break;
+                        }
+                    }
+                }
+
+                //derive flag process
+                DeriveProcess.processDerive(tableInfo, colF, colName);
+
+                // original table fields and sql-fun fields
+                tableInfo.putFieldNameColNameOfModel(fieldName, colName);
+                tableInfo.putColNameAndFieldOfModel(colName, colF);
+
+                //fieldName and field
+                tableInfo.putFieldNameAndField(fieldName, colF);
+
+                //not funSql and not excludeColAll and is originalColName
+                if (!isFunSql && !isExcludeColAll && tableInfo.getColNames().containsKey(colName)) {
+                    //original table fields
+                    tableInfo.putOriginalColNameAndFieldOfModelField(colName, colF);
+                }
+            }
+            Assert.isTrue(uniqueStatus, "Please declare @BaseUnique field in the model "+ modelClazz.getName());
+            tableInfo.unmodifiable();
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ParseTableException(e.getMessage(), e);
+        }
+        modelIsParse.put(modelClazz, true);
     }
 
     private static void parseH2TableInfo(Connection connection, TableInfo tableInfo) throws SQLException, NoSuchFieldException, IllegalAccessException {

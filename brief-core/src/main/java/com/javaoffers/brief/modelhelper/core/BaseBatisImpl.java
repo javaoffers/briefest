@@ -36,18 +36,20 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
     private JdbcTemplate jdbcTemplate;
 
+    private Class modelClass;
+
     public static <T, ID> BaseBatis getInstance(HeadCondition headCondition) {
         return getInstance(headCondition.getTemplate(), headCondition.getModelClass());
     }
 
     private static <T, ID> BaseBatis getInstance(JdbcTemplate jdbcTemplate, Class mClass) {
-        BaseBatisImpl batis = new BaseBatisImpl<>(jdbcTemplate);
+        BaseBatisImpl batis = new BaseBatisImpl<>(jdbcTemplate,mClass);
         return new BaseBatisImplProxy(batis, mClass);
     }
 
-    private BaseBatisImpl(JdbcTemplate jdbcTemplate) {
-        jdbcTemplate.setFetchSize(10000);
+    private BaseBatisImpl(JdbcTemplate jdbcTemplate,Class modelClass) {
         this.jdbcTemplate = jdbcTemplate;
+        this.modelClass = modelClass;
     }
 
     /****************************crud****************************/
@@ -206,38 +208,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
      */
     private List<Map<String, Object>> queryData(String nativeSql, Object[] param) {
         RowMapperResultSetExtractorPlus<Map<String, Object>> rowMapperResultSetExtractorPlus =
-                new RowMapperResultSetExtractorPlus(new ColumnMapRowMapper() {
-                    String[] names = null;
-                    int columnCount = 0;
-                    @Override
-                    public Map<String, Object> mapRow(ResultSet rs, int rowNum) throws SQLException {
-                        Map<String, Object> mapOfColumnValues = new HashMap<>(columnCount);
-                        if(rowNum == 0){
-                            ResultSetMetaData rsmd = rs.getMetaData();
-                            columnCount = rsmd.getColumnCount();
-                            names = new String[columnCount];
-                            for (int i = 1, j = 0; i <= columnCount; i++, j++) {
-                                String name = rsmd.getColumnLabel(i);
-                                names[j] = name;
-                                mapOfColumnValues.put( name, getColumnValue(rs, i));
-                            }
-                            return mapOfColumnValues;
-                        }else{
-//                            if(rowNum > 2){
-//                                return new HashMap<>();
-//                            }
-                            for (int i = 1, j = 0 ; i <= columnCount; i++,j++) {
-                                String name = names[j];
-                                Object columnValue = rs.getObject(i);
-                                //mapOfColumnValues.put( names[j], rs.getObject(i));
-                            }
-                        }
-
-
-
-                        return mapOfColumnValues;
-                    }
-                });
+                new RowMapperResultSetExtractorPlus(this.modelClass);
         return this.jdbcTemplate.query(nativeSql, param, rowMapperResultSetExtractorPlus);
     }
 

@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.parse;
 
 import com.javaoffers.brief.modelhelper.utils.Lists;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,6 +18,8 @@ public class ModelParseUtils {
 
     static final ModelParse modelParse = new SmartModelParse();
 
+    static final RealtimeModelParse realtimeSmartModelParse = new RealtimeSmartModelParse();
+
     public static <E> List<E> converterMap2Model(Class<E> clazz, List<Map<String, Object>> listMap) {
         if (listMap.size() > batch){
             List<Lists.ListData<Map<String, Object>>> partition = Lists.partition(listMap, batch);
@@ -31,5 +34,9 @@ public class ModelParseUtils {
             return modelParse.converterMap2Model(clazz, listMap);
         }
 
+    }
+
+    public static <E> void  converterResultSet2Model(Class<E> clazz, E model, ResultSet rs) {
+        realtimeSmartModelParse.converterResultSet2Model(clazz, model, rs);
     }
 }

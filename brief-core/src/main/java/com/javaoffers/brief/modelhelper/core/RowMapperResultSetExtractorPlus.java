@@ -2,10 +2,14 @@
 package com.javaoffers.brief.modelhelper.core;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.jdbc.core.ColumnMapRowMapper;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.util.Assert;
@@ -15,40 +19,65 @@ import org.springframework.util.Assert;
  */
 public class RowMapperResultSetExtractorPlus<T> implements ResultSetExtractor<List<T>> {
 
-	private final RowMapper<T> rowMapper;
+//    private RowMapper<T> rowMapper =  new BriefColumnMapRowMapper<T>();
 
-	private final int rowsExpected;
+	private Class modelClass;
+    /**
+     * Create a new RowMapperResultSetExtractor.
+     */
+    public RowMapperResultSetExtractorPlus(Class modelClass) {
+    	this.modelClass = modelClass;
+    }
 
+    @Override
+    public List<T> extractData(ResultSet rs) throws SQLException {
+        List<T> results = new ArrayList<>();
+        int rowNum = 0;
+        while (rs.next()) {
+            results.add(renderData(rs));
+        }
+        return results;
+    }
 
-	/**
-	 * Create a new RowMapperResultSetExtractor.
-	 * @param rowMapper the RowMapper which creates an object for each row
-	 */
-	public RowMapperResultSetExtractorPlus(RowMapper<T> rowMapper) {
-		this(rowMapper, 0);
+	private T renderData(ResultSet rs) {
+
+    	return null;
 	}
 
-	/**
-	 * Create a new RowMapperResultSetExtractor.
-	 * @param rowMapper the RowMapper which creates an object for each row
-	 * @param rowsExpected the number of expected rows
-	 * (just used for optimized collection handling)
-	 */
-	public RowMapperResultSetExtractorPlus(RowMapper<T> rowMapper, int rowsExpected) {
-		Assert.notNull(rowMapper, "RowMapper is required");
-		this.rowMapper = rowMapper;
-		this.rowsExpected = rowsExpected;
-	}
-
-
-	@Override
-	public List<T> extractData(ResultSet rs) throws SQLException {
-		List<T> results = (this.rowsExpected > 0 ? new ArrayList<>(this.rowsExpected) : new ArrayList<>());
-		int rowNum = 0;
-		while (rs.next()) {
-			results.add(this.rowMapper.mapRow(rs, rowNum++));
-		}
-		return results;
-	}
+//    static class BriefColumnMapRowMapper<T> implements RowMapper<T>  {
+//        String[] names = null;
+//        int columnCount = 0;
+//		Map<String, T> result = new HashMap<>();
+//        @Override
+//        public T mapRow(ResultSet rs, int rowNum) throws SQLException {
+//
+//
+//
+//
+//            if (rowNum == 0) {
+//                ResultSetMetaData rsmd = rs.getMetaData();
+//                columnCount = rsmd.getColumnCount();
+//                names = new String[columnCount];
+//                for (int i = 1, j = 0; i <= columnCount; i++, j++) {
+//                    String name = rsmd.getColumnLabel(i);
+//                    names[j] = name;
+//                    mapOfColumnValues.put(name, getColumnValue(rs, i));
+//                }
+//                return mapOfColumnValues;
+//            } else {
+////                            if(rowNum > 2){
+////                                return new HashMap<>();
+////                            }
+//                for (int i = 1, j = 0; i <= columnCount; i++, j++) {
+//                    String name = names[j];
+//                    Object columnValue = rs.getObject(i);
+//                    //mapOfColumnValues.put( names[j], rs.getObject(i));
+//                }
+//            }
+//
+//
+//            return mapOfColumnValues;
+//        }
+    }
 
 }

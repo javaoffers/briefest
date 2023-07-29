@@ -36,8 +36,6 @@ import java.util.stream.Collectors;
  */
 public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
 
-    private static final Object[] EMPTY = new Object[0];
-
     private JdbcExecutor<T> jdbcExecutor;
 
     public static <T, ID> BaseBatis getInstance(HeadCondition headCondition) {
@@ -50,6 +48,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
     }
 
     private BaseBatisImpl(DataSource dataSource,Class modelClass) {
+
         this.jdbcExecutor = new BriefJdbcExecutor<T>(dataSource, modelClass);
     }
 

@@ -1,8 +1,17 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
+import com.javaoffers.brief.modelhelper.convert.Serializable2IdConvert;
+import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.SQL;
+import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 
 import javax.sql.DataSource;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @description: modify
@@ -18,11 +27,65 @@ public class BriefModifyExecutor implements ModifyExecutor {
 
     @Override
     public int modify(SQL sql) {
-        return 0;
+        return batchModify(sql);
     }
 
     @Override
     public int batchModify(SQL sql) {
-        return 0;
+        Connection connection = null;
+        Boolean oldAutoCommit = null;
+        try {
+            connection = dataSource.getConnection();
+            String nativeSql = sql.getSql();
+            List<Object[]> argsParam = sql.getArgsParam();
+            oldAutoCommit = connection.getAutoCommit();
+            connection.setAutoCommit(false);
+            PreparedStatement ps = connection.prepareStatement(nativeSql);
+            int size = argsParam.size();
+            int y = size % 2;
+            if (size > 1) {
+                if (y == 1) {
+                    Object[] p = argsParam.remove(0);
+                    for (int pi = 0; pi < p.length; ) {
+                        Object ov = p[pi];
+                        ps.setObject(++pi, ov);
+                    }
+                    ps.addBatch();
+                }
+                for (int i = 0, j = 1; i < size && j < size; i++, j++) {
+                    Object[] p = argsParam.get(i);
+                    Object[] p2 = argsParam.get(j);
+                    for (int pi = 0; pi < p.length; ) {
+                        Object ov = p[pi];
+                        ps.setObject(++pi, ov);
+                    }
+                    ps.addBatch();
+                    for (int pi = 0; pi < p2.length; ) {
+                        Object ov = p2[pi];
+                        ps.setObject(++pi, ov);
+                    }
+                    ps.addBatch();
+                }
+            } else {
+                Object[] p = argsParam.get(0);
+                for (int pi = 0; pi < p.length; ) {
+                    Object ov = p[pi];
+                    ps.setObject(++pi, ov);
+                }
+            }
+            return ps.executeBatch().length;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        } finally {
+            if (connection == null && oldAutoCommit != null) {
+                try {
+                    connection.setAutoCommit(oldAutoCommit);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new SqlParseException(e.getMessage());
+                }
+            }
+        }
     }
 }

@@ -37,6 +37,6 @@ public class ModelParseUtils {
     }
 
     public static <E> void  converterResultSet2Model(Class<E> clazz, E model, ResultSet rs) {
-        realtimeSmartModelParse.converterResultSet2Model(clazz, model, rs);
+        realtimeSmartModelParse.converterResultSet2Model(clazz, rs);
     }
 }

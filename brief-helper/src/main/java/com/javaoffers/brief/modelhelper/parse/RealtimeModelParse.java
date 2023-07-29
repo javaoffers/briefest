@@ -12,12 +12,11 @@ public interface RealtimeModelParse  {
 
     /**
      * 模型解析
-     * @param model
      * @param clazz
      * @param rs
      * @param <E>
      * @return void
      */
-    public <E> void converterResultSet2Model(Class<E> clazz, E model, ResultSet rs);
+    public <E> List<E> converterResultSet2Model(Class<E> clazz, ResultSet rs);
 
 }

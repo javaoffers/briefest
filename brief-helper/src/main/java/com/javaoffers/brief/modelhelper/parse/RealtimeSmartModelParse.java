@@ -35,13 +35,14 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     /**
      * rs 不需要next(又上层进行next操作), 直接获取数据即可.
      * @param clazz
-     * @param model
      * @param rs
      * @param <E>
      */
     @Override
-    public <E> void converterResultSet2Model(Class<E> clazz, E model, ResultSet rs) {
+    public <E> List<E> converterResultSet2Model(Class<E> clazz, ResultSet rs) {
         TableInfo tableInfo = TableHelper.getTableInfo(clazz);
+
+        return Collections.EMPTY_LIST;
     }
 
 

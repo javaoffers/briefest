@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public interface BaseBatis<T,ID>{
 	
-    /*****************************************************************************/ 
+    /*****************************************************************************/
 	public int saveData(String sql);
 
 	public int saveData(String sql,Map<String,Object> map);
@@ -24,10 +24,6 @@ public interface BaseBatis<T,ID>{
 	public int updateData(String sql);
 
 	public int updateData(String sql,Map<String,Object> map);
-	
-	public List<Map<String,Object>> queryData(String sql);
-
-	public List<Map<String,Object>> queryData(String sql,Map<String,Object> map);
 	
 	/*****************************************************************************/ 
 	public <E> List<E> queryDataForT(String sql,Class<E> clazz);

@@ -78,6 +78,6 @@ public class RowMapperResultSetExtractorPlus<T> implements ResultSetExtractor<Li
 //
 //            return mapOfColumnValues;
 //        }
-    }
+//    }
 
 }

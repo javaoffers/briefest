@@ -14,19 +14,15 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class HeadCondition implements Condition {
 
-    private JdbcTemplate template;
+    private DataSource dataSource;
 
     private AtomicLong nextTag = new AtomicLong(0);
 
     private Class modelClass;
 
-    public HeadCondition(JdbcTemplate template, Class modelClass) {
-        this.template = template;
+    public HeadCondition(DataSource dataSource, Class modelClass) {
+        this.dataSource = dataSource;
         this.modelClass = modelClass;
-    }
-
-    public JdbcTemplate getTemplate() {
-        return template;
     }
 
     @Override
@@ -53,21 +49,11 @@ public class HeadCondition implements Condition {
     }
 
     public HeadCondition clone(){
-        return new HeadCondition(this.template, this.modelClass);
-    }
-
-    public static Connection getNewConnection(HeadCondition condition) {
-        Connection connection = null;
-        try {
-            connection = condition.getTemplate().getDataSource().getConnection();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return connection;
+        return new HeadCondition(this.dataSource, this.modelClass);
     }
 
     public DataSource getDataSource(){
-       return this.getTemplate().getDataSource();
+       return this.dataSource;
     }
 
     public Class getModelClass() {

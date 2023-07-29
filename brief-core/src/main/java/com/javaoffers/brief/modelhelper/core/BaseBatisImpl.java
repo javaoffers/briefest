@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.convert.Serializable2IdConvert;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutor;
+import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
@@ -16,6 +18,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.sql.DataSource;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -34,22 +37,19 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
 
     private static final Object[] EMPTY = new Object[0];
 
-    private JdbcTemplate jdbcTemplate;
-
-    private Class modelClass;
+    private JdbcExecutor<T> jdbcExecutor;
 
     public static <T, ID> BaseBatis getInstance(HeadCondition headCondition) {
-        return getInstance(headCondition.getTemplate(), headCondition.getModelClass());
+        return getInstance(headCondition.getDataSource(), headCondition.getModelClass());
     }
 
-    private static <T, ID> BaseBatis getInstance(JdbcTemplate jdbcTemplate, Class mClass) {
-        BaseBatisImpl batis = new BaseBatisImpl<>(jdbcTemplate,mClass);
+    private static <T, ID> BaseBatis getInstance(DataSource dataSource, Class mClass) {
+        BaseBatisImpl batis = new BaseBatisImpl(dataSource,mClass);
         return new BaseBatisImplProxy(batis, mClass);
     }
 
-    private BaseBatisImpl(JdbcTemplate jdbcTemplate,Class modelClass) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.modelClass = modelClass;
+    private BaseBatisImpl(DataSource dataSource,Class modelClass) {
+        this.jdbcExecutor = new BriefJdbcExecutor<T>(dataSource, modelClass);
     }
 
     /****************************crud****************************/
@@ -60,7 +60,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     @Override
     public int saveData(String sql, Map<String, Object> map) {
         SQL sql_ = SQLParse.getSQL(sql, map);
-        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+        return this.jdbcExecutor.save(sql_).toInt();
     }
 
     public int deleteData(String sql) {
@@ -70,7 +70,8 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     @Override
     public int deleteData(String sql, Map<String, Object> map) {
         SQL sql_ = SQLParse.getSQL(sql, map);
-        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+        return this.jdbcExecutor.modify(sql_);
+        //return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
     }
 
     public int updateData(String sql) {
@@ -80,7 +81,8 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T, ID> {
     @Override
     public int updateData(String sql, Map<String, Object> map) {
         SQL sql_ = SQLParse.getSQL(sql, map);
-        return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
+        return this.jdbcExecutor.modify(sql_);
+        //return this.jdbcTemplate.update(sql_.getSql(), new ArgumentPreparedStatementSetter(sql_.getArgsParam().get(0)));
     }
 
     public List<Map<String, Object>> queryData(String sql) {

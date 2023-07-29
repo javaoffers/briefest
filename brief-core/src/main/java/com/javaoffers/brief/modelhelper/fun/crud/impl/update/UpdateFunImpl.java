@@ -6,23 +6,25 @@ import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.UpdateFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
+
 public class UpdateFunImpl <M, C extends GetterFun<M, Object>, V> implements UpdateFun<M,C,V> {
 
     private Class modelClass;
-    private JdbcTemplate jdbcTemplate;
+    private DataSource dataSource;
 
     public UpdateFunImpl(Class modelClass) {
         this.modelClass = modelClass;
-        this.jdbcTemplate = CrudMapperMethodThreadLocal.getExcutorJdbcTemplate();
+        this.dataSource = CrudMapperMethodThreadLocal.getExcutorDataSource();
     }
 
     @Override
     public SmartUpdateFun<M, C, V> updateNull() {
-        return new SmartUpdateFunImpl<>(modelClass, true,jdbcTemplate);
+        return new SmartUpdateFunImpl<>(modelClass, true,dataSource);
     }
 
     @Override
     public SmartUpdateFun<M, C, V> npdateNull() {
-        return new SmartUpdateFunImpl<>(modelClass, false,jdbcTemplate);
+        return new SmartUpdateFunImpl<>(modelClass, false,dataSource);
     }
 }

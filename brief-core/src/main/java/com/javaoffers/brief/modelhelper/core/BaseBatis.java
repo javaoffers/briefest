@@ -7,10 +7,9 @@ import java.util.Map;
 /**
  * @Description: 该项目的顶级接口
  * @param <T> model
- * @param <ID> 主键
  * @Auther: create by cmj on 2022/05/22 02:49
  */
-public interface BaseBatis<T,ID>{
+public interface BaseBatis<T>{
 	
     /*****************************************************************************/
 	public int saveData(String sql);
@@ -26,14 +25,14 @@ public interface BaseBatis<T,ID>{
 	public int updateData(String sql,Map<String,Object> map);
 	
 	/*****************************************************************************/ 
-	public <E> List<E> queryDataForT(String sql,Class<E> clazz);
+	public List<T> queryData(String sql);
 
-	public <E> List<E> queryDataForT4(String sql,Map<String,Object> map,Class<E> clazz);
+	public List<T> queryData(String sql,Map<String,Object> map);
 
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);
 
-	public List<Serializable> batchInsert(String sql, List<Map<String,Object>> paramMap);
+	public List<Id> batchInsert(String sql, List<Map<String,Object>> paramMap);
 
 	/*****************************************************************************/ 
 

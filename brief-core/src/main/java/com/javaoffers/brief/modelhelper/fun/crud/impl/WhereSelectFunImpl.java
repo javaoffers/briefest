@@ -434,6 +434,6 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
         JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
         JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
-        return instance.queryDataForT4(sqlInfo.getSql(), sqlInfo.getParams().get(0), sqlInfo.getAClass());
+        return instance.queryData(sqlInfo.getSql(), sqlInfo.getParams().get(0));
     }
 }

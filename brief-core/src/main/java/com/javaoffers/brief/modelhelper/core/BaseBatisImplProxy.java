@@ -21,7 +21,7 @@ import java.util.function.Supplier;
  * @description: 包装代理， 没有用jdk代理实现是因为性能问题. 通过该类来扩展额外的功能。
  * @author: create by cmj on 2023/5/28 20:31
  */
-public class BaseBatisImplProxy<T, ID> implements BaseBatis<T,ID> {
+public class BaseBatisImplProxy<T, ID> implements BaseBatis<T> {
 
     static List<JqlChainFilter> jqlChainFilterList = new ArrayList<>();
 
@@ -103,29 +103,15 @@ public class BaseBatisImplProxy<T, ID> implements BaseBatis<T,ID> {
     }
 
     @Override
-    public List<Map<String, Object>> queryData(String sql) {
+    public List<T> queryData(String sql) {
         return doProxy(new SqlMetaInfo(sql,modelClass), ()->{return baseBatis.queryData(sql);});
     }
 
     @Override
-    public List<Map<String, Object>> queryData(String sql, Map<String, Object> map) {
+    public List<T> queryData(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
         return doProxy(new SqlMetaInfo(sql,maps, modelClass), ()->{return baseBatis.queryData(sql , map);});
-    }
-
-    @Override
-    public <E> List<E> queryDataForT(String sql, Class<E> clazz) {
-        SqlMetaInfo sqlMetaInfo = new SqlMetaInfo(sql, clazz);
-        return doProxy(sqlMetaInfo, ()-> baseBatis.queryDataForT(sql, clazz));
-    }
-
-    @Override
-    public <E> List<E> queryDataForT4(String sql, Map<String, Object> map, Class<E> clazz) {
-        ArrayList<Map<String, Object>> maps = new ArrayList<>();
-        maps.add(map);
-        SqlMetaInfo sqlMetaInfo = new SqlMetaInfo(sql,maps, clazz);
-        return doProxy(sqlMetaInfo, ()-> baseBatis.queryDataForT4(sql ,map, clazz));
     }
 
     @Override
@@ -135,7 +121,7 @@ public class BaseBatisImplProxy<T, ID> implements BaseBatis<T,ID> {
     }
 
     @Override
-    public List<Serializable> batchInsert(String sql, List<Map<String, Object>> paramMap) {
+    public List<Id> batchInsert(String sql, List<Map<String, Object>> paramMap) {
         SqlMetaInfo sqlMetaInfo = new SqlMetaInfo(sql,paramMap, modelClass);
         return doProxy(sqlMetaInfo, ()-> baseBatis.batchInsert(sql ,paramMap));
     }

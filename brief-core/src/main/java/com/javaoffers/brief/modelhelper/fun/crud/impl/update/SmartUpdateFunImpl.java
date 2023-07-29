@@ -12,6 +12,8 @@ import com.javaoffers.brief.modelhelper.fun.crud.update.PrepareWhereModifyFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
+
 /**
  * @author create by cmj on 2022-06-29
  */
@@ -34,11 +36,11 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
 
     private OneUpdateFunImpl<M,C,V> oneUpdateFun;
 
-    public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull, JdbcTemplate jdbcTemplate) {
+    public SmartUpdateFunImpl(Class<M> mClass, boolean isUpdateNull, DataSource dataSource) {
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
-        HeadCondition headCondition = new HeadCondition(jdbcTemplate,mClass);
+        HeadCondition headCondition = new HeadCondition(dataSource,mClass);
         this.conditions.add(headCondition);
         this.conditions.add(new UpdateCondtionMark(mClass,headCondition));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);

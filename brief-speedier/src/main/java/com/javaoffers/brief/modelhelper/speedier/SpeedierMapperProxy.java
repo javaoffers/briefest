@@ -30,7 +30,7 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
 
     private volatile Class modelClass;
 
-    private volatile JdbcTemplate jdbcTemplate;
+    private volatile DataSource dataSource;
 
     private FutureLock<Pair<Boolean, Exception>> status = new FutureLock();
 
@@ -44,7 +44,7 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
                 // Note that after unLock, tryLock is still unsuccessful. FutureLock can only be used once,
                 // unless it can be used again after reset
                 if(this.status.tryLock()){
-                    Connection connection = this.jdbcTemplate.getDataSource().getConnection();
+                    Connection connection = this.dataSource.getConnection();
                     try {
                         List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
                         for(Class mc : modelClass){
@@ -67,7 +67,7 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
                 }
             }
             CrudMapperMethodThreadLocal.addExcutorModel( this.modelClass);
-            CrudMapperMethodThreadLocal.addExcutorJdbcTemplate(this.jdbcTemplate);
+            CrudMapperMethodThreadLocal.addExcutorDataSource(this.dataSource);
 
             if(method.getModifiers() == 1){
                 return method.invoke(briefMapperJql,args);
@@ -93,13 +93,13 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
             throw  e;
         }finally {
             CrudMapperMethodThreadLocal.delExcutorModel();
-            CrudMapperMethodThreadLocal.delExcutorJdbcTemplate();
+            CrudMapperMethodThreadLocal.delExcutorDataSource();
         }
     }
 
     SpeedierMapperProxy(BriefMapper briefMapperJql, DataSource dataSource, Class modelClass) {
         this.briefMapperJql = briefMapperJql;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.dataSource = dataSource;
         this.modelClass = modelClass;
     }
 

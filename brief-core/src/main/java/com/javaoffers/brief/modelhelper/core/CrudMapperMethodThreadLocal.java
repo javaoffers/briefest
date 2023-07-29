@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CrudMapperMethodThreadLocal {
 
     private final static ThreadLocal<Class> excutorSelect = new InheritableThreadLocal<Class>();
-    private final static ThreadLocal< JdbcTemplate> excutorJdbcTemplate = new InheritableThreadLocal< JdbcTemplate>();
+    private final static ThreadLocal< DataSource> excutorDataSource = new InheritableThreadLocal< DataSource>();
 
     public static void addExcutorModel(Class clazz){
         excutorSelect.set(clazz);
@@ -27,16 +27,16 @@ public class CrudMapperMethodThreadLocal {
         return excutorSelect.get();
     }
 
-    public static void addExcutorJdbcTemplate(JdbcTemplate jdbcTemplate){
-        excutorJdbcTemplate.set(jdbcTemplate);
+    public static void addExcutorDataSource(DataSource dataSource){
+        excutorDataSource.set(dataSource);
     }
 
-    public static void delExcutorJdbcTemplate(){
-        excutorJdbcTemplate.remove();
+    public static void delExcutorDataSource(){
+        excutorDataSource.remove();
     }
 
-    public static JdbcTemplate getExcutorJdbcTemplate(){
-       return excutorJdbcTemplate.get();
+    public static DataSource getExcutorDataSource(){
+       return excutorDataSource.get();
     }
 
 }

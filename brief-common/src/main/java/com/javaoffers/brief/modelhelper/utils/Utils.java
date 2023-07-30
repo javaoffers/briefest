@@ -270,4 +270,14 @@ public class Utils {
 
     }
 
+    public static String getSpecialColName(String tableName, DBType dbType, String colName){
+        switch (dbType){
+            case MYSQL:
+                return tableName + "__" + colName;
+            case H2:
+                return tableName.toUpperCase() + "__" + colName.toUpperCase();
+        }
+        return tableName + "__" + colName;
+    }
+
 }

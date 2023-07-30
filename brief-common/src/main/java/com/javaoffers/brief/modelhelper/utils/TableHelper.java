@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TableHelper {
 
-    private final  static Map<Class, TableInfo> modelInfoMap = new ConcurrentHashMap<>();
+    private final  static Map<Class, ModelInfo> modelInfoMap = new ConcurrentHashMap<>();
 
     private final  static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
 
@@ -217,32 +217,14 @@ public class TableHelper {
                     BaseModel table = modelClazz.getDeclaredAnnotation(BaseModel.class);
                     Assert.isTrue(table != null, "please use @BaseModel on class " + modelClazz.getName());
                     parseTableInfo(modelClazz, connection, table);
-                    parseModelInfo(modelClazz, table);
+                    parseModelInfo(modelClazz);
                 }
             }
         }
     }
 
-    private static void parseModelInfo(Class<?> modelClazz, BaseModel table) {
-        ArrayList<Field> ones = new ArrayList<Field>();//非数组或集合model,一对一
-        ArrayList<Field> arrays = new ArrayList<Field>();//存放数组model
-        ArrayList<Field> list_ = new ArrayList<Field>();//存放list集合model
-        ArrayList<Field> set_ = new ArrayList<Field>();//存放set集合model
-        Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
-        for(Field fd : colFs) {
-            if(fd.getType().isArray()) {
-                arrays.add(fd);
-            }else if(List.class.isAssignableFrom(fd.getType())) {
-                list_.add(fd);
-            }else if(Set.class.isAssignableFrom(fd.getType())) {
-                set_.add(fd);
-            }else {
-                ones.add(fd);
-            }
-        }
-
-
-
+    private static void parseModelInfo(Class<?> modelClazz) {
+        modelInfoMap.put(modelClazz, new ModelInfo(modelClazz));
 
     }
 
@@ -537,5 +519,15 @@ public class TableHelper {
     public static TableInfo getTableInfo(Class<?> m2c) {
         TableInfo tableInfo = tableInfoMap.get(m2c);
         return tableInfo;
+    }
+
+    /**
+     * getModelInfo
+     * @param m2c
+     * @param <T>
+     * @return
+     */
+    public static <T> ModelInfo<T> getModelInfo(Class<T> m2c){
+        return modelInfoMap.get(m2c);
     }
 }

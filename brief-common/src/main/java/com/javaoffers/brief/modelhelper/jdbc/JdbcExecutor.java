@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.Id;
-import com.javaoffers.brief.modelhelper.core.SQL;
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -17,41 +17,41 @@ public interface JdbcExecutor<T> {
      * @param sql
      * @return
      */
-    Id save(SQL sql);
+    Id save(BaseSQLInfo sql);
 
     /**
      * 批量保存
      * @param sql
      * @return
      */
-    List<Id> batchSave(SQL sql);
+    List<Id> batchSave(BaseSQLInfo sql);
 
     /**
      * 更新
      * @param sql
      * @return
      */
-    int modify(SQL sql);
+    int modify(BaseSQLInfo sql);
 
     /**
      * 批量更新
      * @param sql
      * @return
      */
-    int batchModify(SQL sql);
+    int batchModify(BaseSQLInfo sql);
 
     /**
      * 查询
      * @param sql
      * @return
      */
-    T query(SQL sql);
+    T query(BaseSQLInfo sql);
 
     /**
      * 查询列表
      * @param sql
      * @return
      */
-    List<T> queryList(SQL sql);
+    List<T> queryList(BaseSQLInfo sql);
 
 }

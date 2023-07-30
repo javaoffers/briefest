@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 
@@ -26,14 +27,15 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     }
 
     @Override
-    public T query(SQL sql) {
+    public T query(BaseSQLInfo sql) {
         return null;
     }
 
     @Override
-    public List<T> queryList(SQL sql) {
+    public List<T> queryList(BaseSQLInfo sql) {
         try {
-            Connection connection = this.dataSource.getConnection();
+
+            Connection connection = getConnection();
             PreparedStatement ps = connection.prepareStatement(sql.getSql());
             List<Object[]> argsParam = sql.getArgsParam();
             if(argsParam != null && argsParam.size() == 1){
@@ -44,12 +46,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                 }
             }
             ResultSet rs = ps.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            String[] colNames = new String[columnCount];
-            for(int i=0; i <= columnCount;){
-                colNames[i] = metaData.getColumnName(++i);
-            }
+
 
             while (rs.next()){
 
@@ -61,5 +58,16 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
         }
 
         return null;
+    }
+
+    @Override
+    public Connection getConnection() {
+        try {
+            return this.dataSource.getConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        }
+
     }
 }

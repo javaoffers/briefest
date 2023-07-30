@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.parse;
 
+import com.javaoffers.brief.modelhelper.jdbc.ResultSetExecutor;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 
 import java.sql.ResultSet;
@@ -36,7 +37,7 @@ public class ModelParseUtils {
 
     }
 
-    public static <E> void  converterResultSet2Model(Class<E> clazz, E model, ResultSet rs) {
+    public static <E> void  converterResultSet2Model(Class<E> clazz, E model, ResultSetExecutor rs) {
         realtimeSmartModelParse.converterResultSet2Model(clazz, rs);
     }
 }

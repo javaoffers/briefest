@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.convert.Serializable2IdConvert;
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
@@ -26,7 +27,7 @@ public class BriefSaveExecutor implements SaveExecutor {
     }
 
     @Override
-    public Id save(SQL sql) {
+    public Id save(BaseSQLInfo sql) {
         List<Id> ids = batchSave(sql);
         if(ids != null && ids.size() > 0){
             return ids.get(0);
@@ -35,13 +36,13 @@ public class BriefSaveExecutor implements SaveExecutor {
     }
 
     @Override
-    public List<Id> batchSave(SQL sql) {
+    public List<Id> batchSave(BaseSQLInfo sql) {
         Connection connection = null;
         Boolean oldAutoCommit = null;
         int batchSize = sql.getBatchSize();
         List<Id> ids = new ArrayList<>();
         try {
-            connection = dataSource.getConnection();
+            connection = this.getConnection();
             String nativeSql = sql.getSql();
             List<Object[]> argsParam = sql.getArgsParam();
             oldAutoCommit = connection.getAutoCommit();
@@ -106,5 +107,17 @@ public class BriefSaveExecutor implements SaveExecutor {
             }
         }
         return ids;
+    }
+
+
+    @Override
+    public Connection getConnection() {
+        try {
+            return this.dataSource.getConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        }
+
     }
 }

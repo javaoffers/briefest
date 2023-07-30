@@ -180,13 +180,7 @@ public class HelperUtils {
     }
 
     public static String getSpecialColName(String tableName, DBType dbType, String colName){
-        switch (dbType){
-            case MYSQL:
-                return tableName + "__" + colName;
-            case H2:
-                return tableName.toUpperCase() + "__" + colName.toUpperCase();
-        }
-        return tableName + "__" + colName;
+        return Utils.getSpecialColName(tableName, dbType,colName);
     }
 
     public static String getSpecialColName(Class mClass, Field fd){

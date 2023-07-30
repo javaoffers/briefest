@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Id;
-import com.javaoffers.brief.modelhelper.core.SQL;
 
 import java.util.List;
 
@@ -9,10 +9,10 @@ import java.util.List;
  * @description: save
  * @author: create by cmj on 2023/7/29 18:26
  */
-public interface SaveExecutor {
+public interface SaveExecutor extends DataSourceExecutor{
 
-    Id save(SQL sql);
+    Id save(BaseSQLInfo sql);
 
-    List<Id> batchSave(SQL sql);
+    List<Id> batchSave(BaseSQLInfo sql);
 
 }

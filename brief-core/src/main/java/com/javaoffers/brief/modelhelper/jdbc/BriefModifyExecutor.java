@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.convert.Serializable2IdConvert;
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
@@ -26,16 +27,16 @@ public class BriefModifyExecutor implements ModifyExecutor {
     }
 
     @Override
-    public int modify(SQL sql) {
+    public int modify(BaseSQLInfo sql) {
         return batchModify(sql);
     }
 
     @Override
-    public int batchModify(SQL sql) {
+    public int batchModify(BaseSQLInfo sql) {
         Connection connection = null;
         Boolean oldAutoCommit = null;
         try {
-            connection = dataSource.getConnection();
+            connection = this.getConnection();
             String nativeSql = sql.getSql();
             List<Object[]> argsParam = sql.getArgsParam();
             oldAutoCommit = connection.getAutoCommit();
@@ -87,5 +88,16 @@ public class BriefModifyExecutor implements ModifyExecutor {
                 }
             }
         }
+    }
+
+    @Override
+    public Connection getConnection() {
+        try {
+            return this.dataSource.getConnection();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        }
+
     }
 }

@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.parse;
 
+import com.javaoffers.brief.modelhelper.jdbc.ResultSetExecutor;
+
 import java.sql.ResultSet;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +19,6 @@ public interface RealtimeModelParse  {
      * @param <E>
      * @return void
      */
-    public <E> List<E> converterResultSet2Model(Class<E> clazz, ResultSet rs);
+    public <E> List<E> converterResultSet2Model(Class<E> clazz, ResultSetExecutor rs);
 
 }

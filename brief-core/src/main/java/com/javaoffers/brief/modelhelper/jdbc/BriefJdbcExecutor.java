@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.SQL;
 
@@ -22,32 +23,32 @@ public class BriefJdbcExecutor<T> implements JdbcExecutor<T> {
     }
 
     @Override
-    public Id save(SQL sql) {
+    public Id save(BaseSQLInfo sql) {
         return new BriefSaveExecutor(dataSource).save(sql);
     }
 
     @Override
-    public List<Id> batchSave(SQL sql) {
+    public List<Id> batchSave(BaseSQLInfo sql) {
         return new BriefSaveExecutor(dataSource).batchSave(sql);
     }
 
     @Override
-    public int modify(SQL sql) {
+    public int modify(BaseSQLInfo sql) {
         return new BriefModifyExecutor(dataSource).modify(sql);
     }
 
     @Override
-    public int batchModify(SQL sql) {
+    public int batchModify(BaseSQLInfo sql) {
         return new BriefModifyExecutor(dataSource).batchModify(sql);
     }
 
     @Override
-    public T query(SQL sql) {
+    public T query(BaseSQLInfo sql) {
         return new BriefQueryExecutor<T>(dataSource, modelClass).query(sql);
     }
 
     @Override
-    public List<T> queryList(SQL sql) {
+    public List<T> queryList(BaseSQLInfo sql) {
         return new BriefQueryExecutor<T>(dataSource, modelClass).queryList(sql);
     }
 }

@@ -1,11 +1,6 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.util.Assert;
-
 import javax.sql.DataSource;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * create by cmj

@@ -23,7 +23,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;

@@ -4,8 +4,8 @@ import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.fun.CategoryTag;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;

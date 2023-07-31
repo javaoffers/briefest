@@ -6,11 +6,10 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondtionMark;
-import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.fun.crud.update.OneUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.PrepareWhereModifyFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
-import org.springframework.jdbc.core.JdbcTemplate;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import javax.sql.DataSource;
 

@@ -1,34 +1,15 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import com.javaoffers.brief.modelhelper.convert.Serializable2IdConvert;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
-import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
-import com.javaoffers.brief.modelhelper.utils.Lists;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
-import org.springframework.jdbc.core.InterruptibleBatchPreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ParameterDisposer;
-import org.springframework.jdbc.core.PreparedStatementCallback;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Description: core implementation class

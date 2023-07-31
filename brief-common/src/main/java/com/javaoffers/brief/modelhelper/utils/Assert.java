@@ -23,4 +23,10 @@ public abstract class Assert {
 			throw new IllegalArgumentException(message);
 		}
 	}
+
+	public static void isTrue(boolean expression) {
+		if (!expression) {
+			throw new IllegalArgumentException(" Condition not met ");
+		}
+	}
 }

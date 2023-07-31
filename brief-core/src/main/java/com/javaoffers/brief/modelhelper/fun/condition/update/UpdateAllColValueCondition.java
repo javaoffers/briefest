@@ -2,11 +2,11 @@ package com.javaoffers.brief.modelhelper.fun.condition.update;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;

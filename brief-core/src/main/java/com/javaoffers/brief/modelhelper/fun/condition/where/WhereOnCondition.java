@@ -5,7 +5,7 @@ import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.HashMap;
 import java.util.HashSet;

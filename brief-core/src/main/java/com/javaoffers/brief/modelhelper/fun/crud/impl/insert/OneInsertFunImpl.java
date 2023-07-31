@@ -16,7 +16,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.fun.crud.insert.OneInsertFun;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
 

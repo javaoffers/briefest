@@ -9,7 +9,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCo
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.*;
 

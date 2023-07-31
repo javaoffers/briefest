@@ -4,7 +4,7 @@ import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.sql.DataSource;

@@ -3,7 +3,7 @@ package com.javaoffers.brief.modelhelper.fun.condition;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.Collections;
 import java.util.Map;

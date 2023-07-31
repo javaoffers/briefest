@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import org.springframework.util.CollectionUtils;
+
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;
 import java.util.LinkedList;

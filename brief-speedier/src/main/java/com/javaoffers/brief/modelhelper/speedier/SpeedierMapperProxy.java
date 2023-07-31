@@ -10,7 +10,6 @@ import com.javaoffers.brief.modelhelper.utils.FutureLock;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.Serializable;

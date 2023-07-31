@@ -4,7 +4,6 @@ import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.UpdateFun;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 

@@ -1,12 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.jdbc.core.BatchPreparedStatementSetter;
 
 /**
  * create by cmj

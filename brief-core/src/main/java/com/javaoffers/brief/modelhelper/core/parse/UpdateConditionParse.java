@@ -10,7 +10,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCo
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondtionMark;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.Assert;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.Arrays;
 import java.util.HashMap;

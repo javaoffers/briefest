@@ -10,12 +10,6 @@
      <version>3.6.3-SNAPSHOT</version>
     <dependencies>
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-jdbc</artifactId>
-            <version>${spring.jdbc}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-helper</artifactId>
               <version>3.6.3-SNAPSHOT</version>

@@ -6,6 +6,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -103,8 +104,7 @@ public class ModelInfo<T> {
 
     public List<ModelFieldInfo> getOnes(List<String> colNames) {
         return ones.stream().filter(
-                modelFieldInfo -> colNames.contains(modelFieldInfo.getAliasName())
-                        || colNames.contains(modelFieldInfo.getFieldName())
+                filter(colNames)
         ).collect(Collectors.toList());
     }
 
@@ -114,22 +114,39 @@ public class ModelInfo<T> {
 
     public List<ModelFieldInfo> getList(List<String> colNames) {
         return list.stream().filter(
-                modelFieldInfo -> colNames.contains(modelFieldInfo.getAliasName())
-                        || colNames.contains(modelFieldInfo.getFieldName())
+                filter(colNames)
         ).collect(Collectors.toList());
     }
 
     public List<ModelFieldInfo> getSet(List<String> colNames) {
         return set.stream().filter(
-                modelFieldInfo -> colNames.contains(modelFieldInfo.getAliasName())
-                        || colNames.contains(modelFieldInfo.getFieldName())
+                filter(colNames)
         ).collect(Collectors.toList());
     }
 
     public List<ModelFieldInfo> getUnique(List<String> colNames) {
-        return unique.stream().filter(
-                modelFieldInfo -> colNames.contains(modelFieldInfo.getAliasName())
-                        || colNames.contains(modelFieldInfo.getFieldName())
+        List<ModelFieldInfo>  uniqueList = unique.stream().filter(
+                filter(colNames)
         ).collect(Collectors.toList());
+        if(uniqueList.size() != unique.size()){
+            return getOnes(colNames);
+        }
+        return uniqueList;
     }
+
+    private Predicate<ModelFieldInfo> filter(List<String> colNames) {
+        return modelFieldInfo -> {
+            boolean a = colNames.contains(modelFieldInfo.getAliasName())
+                    || colNames.contains(modelFieldInfo.getFieldName());
+            if(a){
+                return a;
+            }
+            if(modelFieldInfo.isModelClass()){
+                ModelInfo modelInfo = TableHelper.getModelInfo(modelFieldInfo.getModelClassOfField());
+                return modelInfo.getOnes(colNames).size()>0 ;
+            }
+            return false;
+        };
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -14,6 +16,8 @@ import java.util.List;
  */
 public class BriefResultSetExecutor implements ResultSetExecutor {
 
+    static Logger logger = LoggerFactory.getLogger(BriefResultSetExecutor.class);
+
     private List<String> colNames = new ArrayList<>();
 
     private ResultSet resultSet;
@@ -24,7 +28,7 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
             ResultSetMetaData metaData = resultSet.
                     getMetaData();
             int columnCount = metaData.getColumnCount();
-            for(int i=0; i <= columnCount;){
+            for(int i=0; i < columnCount;){
                 colNames.add(metaData.getColumnLabel(++i));
             }
         }catch (Exception e){
@@ -43,8 +47,8 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
         try {
             return this.resultSet.getObject(colName);
         }catch (Exception e){
-            e.printStackTrace();
-            throw new ParseResultSetException(e.getMessage());
+            //logger.warn("colName:{} result is null",colName);
+            return null;
         }
     }
 

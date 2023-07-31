@@ -87,6 +87,7 @@ public class BriefModifyExecutor implements ModifyExecutor {
                     throw new SqlParseException(e.getMessage());
                 }
             }
+            closeConnection(connection, oldAutoCommit);
         }
     }
 

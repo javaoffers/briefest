@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class BriefSaveExecutor implements SaveExecutor {
     }
 
     @Override
-    public List<Id> batchSave(BaseSQLInfo sql) {
+    public List<Id> batchSave(BaseSQLInfo sql)  {
         Connection connection = null;
         Boolean oldAutoCommit = null;
         int batchSize = sql.getBatchSize();
@@ -105,6 +106,7 @@ public class BriefSaveExecutor implements SaveExecutor {
                     throw new SqlParseException(e.getMessage());
                 }
             }
+           closeConnection(connection, oldAutoCommit);
         }
         return ids;
     }
@@ -118,6 +120,5 @@ public class BriefSaveExecutor implements SaveExecutor {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());
         }
-
     }
 }

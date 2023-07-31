@@ -3,12 +3,14 @@ package com.javaoffers.brief.modelhelper.jdbc;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
+import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,9 +35,12 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
 
     @Override
     public List<T> queryList(BaseSQLInfo sql) {
+        boolean oldAutoCommitStatus = false;
+        Connection connection = null;
         try {
 
-            Connection connection = getConnection();
+            connection = getConnection();
+            oldAutoCommitStatus = connection.getAutoCommit();
             PreparedStatement ps = connection.prepareStatement(sql.getSql());
             List<Object[]> argsParam = sql.getArgsParam();
             if(argsParam != null && argsParam.size() == 1){
@@ -47,17 +52,13 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
             }
             ResultSet rs = ps.executeQuery();
 
-
-            while (rs.next()){
-
-
-            }
+            return ModelParseUtils.converterResultSet2Model(this.modelClass, new BriefResultSetExecutor(rs));
         }catch (Exception e){
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());
+        }finally {
+            closeConnection(connection, oldAutoCommitStatus);
         }
-
-        return null;
     }
 
     @Override

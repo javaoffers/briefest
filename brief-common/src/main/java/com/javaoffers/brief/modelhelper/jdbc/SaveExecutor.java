@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.jdbc;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Id;
 
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -13,6 +14,6 @@ public interface SaveExecutor extends DataSourceExecutor{
 
     Id save(BaseSQLInfo sql);
 
-    List<Id> batchSave(BaseSQLInfo sql);
+    List<Id> batchSave(BaseSQLInfo sql) throws SQLException;
 
 }

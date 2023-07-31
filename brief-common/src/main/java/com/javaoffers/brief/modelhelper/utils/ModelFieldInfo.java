@@ -86,6 +86,7 @@ public class ModelFieldInfo {
     public ModelFieldInfo(Field field, Class modelClass) {
         this.field = field;
         this.modelClass = modelClass;
+        init();
     }
 
     private void init(){

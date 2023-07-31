@@ -258,6 +258,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                     tmpCache.put(uniqueKey, o);
                     buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
+                    listFieldValue.add(o);
 
                 }else{
                     buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),

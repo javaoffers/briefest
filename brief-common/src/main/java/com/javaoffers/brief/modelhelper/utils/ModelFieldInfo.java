@@ -4,6 +4,11 @@ import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * 避免反射.
@@ -73,6 +78,11 @@ public class ModelFieldInfo {
      */
     private boolean fieldTypeIsAbstract;
 
+    /**
+     * list / set 构造方法. 当fieldType为List/Set时才有效
+     */
+    private Newc newc;
+
     public ModelFieldInfo(Field field, Class modelClass) {
         this.field = field;
         this.modelClass = modelClass;
@@ -92,6 +102,18 @@ public class ModelFieldInfo {
             this.fieldGenericClass = Utils.getGenericityClass(field);
             this.fieldType = this.field.getType();
             this.fieldTypeIsAbstract = this.fieldType.isInterface();
+            if(this.fieldTypeIsAbstract){
+                if(List.class.isAssignableFrom(this.fieldType)){
+                    newc = ArrayList::new;
+                }else if(Set.class.isAssignableFrom(this.fieldType)){
+                    newc = HashSet::new;
+                } else if(Collection.class.isAssignableFrom(this.fieldType)){
+                    newc = ArrayList::new;
+                }
+            }else if(Collection.class.isAssignableFrom(this.fieldType)){
+                newc = LambdaCreateUtils.createConstructor(this.fieldType);
+            }
+
         }catch (Throwable e){
             e.printStackTrace();
             throw new ParseModelException(e.getMessage());
@@ -147,5 +169,13 @@ public class ModelFieldInfo {
 
     public boolean isAbstractFieldType() {
         return fieldTypeIsAbstract;
+    }
+
+    /**
+     * 该对象为List/Set/Collection
+     * @return
+     */
+    public Object getNewc(){
+        return newc.newc();
     }
 }

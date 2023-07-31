@@ -82,10 +82,11 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
             if(o==null){
                 o = modelInfo.newC();
                 tmpCache.put(keyStr, o);
+                result.add((E)o);
+                buildData(rs,tmpCache, ones, arrays, list, set, o, true);
+            }else{
+                buildData(rs,tmpCache, ones, arrays, list, set, o, false);
             }
-            result.add((E)o);
-            buildData()
-
         }
         return result;
 
@@ -173,7 +174,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                 Object o = null;
                 if((o=rs.getColValueByColName(one.getAliasName())) != null
                         || (o=rs.getColValueByColName(one.getFieldName()))!=null){
-                    Object o1 = convert.converterObject(one.getFieldClass(), o);
+                    Object o1 = convert.converterObject(one.getFieldGenericClass(), o);
                     one.getSetter().setter(model, o1);
                 }
             }
@@ -208,12 +209,13 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
                 }
             }else{
-                Class fieldClass = arrayField.getFieldClass();
+                Class fieldClass = arrayField.getFieldGenericClass();
                 String aliasName = arrayField.getAliasName();
                 String fieldName = arrayField.getFieldName();
                 Object o = null;
                 if((o = rs.getColValueByColName(aliasName)) != null
                         ||(o = rs.getColValueByColName(fieldName)) != null){
+                    o = convert.converterObject(arrayField.getFieldGenericClass(), o);
                     Object arrayObj = arrayField.getGetter().getter(model);
                     if(arrayObj == null){
                         arrayObj = Array.newInstance(fieldClass, 1);
@@ -239,177 +241,225 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         }
 
         for(ModelFieldInfo listField : list_){
+            List listFieldValue = (List) listField.getGetter().getter(model);
+            if(listFieldValue == null){
+                listFieldValue = (List) listField.getNewc();
+                listField.getSetter().setter(model, listFieldValue);
+            }
             if(listField.isModelClass()){
                 Class modelClassOfField = listField.getModelClassOfField();
                 ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
                 List<String> colNames = rs.getColNames();
                 String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
                 Object o = tmpCache.get(uniqueKey);
-                List listFieldValue = (List) listField.getGetter().getter(model);
-                if(listFieldValue == null){
-                    if(listField.getField().getType()){
 
-                    }
-                }
                 if(o == null){
                     o = modelInfo.newC();
                     tmpCache.put(uniqueKey, o);
-
+                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
 
                 }else{
-
+                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
                 }
-            }else{
-
+            }else {
+                String aliasName = listField.getAliasName();
+                String fieldName = listField.getFieldName();
+                Object o = null;
+                if((o=rs.getColValueByColName(aliasName)) != null || (o=rs.getColValueByColName(fieldName))!=null){
+                    o = convert.converterObject(listField.getFieldGenericClass(), o);
+                    if(!listFieldValue.contains(o)){
+                        listFieldValue.add(o);
+                    }
+                }
             }
         }
 
-
-
-
-
-
-        //---------------------------------------------------
-        List<E> resultList = new ArrayList<>();
-
-        try {
-            Set<Map.Entry<String, List<Map<String, Object>>>> entrySet = map_.entrySet();
-            for (Map.Entry<String, List<Map<String, Object>>> entry : entrySet) {
-
-                List<Map<String, Object>> list = entry.getValue();//Get a cut data
-                if (list == null || list.size() == 0) {
-                    continue;
-                }
-                Map<String, Object> mp = list.get(0);//Get the unique cutting data, just take 0, which refers to the main model main data
-                Model<E> model = Model.getModel(clazz.newInstance());
-
-                for (Field fd : ones) {
-                    if (HelperUtils.isBaseModel(fd)) {
-                        List ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        if (ls != null && ls.size() == 1) {
-                            Object object = ls.get(0);
-                            fd.set(model.getModelAndSetStatusIsTrue(), object);
-                        }
-                        continue;
-                    }
-                    String name = HelperUtils.getSpecialColName(tableName, dbType, fd.getName());
-                    Object o = null;
-                    if ((o = mp.get(name)) != null || (o = mp.get(fd.getName())) != null
-                            || (o = mp.get(HelperUtils.getSpecialColName(clazz, fd))) != null) {
-                        Class<?> type = fd.getType();
-                        Object object2 = convert.converterObject(type, o, fd);
-                        fd.set(model.getModelAndSetStatusIsTrue(), object2);
-                    }
-
-                    continue;
-                }
-                for (Field fd : arrays) {
-                    if (HelperUtils.isBaseModel(fd)) {
-                        List<E> ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        if (ls != null && !ls.isEmpty() && ls.size() > 0) {
-                            Class<? extends Object> class1 = ls.get(0).getClass();
-                            Object object = Array.newInstance(class1, ls.size());
-                            for (int i = 0; i < ls.size(); i++) {
-                                Array.set(object, i, ls.get(i));
-                            }
-                            if (object != null) {
-                                fd.set(model.getModelAndSetStatusIsTrue(), object);
-                            }
-                        }
-                    } else {
-                        String name = HelperUtils.getSpecialColName(tableName, dbType, fd.getName());
-                        ArrayList<Object> arrayData = new ArrayList<Object>();
-                        for (Map<String, Object> map : list) {
-                            Object object = map.get(name);
-                            if (object == null) {
-                                object = map.get(fd.getName());
-                            }
-                            if (object == null) {
-                                object = map.get(HelperUtils.getSpecialColName(clazz, fd));
-                            }
-                            if (object != null) {
-                                arrayData.add(object);
-                            }
-                        }
-                        String typeName = fd.getGenericType().getTypeName();
-                        Class<?> originClass = Class.forName(typeName.substring(0, typeName.length() - 2));
-                        Object object = Array.newInstance(originClass, arrayData.size());
-                        if (arrayData != null && arrayData.size() > 0) {
-                            for (int i = 0; i < arrayData.size(); i++) {
-                                Object object2 = convert.converterObject(originClass.getClass(), arrayData.get(i), fd);
-                                Array.set(object, i, object2);
-                            }
-                            fd.set(model.getModelAndSetStatusIsTrue(), object);
-                        }
-                    }
-                }
-                for (Field fd : list_) {
-                    Class<?> type = fd.getType();
-                    List ls = Collections.EMPTY_LIST;
-                    if (type.isInterface()) {
-                        if (HelperUtils.isBaseModel(fd)) {
-                            ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        } else {
-                            ls = getList(clazz, tableName, dbType, list, fd);
-                        }
-                    } else {
-                        if (HelperUtils.isBaseModel(fd)) {
-                            ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        } else {
-                            ls = getList(clazz, tableName, dbType, list, fd);
-                        }
-                        List newInstance = (List) fd.get(model.getModelAndSetStatusIsTrue());
-                        if (newInstance == null) {
-                            newInstance = (List) type.newInstance();
-                        }
-                        newInstance.addAll(ls);
-                        ls = newInstance;
-                    }
-
-                    if (ls != null && ls.size() > 0) {
-                        fd.set(model.getModelAndSetStatusIsTrue(), ls);
-                    }
-
-                }
-                for (Field fd : set_) {
-                    Class<?> type = fd.getType();
-                    List ls = Collections.EMPTY_LIST;
-                    Set newInstance = Collections.EMPTY_SET;
-                    if (type.isInterface()) {
-
-                        if (HelperUtils.isBaseModel(fd)) {
-                            ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        } else {
-                            ls = getList(clazz, tableName, dbType, list, fd);
-                        }
-                        newInstance = new HashSet();
-                        newInstance.addAll(ls);
-                    } else {
-                        if (HelperUtils.isBaseModel(fd)) {
-                            ls = buildModel(HelperUtils.getModelClass(fd), list);
-                        } else {
-                            ls = getList(clazz, tableName, dbType, list, fd);
-                        }
-                        newInstance = (Set) fd.get(model.getModelAndSetStatusIsTrue());
-                        if (newInstance == null) {
-                            newInstance = (Set) type.newInstance();
-                        }
-                        newInstance.addAll(ls);
-                    }
-                    if (newInstance != null && newInstance.size() > 0) {
-                        fd.set(model.getModelAndSetStatusIsTrue(), newInstance);
-                    }
-                }
-                if (model.isStatus()) {
-                    resultList.add(model.getModel());
-                }
-
+        for(ModelFieldInfo setField : set_){
+            Set setFieldValue = (Set) setField.getGetter().getter(model);
+            if(setFieldValue == null){
+                setFieldValue = (Set) setField.getNewc();
+                setField.getSetter().setter(model, setFieldValue);
             }
 
-        } catch (Exception ex) {
-            throw ex;
+            if(setField.isModelClass()){
+                Class modelClassOfField = setField.getModelClassOfField();
+                ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
+                List<String> colNames = rs.getColNames();
+                String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
+                Object o = tmpCache.get(uniqueKey);
+
+                if(o == null){
+                    o = modelInfo.newC();
+                    tmpCache.put(uniqueKey, o);
+                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
+
+                }else{
+                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
+                }
+            }else {
+                String aliasName = setField.getAliasName();
+                String fieldName = setField.getFieldName();
+                Object o = null;
+                if((o=rs.getColValueByColName(aliasName)) != null || (o=rs.getColValueByColName(fieldName))!=null){
+                    o = convert.converterObject(setField.getFieldGenericClass(), o);
+                    if(!setFieldValue.contains(o)){
+                        setFieldValue.add(o);
+                    }
+                }
+            }
+
         }
-        return resultList;
+
+
+//
+//
+//
+//
+//        //---------------------------------------------------
+//        List<E> resultList = new ArrayList<>();
+//
+//        try {
+//            Set<Map.Entry<String, List<Map<String, Object>>>> entrySet = map_.entrySet();
+//            for (Map.Entry<String, List<Map<String, Object>>> entry : entrySet) {
+//
+//                List<Map<String, Object>> list = entry.getValue();//Get a cut data
+//                if (list == null || list.size() == 0) {
+//                    continue;
+//                }
+//                Map<String, Object> mp = list.get(0);//Get the unique cutting data, just take 0, which refers to the main model main data
+//                Model<E> model = Model.getModel(clazz.newInstance());
+//
+//                for (Field fd : ones) {
+//                    if (HelperUtils.isBaseModel(fd)) {
+//                        List ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        if (ls != null && ls.size() == 1) {
+//                            Object object = ls.get(0);
+//                            fd.set(model.getModelAndSetStatusIsTrue(), object);
+//                        }
+//                        continue;
+//                    }
+//                    String name = HelperUtils.getSpecialColName(tableName, dbType, fd.getName());
+//                    Object o = null;
+//                    if ((o = mp.get(name)) != null || (o = mp.get(fd.getName())) != null
+//                            || (o = mp.get(HelperUtils.getSpecialColName(clazz, fd))) != null) {
+//                        Class<?> type = fd.getType();
+//                        Object object2 = convert.converterObject(type, o, fd);
+//                        fd.set(model.getModelAndSetStatusIsTrue(), object2);
+//                    }
+//
+//                    continue;
+//                }
+//                for (Field fd : arrays) {
+//                    if (HelperUtils.isBaseModel(fd)) {
+//                        List<E> ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        if (ls != null && !ls.isEmpty() && ls.size() > 0) {
+//                            Class<? extends Object> class1 = ls.get(0).getClass();
+//                            Object object = Array.newInstance(class1, ls.size());
+//                            for (int i = 0; i < ls.size(); i++) {
+//                                Array.set(object, i, ls.get(i));
+//                            }
+//                            if (object != null) {
+//                                fd.set(model.getModelAndSetStatusIsTrue(), object);
+//                            }
+//                        }
+//                    } else {
+//                        String name = HelperUtils.getSpecialColName(tableName, dbType, fd.getName());
+//                        ArrayList<Object> arrayData = new ArrayList<Object>();
+//                        for (Map<String, Object> map : list) {
+//                            Object object = map.get(name);
+//                            if (object == null) {
+//                                object = map.get(fd.getName());
+//                            }
+//                            if (object == null) {
+//                                object = map.get(HelperUtils.getSpecialColName(clazz, fd));
+//                            }
+//                            if (object != null) {
+//                                arrayData.add(object);
+//                            }
+//                        }
+//                        String typeName = fd.getGenericType().getTypeName();
+//                        Class<?> originClass = Class.forName(typeName.substring(0, typeName.length() - 2));
+//                        Object object = Array.newInstance(originClass, arrayData.size());
+//                        if (arrayData != null && arrayData.size() > 0) {
+//                            for (int i = 0; i < arrayData.size(); i++) {
+//                                Object object2 = convert.converterObject(originClass.getClass(), arrayData.get(i), fd);
+//                                Array.set(object, i, object2);
+//                            }
+//                            fd.set(model.getModelAndSetStatusIsTrue(), object);
+//                        }
+//                    }
+//                }
+//                for (Field fd : list_) {
+//                    Class<?> type = fd.getType();
+//                    List ls = Collections.EMPTY_LIST;
+//                    if (type.isInterface()) {
+//                        if (HelperUtils.isBaseModel(fd)) {
+//                            ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        } else {
+//                            ls = getList(clazz, tableName, dbType, list, fd);
+//                        }
+//                    } else {
+//                        if (HelperUtils.isBaseModel(fd)) {
+//                            ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        } else {
+//                            ls = getList(clazz, tableName, dbType, list, fd);
+//                        }
+//                        List newInstance = (List) fd.get(model.getModelAndSetStatusIsTrue());
+//                        if (newInstance == null) {
+//                            newInstance = (List) type.newInstance();
+//                        }
+//                        newInstance.addAll(ls);
+//                        ls = newInstance;
+//                    }
+//
+//                    if (ls != null && ls.size() > 0) {
+//                        fd.set(model.getModelAndSetStatusIsTrue(), ls);
+//                    }
+//
+//                }
+//                for (Field fd : set_) {
+//                    Class<?> type = fd.getType();
+//                    List ls = Collections.EMPTY_LIST;
+//                    Set newInstance = Collections.EMPTY_SET;
+//                    if (type.isInterface()) {
+//
+//                        if (HelperUtils.isBaseModel(fd)) {
+//                            ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        } else {
+//                            ls = getList(clazz, tableName, dbType, list, fd);
+//                        }
+//                        newInstance = new HashSet();
+//                        newInstance.addAll(ls);
+//                    } else {
+//                        if (HelperUtils.isBaseModel(fd)) {
+//                            ls = buildModel(HelperUtils.getModelClass(fd), list);
+//                        } else {
+//                            ls = getList(clazz, tableName, dbType, list, fd);
+//                        }
+//                        newInstance = (Set) fd.get(model.getModelAndSetStatusIsTrue());
+//                        if (newInstance == null) {
+//                            newInstance = (Set) type.newInstance();
+//                        }
+//                        newInstance.addAll(ls);
+//                    }
+//                    if (newInstance != null && newInstance.size() > 0) {
+//                        fd.set(model.getModelAndSetStatusIsTrue(), newInstance);
+//                    }
+//                }
+//                if (model.isStatus()) {
+//                    resultList.add(model.getModel());
+//                }
+//
+//            }
+//
+//        } catch (Exception ex) {
+//            throw ex;
+//        }
+//        return resultList;
     }
 
     private static List getList(Class mClass, String tableName, DBType dbType, List<Map<String, Object>> list, Field fd) throws ClassNotFoundException {

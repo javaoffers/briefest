@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class BriefSaveExecutor implements SaveExecutor {
             List<Object[]> argsParam = sql.getArgsParam();
             oldAutoCommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
-            PreparedStatement ps = connection.prepareStatement(nativeSql);
+            PreparedStatement ps = connection.prepareStatement(nativeSql, Statement.RETURN_GENERATED_KEYS);
             int size = argsParam.size();
             int y = size % 2;
             if (size > 1) {
@@ -60,6 +61,7 @@ public class BriefSaveExecutor implements SaveExecutor {
                     }
                     ps.addBatch();
                 }
+                size = argsParam.size();
                 for (int i = 0, j = 1; i < size && j < size; i++, j++) {
                     Object[] p = argsParam.get(i);
                     Object[] p2 = argsParam.get(j);
@@ -74,14 +76,16 @@ public class BriefSaveExecutor implements SaveExecutor {
                     }
                     ps.addBatch();
                 }
-            } else {
+            } else if(size == 1) {
                 Object[] p = argsParam.get(0);
                 for (int pi = 0; pi < p.length; ) {
                     Object ov = p[pi];
                     ps.setObject(++pi, ov);
                 }
+            }else{
+                return ids;
             }
-            ps.executeBatch();
+            ps.execute();
             //Avoid transactional inconsistencies
             if (oldAutoCommit) {
                 connection.commit();

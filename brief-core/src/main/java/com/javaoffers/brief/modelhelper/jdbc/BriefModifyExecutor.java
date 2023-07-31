@@ -53,6 +53,7 @@ public class BriefModifyExecutor implements ModifyExecutor {
                     }
                     ps.addBatch();
                 }
+                size = argsParam.size();
                 for (int i = 0, j = 1; i < size && j < size; i++, j++) {
                     Object[] p = argsParam.get(i);
                     Object[] p2 = argsParam.get(j);
@@ -67,12 +68,14 @@ public class BriefModifyExecutor implements ModifyExecutor {
                     }
                     ps.addBatch();
                 }
-            } else {
+            } else if(size ==1) {
                 Object[] p = argsParam.get(0);
                 for (int pi = 0; pi < p.length; ) {
                     Object ov = p[pi];
                     ps.setObject(++pi, ov);
                 }
+            }else{
+                return 0;
             }
             return ps.executeBatch().length;
         } catch (Exception e) {

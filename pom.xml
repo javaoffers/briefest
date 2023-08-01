@@ -29,6 +29,7 @@
     <spring.jdbc>5.1.5.RELEASE</spring.jdbc>
     <spring.core>5.1.5.RELEASE</spring.core>
     <spring.boot.autoconfigure>2.1.3.RELEASE</spring.boot.autoconfigure>
+    <brief.version>3.6.3-SNAPSHOT</brief.version>
     <!--大版本跟着mybatisThe big version follows mybatis-->
   </properties>
 

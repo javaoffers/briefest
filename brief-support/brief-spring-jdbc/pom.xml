@@ -10,6 +10,27 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>brief-spring-jdbc</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-common</artifactId>
+            <version>3.6.3-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-core</artifactId>
+            <version>3.6.3-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>${spring.jdbc}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 
 </project>

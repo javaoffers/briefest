@@ -5,7 +5,7 @@
     <parent>
         <artifactId>brief-samples</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>1.0.1-SNAPSHOT</version>
+        <version>3.6.3-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>${brief.version}</version>
         </dependency>
 
         <dependency>

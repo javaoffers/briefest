@@ -47,7 +47,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
 //        testInsertUpdate();
 //        transactionInsert();
-//        testBatchInsert();
+        //testBatchInsert();
         testInsert();
         testEnum();
         if(status){

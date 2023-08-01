@@ -36,6 +36,7 @@ public class SpringSupportCrudUserMapperAllOperation {
         SpringSuportCrudUserMapperDelete.status = false;
         SpringSuportCrudUserMapperGeneral.status = false;
         SpringSuportCrudUserMapperBlur.status = false;
+        SpringSuportCrudEncryptMapperEncryptData.status=false;
         SpringApplication.run(SpringSupportCrudUserMapperAllOperation.class, args);
         System.exit(1);
 

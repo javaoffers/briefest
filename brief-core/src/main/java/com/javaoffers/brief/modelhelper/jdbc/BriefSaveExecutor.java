@@ -82,10 +82,11 @@ public class BriefSaveExecutor implements SaveExecutor {
                     Object ov = p[pi];
                     ps.setObject(++pi, ov);
                 }
+                ps.addBatch();
             }else{
                 return ids;
             }
-            ps.execute();
+            ps.executeBatch();
             //Avoid transactional inconsistencies
             if (oldAutoCommit) {
                 connection.commit();

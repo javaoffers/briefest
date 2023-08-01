@@ -68,16 +68,22 @@ public class BriefModifyExecutor implements ModifyExecutor {
                     }
                     ps.addBatch();
                 }
-            } else if(size ==1) {
+            } else if(size == 1) {
                 Object[] p = argsParam.get(0);
                 for (int pi = 0; pi < p.length; ) {
                     Object ov = p[pi];
                     ps.setObject(++pi, ov);
                 }
+                ps.addBatch();
             }else{
                 return 0;
             }
-            return ps.executeBatch().length;
+            int[] ints = ps.executeBatch();
+            int count  = 0;
+            for(int i : ints){
+                count = count + i;
+            }
+            return count;
         } catch (Exception e) {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());

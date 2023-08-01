@@ -4,7 +4,7 @@ import com.javaoffers.brief.modelhelper.filter.Chain;
 import com.javaoffers.brief.modelhelper.filter.ChainFilter;
 
 /**
- * @description:
+ * @description: 链包裹器
  * @author: create by cmj on 2023/5/28 20:05
  */
 public class ChainFilterWrap<R,S> implements Chain<R,S> {

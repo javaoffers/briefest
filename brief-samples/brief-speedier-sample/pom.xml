@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>${brief.version}</version>
         </dependency>
 
         <dependency>

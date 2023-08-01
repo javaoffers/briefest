@@ -8,7 +8,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -20,6 +22,8 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
 
     private List<String> colNames = new ArrayList<>();
 
+    private Map<String, Boolean> colNameBool = new HashMap<>();
+
     private ResultSet resultSet;
 
     public BriefResultSetExecutor(ResultSet resultSet) {
@@ -29,8 +33,11 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
                     getMetaData();
             int columnCount = metaData.getColumnCount();
             for(int i=0; i < columnCount;){
-                colNames.add(metaData.getColumnLabel(++i));
+                String columnLabel = metaData.getColumnLabel(++i);
+                colNames.add(columnLabel);
+                colNameBool.put(columnLabel, true);
             }
+
         }catch (Exception e){
             e.printStackTrace();
             throw new ParseResultSetException(e.getMessage());
@@ -45,11 +52,14 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
     @Override
     public Object getColValueByColName(String colName) {
         try {
-            return this.resultSet.getObject(colName);
+            if(colNameBool.containsKey(colName)){
+                return this.resultSet.getObject(colName);
+            }
         }catch (Exception e){
-            //logger.warn("colName:{} result is null",colName);
-            return null;
+            e.printStackTrace();
+            logger.warn("colName:{} result is null",colName);
         }
+        return null;
     }
 
     public boolean nextRow(){

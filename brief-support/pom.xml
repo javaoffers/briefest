@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>brief-mybatis</module>
+        <module>brief-spring-jdbc</module>
     </modules>
 
     <build>

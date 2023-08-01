@@ -16,6 +16,7 @@
     <module>brief-router</module>
     <module>brief-sqlstatement</module>
     <module>brief-support</module>
+    <module>brief-samples</module>
   </modules>
 
   <name>brief</name>

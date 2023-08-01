@@ -1,7 +1,7 @@
-### 摘要 mybatis-jql 是什么? 解决了什么? 
+### 摘要 brief 是什么? 解决了什么? 
 <p>
 
- mybatis-jql 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性 (完全支持原生Mybatis). 
+ brief 可以看作是一个依附于myabtis之上并提供mybatis所不具备的一些特性 (完全支持原生Mybatis). 
  目的是快速开发. 简化代码. 增强代码易读性. 提高项目可维护性. 比如
  不用写xml文件, 不用写原生的字符sql,直接在接口的defalut方法中编写jql即可(java stream sql).
  这种方式即加快了sql的编写又起到了规范作用. 常用的crud操作已经集成
@@ -9,14 +9,14 @@
  不会使项目中出现复杂的sql.可将复杂的sql拆解为多个jql (项目中杜绝复杂sql. 经历过的都明白). 为了提高可读性,jql的
  形式接近原生sql. 为了提高编写效率,jql采用java stream的编写风格. 还有丰富的类型自动转换器. 比如表中的字段为long,我们
  可以在实体类中直接定义Date/LoacalDateTime (具体可查看支持的类型转换.). 更多特性这里不一一介绍了.
- 接下来让我们进入mybatis-jql 
+ 接下来让我们进入brief 
     
 </p>
   
 ### @BaseModel, @BaseUnique
 <p>
-  @BaseModel 表示是一个Model类，mybatis-jql会自动解析映射表字段. mybatis-jql并不会向mysql发送ddl语句（这是非常危险的）.
-  mybatis-jql会根据@BaseModel解析出表名称（将Model类名解析为下划线格式作为数据库表名，如果表名和Model类型不一样则可以使用
+  @BaseModel 表示是一个Model类，brief会自动解析映射表字段. brief并不会向mysql发送ddl语句（这是非常危险的）.
+  brief会根据@BaseModel解析出表名称（将Model类名解析为下划线格式作为数据库表名，如果表名和Model类型不一样则可以使用
    @BaseModel的value属性进行指定），然后查询此表的字段信息并与Model类中的属性相关联. 关联的策略是将属性名称（驼峰形式）
   转化成下划线并与表字段进行匹配，匹配成功才会进行关联并缓存这种关联关系. 所以Model类可以出现非表字段属性.提高了Model类的灵活
   性. 非表字段属性不会被解析成sql. @BaseUnique 表示此表中具有唯一属性的字段（通常用于主键id）。 案例如下：
@@ -48,7 +48,7 @@ public class User {
 
 ### CrudMapper<T> 接口
 <p>
-mybatis-jql 以简单快速开发为理念，因此mybatis-jql几乎没有学习成本. 我们只需要将我们的接口继承 CrudMapper 接口即可. T 为泛型Model类
+brief 以简单快速开发为理念，因此brief几乎没有学习成本. 我们只需要将我们的接口继承 CrudMapper 接口即可. T 为泛型Model类
 （标记@BaseModel注解的类）。这样我们的Mapper接口在mybatis的基础上又拥有了jql的能力了. 在CrudMapper接口中主要有5个方法：select(),
 insert(), update(), delete(), general(). 就是这这么简单. 案例如下
 </p>
@@ -745,7 +745,7 @@ Number2DateConvert 表示 number数字转换为date日期 .
 
 ### 支持自动加解密
 <p>
-    当我们需要将数据库表中的某些字段进行加解密时。mybatis-jql 提供了一个简单的配置就可以搞定。 
+    当我们需要将数据库表中的某些字段进行加解密时。brief 提供了一个简单的配置就可以搞定。 
     我们只需要指定一个key(长度是32个十六进制). 然后指定表和表中的字段即可。加解密的
     事情就交给框架去做.下面我们举例来说. 我们指定一个私钥是 ‘AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF’
     并且给表 encrypt_data 中的encrypt_num 加密. 配置如下：

@@ -1,17 +1,17 @@
 package com.javaoffers.brief.modelhelper.constants;
 
 /**
- * @description: mybatis-jql properties
+ * @description: brief properties
  * @author: create by cmj on 2023/5/28 01:46
  */
 public interface ConfigPropertiesConstants {
 
-    String SLOW_LOG_TIME = "mybatis-jql:slow-sql:time";
+    String SLOW_LOG_TIME = "brief:slow-sql:time";
 
-    String JQL_FILTER = "mybatis-jql:filter:jql-filter";
+    String JQL_FILTER = "brief:filter:jql-filter";
 
     /**
      * com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor
      */
-    String JDBC_EXECUTOR = "mybatis-jql:jdbc-executor";
+    String JDBC_EXECUTOR_FACTORY = "brief:jdbc-executor-factory";
 }

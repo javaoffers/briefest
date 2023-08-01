@@ -1,8 +1,11 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
+import com.javaoffers.brief.modelhelper.exception.BriefException;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
+import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -17,6 +20,19 @@ import java.util.Map;
  */
 public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
 
+    private static JdbcExecutorFactory jdbcExecutorFactory;
+    static {
+        String jdbcExecutorFactoryClassName = System.getProperty(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY,
+                "com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutorFactory");
+        try {
+            Class<?> jef = Class.forName(jdbcExecutorFactoryClassName);
+            jdbcExecutorFactory = (JdbcExecutorFactory)jef.newInstance();
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new BriefException(e.getMessage());
+        }
+    }
+
     private JdbcExecutor<T> jdbcExecutor;
 
     public static <T, ID> BaseBatis getInstance(HeadCondition headCondition) {
@@ -29,8 +45,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
     }
 
     private BaseBatisImpl(DataSource dataSource,Class modelClass) {
-
-        this.jdbcExecutor = new BriefJdbcExecutor<T>(dataSource, modelClass);
+        this.jdbcExecutor = jdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass);
     }
 
     /****************************crud****************************/

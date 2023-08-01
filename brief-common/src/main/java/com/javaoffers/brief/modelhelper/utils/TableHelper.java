@@ -406,12 +406,15 @@ public class TableHelper {
         info = builder.toString();
         String defaultCase = "NO";
         String YES = "YES";
-        String ignoreCase = System.getProperty("IgnoreCase", defaultCase);
+        String ignoreCase = System.getProperty("LowerCase", defaultCase);
         String upperCase = System.getProperty("UpperCase", defaultCase);
         if (YES.equalsIgnoreCase(ignoreCase)) {
             info = info.toLowerCase();
         }else if(YES.equalsIgnoreCase(upperCase)){
             info = info.toUpperCase();
+        }else{
+            //如果没有设置大小写,则默认为小写
+            info = info.toLowerCase();
         }
         return info;
     }

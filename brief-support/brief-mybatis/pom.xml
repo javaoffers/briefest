@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>brief-support</artifactId>
+        <groupId>com.javaoffers</groupId>
+        <version>3.6.3-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>brief-mybatis</artifactId>
+
+    <name>brief-mybatis</name>
+    <properties>
+        <mybatis.version>3.5.11</mybatis.version>
+    </properties>
+    <!--Version numbers are aligned with Mybatis compatible versions-->
+    <dependencies>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-core</artifactId>
+             <version>3.6.3-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring.boot.autoconfigure}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.mybatis/mybatis -->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-spring-jdbc</artifactId>
+            <version>3.6.3-SNAPSHOT</version>
+        </dependency>
+
+    </dependencies>
+
+<!--    &lt;!&ndash; FIXME change it to the project's website &ndash;&gt;-->
+<!--    <url>https://github.com/javaoffers/brief</url>-->
+<!--    <description>javaoffers is opened project</description>-->
+
+<!--    &lt;!&ndash;licenses 默认用这个就可以&ndash;&gt;-->
+<!--    <licenses>-->
+<!--        <license>-->
+<!--            <name>Server Side Public License</name>-->
+<!--            <url>https://www.mongodb.com/licensing/server-side-public-license</url>-->
+<!--            <distribution>repo</distribution>-->
+<!--            <comments>A not business-friendly OSS license</comments>-->
+<!--        </license>-->
+<!--    </licenses>-->
+<!--    &lt;!&ndash;配置你github信息&ndash;&gt;-->
+<!--    <scm>-->
+<!--        <url>git:https://github.com/javaoffers/brief-mybatis.git</url>-->
+<!--        <developerConnection>scm:git:https://github.com/javaoffers/brief-mybatis.git</developerConnection>-->
+<!--        <connection>scm:git:https://github.com/javaoffers/brief-mybatis.git</connection>-->
+<!--        <tag>vy</tag>-->
+<!--    </scm>-->
+
+<!--    &lt;!&ndash;name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以&ndash;&gt;-->
+<!--    <developers>-->
+<!--        <developer>-->
+<!--            <name>caomingjie</name>-->
+<!--            <id>caomingjie</id>-->
+<!--            <email>caomingjiecode@outlook.com</email>-->
+<!--            <roles>-->
+<!--                <role>Developer</role>-->
+<!--            </roles>-->
+<!--            <timezone>+8</timezone>-->
+<!--        </developer>-->
+<!--    </developers>-->
+
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>default</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    &lt;!&ndash;source 打包&ndash;&gt;-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-source-plugin</artifactId>-->
+<!--                        <version>2.2.1</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <phase>package</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>jar-no-fork</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                    &lt;!&ndash;javadoc打包&ndash;&gt;-->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-javadoc-plugin</artifactId>-->
+<!--                        <version>3.2.0</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <phase>package</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>jar</goal>-->
+<!--                                </goals>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                        &lt;!&ndash;防止生成 javadoc 报错&ndash;&gt;-->
+<!--                        <configuration>-->
+<!--                            &lt;!&ndash; jdk1.8要加上，1.7要去掉，否则会报错 &ndash;&gt;-->
+<!--                            <additionalJOptions>-->
+<!--                                <additionalJOption>-Xdoclint:none</additionalJOption>-->
+<!--                            </additionalJOptions>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
+<!--                    &lt;!&ndash;gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）&ndash;&gt;-->
+<!--                    &lt;!&ndash;          <plugin>&ndash;&gt;-->
+<!--                    &lt;!&ndash;            <groupId>org.apache.maven.plugins</groupId>&ndash;&gt;-->
+<!--                    &lt;!&ndash;            <artifactId>maven-gpg-plugin</artifactId>&ndash;&gt;-->
+<!--                    &lt;!&ndash;            <version>1.6</version>&ndash;&gt;-->
+<!--                    &lt;!&ndash;            <executions>&ndash;&gt;-->
+<!--                    &lt;!&ndash;              <execution>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                <phase>verify</phase>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                <goals>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                  <goal>sign</goal>&ndash;&gt;-->
+<!--                    &lt;!&ndash;                </goals>&ndash;&gt;-->
+<!--                    &lt;!&ndash;              </execution>&ndash;&gt;-->
+<!--                    &lt;!&ndash;            </executions>&ndash;&gt;-->
+<!--                    &lt;!&ndash;          </plugin>&ndash;&gt;-->
+<!--                </plugins>-->
+<!--            </build>-->
+
+<!--            &lt;!&ndash;配置你创建issue时，解决人员给你最后发的，通常都一样可以不改&ndash;&gt;-->
+<!--            <distributionManagement>-->
+<!--                <snapshotRepository>-->
+<!--                    <id>ossrh</id>-->
+<!--                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--                </snapshotRepository>-->
+<!--                <repository>-->
+<!--                    <id>ossrh</id>-->
+<!--                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
+<!--                </repository>-->
+<!--            </distributionManagement>-->
+<!--        </profile>-->
+<!--    </profiles>-->
+
+
+<!--    <build>-->
+<!--        <plugins>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-release-plugin</artifactId>-->
+<!--                <version>2.5.3</version>-->
+<!--                <configuration>-->
+<!--                    <autoVersionSubmodules>true</autoVersionSubmodules>-->
+<!--                    <tagNameFormat>v@{project.version}</tagNameFormat>-->
+<!--                    <generateReleasePoms>false</generateReleasePoms>-->
+<!--                    <arguments>-DskipTests</arguments>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--        </plugins>-->
+<!--    </build>-->
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+        </plugins>
+    </build>
+</project>

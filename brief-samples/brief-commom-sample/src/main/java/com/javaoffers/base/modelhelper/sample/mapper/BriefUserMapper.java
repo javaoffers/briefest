@@ -1,7 +1,9 @@
 package com.javaoffers.base.modelhelper.sample.mapper;
 
+import com.javaoffers.base.modelhelper.sample.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
+import com.javaoffers.base.modelhelper.sample.model.UserTeacher;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
@@ -103,6 +105,18 @@ public interface BriefUserMapper extends BriefMapper<User> {
 
     @Transactional(rollbackFor=Exception.class)
     default List<Id> saveUserWithTran(User... users){
+        this.select()
+                .col(User::getId)
+                .innerJoin(UserTeacher::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .exs();
         List<Id> exs = insert().colAll(users).exs();
         return exs;
     }

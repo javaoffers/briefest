@@ -459,10 +459,7 @@ public class TableHelper {
         Connection connection = null;
         try {
             try {
-                Method method = constructorFun.getClass().getDeclaredMethods()[0];
-                method.setAccessible(true);
-                Object sl = method.invoke(constructorFun);
-                clazz = sl.getClass();
+                clazz = constructorFun.f().getClass();
                 String lamdaName = clazz.getName();
                 implClass = lamdaName.replaceAll("\\.", "/");
 

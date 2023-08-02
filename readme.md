@@ -16,7 +16,7 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 ## Lightweight machine version
 <p>
 <code>brief-speedier</code> Can be used alone. Do not rely on any environment.
-sample ： https://github.com/javaoffers/brief-samples/blob/master/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
+sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
 - maven

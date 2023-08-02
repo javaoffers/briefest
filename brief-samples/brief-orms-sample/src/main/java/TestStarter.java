@@ -48,7 +48,7 @@ public class TestStarter {
         System.out.println();
         System.out.println("---------------------selectOne:");
 
-        for (int i = 10; i < 10; i++) {
+        for (int i = 1; i < 10; i++) {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();

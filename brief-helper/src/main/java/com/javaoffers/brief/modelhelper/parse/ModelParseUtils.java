@@ -37,7 +37,11 @@ public class ModelParseUtils {
 
     }
 
-    public static <E> List<E>  converterResultSet2Model(Class<E> clazz, ResultSetExecutor rs) {
-        return realtimeSmartModelParse.converterResultSet2Model(clazz, rs);
+    public static <E> List<E>  converterResultSet2ModelForJoinSelect(Class<E> clazz, ResultSetExecutor rs) {
+        return realtimeSmartModelParse.converterResultSet2ModelForJoinSelect(clazz, rs);
+    }
+
+    public static <T> List<T> converterResultSet2ModelForNormalSelect(Class<T> modelClass, ResultSetExecutor briefResultSetExecutor) {
+        return realtimeSmartModelParse.converterResultSet2ModelForNormalSelect(modelClass, briefResultSetExecutor);
     }
 }

@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQL;
+import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
 
@@ -51,8 +52,16 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                 }
             }
             ResultSet rs = ps.executeQuery();
+            switch (sql.getSqlType()){
+                case JOIN_SELECT:
+                    return ModelParseUtils.converterResultSet2ModelForJoinSelect(this.modelClass, new BriefResultSetExecutor(rs));
+                case NORMAL_SELECT:
+                    return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass, new BriefResultSetExecutor(rs));
+                default:
+                    throw new ParseResultSetException("sql type does not exist");
+            }
 
-            return ModelParseUtils.converterResultSet2Model(this.modelClass, new BriefResultSetExecutor(rs));
+
         }catch (Exception e){
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());

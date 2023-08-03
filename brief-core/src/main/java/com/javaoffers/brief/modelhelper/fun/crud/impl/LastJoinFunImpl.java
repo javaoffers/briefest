@@ -86,10 +86,8 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
 
     @Override
     public LastJoinFun<M1, M2, M3, C3, V> colAll() {
-        List<String> colAll = TableHelper.getColAllForSelect(m3Class);
-        for(String col: colAll){
-            conditions.add(new SelectColumnCondition(col));
-        }
+        List<SelectColumnCondition> colAll = TableHelper.getColAllForSelect(m3Class, SelectColumnCondition::new);
+        conditions.addAll(colAll);
         return this;
     }
 

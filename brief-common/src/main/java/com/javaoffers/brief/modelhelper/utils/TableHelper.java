@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.exception.ParseTableException;
 import com.javaoffers.brief.modelhelper.filter.impl.AsSqlFunFilterImpl;
+import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConstructorFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import org.apache.commons.lang3.StringUtils;
@@ -25,11 +26,13 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
 
 /**
  * @Description: Table Information Auxiliary Class
@@ -40,6 +43,8 @@ public class TableHelper {
     private final  static Map<Class, ModelInfo> modelInfoMap = new ConcurrentHashMap<>();
 
     private final  static Map<Class, TableInfo> tableInfoMap = new ConcurrentHashMap<>();
+
+    private final static Map<Class, List<Condition>> colAllMap = new ConcurrentHashMap<>();
 
     private final  static Map<String, Class> modelClass = new ConcurrentHashMap<>();
 
@@ -74,6 +79,26 @@ public class TableHelper {
 
         });
         return colAll;
+    }
+
+    /**
+     * Get all fields corresponding to Model. for select().colAll() parse
+     *
+     * @param modelClss
+     * @return
+     */
+    public static <T extends Condition> List<T> getColAllForSelect(Class<?> modelClss, Function<String, T> createCondition) {
+        List conditions = colAllMap.get(modelClss);
+        if(conditions == null){
+            List<String> colAllForSelect = getColAllForSelect(modelClss);
+            conditions = new ArrayList<>();
+            for(String colName : colAllForSelect){
+                conditions.add(createCondition.apply(colName));
+            }
+            conditions = Collections.unmodifiableList(conditions);
+            colAllMap.putIfAbsent(modelClss, conditions);
+        }
+        return conditions;
     }
 
     public static List<SqlColInfo> getColAllAndAliasNameOnly(Class<?> modelClss) {

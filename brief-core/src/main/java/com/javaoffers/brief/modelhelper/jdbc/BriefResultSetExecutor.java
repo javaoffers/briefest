@@ -53,9 +53,7 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
     @Override
     public Object getColValueByColName(String colName) {
         try {
-            if(colNameBool.containsKey(colName)){
-                return this.resultSet.getObject(colName);
-            }
+            return this.resultSet.getObject(colName);
         }catch (Exception e){
             e.printStackTrace();
             logger.warn("colName:{} result is null",colName);

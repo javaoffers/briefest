@@ -81,7 +81,10 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         while (rs.nextRow()){
             Object o = modelInfo.newC();
             result.add((E)o);
-            buildDataForNormalSelect(rs, ones, arrays, list, set, o);
+            for(String colName : colNames){
+                //rs.getColValueByColName(colName);
+            }
+            //buildDataForNormalSelect(rs, ones, arrays, list, set, o);
         }
         return result;
     }

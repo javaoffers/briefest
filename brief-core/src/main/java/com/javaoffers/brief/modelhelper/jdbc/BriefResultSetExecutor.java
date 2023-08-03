@@ -61,6 +61,17 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
         return null;
     }
 
+    @Override
+    public Object getColValueByColPosition(int position) {
+        try {
+            return this.resultSet.getObject(position);
+        }catch (Exception e){
+            e.printStackTrace();
+            logger.warn("colName:{} result is null",position);
+        }
+        return null;
+    }
+
     public boolean nextRow(){
         try {
             return this.resultSet.next();

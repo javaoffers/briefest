@@ -161,6 +161,8 @@ public class ConvertRegisterSelectorDelegate {
         return desObject;
     }
 
+
+
     /**
      *        @see     java.lang.Boolean#TYPE
      *      * @see     java.lang.Character#TYPE

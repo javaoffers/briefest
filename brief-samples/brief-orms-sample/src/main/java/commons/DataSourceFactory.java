@@ -35,8 +35,10 @@ public class DataSourceFactory {
     }
 
     public static void initData(DataSource dataSource) {
+
         for (int i = 1; i <= 20000; i++) {
             try (Connection connection = dataSource.getConnection()) {
+
                 String userName = "admin" + i;
 
                 String sql = "INSERT INTO tb_account (" +

@@ -73,111 +73,29 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         List<String> colNames = rs.getColNames();
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
         List<ModelFieldInfo> ones = modelInfo.getOnes(colNames);
-        List<ModelFieldInfo> arrays = modelInfo.getArrays(colNames);
-        List<ModelFieldInfo> list = modelInfo.getList(colNames);
-        List<ModelFieldInfo> set = modelInfo.getSet(colNames);
-        List<ModelFieldInfo> unique = modelInfo.getUnique(colNames);
         //read next row
+        int size = ones.size();
         while (rs.nextRow()){
             Object o = modelInfo.newC();
             result.add((E)o);
-            for(String colName : colNames){
-                //rs.getColValueByColName(colName);
-            }
-            //buildDataForNormalSelect(rs, ones, arrays, list, set, o);
+            buildDataForNormalSelect(rs, ones, o);
         }
         return result;
     }
 
     private static <E> void buildDataForNormalSelect(ResultSetExecutor rs,
                                                  List<ModelFieldInfo> ones,
-                                                 List<ModelFieldInfo> arrays,
-                                                 List<ModelFieldInfo> list_,
-                                                 List<ModelFieldInfo> set_,
                                                  E model
                                                  ) {
-        for (ModelFieldInfo one : ones) {
+        for (int i = 0; i< ones.size(); ) {
+            ModelFieldInfo one = ones.get(i);
             if (!one.isModelClass()) {
                 Object o = null;
-                if ((o = rs.getColValueByColName(one.getAliasName())) != null
-                        || (o = rs.getColValueByColName(one.getFieldName())) != null) {
+                if ((o = rs.getColValueByColPosition(++i)) != null) {
                     Object o1 = convert.converterObject(one.getFieldGenericClass(), o);
-                    one.getSetter().setter(model, o1);
+                    one.getSetter().setter(model, o);
                 }
             }
-        }
-
-        for (ModelFieldInfo arrayField : arrays) {
-            if (!arrayField.isModelClass()) {
-                Class fieldClass = arrayField.getFieldGenericClass();
-                String aliasName = arrayField.getAliasName();
-                String fieldName = arrayField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null
-                        || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(arrayField.getFieldGenericClass(), o);
-                    Object arrayObj = arrayField.getGetter().getter(model);
-                    if (arrayObj == null) {
-                        arrayObj = Array.newInstance(fieldClass, 1);
-                        Array.set(arrayObj, 0, o);
-                        arrayField.getSetter().setter(model, arrayObj);
-                    } else {
-                        int len = Array.getLength(arrayObj);
-                        boolean isSame = false;
-                        for (int i = 0; i < len; i++) {
-                            if (isSame = o.equals(Array.get(arrayObj, i))) {
-                                break;
-                            }
-                        }
-                        if (isSame) {
-                            Object newArrayObj = Array.newInstance(fieldClass, len + 1);
-                            System.arraycopy(arrayObj, 0, newArrayObj, 0, len);
-                            Array.set(newArrayObj, len, o);
-                            arrayField.getSetter().setter(model, newArrayObj);
-                        }
-                    }
-                }
-            }
-        }
-
-        for (ModelFieldInfo listField : list_) {
-            List listFieldValue = (List) listField.getGetter().getter(model);
-            if (listFieldValue == null) {
-                listFieldValue = (List) listField.getNewc();
-                listField.getSetter().setter(model, listFieldValue);
-            }
-            if (!listField.isModelClass())  {
-                String aliasName = listField.getAliasName();
-                String fieldName = listField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(listField.getFieldGenericClass(), o);
-                    if (!listFieldValue.contains(o)) {
-                        listFieldValue.add(o);
-                    }
-                }
-            }
-        }
-
-        for (ModelFieldInfo setField : set_) {
-            Set setFieldValue = (Set) setField.getGetter().getter(model);
-            if (setFieldValue == null) {
-                setFieldValue = (Set) setField.getNewc();
-                setField.getSetter().setter(model, setFieldValue);
-            }
-
-            if (!setField.isModelClass()) {
-                String aliasName = setField.getAliasName();
-                String fieldName = setField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(setField.getFieldGenericClass(), o);
-                    if (!setFieldValue.contains(o)) {
-                        setFieldValue.add(o);
-                    }
-                }
-            }
-
         }
     }
 

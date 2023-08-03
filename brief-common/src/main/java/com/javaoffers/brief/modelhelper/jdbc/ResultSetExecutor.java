@@ -12,5 +12,7 @@ public interface ResultSetExecutor {
 
     Object getColValueByColName(String colName);
 
+    Object getColValueByColPosition(int position);
+
     public boolean nextRow();
 }

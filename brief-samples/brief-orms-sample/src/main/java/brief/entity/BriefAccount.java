@@ -18,7 +18,7 @@ import java.util.Map;
 public class BriefAccount {
 
     @BaseUnique
-    private Long id;
+    private Integer id;
 
     private String userName;
 
@@ -43,11 +43,12 @@ public class BriefAccount {
 //    @Column(typeHandler = FastjsonTypeHandler.class)
 //    private Map<String, Object> options;
 
-    public Long getId() {
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

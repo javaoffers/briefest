@@ -153,10 +153,10 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     }
 
     private static String getUniqueKey(String parentKey, ResultSetExecutor rs, List<ModelFieldInfoPosition> unique) {
-        StringBuilder key = new StringBuilder(parentKey);
         if(unique.size()==0){
             return String.valueOf(nextKey.getAndIncrement());
         }
+        StringBuilder key = new StringBuilder(parentKey);
         unique.forEach(modelFieldInfoPosition -> {
             int position = modelFieldInfoPosition.getPosition();
             Object o = rs.getColValueByColPosition(position);

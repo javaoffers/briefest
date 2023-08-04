@@ -1,12 +1,15 @@
 package brief;
 
 import brief.entity.BriefAccount;
+import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import commons.DataSourceFactory;
 import easyquery.entity.EasyQueryAccount;
 
 import javax.sql.DataSource;
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -39,15 +42,29 @@ public class BriefInitializer {
     }
 
 
-    public static void update(String userName,String nickname) {
-        briefMapper.update().npdateNull()
-                .col(BriefAccount::getUserName, userName)
-                .col(BriefAccount::getNickname, nickname)
-                .where()
-                .gtEq(BriefAccount::getId, 9000).ltEq(BriefAccount::getId, 9100)
-                .like(BriefAccount::getUserName, "admin")
-                .like(BriefAccount::getNickname,"admin")
-                .ex();
+    public static SmartUpdateFun update(SmartUpdateFun<BriefAccount, GetterFun<BriefAccount, Object>, Serializable> update,
+                                        String userName,String nickname, boolean ex) {
+        if(update == null){
+           update =  briefMapper.update().npdateNull()
+                    .col(BriefAccount::getUserName, userName)
+                    .col(BriefAccount::getNickname, nickname)
+                    .where()
+                    .gtEq(BriefAccount::getId, 9000).ltEq(BriefAccount::getId, 9100)
+                    .like(BriefAccount::getUserName, "admin")
+                    .like(BriefAccount::getNickname, "admin")
+                    .addBatch();
+        }
+        if(ex){
+            update.col(BriefAccount::getUserName, userName)
+                    .col(BriefAccount::getNickname, nickname)
+                    .where()
+                    .gtEq(BriefAccount::getId, 9000).ltEq(BriefAccount::getId, 9100)
+                    .like(BriefAccount::getUserName, "admin")
+                    .like(BriefAccount::getNickname, "admin")
+                    .ex();
+        }
+
+        return update;
     }
 
 

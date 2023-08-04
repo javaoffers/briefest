@@ -1,6 +1,7 @@
 import brief.BriefInitializer;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.mybatisflex.core.datasource.FlexDataSource;
 import com.mybatisflex.core.query.QueryWrapper;
 import easyquery.EasyQueryInitializer;
@@ -105,21 +106,21 @@ public class TestStarter {
 
         for (int i = 1; i < 10; i++) {
             System.out.println("---------------");
-//
-//            timeMillis = System.currentTimeMillis();
-//            testFlexSelectTop10000();
-//            System.out.println(">>>>>>>testFlexSelectTop10000:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testFlexSelectTop10000();
+            System.out.println(">>>>>>>testFlexSelectTop10000:" + (System.currentTimeMillis() - timeMillis));
             timeMillis = System.currentTimeMillis();
             testEasySelectTop10000();
             System.out.println(">>>>>>>testEasySelectTop10000:" + (System.currentTimeMillis() - timeMillis));
-//
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectTop10000WithLambda();
-//            System.out.println(">>>>>>>testPlusSelectTop10000WithLambda:" + (System.currentTimeMillis() - timeMillis));
-//
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectTop10000();
-//            System.out.println(">>>>>>>testPlusSelectTop10000:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectTop10000WithLambda();
+            System.out.println(">>>>>>>testPlusSelectTop10000WithLambda:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectTop10000();
+            System.out.println(">>>>>>>testPlusSelectTop10000:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
             testBriefSelectTop10000();
@@ -177,29 +178,29 @@ public class TestStarter {
 
 
     private static void testFlexSelectOne() {
-        for (int i = 0; i < queryCount; i++) {
+        for (int i = 0; i < queryCount*10; i++) {
             FlexInitializer.selectOne();
         }
     }
     private static void testBriefSelectOne() {
-        for (int i = 0; i < queryCount; i++) {
+        for (int i = 0; i < queryCount*10; i++) {
             BriefInitializer.selectOne();
         }
     }
     private static void testEasySelectOne() {
-        for (int i = 0; i < queryCount; i++) {
+        for (int i = 0; i < queryCount*10; i++) {
             EasyQueryInitializer.selectOne();
         }
     }
 
     private static void testPlusSelectOneWithLambda() {
-        for (int i = 0; i < queryCount; i++) {
+        for (int i = 0; i < queryCount*10; i++) {
             PlusInitializer.selectOneWithLambda();
         }
     }
 
     private static void testPlusSelectOne() {
-        for (int i = 0; i < queryCount; i++) {
+        for (int i = 0; i < queryCount*10; i++) {
             PlusInitializer.selectOne();
         }
     }
@@ -321,13 +322,14 @@ public class TestStarter {
     }
 
     private static void testBriefUpdate() {
+        SmartUpdateFun update = null;
         for (long i = 0; i < queryCount; i++) {
             FlexAccount flexAccount = new FlexAccount();
             flexAccount.setUserName("testInsert" + i);
             flexAccount.setNickname("testInsert" + i);
-
-            BriefInitializer.update("testInsert" + i,"testInsert" + i);
+            update = BriefInitializer.update(update, "testInsert" + i, "testInsert" + i, i== (queryCount-1));
         }
+
     }
 
 

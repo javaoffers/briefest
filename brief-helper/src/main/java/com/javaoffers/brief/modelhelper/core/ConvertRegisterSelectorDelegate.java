@@ -26,21 +26,34 @@ public class ConvertRegisterSelectorDelegate {
 
     public final static ConvertRegisterSelectorDelegate convert = new ConvertRegisterSelectorDelegate();
 
-    private ThreadLocal<Class> processingConvertClass = new ThreadLocal<>();
+    public final static ThreadLocal<Class> processingConvertClass = new ThreadLocal<>();
 
-    private ConvertRegisterSelectorDelegate() { }
+    static Convert  convertSame = new SameConvert();
+
+    static class SameConvert implements Convert<Object, Object>{
+        @Override
+        public Object convert(Object s) {
+            return s;
+        }
+    }
+
+    private ConvertRegisterSelectorDelegate() {
+    }
 
     {
         Set<Class<? extends Convert>> converts = ReflectionUtils.getChilds(Convert.class);
         for (Class c : converts) {
-            if(Modifier.isAbstract(c.getModifiers())){
+            if (Modifier.isAbstract(c.getModifiers())) {
                 continue;
             }
             try {
+                if(c.isAssignableFrom(SameConvert.class)){
+                    continue;
+                }
                 Constructor constructor = c.getConstructor();
                 constructor.setAccessible(true);
-                registerConvert( (AbstractConver) constructor.newInstance());
-            }catch (Exception e){
+                registerConvert((AbstractConver) constructor.newInstance());
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -48,41 +61,43 @@ public class ConvertRegisterSelectorDelegate {
 
     /**
      * registerConvert
+     *
      * @param convert
      */
-    private void registerConvert( AbstractConver convert) {
+    private void registerConvert(AbstractConver convert) {
         convert.register(applicationContext);
     }
 
     /**
      * selector
+     *
      * @return
      */
-    private Convert selector(Class src,Class des) {
+    private Convert selector(Class src, Class des) {
         Convert convert = applicationContext.selector(new ConverDescriptor(src, des));
-        if(convert==null){
+        if (convert == null) {
             LinkedList<Class> srcSupers = getSupers(src);
 
             //src 升级
-            for(Class srcc : srcSupers){
-                convert =  selector(srcc, des);
-                if(convert!=null){
+            for (Class srcc : srcSupers) {
+                convert = selector(srcc, des);
+                if (convert != null) {
                     break;
                 }
             }
             //dec 降级
-            if(convert == null){
+            if (convert == null) {
                 Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
-                for(Class dess : desSupers){
-                    convert = selector(src,dess);
-                    if(convert != null) {
+                for (Class dess : desSupers) {
+                    convert = selector(src, dess);
+                    if (convert != null) {
                         break;
                     }
                 }
             }
 
             //Avoid Upgrading or Downgrading Query Transformers Next Time
-            if(convert != null){
+            if (convert != null) {
                 applicationContext.registerConvert(new ConverDescriptor(src, des), convert);
             }
         }
@@ -93,12 +108,12 @@ public class ConvertRegisterSelectorDelegate {
         Class superclass = c.getSuperclass();
         Class[] interfaces = c.getInterfaces();
         LinkedList<Class> srcs = new LinkedList<>();
-        if(superclass != Object.class && superclass != null){
+        if (superclass != Object.class && superclass != null) {
             Collections.addAll(srcs, superclass);
         }
-        for(Class srcInter : interfaces){
-            if(srcInter!=null){
-                Collections.addAll(srcs,srcInter);
+        for (Class srcInter : interfaces) {
+            if (srcInter != null) {
+                Collections.addAll(srcs, srcInter);
             }
         }
         return srcs;
@@ -106,30 +121,32 @@ public class ConvertRegisterSelectorDelegate {
     }
 
     /**
-     * 类型转换
-     * @param des 要转换的目标类型
+     * 类型转换,支持模糊渲染
+     *
+     * @param des      要转换的目标类型
      * @param srcValue 原始值类型
      * @param <T>
      * @return
      */
-    public <T> T converterObject(Class<T> des, Object srcValue, Field field)  {
+    public <T> T converterObject(Class<T> des, Object srcValue, Field field) {
         try {
             T t = (converterObject(des, srcValue));
             Annotation anno = null;
-            if(t instanceof String && StringUtils.isNotBlank((String)t)
-                    && (anno = Utils.getBlurAnnotation(field)) != null){
+            if (t instanceof String && StringUtils.isNotBlank((String) t)
+                    && (anno = Utils.getBlurAnnotation(field)) != null) {
                 t = (T) BlurUtils.processBlurAnno(anno, (String) t);
             }
             return t;
-        }catch (ClassCastException e){
+        } catch (ClassCastException e) {
 
-           throw new ClassCastException(e.getMessage()+" the field name is "+field.getName());
+            throw new ClassCastException(e.getMessage() + " the field name is " + field.getName());
         }
     }
 
     /**
      * 类型转换
-     * @param des 要转换的目标类型
+     *
+     * @param des      要转换的目标类型
      * @param srcValue 原始值类型
      * @param <T>
      * @return
@@ -140,83 +157,121 @@ public class ConvertRegisterSelectorDelegate {
         des = baseClassUpgrade(des);
         Class src = baseClassUpgrade(srcValue.getClass());
 
-        if(des == src || des.isAssignableFrom(src)){
+        if (des == src || des.isAssignableFrom(src)) {
             return (T) srcValue;
         }
         //选取 convert
         Convert convert = selector(srcValue.getClass(), des);
         //开始转换
-        if(convert ==null){
-            throw new ClassCastException("Origin type:" +srcValue.getClass().getName()+" dont convert to  Target type: "+des.getName());
+        if (convert == null) {
+            throw new ClassCastException("Origin type:" + srcValue.getClass().getName() + " dont convert to  Target type: " + des.getName());
         }
         T desObject = null;
         try {
             processingConvertClass.set(orgDes);
             desObject = (T) convert.convert(src.cast(srcValue));
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             processingConvertClass.remove();
         }
         return desObject;
     }
 
-
-
     /**
-     *        @see     java.lang.Boolean#TYPE
-     *      * @see     java.lang.Character#TYPE
-     *      * @see     java.lang.Byte#TYPE
-     *      * @see     java.lang.Short#TYPE
-     *      * @see     java.lang.Integer#TYPE
-     *      * @see     java.lang.Long#TYPE
-     *      * @see     java.lang.Float#TYPE
-     *      * @see     java.lang.Double#TYPE
-     *      * @see     java.lang.Void#TYPE
-     * @param baseClass
+     * 获取一个转换器代理.
+     *
+     * @param des
+     * @param srcValue
+     * @param field
+     * @param <S>
+     * @param <T>
      * @return
      */
-    private Class baseClassUpgrade(Class baseClass){
-        if(baseClass.isPrimitive()){
-            if(boolean.class == baseClass){
+    public <S, T> ConvertDelegate<T> choseConverter(Class<T> des, S srcValue, Field field) {
+        //源类型
+        Class<T> orgDes = des;
+        //基础类型转换为包装类型，如果存在基础类型
+        des = baseClassUpgrade(des);
+        Convert convert = null;
+        Class srcUpgrade = baseClassUpgrade(srcValue.getClass());
+
+        if (des == srcUpgrade || des.isAssignableFrom(srcUpgrade)) {
+            convert = convertSame;
+        } else {
+            //选取 convert
+            convert = selector(srcValue.getClass(), des);
+            //开始转换
+            if (convert == null) {
+                throw new ClassCastException("Origin type:" + srcValue.getClass().getName() + " dont convert to  Target type: " + des.getName());
+            }
+        }
+
+        ConvertDelegate<T> convertDelegate = new ConvertDelegate<>(srcUpgrade, orgDes, convert);
+        if (Utils.getBlurAnnotation(field) != null) {
+            convertDelegate.setAfterProcess((value) -> {
+                Annotation anno = null;
+                if (value instanceof String && StringUtils.isNotBlank((String) value)) {
+                    value = (T) BlurUtils.processBlurAnno(anno, (String) value);
+                }
+                return value;
+            });
+        }
+        return convertDelegate;
+    }
+
+    /**
+     * @param baseClass
+     * @return
+     * @see java.lang.Boolean#TYPE
+     * * @see     java.lang.Character#TYPE
+     * * @see     java.lang.Byte#TYPE
+     * * @see     java.lang.Short#TYPE
+     * * @see     java.lang.Integer#TYPE
+     * * @see     java.lang.Long#TYPE
+     * * @see     java.lang.Float#TYPE
+     * * @see     java.lang.Double#TYPE
+     * * @see     java.lang.Void#TYPE
+     */
+    private Class baseClassUpgrade(Class baseClass) {
+        if (baseClass.isPrimitive()) {
+            if (boolean.class == baseClass) {
                 return Boolean.class;
             }
-            if(char.class == baseClass){
+            if (char.class == baseClass) {
                 return Character.class;
             }
-            if(byte.class == baseClass){
+            if (byte.class == baseClass) {
                 return Byte.class;
             }
-            if(short.class == baseClass){
+            if (short.class == baseClass) {
                 return Short.class;
             }
-            if(int.class == baseClass){
+            if (int.class == baseClass) {
                 return Integer.class;
             }
-            if(long.class == baseClass){
+            if (long.class == baseClass) {
                 return Long.class;
             }
-            if(float.class == baseClass){
+            if (float.class == baseClass) {
                 return Float.class;
             }
-            if(double.class == baseClass){
+            if (double.class == baseClass) {
                 return Double.class;
             }
-            if(void.class == baseClass){
+            if (void.class == baseClass) {
                 return Void.class;
             }
-        }else if(baseClass.isEnum()){
+        } else if (baseClass.isEnum()) {
             return Enum.class;
         }
         return baseClass;
     }
 
-    private Class getProcessingConvertClass(){
-        return this.processingConvertClass.get();
+
+    public static Class getProcessingConvertDesClass() {
+        return processingConvertClass.get();
     }
 
-    public static Class getProcessingConvertDesClass(){
-        return convert.getProcessingConvertClass();
-    }
 
 }

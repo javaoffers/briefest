@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
+import com.javaoffers.brief.modelhelper.core.ConvertProxy;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
@@ -83,6 +84,14 @@ public class ModelFieldInfo {
      */
     private Newc newc;
 
+    /**
+     * 后置设置.当数据在第一次渲染的时候会被设置.
+     */
+    private ConvertProxy convertProxy;
+
+    private ModelFieldInfo() {
+    }
+
     public ModelFieldInfo(Field field, Class modelClass) {
         this.field = field;
         this.modelClass = modelClass;
@@ -119,6 +128,26 @@ public class ModelFieldInfo {
             e.printStackTrace();
             throw new ParseModelException(e.getMessage());
         }
+    }
+
+    public ModelFieldInfo cloneFieldNameAsAliasName(){
+        ModelFieldInfo modelFieldInfo = new ModelFieldInfo();
+        modelFieldInfo.isModelClass = this.isModelClass;
+        modelFieldInfo.modelClass = this.modelClass;
+        modelFieldInfo.fieldGenericClass = this.fieldGenericClass;
+        modelFieldInfo.fieldType = this.fieldType;
+        modelFieldInfo.tableInfo = this.tableInfo;
+        modelFieldInfo.tableName = this.tableName;
+        modelFieldInfo.field = this.field;
+        modelFieldInfo.setter = this.setter;
+        modelFieldInfo.getter = this.getter;
+        modelFieldInfo.fieldName = this.fieldName;
+        modelFieldInfo.aliasName = this.fieldName;//fieldName as aliasName
+        modelFieldInfo.isUniqueField = this.isUniqueField;
+        modelFieldInfo.fieldTypeIsAbstract = this.fieldTypeIsAbstract;
+        modelFieldInfo.newc = this.newc;
+        return modelFieldInfo;
+
     }
 
     public Class getModelClassOfField() {
@@ -178,5 +207,15 @@ public class ModelFieldInfo {
      */
     public Object getNewc(){
         return newc.newc();
+    }
+
+    public ConvertProxy getConvertProxy() {
+        return convertProxy;
+    }
+
+    public void setConvertProxy(ConvertProxy convertProxy) {
+        if(convertProxy != null){
+            this.convertProxy = convertProxy;
+        }
     }
 }

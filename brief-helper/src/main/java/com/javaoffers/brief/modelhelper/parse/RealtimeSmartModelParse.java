@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.parse;
 
+import com.javaoffers.brief.modelhelper.core.ConvertDelegate;
+import com.javaoffers.brief.modelhelper.core.ConvertProxy;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
@@ -8,6 +10,7 @@ import com.javaoffers.brief.modelhelper.util.HelperUtils;
 import com.javaoffers.brief.modelhelper.util.Model;
 import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
+import com.javaoffers.brief.modelhelper.utils.ModelFieldInfoPosition;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
@@ -23,6 +26,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -72,31 +76,41 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         ArrayList<E> result = new ArrayList<>();
         List<String> colNames = rs.getColNames();
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
-        List<ModelFieldInfo> ones = modelInfo.getOnes(colNames);
+        List<ModelFieldInfoPosition> ones = modelInfo.getOnesCol(colNames);
         //read next row
         int size = ones.size();
-        while (rs.nextRow()){
+        while (rs.nextRow()) {
             Object o = modelInfo.newC();
-            result.add((E)o);
+            result.add((E) o);
             buildDataForNormalSelect(rs, ones, o);
         }
         return result;
     }
 
     private static <E> void buildDataForNormalSelect(ResultSetExecutor rs,
-                                                 List<ModelFieldInfo> ones,
-                                                 E model
-                                                 ) {
-        for (int i = 0; i< ones.size(); ) {
-            ModelFieldInfo one = ones.get(i);
+                                                     List<ModelFieldInfoPosition> ones,
+                                                     E model
+    ) {
+        for (ModelFieldInfoPosition one : ones) {
             if (!one.isModelClass()) {
                 Object o = null;
-                if ((o = rs.getColValueByColPosition(++i)) != null) {
-                    Object o1 = convert.converterObject(one.getFieldGenericClass(), o);
-                    one.getSetter().setter(model, o);
+                if ((o = rs.getColValueByColPosition(one.getPosition())) != null) {
+                    ModelFieldInfo mfi = one.getModelFieldInfo();
+                    Object o1 = convert(mfi, o);
+                    mfi.getSetter().setter(model, o1);
                 }
             }
         }
+    }
+
+    private static Object convert(ModelFieldInfo one, Object o) {
+        ConvertProxy convertProxy = one.getConvertProxy();
+        if (convertProxy == null) {
+            convertProxy = convert.choseConverter(one.getFieldGenericClass(), o, one.getField());
+            one.setConvertProxy(convertProxy);
+        }
+        Object o1 = convertProxy.convert(o);
+        return o1;
     }
 
 
@@ -113,39 +127,36 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         ArrayList<E> result = new ArrayList<>();
         List<String> colNames = rs.getColNames();
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
-        List<ModelFieldInfo> ones = modelInfo.getOnes(colNames);
+        List<ModelFieldInfoPosition> ones = modelInfo.getOnesColWithOneModel(colNames);
         List<ModelFieldInfo> arrays = modelInfo.getArrays(colNames);
         List<ModelFieldInfo> list = modelInfo.getList(colNames);
         List<ModelFieldInfo> set = modelInfo.getSet(colNames);
-        List<ModelFieldInfo> unique = modelInfo.getUnique(colNames);
+        List<ModelFieldInfoPosition> unique = modelInfo.getUniqueCol(colNames);
         //read next row
-        while (rs.nextRow()){
+        while (rs.nextRow()) {
 
             String keyStr = getUniqueKey(rs, unique);
             Object o = tmpCache.get(keyStr);
-            if(o==null){
+            if (o == null) {
                 o = modelInfo.newC();
                 tmpCache.put(keyStr, o);
-                result.add((E)o);
-                buildData(rs,tmpCache, ones, arrays, list, set, o, true);
-            }else{
-                buildData(rs,tmpCache, ones, arrays, list, set, o, false);
+                result.add((E) o);
+                buildData(rs, tmpCache, ones, arrays, list, set, o, true);
+            } else {
+                buildData(rs, tmpCache, ones, arrays, list, set, o, false);
             }
         }
         return result;
     }
 
-    private static String getUniqueKey(ResultSetExecutor rs, List<ModelFieldInfo> unique) {
+    private static String getUniqueKey(ResultSetExecutor rs, List<ModelFieldInfoPosition> unique) {
         StringBuilder key = new StringBuilder();
-        unique.forEach(modelFieldInfo -> {
-            String aliasName = modelFieldInfo.getAliasName();
-            Object o = rs.getColValueByColName(aliasName);
-            if(o==null){
-                o = rs.getColValueByColName(modelFieldInfo.getFieldName());
-            }
-            key.append(aliasName);
+        unique.forEach(modelFieldInfoPosition -> {
+            int position = modelFieldInfoPosition.getPosition();
+            Object o = rs.getColValueByColPosition(position);
+            key.append(modelFieldInfoPosition.getModelFieldInfo().getAliasName());
             key.append(":");
-            key.append(String.valueOf(o));
+            key.append(Objects.hashCode(o));
         });
         return key.toString();
     }
@@ -155,99 +166,69 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     private static <E> void buildData(
             ResultSetExecutor rs,
             Map<String, Object> tmpCache,
-            List<ModelFieldInfo> ones,
+            List<ModelFieldInfoPosition> ones,
             List<ModelFieldInfo> arrays,
             List<ModelFieldInfo> list_,
             List<ModelFieldInfo> set_,
             E model,
             boolean processNoneModelField
-            ) throws Exception {
+    ) throws Exception {
 
-        for (ModelFieldInfo one : ones) {
+        for (ModelFieldInfoPosition mif : ones) {
+            ModelFieldInfo one = mif.getModelFieldInfo();
             if (one.isModelClass()) {
                 Class modelClassOfField = one.getModelClassOfField();
                 ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
                 List<String> colNames = rs.getColNames();
-                String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
+                String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
                 Object o = tmpCache.get(uniqueKey);
                 if (o == null) {
                     o = modelInfo.newC();
                     tmpCache.put(uniqueKey, o);
                     one.getSetter().setter(model, o);
 
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                    buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
                 } else {
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
+                    buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
                 }
             } else if (processNoneModelField) {
                 Object o = null;
-                if ((o = rs.getColValueByColName(one.getAliasName())) != null
-                        || (o = rs.getColValueByColName(one.getFieldName())) != null) {
-                    Object o1 = convert.converterObject(one.getFieldGenericClass(), o);
-                    one.getSetter().setter(model, o1);
+                if ((o = rs.getColValueByColPosition(mif.getPosition())) != null) {
+                    o = convert(one, o);
+                    one.getSetter().setter(model, o);
                 }
             }
         }
 
         for (ModelFieldInfo arrayField : arrays) {
-            if (arrayField.isModelClass()) {
-                Class modelClassOfField = arrayField.getModelClassOfField();
-                ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
-                List<String> colNames = rs.getColNames();
-                String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
-                Object o = tmpCache.get(uniqueKey);
-                if (o == null) {
-                    o = modelInfo.newC();
-                    tmpCache.put(uniqueKey, o);
-                    Object arrayObj = arrayField.getGetter().getter(model);
-                    if (arrayObj == null) {
-                        arrayObj = Array.newInstance(modelClassOfField, 1);
-                        Array.set(arrayObj, 0, o);
-                        arrayField.getSetter().setter(model, arrayObj);
-                    } else {
-                        int len = Array.getLength(arrayObj);
-                        Object newArrayObj = Array.newInstance(modelClassOfField, len + 1);
-                        System.arraycopy(arrayObj, 0, newArrayObj, 0, len);
-                        Array.set(newArrayObj, len, o);
-                        arrayField.getSetter().setter(model, newArrayObj);
-                    }
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
+
+            Class modelClassOfField = arrayField.getModelClassOfField();
+            ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
+            List<String> colNames = rs.getColNames();
+            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            Object o = tmpCache.get(uniqueKey);
+            if (o == null) {
+                o = modelInfo.newC();
+                tmpCache.put(uniqueKey, o);
+                Object arrayObj = arrayField.getGetter().getter(model);
+                if (arrayObj == null) {
+                    arrayObj = Array.newInstance(modelClassOfField, 1);
+                    Array.set(arrayObj, 0, o);
+                    arrayField.getSetter().setter(model, arrayObj);
                 } else {
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
+                    int len = Array.getLength(arrayObj);
+                    Object newArrayObj = Array.newInstance(modelClassOfField, len + 1);
+                    System.arraycopy(arrayObj, 0, newArrayObj, 0, len);
+                    Array.set(newArrayObj, len, o);
+                    arrayField.getSetter().setter(model, newArrayObj);
                 }
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
             } else {
-                Class fieldClass = arrayField.getFieldGenericClass();
-                String aliasName = arrayField.getAliasName();
-                String fieldName = arrayField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null
-                        || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(arrayField.getFieldGenericClass(), o);
-                    Object arrayObj = arrayField.getGetter().getter(model);
-                    if (arrayObj == null) {
-                        arrayObj = Array.newInstance(fieldClass, 1);
-                        Array.set(arrayObj, 0, o);
-                        arrayField.getSetter().setter(model, arrayObj);
-                    } else {
-                        int len = Array.getLength(arrayObj);
-                        boolean isSame = false;
-                        for (int i = 0; i < len; i++) {
-                            if (isSame = o.equals(Array.get(arrayObj, i))) {
-                                break;
-                            }
-                        }
-                        if (isSame) {
-                            Object newArrayObj = Array.newInstance(fieldClass, len + 1);
-                            System.arraycopy(arrayObj, 0, newArrayObj, 0, len);
-                            Array.set(newArrayObj, len, o);
-                            arrayField.getSetter().setter(model, newArrayObj);
-                        }
-                    }
-                }
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
         }
 
@@ -257,35 +238,25 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                 listFieldValue = (List) listField.getNewc();
                 listField.getSetter().setter(model, listFieldValue);
             }
-            if (listField.isModelClass()) {
-                Class modelClassOfField = listField.getModelClassOfField();
-                ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
-                List<String> colNames = rs.getColNames();
-                String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
-                Object o = tmpCache.get(uniqueKey);
 
-                if (o == null) {
-                    o = modelInfo.newC();
-                    tmpCache.put(uniqueKey, o);
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
-                    listFieldValue.add(o);
+            Class modelClassOfField = listField.getModelClassOfField();
+            ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
+            List<String> colNames = rs.getColNames();
+            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            Object o = tmpCache.get(uniqueKey);
 
-                } else {
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
-                }
+            if (o == null) {
+                o = modelInfo.newC();
+                tmpCache.put(uniqueKey, o);
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
+                listFieldValue.add(o);
+
             } else {
-                String aliasName = listField.getAliasName();
-                String fieldName = listField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(listField.getFieldGenericClass(), o);
-                    if (!listFieldValue.contains(o)) {
-                        listFieldValue.add(o);
-                    }
-                }
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
+
         }
 
         for (ModelFieldInfo setField : set_) {
@@ -294,36 +265,22 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                 setFieldValue = (Set) setField.getNewc();
                 setField.getSetter().setter(model, setFieldValue);
             }
+            Class modelClassOfField = setField.getModelClassOfField();
+            ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
+            List<String> colNames = rs.getColNames();
+            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            Object o = tmpCache.get(uniqueKey);
 
-            if (setField.isModelClass()) {
-                Class modelClassOfField = setField.getModelClassOfField();
-                ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
-                List<String> colNames = rs.getColNames();
-                String uniqueKey = getUniqueKey(rs, modelInfo.getUnique(colNames));
-                Object o = tmpCache.get(uniqueKey);
+            if (o == null) {
+                o = modelInfo.newC();
+                tmpCache.put(uniqueKey, o);
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
 
-                if (o == null) {
-                    o = modelInfo.newC();
-                    tmpCache.put(uniqueKey, o);
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
-
-                } else {
-                    buildData(rs, tmpCache, modelInfo.getOnes(colNames), modelInfo.getArrays(colNames),
-                            modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
-                }
             } else {
-                String aliasName = setField.getAliasName();
-                String fieldName = setField.getFieldName();
-                Object o = null;
-                if ((o = rs.getColValueByColName(aliasName)) != null || (o = rs.getColValueByColName(fieldName)) != null) {
-                    o = convert.converterObject(setField.getFieldGenericClass(), o);
-                    if (!setFieldValue.contains(o)) {
-                        setFieldValue.add(o);
-                    }
-                }
+                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                        modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
-
         }
     }
 

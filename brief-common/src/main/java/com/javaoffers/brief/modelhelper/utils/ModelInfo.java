@@ -4,73 +4,105 @@ import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
  * for mapping ResultSet 2 Model
+ *
  * @author mingJie
  */
 public class ModelInfo<T> {
     Class<T> modelClass;
     Newc<T> constructor;
-    ArrayList<ModelFieldInfo> ones = new ArrayList<ModelFieldInfo>();//非数组或集合model,一对一
-    ArrayList<ModelFieldInfo> arrays = new ArrayList<ModelFieldInfo>();//存放数组model
-    ArrayList<ModelFieldInfo> list = new ArrayList<ModelFieldInfo>();//存放list集合model
-    ArrayList<ModelFieldInfo> set = new ArrayList<ModelFieldInfo>();//存放set集合model
-    ArrayList<ModelFieldInfo> unique = new ArrayList<>();//unique field
+    Map<String, ModelFieldInfo> onesColNameMap = new HashMap<>();
+    List<ModelFieldInfo> onesModels= new ArrayList<ModelFieldInfo>();
+    Map<String, ModelFieldInfo> uniqueColNameMap = new HashMap<>();
+    List<ModelFieldInfo> uniqueModels = new ArrayList<ModelFieldInfo>();
+    List<ModelFieldInfo> arraysModels = new ArrayList<ModelFieldInfo>();
+    List<ModelFieldInfo> listModels = new ArrayList<ModelFieldInfo>();
+    List<ModelFieldInfo> setModels = new ArrayList<ModelFieldInfo>();
 
     public ModelInfo(Class<T> modelClass) {
         this.modelClass = modelClass;
-        ArrayList<ModelFieldInfo> ones = new ArrayList<ModelFieldInfo>();//非数组或集合model,一对一
+
+        ArrayList<ModelFieldInfo> ones = new ArrayList<ModelFieldInfo>();//非数组或集合model,一对一 (onesColName + onesModel)
         ArrayList<ModelFieldInfo> arrays = new ArrayList<ModelFieldInfo>();//存放数组model
         ArrayList<ModelFieldInfo> list = new ArrayList<ModelFieldInfo>();//存放list集合model
         ArrayList<ModelFieldInfo> set = new ArrayList<ModelFieldInfo>();//存放set集合model
-        Field[] colFs = Utils.getFields(modelClass).toArray(new Field[]{});
-        for(Field fd : colFs) {
-            if(fd.getType().isArray()) {
-                arrays.add(new ModelFieldInfo(fd, this.modelClass));
-            }else if(List.class.isAssignableFrom(fd.getType())) {
-                list.add(new ModelFieldInfo(fd,this.modelClass));
-            }else if(Set.class.isAssignableFrom(fd.getType())) {
-                set.add(new ModelFieldInfo(fd,this.modelClass));
-            }else {
-                ones.add(new ModelFieldInfo(fd,this.modelClass));
-            }
-        }
 
-        if(ones != null){
-            this.ones = ones;
-        }
-        if(arrays != null){
-            this.arrays = arrays;
-        }
-        if(list != null){
-            this.list = list;
-        }
-        if(set != null){
-            this.set = set;
+        Field[] colFs = Utils.getFields(modelClass).toArray(new Field[]{});
+        for (Field fd : colFs) {
+            if (fd.getType().isArray()) {
+                arrays.add(new ModelFieldInfo(fd, this.modelClass));
+            } else if (List.class.isAssignableFrom(fd.getType())) {
+                list.add(new ModelFieldInfo(fd, this.modelClass));
+            } else if (Set.class.isAssignableFrom(fd.getType())) {
+                set.add(new ModelFieldInfo(fd, this.modelClass));
+            } else {
+                ones.add(new ModelFieldInfo(fd, this.modelClass));
+            }
         }
         try {
-            for(ModelFieldInfo modelFieldInfo : ones){
-                if(modelFieldInfo.isUniqueField()){
-                    unique.add(modelFieldInfo);
+            for (ModelFieldInfo modelFieldInfo : ones) {
+                ModelFieldInfo fieldNameAsAliasNameFieldInfo = modelFieldInfo.cloneFieldNameAsAliasName();
+                if (modelFieldInfo.isModelClass()) {
+                    addModel(onesModels, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    if (modelFieldInfo.isUniqueField()) {
+                        addModel(uniqueModels, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    }
+                } else {
+                    put(onesColNameMap, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    if (modelFieldInfo.isUniqueField()) {
+                        put(uniqueColNameMap, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    }
                 }
             }
+            addModel(arraysModels, arrays);
+            addModel(listModels, list);
+            addModel(setModels, set);
             this.constructor = LambdaCreateUtils.createConstructor(modelClass);
-        }catch (Throwable e){
+        } catch (Throwable e) {
             e.printStackTrace();
             throw new ParseModelException(e.getMessage());
+        }
+
+    }
+
+    public void put(Map<String, ModelFieldInfo> map, ModelFieldInfo... modelFieldInfos) {
+        for (ModelFieldInfo modelFieldInfo : modelFieldInfos) {
+            map.put(modelFieldInfo.getAliasName(), modelFieldInfo);
+        }
+    }
+
+    public void addModel(List<ModelFieldInfo> modes, ArrayList<ModelFieldInfo> listTmp) {
+        for (ModelFieldInfo modelFieldInfo : listTmp) {
+            if (modelFieldInfo.isModelClass()) {
+                ModelFieldInfo fieldNameAsAliasNameFieldInfo = modelFieldInfo.cloneFieldNameAsAliasName();
+                modes.add(modelFieldInfo);
+                modes.add(fieldNameAsAliasNameFieldInfo);
+            }
+        }
+    }
+
+    public void addModel(List<ModelFieldInfo> modes, ModelFieldInfo... modelFieldInfos) {
+        for (ModelFieldInfo modelFieldInfo : modelFieldInfos) {
+            if (modelFieldInfo.isModelClass()) {
+                modes.add(modelFieldInfo);
+            }
         }
     }
 
     /**
      * new instance
+     *
      * @return
      */
-    public T newC(){
+    public T newC() {
         return constructor.newc();
     }
 
@@ -82,71 +114,63 @@ public class ModelInfo<T> {
         return constructor;
     }
 
-    public ArrayList<ModelFieldInfo> getOnes() {
+    //获取一对一model和当前表的字段colName
+    public List<ModelFieldInfoPosition> getOnesColWithOneModel(List<String> colNames) {
+        List<ModelFieldInfoPosition> ones = new ArrayList<>();
+        for (int i = 0; i < colNames.size(); ) {
+            String colName = colNames.get(i);
+            ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+            if (modelFieldInfo != null) {
+                ones.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+            }
+        }
+        List<ModelFieldInfoPosition> oneModelTmp = onesModels.stream().filter(
+                oneFieldModel->{
+                    ModelInfo modelInfo = TableHelper.getModelInfo(oneFieldModel.getModelClassOfField());
+                    return modelInfo.getOnesColWithOneModel(colNames).size()>0 ; }
+        ).map(modelFieldInfo -> {
+            return new ModelFieldInfoPosition(-1, modelFieldInfo);
+        }).collect(Collectors.toList());
+
+        ones.addAll(oneModelTmp);
+        return ones;
+    }
+    //前表的字段colName
+    public List<ModelFieldInfoPosition> getOnesCol(List<String> colNames) {
+        List<ModelFieldInfoPosition> ones = new ArrayList<>();
+        for (int i = 0; i < colNames.size(); ) {
+            String colName = colNames.get(i);
+            ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+            if (modelFieldInfo != null && !modelFieldInfo.isModelClass()) {
+                ones.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+            }
+        }
         return ones;
     }
 
-    public ArrayList<ModelFieldInfo> getArrays() {
-        return arrays;
-    }
-
-    public ArrayList<ModelFieldInfo> getList() {
-        return list;
-    }
-
-    public ArrayList<ModelFieldInfo> getSet() {
-        return set;
-    }
-
-    public ArrayList<ModelFieldInfo> getUnique() {
-        return unique;
-    }
-
-    public List<ModelFieldInfo> getOnes(List<String> colNames) {
-        return ones.stream().filter(
-                filter(colNames)
-        ).collect(Collectors.toList());
-    }
 
     public List<ModelFieldInfo> getArrays(List<String> colNames) {
-        return arrays;
+        return arraysModels;
     }
 
     public List<ModelFieldInfo> getList(List<String> colNames) {
-        return list.stream().filter(
-                filter(colNames)
-        ).collect(Collectors.toList());
+        return this.listModels;
     }
+
 
     public List<ModelFieldInfo> getSet(List<String> colNames) {
-        return set.stream().filter(
-                filter(colNames)
-        ).collect(Collectors.toList());
+        return setModels;
     }
 
-    public List<ModelFieldInfo> getUnique(List<String> colNames) {
-        List<ModelFieldInfo>  uniqueList = unique.stream().filter(
-                filter(colNames)
-        ).collect(Collectors.toList());
-        if(uniqueList.size() != unique.size()){
-            return getOnes(colNames);
+    public List<ModelFieldInfoPosition> getUniqueCol(List<String> colNames) {
+        List<ModelFieldInfoPosition> unique = new ArrayList<>();
+        for (int i = 0; i < colNames.size(); ) {
+            String colName = colNames.get(i);
+            ModelFieldInfo modelFieldInfo = uniqueColNameMap.get(colName);
+            if (modelFieldInfo != null) {
+                unique.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+            }
         }
-        return uniqueList;
+        return unique;
     }
-
-    private Predicate<ModelFieldInfo> filter(List<String> colNames) {
-        return modelFieldInfo -> {
-            boolean a = colNames.contains(modelFieldInfo.getAliasName())
-                    || colNames.contains(modelFieldInfo.getFieldName());
-            if(a){
-                return a;
-            }
-            if(modelFieldInfo.isModelClass()){
-                ModelInfo modelInfo = TableHelper.getModelInfo(modelFieldInfo.getModelClassOfField());
-                return modelInfo.getOnes(colNames).size()>0 ;
-            }
-            return false;
-        };
-    }
-
 }

@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
 public class String2EnumConvert extends AbstractConver<String, Enum> {
     @Override
     public Enum convert(String str) {
-        Class desClass = ConvertRegisterSelectorDelegate.getProcessingConvertDesClass();
+        Class desClass = ConvertRegisterSelectorDelegate.processingConvertClass.get();
         Object[] enumConstants = desClass.getEnumConstants();
         if (StringUtils.isNotBlank(str) && enumConstants != null) {
             Field enumValueField = EnumValueUtils.getEnumValueFields(desClass);

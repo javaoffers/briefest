@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 public class Number2EnumConvert extends AbstractConver<Number, Enum> {
     @Override
     public Enum convert(Number number) {
-        Class desClass = ConvertRegisterSelectorDelegate.getProcessingConvertDesClass();
+        Class desClass = ConvertRegisterSelectorDelegate.processingConvertClass.get();
         Object[] enumConstants = desClass.getEnumConstants();
         if (number != null && enumConstants != null) {
             Field enumValueField = EnumValueUtils.getEnumValueFields(desClass);

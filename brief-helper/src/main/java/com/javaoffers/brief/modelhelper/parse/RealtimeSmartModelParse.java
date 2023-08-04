@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +41,9 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
 
     private final static ThreadLocal<Map<String, String>> tl = new ThreadLocal<Map<String, String>>();
 
+    private final static AtomicLong nextKey = new AtomicLong();
+
+    private final static String ROOT_KEY = "";
 
     /**
      * rs 不需要next(又上层进行next操作), 直接获取数据即可.
@@ -113,7 +117,6 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         return o1;
     }
 
-
     /**
      * 用于原始数据集转换Model数据集
      *
@@ -135,22 +138,25 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         //read next row
         while (rs.nextRow()) {
 
-            String keyStr = getUniqueKey(rs, unique);
+            String keyStr = getUniqueKey(ROOT_KEY, rs, unique);
             Object o = tmpCache.get(keyStr);
             if (o == null) {
                 o = modelInfo.newC();
                 tmpCache.put(keyStr, o);
                 result.add((E) o);
-                buildData(rs, tmpCache, ones, arrays, list, set, o, true);
+                buildData(keyStr,rs, tmpCache, ones, arrays, list, set, o, true);
             } else {
-                buildData(rs, tmpCache, ones, arrays, list, set, o, false);
+                buildData(keyStr, rs, tmpCache, ones, arrays, list, set, o, false);
             }
         }
         return result;
     }
 
-    private static String getUniqueKey(ResultSetExecutor rs, List<ModelFieldInfoPosition> unique) {
-        StringBuilder key = new StringBuilder();
+    private static String getUniqueKey(String parentKey, ResultSetExecutor rs, List<ModelFieldInfoPosition> unique) {
+        StringBuilder key = new StringBuilder(parentKey);
+        if(unique.size()==0){
+            return String.valueOf(nextKey.getAndIncrement());
+        }
         unique.forEach(modelFieldInfoPosition -> {
             int position = modelFieldInfoPosition.getPosition();
             Object o = rs.getColValueByColPosition(position);
@@ -161,9 +167,9 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         return key.toString();
     }
 
-
     @SuppressWarnings("unchecked")
     private static <E> void buildData(
+            String parentKey,
             ResultSetExecutor rs,
             Map<String, Object> tmpCache,
             List<ModelFieldInfoPosition> ones,
@@ -180,17 +186,17 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                 Class modelClassOfField = one.getModelClassOfField();
                 ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
                 List<String> colNames = rs.getColNames();
-                String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+                String uniqueKey = getUniqueKey(parentKey, rs, modelInfo.getUniqueCol(colNames));
                 Object o = tmpCache.get(uniqueKey);
                 if (o == null) {
                     o = modelInfo.newC();
                     tmpCache.put(uniqueKey, o);
                     one.getSetter().setter(model, o);
 
-                    buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                    buildData(uniqueKey,rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
                 } else {
-                    buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                    buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                             modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
                 }
             } else if (processNoneModelField) {
@@ -207,7 +213,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
             Class modelClassOfField = arrayField.getModelClassOfField();
             ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
             List<String> colNames = rs.getColNames();
-            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            String uniqueKey = getUniqueKey(parentKey, rs, modelInfo.getUniqueCol(colNames));
             Object o = tmpCache.get(uniqueKey);
             if (o == null) {
                 o = modelInfo.newC();
@@ -224,10 +230,10 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                     Array.set(newArrayObj, len, o);
                     arrayField.getSetter().setter(model, newArrayObj);
                 }
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
             } else {
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
         }
@@ -242,18 +248,18 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
             Class modelClassOfField = listField.getModelClassOfField();
             ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
             List<String> colNames = rs.getColNames();
-            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            String uniqueKey = getUniqueKey(parentKey, rs, modelInfo.getUniqueCol(colNames));
             Object o = tmpCache.get(uniqueKey);
 
             if (o == null) {
                 o = modelInfo.newC();
                 tmpCache.put(uniqueKey, o);
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
                 listFieldValue.add(o);
 
             } else {
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
 
@@ -268,17 +274,17 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
             Class modelClassOfField = setField.getModelClassOfField();
             ModelInfo modelInfo = TableHelper.getModelInfo(modelClassOfField);
             List<String> colNames = rs.getColNames();
-            String uniqueKey = getUniqueKey(rs, modelInfo.getUniqueCol(colNames));
+            String uniqueKey = getUniqueKey(parentKey, rs, modelInfo.getUniqueCol(colNames));
             Object o = tmpCache.get(uniqueKey);
 
             if (o == null) {
                 o = modelInfo.newC();
                 tmpCache.put(uniqueKey, o);
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, true);
 
             } else {
-                buildData(rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
+                buildData(uniqueKey, rs, tmpCache, modelInfo.getOnesColWithOneModel(colNames), modelInfo.getArrays(colNames),
                         modelInfo.getList(colNames), modelInfo.getSet(colNames), o, false);
             }
         }

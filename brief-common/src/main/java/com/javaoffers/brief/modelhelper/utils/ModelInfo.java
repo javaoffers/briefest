@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
+import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -51,9 +52,9 @@ public class ModelInfo<T> {
             for (ModelFieldInfo modelFieldInfo : ones) {
                 ModelFieldInfo fieldNameAsAliasNameFieldInfo = modelFieldInfo.cloneFieldNameAsAliasName();
                 if (modelFieldInfo.isModelClass()) {
-                    addModel(onesModels, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    addModel(onesModels, modelFieldInfo);
                     if (modelFieldInfo.isUniqueField()) {
-                        addModel(uniqueModels, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                        addModel(uniqueModels, modelFieldInfo);
                     }
                 } else {
                     put(onesColNameMap, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
@@ -82,9 +83,7 @@ public class ModelInfo<T> {
     public void addModel(List<ModelFieldInfo> modes, ArrayList<ModelFieldInfo> listTmp) {
         for (ModelFieldInfo modelFieldInfo : listTmp) {
             if (modelFieldInfo.isModelClass()) {
-                ModelFieldInfo fieldNameAsAliasNameFieldInfo = modelFieldInfo.cloneFieldNameAsAliasName();
                 modes.add(modelFieldInfo);
-                modes.add(fieldNameAsAliasNameFieldInfo);
             }
         }
     }
@@ -120,9 +119,11 @@ public class ModelInfo<T> {
         for (int i = 0; i < colNames.size(); ) {
             String colName = colNames.get(i);
             ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+            ++i;
             if (modelFieldInfo != null) {
-                ones.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+                ones.add(new ModelFieldInfoPosition(i, modelFieldInfo));
             }
+
         }
         List<ModelFieldInfoPosition> oneModelTmp = onesModels.stream().filter(
                 oneFieldModel->{
@@ -135,31 +136,36 @@ public class ModelInfo<T> {
         ones.addAll(oneModelTmp);
         return ones;
     }
-    //前表的字段colName
+    //当前表的字段colName
     public List<ModelFieldInfoPosition> getOnesCol(List<String> colNames) {
         List<ModelFieldInfoPosition> ones = new ArrayList<>();
         for (int i = 0; i < colNames.size(); ) {
             String colName = colNames.get(i);
             ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+            ++i;
             if (modelFieldInfo != null && !modelFieldInfo.isModelClass()) {
-                ones.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+                ones.add(new ModelFieldInfoPosition(i, modelFieldInfo));
             }
         }
         return ones;
     }
 
-
     public List<ModelFieldInfo> getArrays(List<String> colNames) {
-        return arraysModels;
+        return arraysModels.stream().filter(
+                filter(colNames)
+        ).collect(Collectors.toList());
     }
 
     public List<ModelFieldInfo> getList(List<String> colNames) {
-        return this.listModels;
+        return this.listModels.stream().filter(
+                filter(colNames)
+        ).collect(Collectors.toList());
     }
 
-
     public List<ModelFieldInfo> getSet(List<String> colNames) {
-        return setModels;
+        return setModels.stream().filter(
+                filter(colNames)
+        ).collect(Collectors.toList());
     }
 
     public List<ModelFieldInfoPosition> getUniqueCol(List<String> colNames) {
@@ -167,10 +173,18 @@ public class ModelInfo<T> {
         for (int i = 0; i < colNames.size(); ) {
             String colName = colNames.get(i);
             ModelFieldInfo modelFieldInfo = uniqueColNameMap.get(colName);
+            ++i;
             if (modelFieldInfo != null) {
-                unique.add(new ModelFieldInfoPosition(++i, modelFieldInfo));
+                unique.add(new ModelFieldInfoPosition(i, modelFieldInfo));
             }
         }
         return unique;
+    }
+
+    private Predicate<ModelFieldInfo> filter(List<String> colNames) {
+        return modelFieldInfo -> {
+            ModelInfo modelInfo = TableHelper.getModelInfo(modelFieldInfo.getModelClassOfField());
+            return modelInfo.getOnesCol(colNames).size()>0 ;
+        };
     }
 }

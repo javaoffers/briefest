@@ -45,8 +45,8 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        transactionInsert();
-        testInsertUpdate();
+        //transactionInsert();
+        //testInsertUpdate();
         testBatchInsert();
         testInsert();
         testEnum();
@@ -133,6 +133,11 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     }
 
     public void testBatchInsert(){
+        List<User> query = this.crudUserMapper.general().query(1, 10);
+        if(query.size()== 10){
+            User user = query.get(9);
+            crudUserMapper.delete().where().gt(User::getId, user.getId()).ex();
+        }
         List<User> batchUser = new LinkedList<>();
 
         for(int i=0; i < 10000; i++){
@@ -148,7 +153,9 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         }
         LOGUtils.printLog("----------------------------------------");
         long start = System.nanoTime();
-        List<Id> exs = crudUserMapper.insert().colAll(batchUser)
+        List<Id> exs = crudUserMapper
+                .insert()
+                .colAll(batchUser)
                 .exs();
 //        exs.addAll(crudUserMapper.insert().colAll(batchUser)
 //                .exs());

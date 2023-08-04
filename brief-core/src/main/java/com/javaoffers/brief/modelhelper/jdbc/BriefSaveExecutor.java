@@ -65,11 +65,13 @@ public class BriefSaveExecutor implements SaveExecutor {
                 for (int i = 0, j = 1; i < size && j < size; i++, j++) {
                     Object[] p = argsParam.get(i);
                     Object[] p2 = argsParam.get(j);
+
                     for (int pi = 0; pi < p.length; ) {
                         Object ov = p[pi];
                         ps.setObject(++pi, ov);
                     }
                     ps.addBatch();
+
                     for (int pi = 0; pi < p2.length; ) {
                         Object ov = p2[pi];
                         ps.setObject(++pi, ov);
@@ -86,7 +88,9 @@ public class BriefSaveExecutor implements SaveExecutor {
             }else{
                 return ids;
             }
+
             ps.executeBatch();
+            ps.clearBatch();
             //Avoid transactional inconsistencies
             if (oldAutoCommit) {
                 connection.commit();

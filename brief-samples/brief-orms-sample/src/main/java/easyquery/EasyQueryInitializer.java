@@ -64,7 +64,6 @@ public class EasyQueryInitializer {
 
 
     public static void update(String userName,String nickname) {
-
         easyQuery.updatable(EasyQueryAccount.class)
                 .set(EasyQueryAccount::getUserName,userName)
                 .set(EasyQueryAccount::getNickname,nickname)

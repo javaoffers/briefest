@@ -79,6 +79,11 @@ public class BriefModifyExecutor implements ModifyExecutor {
                 return 0;
             }
             int[] ints = ps.executeBatch();
+            ps.clearBatch();
+            if(oldAutoCommit){
+                connection.commit();
+                connection.setAutoCommit(oldAutoCommit);
+            }
             int count  = 0;
             for(int i : ints){
                 count = count + i;

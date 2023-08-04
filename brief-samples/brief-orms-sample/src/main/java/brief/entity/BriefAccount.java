@@ -18,7 +18,7 @@ import java.util.Map;
 public class BriefAccount {
 
     @BaseUnique
-    private Integer id;
+    private Long id;
 
     private String userName;
 
@@ -44,11 +44,11 @@ public class BriefAccount {
 //    private Map<String, Object> options;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

@@ -178,29 +178,29 @@ public class TestStarter {
 
 
     private static void testFlexSelectOne() {
-        for (int i = 0; i < queryCount*10; i++) {
+        for (int i = 0; i < queryCount; i++) {
             FlexInitializer.selectOne();
         }
     }
     private static void testBriefSelectOne() {
-        for (int i = 0; i < queryCount*10; i++) {
+        for (int i = 0; i < queryCount; i++) {
             BriefInitializer.selectOne();
         }
     }
     private static void testEasySelectOne() {
-        for (int i = 0; i < queryCount*10; i++) {
+        for (int i = 0; i < queryCount; i++) {
             EasyQueryInitializer.selectOne();
         }
     }
 
     private static void testPlusSelectOneWithLambda() {
-        for (int i = 0; i < queryCount*10; i++) {
+        for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectOneWithLambda();
         }
     }
 
     private static void testPlusSelectOne() {
-        for (int i = 0; i < queryCount*10; i++) {
+        for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectOne();
         }
     }

@@ -30,13 +30,6 @@ public class BriefInitializer {
         return briefMapper.general().query(1,10);
     }
     public static List<BriefAccount> selectTop10000() {
-
-//        return easyQuery.queryable(EasyQueryAccount.class)
-//                .where(o->o.ge(EasyQueryAccount::getId,100)
-//                        .or()
-//                        .eq(EasyQueryAccount::getUserName,"admin" + ThreadLocalRandom.current().nextInt(10000)))
-//                .limit(10000).toList();
-
         return briefMapper.select().colAll().where().gtEq(BriefAccount::getId, 100).or().eq(BriefAccount::getUserName,
                 "admin" + ThreadLocalRandom.current().nextInt(10000)).limitPage(1, 10000).exs();
     }

@@ -40,8 +40,8 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
         List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {
-            JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
-            JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
+            JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
+            JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
             list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
         });
         return list;

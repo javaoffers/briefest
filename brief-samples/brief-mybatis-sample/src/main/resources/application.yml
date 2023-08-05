@@ -20,6 +20,7 @@ mybatis:
 # brief 配置
 brief:
   # 慢sql超过10毫秒打印慢sql
+  print-sql: false
   slow-sql:
     time : 0
   filter:

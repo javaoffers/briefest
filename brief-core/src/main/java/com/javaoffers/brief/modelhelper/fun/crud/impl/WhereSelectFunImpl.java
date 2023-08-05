@@ -432,8 +432,8 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //解析SQL select 并执行。
         BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
-        JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
-        JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
+        JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
+        JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
         return instance.queryData(sqlInfo.getSql(), sqlInfo.getParams().get(0));
     }
 }

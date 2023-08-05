@@ -3,16 +3,23 @@ package com.javaoffers.brief.modelhelper.filter;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import com.javaoffers.brief.modelhelper.log.slowsql.CostTimeLogger;
-import com.javaoffers.brief.modelhelper.utils.*;
+import com.javaoffers.brief.modelhelper.utils.Assert;
+import com.javaoffers.brief.modelhelper.utils.CglibProxyUtils;
+import com.javaoffers.brief.modelhelper.utils.ColNameAndColValueUtils;
+import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -33,8 +40,8 @@ public class SmartJqlChainFilter implements JqlChainFilter {
         long startTime = System.currentTimeMillis();
         Object o = chain.doChain();
         long endTime = System.currentTimeMillis();
-        if ((cost = endTime - startTime) > CostTimeLogger.time) {
-            CostTimeLogger.log.info("COST TIME : {}", cost);
+        if ((cost = endTime - startTime) > JqlLogger.time) {
+            JqlLogger.infoSqlCost("COST TIME : {}", cost);
         }
         if (autoUpdateDerive != null) {
             o = processAutoUpdate(metaInfo, modelClass, tableInfo, o);
@@ -128,8 +135,8 @@ public class SmartJqlChainFilter implements JqlChainFilter {
                             if(params.size() != 0){
                                 params.put(updateTag, args[0]);
                                 String sqlStr = sql.toString();
-                                JqlLogger.log.info("SQL: {}", sqlStr);
-                                JqlLogger.log.info("PAM: {}", params);
+                                JqlLogger.infoSql("SQL: {}", sqlStr);
+                                JqlLogger.infoSql("PAM: {}", params);
                                 metaInfo.getBaseBatis().updateData(sqlStr, params);
                             }
                         }

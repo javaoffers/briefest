@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.install;
 
 import com.javaoffers.brief.modelhelper.aggent.InstallModelHelper;
-import com.javaoffers.brief.modelhelper.config.ConfigContext;
+import com.javaoffers.brief.modelhelper.config.BriefMybatisConfigContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;
@@ -27,7 +27,7 @@ public class InstallAgent implements BeanFactoryPostProcessor, BeanPostProcessor
        if(status.compareAndSet(true,false)){
            InstallModelHelper.install();
            Environment environment = beanFactory.getBean(Environment.class);
-           ConfigContext.init(environment);
+           BriefMybatisConfigContext.init(environment);
        }
     }
 

@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc.spring;
 
 
+import com.javaoffers.brief.modelhelper.config.BriefProperties;
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -19,8 +20,8 @@ public class SpringJdbcConfig implements BeanFactoryPostProcessor, BeanPostProce
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
        if(status.compareAndSet(true,false)){
-           System.setProperty(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY,
-                   SpringJdbcExecutorFactory.class.getName());
+          BriefProperties.setJdbcExecutorFactory(SpringJdbcExecutorFactory.class.getName());
+          BriefProperties.initJdbcExecutorFactory();
        }
     }
 

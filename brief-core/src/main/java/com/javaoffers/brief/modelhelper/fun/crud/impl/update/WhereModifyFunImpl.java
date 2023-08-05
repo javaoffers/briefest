@@ -341,8 +341,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
         }
         AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{
-            JqlLogger.log.info("SQL: {}", sql);
-            JqlLogger.log.info("PAM: {}", params);
+            JqlLogger.infoSql("SQL: {}", sql);
+            JqlLogger.infoSql("PAM: {}", params);
             Integer integer = instance.batchUpdate(sql, params);
             count.addAndGet(integer);
         });

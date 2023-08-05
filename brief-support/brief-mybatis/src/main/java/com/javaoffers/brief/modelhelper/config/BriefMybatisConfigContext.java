@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  * @description:
  * @author: create by cmj on 2023/5/28 14:23
  */
-public class ConfigContext {
+public class BriefMybatisConfigContext {
 
    public static void init(Environment environment){
        try {
@@ -21,9 +21,10 @@ public class ConfigContext {
                String propertyTmp = property.replaceAll(":", ".");
                String value = environment.getProperty(propertyTmp, "");
                if(StringUtils.isNotBlank(value)){
-                   System.setProperty(property, value);
+                   BriefProperties.put(property, value);
                }
            }
+           BriefProperties.freshAll();
        }catch (Exception e){
            e.printStackTrace();
        }

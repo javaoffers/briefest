@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
+import com.javaoffers.brief.modelhelper.exception.ClassNotFindException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -278,6 +279,16 @@ public class Utils {
                 return tableName.toUpperCase() + "__" + colName.toUpperCase();
         }
         return tableName + "__" + colName;
+    }
+
+    public static Class getClass(String className){
+        Class<?> aClass = null;
+        try {
+            aClass = Class.forName(className);
+        }catch (Exception e){
+            throw new ClassNotFindException(e.getMessage(), e);
+        }
+        return aClass;
     }
 
 }

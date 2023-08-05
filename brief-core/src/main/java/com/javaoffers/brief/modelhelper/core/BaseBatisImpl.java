@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.config.BriefProperties;
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
@@ -22,15 +23,7 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
 
     private static JdbcExecutorFactory jdbcExecutorFactory;
     static {
-        String jdbcExecutorFactoryClassName = System.getProperty(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY,
-                "com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutorFactory");
-        try {
-            Class<?> jef = Class.forName(jdbcExecutorFactoryClassName);
-            jdbcExecutorFactory = (JdbcExecutorFactory)jef.newInstance();
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new BriefException(e.getMessage());
-        }
+        jdbcExecutorFactory = BriefProperties.getJdbcExecutorFactory();
     }
 
     private JdbcExecutor<T> jdbcExecutor;

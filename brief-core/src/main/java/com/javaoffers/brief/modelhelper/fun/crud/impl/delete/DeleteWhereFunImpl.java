@@ -292,8 +292,8 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     public Integer ex() {
         BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
         SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        JqlLogger.log.info("SQL: {}", sqlInfo.getSql());
-        JqlLogger.log.info("PAM: {}", sqlInfo.getParams());
+        JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
+        JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
         Integer count = instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
         return count;
     }

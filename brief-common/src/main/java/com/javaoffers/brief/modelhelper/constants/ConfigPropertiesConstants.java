@@ -8,6 +8,10 @@ public interface ConfigPropertiesConstants {
 
     String SLOW_LOG_TIME = "brief:slow-sql:time";
 
+    String IS_PRINT_SQL = "brief:print-sql";
+
+    String IS_PRINT_SQL_COST = "brief:print-cost";
+
     String JQL_FILTER = "brief:filter:jql-filter";
 
     /**

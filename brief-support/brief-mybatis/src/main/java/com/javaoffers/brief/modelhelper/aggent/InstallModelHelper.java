@@ -9,6 +9,7 @@ import org.apache.ibatis.binding.MapperProxyFactoryAggent3511;
 import org.apache.ibatis.binding.MapperProxyFactoryAggent341;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * install. Currently only supported My Batis3.4.1
@@ -16,11 +17,22 @@ import java.util.Arrays;
 public class InstallModelHelper {
 
     private static final String[] MYBATIS_VERSION = new String[]{"3.4.1"};
+    private static final AtomicInteger tryTime = new AtomicInteger();
 
     public static void install(){
-
-        ByteBuddyAgent.install();
-
+        try {
+            ByteBuddyAgent.install();
+        }catch (Exception e){
+            if(tryTime.getAndIncrement() == 5){
+                throw  e;
+            }
+            try {
+                Thread.sleep(1000);
+            }catch (Exception e2){
+                throw  new IllegalStateException(e2);
+            }
+            InstallModelHelper.install();
+        }
         if(install341()){}
         else if(install3511()){}
         else {

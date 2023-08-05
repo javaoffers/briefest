@@ -221,6 +221,38 @@ public class ConvertRegisterSelectorDelegate {
     }
 
     /**
+     * 获取一个转换器代理. 没有后置处理器
+     *
+     * @param des
+     * @param srcValue
+     * @param <S>
+     * @param <T>
+     * @return
+     */
+    public <S, T> ConvertDelegate<T> choseConverter(Class<T> des, S srcValue) {
+        //源类型
+        Class<T> orgDes = des;
+        //基础类型转换为包装类型，如果存在基础类型
+        des = baseClassUpgrade(des);
+        Convert convert = null;
+        Class srcUpgrade = baseClassUpgrade(srcValue.getClass());
+
+        if (des == srcUpgrade || des.isAssignableFrom(srcUpgrade)) {
+            convert = convertSame;
+        } else {
+            //选取 convert
+            convert = selector(srcValue.getClass(), des);
+            //开始转换
+            if (convert == null) {
+                throw new ClassCastException("Origin type:" + srcValue.getClass().getName() + " dont convert to  Target type: " + des.getName());
+            }
+        }
+
+        ConvertDelegate<T> convertDelegate = new ConvertDelegate<>(srcUpgrade, orgDes, convert);
+        return convertDelegate;
+    }
+
+    /**
      * @param baseClass
      * @return
      * @see java.lang.Boolean#TYPE

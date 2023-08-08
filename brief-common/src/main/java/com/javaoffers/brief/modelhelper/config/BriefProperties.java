@@ -48,7 +48,7 @@ public class BriefProperties  {
 
     public static void setIsPrintSqlCost(String boolStr){
         put(ConfigPropertiesConstants.IS_PRINT_SQL_COST, boolStr.trim().toLowerCase());
-        initIsPrintSql();
+        initIsPrintSqlCost();
     }
 
     public static void setJdbcExecutorFactory(String jdbcExecutorFactoryClassName){
@@ -60,8 +60,6 @@ public class BriefProperties  {
         put(ConfigPropertiesConstants.SLOW_LOG_TIME, slowLogTime);
         initShowLogTime();
     }
-
-
 
     public static JdbcExecutorFactory getJdbcExecutorFactory(){
         return jdbcExecutorFactory;

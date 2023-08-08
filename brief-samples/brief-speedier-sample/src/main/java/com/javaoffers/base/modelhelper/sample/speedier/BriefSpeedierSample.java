@@ -59,7 +59,9 @@ public class BriefSpeedierSample {
         user.setWork(Work.JAVA);
         Id save = crudUserMapper.general().save(user);
         print(save.toLong());
-        for(int i=0; i<1000; i++) {
+        Number countNum = crudUserMapper.general().count();
+        //数据量不要太大. 如果想测试一下数据量无限制可以将countNum.intValue() < 10000 条件注释掉.
+        for(int i=0; i<1000 && countNum.intValue() < 10000; i++) {
             List<User> users = crudUserMapper.queryAll();
             print("size "+users.size());
             print(user);

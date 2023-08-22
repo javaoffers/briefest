@@ -219,11 +219,12 @@ public class ConvertRegisterSelectorDelegate {
         }
 
         ConvertDelegate<T> convertDelegate = new ConvertDelegate<>(srcUpgrade, orgDes, convert);
-        if (Utils.getBlurAnnotation(field) != null) {
+        Annotation anno = null;
+        if ((anno = Utils.getBlurAnnotation(field)) != null) {
+            Annotation finalAnno = anno;
             convertDelegate.setAfterProcess((value) -> {
-                Annotation anno = null;
                 if (value instanceof String && StringUtils.isNotBlank((String) value)) {
-                    value = (T) BlurUtils.processDeriveAnno(anno, (String) value);
+                    value = (T) BlurUtils.processDeriveAnno(finalAnno, (String) value);
                 }
                 return value;
             });

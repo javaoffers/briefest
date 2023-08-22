@@ -134,7 +134,7 @@ public class ConvertRegisterSelectorDelegate {
             Annotation anno = null;
             if (t instanceof String && StringUtils.isNotBlank((String) t)
                     && (anno = Utils.getBlurAnnotation(field)) != null) {
-                t = (T) BlurUtils.processBlurAnno(anno, (String) t);
+                t = (T) BlurUtils.processDeriveAnno(anno, (String) t);
             }
             return t;
         } catch (ClassCastException e) {
@@ -212,7 +212,7 @@ public class ConvertRegisterSelectorDelegate {
             convertDelegate.setAfterProcess((value) -> {
                 Annotation anno = null;
                 if (value instanceof String && StringUtils.isNotBlank((String) value)) {
-                    value = (T) BlurUtils.processBlurAnno(anno, (String) value);
+                    value = (T) BlurUtils.processDeriveAnno(anno, (String) value);
                 }
                 return value;
             });

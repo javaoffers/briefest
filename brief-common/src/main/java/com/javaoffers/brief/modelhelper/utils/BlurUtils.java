@@ -46,7 +46,7 @@ public class BlurUtils {
         return blurCLASS.contains(clazz);
     }
 
-    public static String processBlurAnno(Annotation blurAnno, String orgValue){
+    public static String processDeriveAnno(Annotation blurAnno, String orgValue){
         if(StringUtils.isBlank(orgValue)){
             return orgValue;
         }
@@ -59,14 +59,14 @@ public class BlurUtils {
             String emailContent = email[0];
             String emilSuffix = email.length == 2 ? "@"+email[1] :
                     email.length == 1 ? "" : orgValue.substring(orgValue.indexOf("@"));
-            orgValue = processBlurAnno(blur, percent, emailContent, blurTag) + emilSuffix;
+            orgValue = processDeriveAnno(blur, percent, emailContent, blurTag) + emilSuffix;
         }
         if(blurAnno instanceof IdCardBlur){
             IdCardBlur idCardBlur = (IdCardBlur) blurAnno;
             Blur blur = idCardBlur.blur();
             String blurTag = idCardBlur.blurTag();
             double percent = idCardBlur.percent();
-            orgValue = processBlurAnno(blur, percent, orgValue, blurTag);
+            orgValue = processDeriveAnno(blur, percent, orgValue, blurTag);
         }
         if(blurAnno instanceof PhoneNumBlur){
             PhoneNumBlur phoneNumBlur = (PhoneNumBlur) blurAnno;
@@ -74,9 +74,9 @@ public class BlurUtils {
             String blurTag = phoneNumBlur.blurTag();
             double percent = phoneNumBlur.percent();
             if(orgValue.charAt(0) == '+' && orgValue.length() > 1){
-                orgValue = "+"+processBlurAnno(blur, percent, orgValue.substring(1), blurTag);
+                orgValue = "+"+ processDeriveAnno(blur, percent, orgValue.substring(1), blurTag);
             }else{
-                orgValue = processBlurAnno(blur, percent, orgValue, blurTag);
+                orgValue = processDeriveAnno(blur, percent, orgValue, blurTag);
             }
         }
         if(blurAnno instanceof StringBlur){
@@ -84,12 +84,12 @@ public class BlurUtils {
             Blur blur = stringBlur.blur();
             String blurTag = stringBlur.blurTag();
             double percent = stringBlur.percent();
-            orgValue = processBlurAnno(blur, percent, orgValue, blurTag);
+            orgValue = processDeriveAnno(blur, percent, orgValue, blurTag);
         }
         return orgValue;
     }
 
-    private static String processBlurAnno(Blur blur, double percent, String orgValue,String blurTag){
+    private static String processDeriveAnno(Blur blur, double percent, String orgValue, String blurTag){
         if(StringUtils.isBlank(orgValue)){
             return orgValue;
         }

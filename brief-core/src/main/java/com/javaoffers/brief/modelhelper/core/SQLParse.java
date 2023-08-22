@@ -1,8 +1,10 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
+import com.javaoffers.brief.modelhelper.utils.GsonUtils;
 import com.javaoffers.brief.modelhelper.utils.InterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -62,6 +64,8 @@ public class SQLParse{
                         o = EnumValueUtils.getEnumValue(((Enum) o));
                     } else if(o instanceof Version){
                         o = ((Version) o).longValue();
+                    } else if(o instanceof JsonColumn){
+                        o = GsonUtils.gson.toJson(o);
                     }
                     params[k] = o;
                 }
@@ -81,6 +85,8 @@ public class SQLParse{
                         oLeft = EnumValueUtils.getEnumValue(((Enum) oLeft));
                     }else if(oLeft instanceof Version){
                         oLeft = ((Version) oLeft).longValue();
+                    } else if(oLeft instanceof JsonColumn){
+                        oLeft = GsonUtils.gson.toJson(oLeft);
                     }
                     paramsLeft[k] = oLeft;
 
@@ -91,6 +97,8 @@ public class SQLParse{
                         oRight = EnumValueUtils.getEnumValue(((Enum) oRight));
                     }else if(oRight instanceof Version){
                         oRight = ((Version) oRight).longValue();
+                    } else if(oRight instanceof JsonColumn){
+                        oRight = GsonUtils.gson.toJson(oRight);
                     }
                     paramsRight[k] = oRight;
 

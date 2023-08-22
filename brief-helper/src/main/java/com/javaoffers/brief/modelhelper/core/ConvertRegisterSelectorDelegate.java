@@ -85,12 +85,23 @@ public class ConvertRegisterSelectorDelegate {
                     break;
                 }
             }
-            //dec 降级
+            //des 降级
             if (convert == null) {
                 Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
                 for (Class dess : desSupers) {
                     convert = selector(src, dess);
                     if (convert != null) {
+                        break;
+                    }
+                }
+            }
+
+            //des特殊升级
+            if(convert == null){
+                LinkedList<Class> desSupers = getSupers(des);
+                for(Class desSupper : desSupers){
+                    convert = selector(src, desSupper);
+                    if(convert != null){
                         break;
                     }
                 }

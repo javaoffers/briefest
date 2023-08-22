@@ -3,6 +3,7 @@ package com.javaoffers.base.modelhelper.sample.model;
 import com.javaoffers.base.modelhelper.sample.constant.ManLevel;
 import com.javaoffers.base.modelhelper.sample.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.constant.Work;
+import com.javaoffers.base.modelhelper.sample.json.ExtraInfo;
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.anno.ColName;
@@ -273,6 +274,9 @@ public class User {
             elseEnd = @CaseWhen.Else("'civilian'")
     )
     private String moneyDes;
+
+    @ColName("'{\"nickName\":\"mingJie\",\"age\":30}'")
+    private ExtraInfo extraInfo;
 
     private List<UserOrder> orders;
 

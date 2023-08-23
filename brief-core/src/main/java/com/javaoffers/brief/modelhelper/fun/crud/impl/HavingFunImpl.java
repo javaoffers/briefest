@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.HavingGroupCondition
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingInCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingMarkWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
@@ -176,7 +177,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     @Override
     public HavingFunImpl like(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag,  col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -190,7 +191,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     @Override
     public HavingFunImpl likeLeft(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag,  col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -204,7 +205,7 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     @Override
     public HavingFunImpl likeRight(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag,  col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 

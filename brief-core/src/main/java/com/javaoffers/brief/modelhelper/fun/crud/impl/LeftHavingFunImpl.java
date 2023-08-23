@@ -10,6 +10,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.HavingGroupCondition
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingInCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingMarkWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
@@ -184,7 +185,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
 
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> like(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -198,7 +199,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
 
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeLeft(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -212,7 +213,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
 
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeRight(AggTag aggTag, C col, V value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 
@@ -398,7 +399,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
     }
 
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> like(AggTag aggTag, C2 col, V2 value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -410,7 +411,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
     }
 
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeLeft(AggTag aggTag, C2 col, V2 value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -424,7 +425,7 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
 
 
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeRight(AggTag aggTag, C2 col, V2 value) {
-        conditions.add(new HavingGroupCondition(aggTag, col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(aggTag, col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 

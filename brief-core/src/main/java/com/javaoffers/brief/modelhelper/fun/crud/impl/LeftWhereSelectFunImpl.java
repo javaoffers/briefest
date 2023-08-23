@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.GroupByWordCondition
 import com.javaoffers.brief.modelhelper.fun.condition.where.InCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
@@ -284,7 +285,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     @Override
     public LeftWhereSelectFunImpl<M, M2, V> like(GetterFun<M, V> col, V value) {
-        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -298,7 +299,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     @Override
     public LeftWhereSelectFunImpl<M, M2, V> likeLeft(GetterFun<M, V> col, V value) {
-        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -312,7 +313,7 @@ public class LeftWhereSelectFunImpl<M, M2, V> implements LeftWhereSelectFun<M, M
 
     @Override
     public LeftWhereSelectFunImpl<M, M2, V> likeRight(GetterFun<M, V> col, V value) {
-        conditions.add(new WhereOnCondition(col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 

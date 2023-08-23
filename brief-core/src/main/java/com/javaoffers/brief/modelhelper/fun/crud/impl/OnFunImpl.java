@@ -15,6 +15,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.on.OnColumnFunCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.on.OnValueFunCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.LastJoinFun;
@@ -263,7 +264,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
 
     @Override
     public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> like(GetterFun<M2, Object> col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -277,7 +278,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
 
     @Override
     public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeLeft(GetterFun<M2, Object> col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -291,7 +292,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
 
     @Override
     public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeRight(GetterFun<M2, Object> col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 

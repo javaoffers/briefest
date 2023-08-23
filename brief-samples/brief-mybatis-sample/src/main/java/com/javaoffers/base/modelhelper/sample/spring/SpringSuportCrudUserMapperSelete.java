@@ -53,7 +53,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     public void testAll() {
         List<User> query = this.crudUserMapper.general().query(1, 1);
         User id_as_countId = this.crudUserMapper.select().col("id as countId").where().limitPage(1, 1).ex();
-
+        testLike();
         testCaseWhen();
         testGroupConcat();
         testDistinc();
@@ -66,6 +66,41 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         testGroupBy();
         Number count = this.crudUserMapper.general().count();
         print("total count : "+ count);
+    }
+
+    public void testLike(){
+        List<User> exs = crudUserMapper.select().col(User::getId).where().gt(User::getId, 0).like(User::getId, "1").exs();
+        exs = this.crudUserMapper.select().colAll().where().likeLeft(User::getId, "1").exs();
+        exs = this.crudUserMapper.select().colAll().where().likeRight(User::getId, "1").exs();
+
+        exs = this.crudUserMapper.select()
+                .col(User::getId)
+                .innerJoin(UserTeacher::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserTeacher::getUserId)
+                .innerJoin(Teacher::new)
+                .col(Teacher::getName)
+                .on()
+                .oeq(UserTeacher::getTeacherId, Teacher::getId)
+                .where()
+                .like(User::getId, "1")
+                .exs();
+
+        exs = crudUserMapper
+                .select()
+                .col(User::getBirthday)
+                .col(User::getName)
+                .col(AggTag.MAX, User::getId)
+                .where()
+                .eq(User::getId, 1)
+                .groupBy(User::getBirthday, User::getName)
+                .having()
+                .eq(AggTag.COUNT, User::getId, 1)
+                .like(AggTag.MAX, User::getId, "1")
+                .limitPage(1, 10)
+                .exs();
+
     }
 
     public void testCaseWhen(){

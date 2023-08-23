@@ -12,6 +12,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.ExistsCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.InCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.LastOnFun;
@@ -238,7 +239,7 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
 
     @Override
     public LastOnFun<M1, M2, M3, C2, C3, V> like(C3 col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE));
         return this;
     }
 
@@ -252,7 +253,7 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
 
     @Override
     public LastOnFun<M1, M2, M3, C2, C3, V> likeLeft(C3 col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE_LEFT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
@@ -266,7 +267,7 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
 
     @Override
     public LastOnFun<M1, M2, M3, C2, C3, V> likeRight(C3 col, V value) {
-        conditions.add(new OnValueFunCondition(col, value, ConditionTag.LIKE_RIGHT));
+        conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 

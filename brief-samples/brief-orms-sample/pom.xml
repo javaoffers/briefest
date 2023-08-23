@@ -37,16 +37,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.easy-query</groupId>
-            <artifactId>sql-core</artifactId>
-            <version>${easy-query.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.easy-query</groupId>
-            <artifactId>sql-api4j</artifactId>
-            <version>${easy-query.version}</version>
-        </dependency>
-        <dependency>
             <groupId>com.mybatis-flex</groupId>
             <artifactId>mybatis-flex-core</artifactId>
             <version>${mybatis-flex.version}</version>

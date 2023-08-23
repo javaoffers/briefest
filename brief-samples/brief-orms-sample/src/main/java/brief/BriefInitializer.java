@@ -6,7 +6,6 @@ import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import commons.DataSourceFactory;
-import easyquery.entity.EasyQueryAccount;
 
 import javax.sql.DataSource;
 import java.io.Serializable;

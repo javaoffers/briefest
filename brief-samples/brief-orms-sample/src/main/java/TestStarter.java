@@ -45,18 +45,18 @@ public class TestStarter {
 
         for (int i = 1; i < 10; i++) {
             System.out.println("---------------");
-//
-//            timeMillis = System.currentTimeMillis();
-//            testFlexSelectOne();
-//            System.out.println(">>>>>>>testFlexSelectOne:" + (System.currentTimeMillis() - timeMillis));
 
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectOneWithLambda();
-//            System.out.println(">>>>>>>testPlusSelectOneWithLambda:" + (System.currentTimeMillis() - timeMillis));
-//
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectOne();
-//            System.out.println(">>>>>>>testPlusSelectOne:" + (System.currentTimeMillis() - timeMillis));
+            timeMillis = System.currentTimeMillis();
+            testFlexSelectOne();
+            System.out.println(">>>>>>>testFlexSelectOne:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectOneWithLambda();
+            System.out.println(">>>>>>>testPlusSelectOneWithLambda:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectOne();
+            System.out.println(">>>>>>>testPlusSelectOne:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
             testBriefSelectOne();
@@ -69,18 +69,18 @@ public class TestStarter {
 
         for (int i = 10; i < 10; i++) {
             System.out.println("---------------");
-//
-//            timeMillis = System.currentTimeMillis();
-//            testFlexSelectTop10();
-//            System.out.println(">>>>>>>testFlexSelectTop10:" + (System.currentTimeMillis() - timeMillis));
-//
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectTop10WithLambda();
-//            System.out.println(">>>>>>>testPlusSelectTop10WithLambda:" + (System.currentTimeMillis() - timeMillis));
-//
-//            timeMillis = System.currentTimeMillis();
-//            testPlusSelectTop10();
-//            System.out.println(">>>>>>>testPlusSelectTop10:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testFlexSelectTop10();
+            System.out.println(">>>>>>>testFlexSelectTop10:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectTop10WithLambda();
+            System.out.println(">>>>>>>testPlusSelectTop10WithLambda:" + (System.currentTimeMillis() - timeMillis));
+
+            timeMillis = System.currentTimeMillis();
+            testPlusSelectTop10();
+            System.out.println(">>>>>>>testPlusSelectTop10:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
             testBriefSelectTop10();

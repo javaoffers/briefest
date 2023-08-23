@@ -86,7 +86,7 @@ public class BriefProperties  {
     }
 
     public static boolean isIsPrintSqlCost(){
-        return BriefProperties.isPrintSql;
+        return BriefProperties.isPrintSqlCost;
     }
 
     //刷新配置信息
@@ -95,6 +95,7 @@ public class BriefProperties  {
         initShowLogTime();
         initJdbcExecutorFactory();
         initIsPrintSql();
+        initIsPrintSqlCost();
     }
 
     private static void initIsPrintSql() {

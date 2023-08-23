@@ -19,7 +19,7 @@ public class JqlLogger {
             log.info(info, param);
     }
 
-    public static void infoSqlCost(String info, Object param){
+    public static void infoSqlCost(String info, Object... param){
         if(BriefProperties.isIsPrintSqlCost())
             log.info(info, param);
     }

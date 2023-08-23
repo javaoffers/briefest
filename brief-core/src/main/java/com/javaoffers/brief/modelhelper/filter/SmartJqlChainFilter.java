@@ -18,6 +18,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -41,7 +42,11 @@ public class SmartJqlChainFilter implements JqlChainFilter {
         Object o = chain.doChain();
         long endTime = System.currentTimeMillis();
         if ((cost = endTime - startTime) > JqlLogger.time) {
-            JqlLogger.infoSqlCost("COST TIME : {}", cost);
+            if(o instanceof List){
+                JqlLogger.infoSqlCost("COST TIME : {}, SIZE: {}", cost, ((List) o).size());
+            }else{
+                JqlLogger.infoSqlCost("COST TIME : {}", cost);
+            }
         }
         if (autoUpdateDerive != null) {
             o = processAutoUpdate(metaInfo, modelClass, tableInfo, o);

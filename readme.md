@@ -10,7 +10,7 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 <p>
  Simplify the development. To write SQL like writing Java code. Here we call JQL. And form a set of JQL API process to reduce the SQL error rate. JQL aimed at the complex SQL is decomposed into simple SQL, this is the core of the development brief.
   <code>brief</code> Support for multiple table joins and does not require any mapping configuration. brief Support the new writing style.在<code>Mapper</code> The default method can directly manipulate JQL API（The premise is extends <code>BriefMapper</code>）。 
-  Integrates the function of brief, can directly use the API. Let me written in Java streams JQL, improve the development efficiency. Less code and more smooth writing.
+  Integrates the function of brief, can directly use the API. Let me written in Java streams JQL, improve the development efficiency. Less code and more smooth writing. The performance is twice that of mybatis.
 
 </p>
 

@@ -9,8 +9,7 @@
 <p>
  简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief的核心。
   <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。在<code>Mapper</code> default方法中可以直接操作JQL API（前提是继承了<code>BriefMapper</code>）。 
-  集成了brief功能，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。
-
+  集成了brief功能，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。 性能是mybatis的2倍.
 </p>
 
 ## 单独使用brief

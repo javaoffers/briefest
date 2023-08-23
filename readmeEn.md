@@ -1,21 +1,24 @@
+<img src="note-doc/img/qq.jpg" width="400px"/>
 
-# brief
+# Brief
 <p>
-<code>brief</code> 是一款高性能、轻量级、简单易用, 零配置的orm框架. 让复杂的屎山sql消失、开发效率最大化、代码量更少且阅读性更高、维护性可持续。 
-这是<code>brief</code>存在的原因. <code>brief</code>带你体验前所未有的丝滑.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
+<code>brief</code> Is a high-performance, lightweight, easy to use, zero configuration orm framework. Let complex SQL disappear, development efficiency maximization of shit and less amount of code and sustainable higher readability and maintainability.
+This is the reason for the existence of the <code>brief</code>. <code>brief</code>Take you to experience unprecedented silky.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
 </p>
 
-### 简介
+### Introduction
 <p>
- 简化开发。让编写 SQL 就像编写 Java 代码一样。这里我们称之为JQL。并形成一套JQL API流程来降低SQL错误率。 JQL 旨在将复杂的 SQL 分解为简单的 SQL，这是开发brief的核心。
-  <code>brief</code> 支持多表join并且不需要任何映射配置。 brief支持新的书写格式。在<code>Mapper</code> default方法中可以直接操作JQL API（前提是继承了<code>BriefMapper</code>）。 
-  集成了brief功能，可以直接使用 api。让我用Java流写JQL，提高开发效率。更少的代码和更流畅的写作。 性能是mybatis的2倍.
+ Simplify the development. To write SQL like writing Java code. Here we call JQL. And form a set of JQL API process to reduce the SQL error rate. JQL aimed at the complex SQL is decomposed into simple SQL, this is the core of the development brief.
+  <code>brief</code> Support for multiple table joins and does not require any mapping configuration. brief Support the new writing style.在<code>Mapper</code> The default method can directly manipulate JQL API（The premise is extends <code>BriefMapper</code>）。 
+  Integrates the function of brief, can directly use the API. Let me written in Java streams JQL, improve the development efficiency. Less code and more smooth writing. The performance is twice that of mybatis.
+
 </p>
 
-## 单独使用brief
+
+## Lightweight machine version
 <p>
-<code>brief-speedier</code> 可以单独使用. 不依赖任何环境. 
-使用案例： https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
+<code>brief-speedier</code> Can be used alone. Do not rely on any environment.
+sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
 - maven
@@ -24,32 +27,30 @@
     <properties>
          <brief.version>3.6.2</brief.version>
     </properties>
-   <!--brief轻量级不依赖任何框架-->
+   <!--brief Lightweight and can be used alone-->
      <dependency>
          <groupId>com.javaoffers</groupId>
          <artifactId>brief-speedier</artifactId>
          <version>${brief.version}</version>
-     </dependency>
+   </dependency>
    ```
-
+  
    ```java
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
     BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
     userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
     print(userList);
-   ```
+    ```
 
-## brief增强mybatis
+## Enhance mybatis
 <p>
-<code>brief-mybatis</code> 是对 <code>mybatis</code>增强,让 <code>mybatis</code> 拥有brief能力。 所以<code>brief-mybatis</code> 完全兼容 <code>mybatis</code>.
-如果你的项目中使用的是<code>mybatis</code> 那么你可以直接引入 <code>brief-mybatis</code> 依赖即可. 只做增强不做改变，引入它不会对现有工程产生影响，如丝般顺滑。无需任何配置。
-只需要让你的 <code>Mapper</code>类继承<code>BriefMapper</code>即可使用brief特性. 
+The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> has brief ability. So <code>brief-mybatis</code> is fully compatible with <code>mybatis</code>. If your project is used in the <code>mybatis</code> so you can directly introduced <code>brief-mybatis</code> dependence. Do change, enhance not only introduce it won't affect the existing engineering, silky smooth. Without any configuration. Just need to let your Mapper class inheritance <code>BriefMapper</code> can be used in the feature.
 </p>
 
 - maven
-
   ```
-   <!--brief对mybatis增强-->
+  
+   <!--The brief-mybatis increased-->
    <dependency>
        <groupId>com.javaoffers</groupId>
        <artifactId>brief-mybatis</artifactId>
@@ -58,42 +59,44 @@
 
   ```
 
-## brief-spring-boot-start
+## Brief-spring-boot-start
 <p>
-待支持，支持<code>spring-boot</code>. 如果你的spring-boot项目引用了 <code>mybatis</code> 框架， 那么你只需要引入 <code>brief-mybatis</code> 对mybatis增强即可.
+Later will support，support<code>spring-boot</code>. If your spring - the boot project cited mybatis framework, Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enhanced..
 </p>
 
-## brief 功能介绍
-- 特征
-  - 高性能查询和插入
-  - 支持分库分表 (下个版本支持)
-  - 支持多数据源切换 (下个版本支持)
-  - 不必编写本机 SQL。可以按照Java的stream api来写。
-  - SQL函数注解化，简单易用
-  - 新的写法，支持mapper接口类写default默认方法。
-  - 强大的自动类型转换功能。
-  - 插入/更新自动识别优化为批处理执行
-  - 提供可选自动识别差异数据实时更新能力
-  - 多表查询不需要配置。自动映射一对一，一对多，多对多。
-  - 支持逻辑删除、乐观锁。
-  - 集成了常用的API，无需开发即可直接使用。
-  - 支持mysql语法标准
-  - 表字段自动加解密（支持like模糊查询）.
-  - 字段查询模糊脱敏
-  - sql拦截器， 可自由定制
-  - sql过滤器，可自由定制
-  - 慢sql监控. 可自定义慢sql处理。
-  - 支持json字段.
+## Function is introduced
+- feature
+  - High performance queries and insert
+  - Support sub-database sub-table (supported in the next version)
+  - Support multiple data source switching (supported in the next version)
+  - Don't have to write the native SQL. Can according to the stream of Java API to write.
+  - SQL function annotation, simple and easy to use
+  - New, supporting the mapper interface class write default default method.
+  - Powerful automatic type conversion functions.
+  - The optimization of the automatic identification of insert/update batch execution
+  - Provide optional automatic identification of difference data real-time update capability 
+  - Multi-table query does not need to be configured. Automatically map one-to-one, one-to-many, many-to-many.
+  - Supports logical deletion, optimistic locking.
+  - Integrated with the commonly used API, to directly using the need for development.
+  - Support mysql grammar standard
+  - Table fields automatic decryption (support like fuzzy query).
+  - Field query fuzzy desensitization
+  - SQL interceptors, are free to customize
+  - SQL filter, are free to customize
+  - Slow slow SQL monitor. Allow customizable handling of slow SQL.
+  - Support json field.
 
   
-- 项目实战，已在内部进行了使用。效果非常好. 
+- Project of actual combat, which has been used internally. The effect is very good.
 ![](note-doc/img/2220967059897.png)
 
-
-### 基础使用    
-#### 查询操作
+### Based on using    
+#### Query operation
  <p>
-在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
+Before we see operation, we first look at the data structure: there are two key annotation.
+ @BaseModelUsed to represent the class belongs to the Model classes (class name is the same as the table name, the Model will Help the camel class name converted to underline the name of the table, attribute the same),
+ @BaseUniqueIndicates the only class attributes (corresponding to A unique attribute in A table, when the primary key used in the table that can be more).
+ We will be in the final detailed explanation of the use of annotations. The following is the basic use
  </p>
  
  ```java
@@ -139,7 +142,7 @@ public class UserOrder {
 
 ```
 
-##### 全表查询
+##### A full table query
  ```java
 
  List<User>  users = crudUserMapper 
@@ -151,10 +154,9 @@ public class UserOrder {
  ```
  
   <p>
-这个 JQL 最终会被翻译为 select id, name, xxx..  from user。这里的colall是查询所有表字段的意思。如果要查询指定的字段，比如姓名和生日字段，可以这样做： 
-</p>
+The JQL will eventually be translated into the select id, name, XXX.. From the user. Query all the table fields colall mean here. If you want to query the specified fields, such as your name and birthday field, can do it:</p>
 
-##### 查询指定的表字段 
+##### The query specified table fields 
  ```java
  List<User> users = crudusermapper
                     .select()
@@ -164,10 +166,9 @@ public class UserOrder {
                     .exs();
  ```
  
-##### 指定条件查询 
+##### The query specified conditions 
  <p>
-可以通过col()指定要查询的字段。这里的where()和SQL中的关键字where是一样的。比如要查询一个id值为1的用户，可以这样写：
- </p>
+By col () specifies fields to query. Here's where the where keyword in the () and SQL is the same. Such as to query a user id value is 1, you can write like this: </p>
  
  ```java
  User user = crudusermapper
@@ -178,7 +179,7 @@ public class UserOrder {
              .ex();
  ```
 
-##### 分页查询
+##### Paging query
 
 ```java
  int pageNum = 1;
@@ -188,12 +189,12 @@ public class UserOrder {
                     .col (user:: getbirthday)
                     .col (user:: getname)
                     .where()
-                    .limitPage(1, 10)// 1: 第一页， 查询10条数据
+                    .limitPage(1, 10)//  1: the first page, query 10 data
                     .exs();
  
 ```
 
-##### 统计查询
+##### Statistical query
 ```java
 List<User> users = this.crudUserMapper
                        .select()
@@ -223,13 +224,12 @@ List<User> users = this.crudUserMapper
 ```
 
  <p>
-你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
- </p>  
+You will find that there are two special function of exs (), the ex () these two functions on behalf of the trigger. Exs () is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE () the ex (), WHERE () exs () </p>  
  <p>
-  更多复杂查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
+  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
  </p>
 
-#### 插入操作
+#### The insert
 
 ```java
 Id exOne = crudUserMapper
@@ -239,8 +239,7 @@ Id exOne = crudUserMapper
                 .ex();
 ```
 <p>
-一个简单的insert语句，返回一个wrapper class Id，通常是新插入数据的主键。一个插入操作就这么简单。还有一种更简单的插入数据的方法。插入对象。并支持多个。
-编队逻辑针对批处理进行了优化。例如下面的案例
+A simple insert statement, returns a wrapper class Id, are usually the primary key of the newly inserted data. An insert it's as simple as that. There's a more simple way to insert the data. Insert the object. And support multiple. The formation logic for batch is optimized. For example, the following case
 </p>
 
 ```java
@@ -255,22 +254,22 @@ Id exOne = crudUserMapper
 
 <p>
 
-  我们可以插入整个模型对象，表示要查询所有字段，对层进行批处理。性能非常好。
-  更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+  We can insert the whole model object, said to query all of the fields, for batch layer. Performance is very good.
+  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
 
 </p>
 
-#### 更新操作
+#### The update operation
 <p>
-允许更新空值updateNull、不允许更新空值npdateNull、存在则更新否则插入，乐观锁版本更新、batch更新、
-请看下面的案例
+Allows you to update the Null update npdate Null Null, are not allowed to update the Null values, there is update or insert, optimistic locking version update, batch updates,
+Please see the following case
 </p>
 
 ```java
 crudUserMapper
         .update().npdateNull()
                  .col(User::getBirthday, new Date())
-                 //名称不会更新。因为它的 npdateNull
+                 //The name does not update. Because of its npdate Null
                  .col(User::getName,null)
                  .where()
                  .eq(User::getId, id)
@@ -279,7 +278,7 @@ crudUserMapper
 crudUserMapper
         .update().updateNull()
                  .col(User::getBirthday, new Date())
-                 //名称将更新。因为它的 updateNull
+                 //The name will be updated. Because it is the update of the Null
                  .col(User::getName,null)
                  .where()
                  .eq(User::getId, id)
@@ -298,14 +297,17 @@ this.crudUserMapper.general().updateBatchById(user);
 ```
 
 <p>
-通过上面的案例，我们可以在业务中很好的控制字段的更新。
+Through the above case, we can very good control in the business field of updates.
 </p>
 
-#### 追踪差异更新
+#### Update tracking difference
 <p>
-    可以实时追踪差异更新. 当model数据发生变化时进行自动更新. 想使用此功能只需要将<code>@BaseModel</code>
-    的autoUpdate = true. 开启后查询的每一条带有主键id的数据都是具有差异更新能力的. 在操作的过程中如果将
-    主键id设置为null, 则model数据将失去差异更新能力并且不会回复即使你还原了主键id.  
+    Differences can real-time tracking updates. When data change model for automatic updates.
+    Want to use this feature only needs to be  <code>@BaseModel</code> autoUpdate = true.
+    After open the query each with a primary key id data are able to provide a different update.
+    In the process of operation if the primary key id is set to null, 
+    The differences will lose the ability to update the model data and not reply even if you restore the primary key id.
+    
 </p>
 
 ```java
@@ -322,6 +324,7 @@ this.crudUserMapper.general().updateBatchById(user);
    EncryptDataAutoUpdate encryptData = new EncryptDataAutoUpdate();
    encryptData.setEncryptNum("12345678");
    Id id = autoUpdateBriefMapper.general().save(encryptData);
+
    EncryptDataAutoUpdate autoUpdate = autoUpdateBriefMapper.general().queryById(id);
    print(autoUpdate);
    //Not updated, because there is no difference
@@ -339,10 +342,11 @@ this.crudUserMapper.general().updateBatchById(user);
 
 ```
 
-#### 删除操作
-<p>
-<code>brief</code>支持丰富的删除功能. 同时还支持逻辑删除. 使用逻辑删除需要在<code>User</code>中使用IsDel 枚举即可.
 
+#### Delete operation
+<p>
+<code>brief</code>Support rich delete functions. At the same time also delete support logic. 
+Use logic to delete need use <code>IsDel/RowStatus</code> in the <code>User</code>  enumeration.
 </p>
 
 ```java
@@ -361,10 +365,11 @@ this.crudUserMapper.general().logicRemoveById(id);
 ```
 
 
-#### Mapper接口中支持default编写jql/sql
+#### Support the default write JQL/SQL Mapper interfaces
 <p>
-一种新的编码方式。我们可以在 <code>Mapper</code> 接口中编写默认方法。用于集中管理 jql/sql. 防止项目中出现到处都是jql/sql.
-例如下面的案例(我们推荐使用这种风格).
+A new kind of coding style. We can in <code>Mapper</code> Write the default method in the interface.
+Used for centralized management JQL/SQL. Prevent project in JQL/SQL are everywhere.
+For example, the following case (we recommend this kind of style).
 </p>
 
 ```java
@@ -382,21 +387,22 @@ public interface CrudUserMapper extends BriefMapper<User> {
 ```
 
 <p>
-当我的接口继承了<code>BriefMapper</code>  接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 <code>Mapper</code> 接口上编写原生 SQL 语句的方法。.
-更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/BriefUserMapper.java
+When we interface inheritance <code>BriefMapper</code>  ，
+We can write our JQL logic by default。
+Please see more cases:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/BriefUserMapper.java
 </p>
 
-- 演示 crud:
+- sample crud:
   - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
     
-#### 多表join 
-- 这部分主要介绍如何使用JQL来表达一些复杂的查询语句. 多表进行join不需要任何配置（零配置）. 
+#### Multi-table join 
+- This part mainly introduces how to use JQL to express complex query. Does not require any configuration to join multiple tables (zero configuration).
 <p>
-  在上面的基础部分，我们解释了一些常见和最基本的用途。接下来，我们将介绍一些实际项目中的场景。一些稍微复杂的用例。主要包括连接查询、分组查询、统计查询和常用的通用操作。
+On the basis of the above section, we explained some of the common and the most basic purpose. Next, we will introduce some scenes in the actual project. Some of the slightly more complicated cases. Mainly includes the join query, grouping query, statistic query and commonly used common operations.
 </p>
 
 <p>
-    JQL 提供了丰富的常用 API。比如 >= , <= , in , between, like, likeLeft, likeRight, exists等。还有一个combination unite，主要是把多个条件组合成一个，比如(xx > xx or xx < xx )把两个关联条件为一。同时我们让你写原生sql的入口，比如col(sql), condSQL(sql)，虽然我们通常不推荐使用原生sql。因为尽量不要用sql进行复杂的逻辑处理，比如截取一些字符串。或者拼接等，这些操作建议在业务层处理。先来看一个简单的join JQL案例：推荐在接口类中写JQL
+The commonly used API JQL provides rich. For example, > =, =, and in between, like, like Left, like Right, exists, and so on. There is also a combination unite, mainly is the combined into a multiple conditions, such as xx or xx (xx > xx) for a two associated conditions. At the same time we let you write native SQL entry, such as col (SQL), cond SQL (SQL), although we usually don't recommend to use native SQL. Because as far as possible do not use SQL for complex logical processing, such as capture some string. Or etc, these actions suggested in the business layer. Start with a simple join JQL case: write JQL recommended in the interface class
 </p>
 
 ```java
@@ -438,14 +444,14 @@ public interface CrudUserMapper extends BriefMapper<User> {
 
 ```
 
-####  通用API
+####  Generic API
 
 <p>
-    我封装了一些常用的功能，使用起来非常简单。而且代码也非常简洁明了。例如通过 id 查询或更改。
+I enclosed some of the commonly used functions, use rise very simple. And the code is very concise and clear. For example, by id query or change.
 </p>
 
 <p>
-    常用的api只需要调用general()方法即可使用。比如通过id查询数据
+  Commonly used API just call the general () method can be used. Such as through the id data
 </p>
 
 ```java
@@ -454,7 +460,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    save api，保存一个对象到数据库
+   Save the API, to save an object to the database
 </p>
 
 ```java
@@ -464,7 +470,7 @@ User user = crudUserMapper.general().queryById(id);
 ```
 
 <p>
-    通过id删除指定数据
+    By id delete specified data
 </p>
 
 ```java
@@ -472,7 +478,7 @@ crudUserMapper.general().removeById(1);
 ```
 
 <p>
-   比较简单常用的API如下。
+  Commonly used simple API is as follows
 </p>
 
 ```java
@@ -788,9 +794,9 @@ crudUserMapper.general().removeById(1);
         public Number countDistinct(C c,T model);
 
 ```
-#### sql函数注解
+#### SQL function annotation
 <p>
-    我们可以通过在类的字段上使用注解来使用sql函数。以下是一些用例：
+  We can pass on the field of class use annotations to use SQL functions. Here are some use cases:
 </p>
 
 ```java
@@ -926,13 +932,12 @@ public class FunAnnoParserSample {
 
 }
 ```
-#### 自动类型转换
+#### Automatic type conversion
 <p>
-内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
-
-https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
-
-). 
+Built a large number of commonly used types of converters.
+Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
+Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
+(sample of enum :https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java ). 
 </p>
 
 ```
@@ -975,10 +980,11 @@ https://github.com/javaoffers/brief/blob/develop/brief-sample/src/main/java/com/
 
 ```
 
-#### 拦截器模式
+#### The interceptor pattern
 <p>
-sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的拦截器中进行二次处理。 自定义拦截器非常简单，你只需要实现接口
-<code>JqlInterceptor</code>，然后调用 <code>InterceptorLoader.init()</code> 进行初始化自己的拦截器即可。
+SQL and parameters before the real execution will be interceptor intercepts. Can the interceptor defined in their secondary processing.
+Custom interceptors is very simple, you only need to implement the interface
+<code>JqlInterceptor</code>，And then perform <code>InterceptorLoader.init()</code> Initialize your interceptor.
 </p>
 
 ```java
@@ -989,16 +995,16 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
 ```
 
 
-#### 支持自动加密和解密
+#### Support automatic encryption and decryption
 <p>
-   当我们需要添加一个数据库表中的某些字段进行解密。Mybatis JQL提供了一个简单的配置可以做;
-   我们只需要指定一个关键(长度为32个十六进制)。然后指定表和表中的字段。
-   我们指定一个私钥 “FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA”是关键
-   并给出了encrypt_num加密。在表encrypt_data配置如下: 
+When we need to add some fields in a database table. Mybatis JQL provides a simple configuration can be done;
+We only need to specify a key (length is 32 hexadecimal). And then specify tables and the fields in the table.
+"FFFFFFFFAAAAAAAAAAAAFFFFFAFAFAFA" we specify a private key to encrypt the num encryption.
+In table encrypt data configuration is as follows:
 </p>
   <p>
-  加密和解密模块被设计为一个独立的模块。 
-  使用这个功能服务,您需要添加mvn引用。如下
+Encryption and decryption module is designed as an independent module.
+Using this feature service, you need to add the MVN references. The following
   </p> 
 
 ```java
@@ -1024,31 +1030,31 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
     EncryptData encryptData = new EncryptData();
     String encryptNum = "1234567890";
     encryptData.setEncryptNum(encryptNum);
-     //加密后在db里存储的数据是 396195EAF65E740AEC39E6FFF0714542
+     //The data stored in the db is after encryption 396195EAF65E740AEC39E6FFF0714542
     Id id = this.crudEncryptDataMapper.general().save(encryptData);
-    //查询的时候会自动解密
+    //The query will automatically declassified
     encryptDatas = this.crudEncryptDataMapper.general().queryByIds(id); 
     print(encryptDatas); //[{"id":10,"encryptNum":"1234567890"}]
-    // 查询时直接指定铭文即可. 铭文查询,底部将转换成密文和查询
+    //Query, query is specified directly inscriptions. Inscriptions will convert ciphertext and at the bottom of the query
     EncryptData ex = this.crudEncryptDataMapper.select().colAll()
     .where().eq(EncryptData::getEncryptNum, encryptNum).ex();
     print(ex);//{"id":10,"encryptNum":"1234567890"}
 ```
 
-#### 字段脱敏
+#### Field desensitization
 <p>
-支持字段脱敏. 只需要在model类上加上@EmailBlur注解可可以类。 注意被加上的注解的字段必须是String类型.
+Support field desensitization. Only need a model class with @ Email can Blur annotations can be class. Note by plus annotation fields must be a String type.
 </p>
 
 ```
    @EmailBlur
-   private String email; // 12345678@outlook.com加密后的数据为12***678@outlook.com
+   private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
 ```  
 <p>
-更多案例： https://github.com/javaoffers/brief/tree/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
+sample： https://github.com/javaoffers/brief/tree/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
 </p>
 
 #### Code contributions are welcome
 <p>
-该项目已在内部使用。大大提高了开发效率和代码整洁度。如果觉得不错，请点个小星星鼓励一下
+This project has used internally. Greatly improves the development efficiency and code cleanliness. If you feel good, please point a little encouragement
 </p>

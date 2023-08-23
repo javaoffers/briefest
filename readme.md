@@ -1,3 +1,4 @@
+<img src="note-doc/img/qq.jpg" width="400px"/>
 
 # Brief
 <p>
@@ -19,8 +20,6 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 <code>brief-speedier</code> Can be used alone. Do not rely on any environment.
 sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
-
-<img src="note-doc/img/qq.jpg" width="400px"/>
 
 - maven
 

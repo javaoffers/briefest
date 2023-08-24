@@ -67,8 +67,6 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
 ## Function is introduced
 - feature
   - High performance queries and insert
-  - Support sub-database sub-table (supported in the next version)
-  - Support multiple data source switching (supported in the next version)
   - Don't have to write the native SQL. Can according to the stream of Java API to write.
   - SQL function annotation, simple and easy to use
   - New, supporting the mapper interface class write default default method.

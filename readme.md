@@ -1,5 +1,6 @@
 
 <a href="https://github.com/javaoffers/briefest/blob/develop/readmeEn.md">ENGLISH</a>
+<img src="note-doc/img/qq.jpg" width="400px"/>
 # brief
 <p>
 <code>brief</code> 是一款高性能、轻量级、简单易用, 零配置的orm框架. 让复杂的屎山sql消失、开发效率最大化、代码量更少且阅读性更高、维护性可持续。 

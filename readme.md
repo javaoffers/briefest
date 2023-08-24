@@ -221,7 +221,7 @@ List<User> users = this.crudUserMapper
 ```
 
  <p>
-你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过才能触发 where 和 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
+你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过 where 才能触发 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
  </p>  
  <p>
   更多复杂查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
@@ -303,7 +303,7 @@ this.crudUserMapper.general().updateBatchById(user);
 <p>
     可以实时追踪差异更新. 当model数据发生变化时进行自动更新. 想使用此功能只需要将<code>@BaseModel</code>
     的autoUpdate = true. 开启后查询的每一条带有主键id的数据都是具有差异更新能力的. 在操作的过程中如果将
-    主键id设置为null, 则model数据将失去差异更新能力并且不会回复即使你还原了主键id.  
+    主键id设置为null, 则model数据将失去差异更新能力并且不会恢复即使你还原了主键id.  
 </p>
 
 ```java

@@ -66,7 +66,8 @@
 ## brief 功能介绍
 - 特征
   - 高性能查询和插入
-  - 不必编写本机 SQL。可以按照Java的stream api来写。
+  - JQL api 推导提示. 开发就是点点点
+  - 不必编写原生 SQL。可以按照Java的stream api来写。
   - SQL函数注解化，简单易用
   - 新的写法，支持mapper接口类写default默认方法。
   - 强大的自动类型转换功能。

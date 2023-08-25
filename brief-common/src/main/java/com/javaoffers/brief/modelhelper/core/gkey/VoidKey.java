@@ -1,4 +1,6 @@
-package com.javaoffers.brief.modelhelper.core;
+package com.javaoffers.brief.modelhelper.core.gkey;
+
+import com.javaoffers.brief.modelhelper.core.UniqueKeyGenerate;
 
 /**
  * @author mingJie

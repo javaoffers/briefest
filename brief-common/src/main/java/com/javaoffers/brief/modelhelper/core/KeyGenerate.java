@@ -8,8 +8,8 @@ public enum KeyGenerate {
     //无效key. 由服务自己决定.
     VOID_KEY,
 
-    //自增, 长度31位, nowTime(固定不变12位) + increment(原子自增 19位.)
-    ATO_INCREMENT,
+    //自增, {@link AtoIncrementSequenceKey}
+    ATO_INCREMENT_SEQ27,
 
     //UUID
     UUID,

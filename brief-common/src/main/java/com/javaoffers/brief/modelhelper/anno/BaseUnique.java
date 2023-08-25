@@ -2,7 +2,7 @@ package com.javaoffers.brief.modelhelper.anno;
 
 import com.javaoffers.brief.modelhelper.core.KeyGenerate;
 import com.javaoffers.brief.modelhelper.core.UniqueKeyGenerate;
-import com.javaoffers.brief.modelhelper.core.VoidKey;
+import com.javaoffers.brief.modelhelper.core.gkey.VoidKey;
 
 import java.lang.annotation.*;
 

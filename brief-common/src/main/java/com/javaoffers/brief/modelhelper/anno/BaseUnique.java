@@ -1,5 +1,9 @@
 package com.javaoffers.brief.modelhelper.anno;
 
+import com.javaoffers.brief.modelhelper.core.KeyGenerate;
+import com.javaoffers.brief.modelhelper.core.UniqueKeyGenerate;
+import com.javaoffers.brief.modelhelper.core.VoidKey;
+
 import java.lang.annotation.*;
 
 /**
@@ -22,4 +26,18 @@ public @interface BaseUnique {
      * But Unique features of {@code BaseUnique} are not lost。
      */
     String value() default "";
+
+    /**
+     * Default key generator. VoidKey is an invalid key.
+     * Usually controlled by the server itself.
+     * @return
+     */
+    Class<? extends UniqueKeyGenerate> keyGenerateClass() default VoidKey.class;
+
+    /**
+     * Default key generator. VoidKey is an invalid key.
+     * Usually controlled by the server itself.
+     * @return
+     */
+    KeyGenerate keyGenerate() default KeyGenerate.VOID_KEY;
 }

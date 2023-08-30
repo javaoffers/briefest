@@ -65,7 +65,7 @@ class WorkSeq {
                     return build;
                 }
                 //满了
-                Thread.yield();
+                //Thread.yield();
             }else {
                 //时间过期
                 this.timeSeq.compareAndSet(timeSeq, new TimeSeq(nowMil));

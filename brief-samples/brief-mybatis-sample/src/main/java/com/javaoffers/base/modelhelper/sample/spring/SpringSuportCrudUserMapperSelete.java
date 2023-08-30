@@ -65,7 +65,14 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         testSelect();
         testGroupBy();
         Number count = this.crudUserMapper.general().count();
+        selectCount();
+
         print("total count : "+ count);
+    }
+
+    private void selectCount() {
+        User user = this.crudUserMapper.select().col(AggTag.COUNT, User::getCountId).where().ueq(User::getBirthday, "xxx").ex();
+        user.getCountId();
     }
 
     public void testLike(){

@@ -109,7 +109,7 @@ class AtoSeq {
     AtomicInteger seq;
 
     public AtoSeq() {
-        this.seq = new AtomicInteger(0);
+        this.seq = new AtomicInteger(-1);
     }
 
     public int next(){

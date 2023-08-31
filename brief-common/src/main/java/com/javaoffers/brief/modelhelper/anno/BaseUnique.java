@@ -31,6 +31,7 @@ public @interface BaseUnique {
      * Default key generator. VoidKey is an invalid key.
      * Usually controlled by the server itself.
      * You can customize the generation strategy through keyGenerateClass
+     * use {@code mapper.general().save(model)}
      * @return
      */
     Class<? extends UniqueKeyGenerate> keyGenerateClass() default VoidKey.class;
@@ -38,6 +39,7 @@ public @interface BaseUnique {
     /**
      * Default key generator. VoidKey is an invalid key.
      * Usually controlled by the server itself.
+     * use {@code mapper.general().save(model)}
      * @return
      */
     KeyGenerate keyGenerate() default KeyGenerate.VOID_KEY;

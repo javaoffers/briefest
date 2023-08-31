@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.speedier;
 import com.javaoffers.brief.modelhelper.config.BriefProperties;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
+import com.javaoffers.brief.modelhelper.speedier.transaction.TransactionManagement;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
 import com.javaoffers.brief.modelhelper.utils.Assert;
@@ -19,9 +20,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class BriefSpeedier {
 
     /**
-     * The data source.
+     * 事务管理
      */
-    private DataSource dataSource;
+    private TransactionManagement transactionManagement;
 
     /**
      * cache.
@@ -44,7 +45,8 @@ public class BriefSpeedier {
                     //First create crudMapper implementation
                     BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(BriefMapper.class);
                     //Generate crudMapper agent
-                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl, dataSource, modelClass);
+                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
+                            this.transactionManagement.getDataSource(), modelClass);
                     proxy = JdkProxyUtils.createProxy(BriefMapper.class, speedierMapperProxy);
                     cache.put(modelClass, proxy);
                 }
@@ -52,6 +54,10 @@ public class BriefSpeedier {
         }
 
         return proxy;
+    }
+
+    public TransactionManagement getTransactionManagement() {
+        return transactionManagement;
     }
 
     /**
@@ -74,7 +80,8 @@ public class BriefSpeedier {
                     //First create crudMapper implementation
                     BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(mapperClass);
                     //Generate crudMapper agent
-                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl, dataSource, (Class) modelclass);
+                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
+                            this.transactionManagement.getDataSource(), (Class) modelclass);
                     proxyBriefMapper = JdkProxyUtils.createProxy(mapperClass, speedierMapperProxy);
                     cache.put(mapperClass, proxyBriefMapper);
                 }
@@ -96,7 +103,7 @@ public class BriefSpeedier {
      */
     public static BriefSpeedier getInstance(DataSource dataSource) {
         BriefSpeedier briefSpeedier = new BriefSpeedier();
-        briefSpeedier.dataSource = dataSource;
+        briefSpeedier.transactionManagement = new TransactionManagement(dataSource);
         BriefProperties.freshAll();
         return briefSpeedier;
     }

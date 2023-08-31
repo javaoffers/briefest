@@ -83,6 +83,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - SQL filter, are free to customize
   - Slow slow SQL monitor. Allow customizable handling of slow SQL.
   - Support json field.
+  - Support automatic generation of unique keys
 
   
 - Project of actual combat, which has been used internally. The effect is very good.

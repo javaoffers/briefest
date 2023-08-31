@@ -18,10 +18,11 @@ CREATE TABLE `user_order` (
   `order_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   `order_money` int(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `is_del` int(3) DEFAULT NULL,
+  `is_del` int(3) DEFAULT '1',
+  `order_mark` varchar(255) COLLATE utf8_bin DEFAULT NULL COMMENT '订单标识唯一',
   `create_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`, `create_time`) VALUES (1, 'computer', 101, 1, 1, '2022-09-12 03:51:32');
 INSERT INTO `base`.`user_order`(`id`, `order_name`, `order_money`, `user_id`, `is_del`, `create_time`) VALUES (2, 'phone', 120, 1, 1, '2022-09-11 03:51:36');

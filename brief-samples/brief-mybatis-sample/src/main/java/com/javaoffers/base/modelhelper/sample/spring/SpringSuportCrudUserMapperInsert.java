@@ -45,6 +45,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testGkeyForInsert();
         //transactionInsert();
         //testInsertUpdate();
         testBatchInsert();
@@ -54,6 +55,14 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             System.exit(0);
         }
 
+    }
+
+    public void testGkeyForInsert()  {
+        UserOrder userOrder = new UserOrder();
+        userOrder.setOrderName("gkey");
+        Id orderId = this.crudUserOrderMapper.general().save(userOrder);
+        UserOrder userOrder1 = this.crudUserOrderMapper.general().queryById(orderId);
+        print(userOrder1);
     }
 
     public void testInsertUpdate(){
@@ -298,7 +307,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     }
 
 
-    public void print(Object user) throws JsonProcessingException {
+    public void print(Object user) {
         try {
             System.out.println(objectMapper.writeValueAsString(user));
         }catch (Exception e ){

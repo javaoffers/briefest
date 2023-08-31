@@ -10,9 +10,4 @@ public interface UniqueKeyGenerate<K> {
      */
     K generate();
 
-    /**
-     * 初始化key值.
-     */
-    default void initKey(K k){};
-
 }

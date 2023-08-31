@@ -1,7 +1,10 @@
 package com.javaoffers.brief.modelhelper.fun.condition.insert;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
+import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -45,6 +48,8 @@ public class InsertAllColValueCondition implements InsertCondition {
     }
 
     public InsertAllColValueCondition(Class modelClass, Object model) {
+        //生成唯一key
+        gkeyProcess(modelClass, model);
         this.model = model;
         this.modelClass = modelClass;
         //left: colName. right: fieldName
@@ -91,6 +96,22 @@ public class InsertAllColValueCondition implements InsertCondition {
         valuesAppender.append(String.join(",", colNames));
         valuesAppender.append(")");
         this.sqlValues = valuesAppender.toString();
+    }
+
+    private void gkeyProcess(Class modelClass, Object model) {
+        ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
+        List<ModelFieldInfo> gkeyUniqueModels = modelInfo.getGkeyUniqueModels();
+        if(CollectionUtils.isNotEmpty(gkeyUniqueModels)){
+            gkeyUniqueModels.forEach(gkeyUniqueModel->{
+                Object uniqueValue = gkeyUniqueModel.getGetter().getter(model);
+                if(uniqueValue == null
+                        ||(uniqueValue instanceof Number && uniqueValue.toString().equals("0"))){
+
+                    uniqueValue = gkeyUniqueModel.getUniqueKeyGenerate().generate();
+                    gkeyUniqueModel.getSetter().setter(model, uniqueValue);
+                }
+            });
+        }
     }
 
     public String getOnDuplicate() {

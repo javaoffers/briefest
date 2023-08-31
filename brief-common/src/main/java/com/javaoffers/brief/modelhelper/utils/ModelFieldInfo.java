@@ -2,6 +2,9 @@ package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.core.ConvertProxy;
+import com.javaoffers.brief.modelhelper.core.KeyGenerate;
+import com.javaoffers.brief.modelhelper.core.UniqueKeyGenerate;
+import com.javaoffers.brief.modelhelper.core.gkey.VoidKey;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
@@ -89,6 +92,16 @@ public class ModelFieldInfo {
      */
     private ConvertProxy convertProxy;
 
+    /**
+     * 生成唯一key策略
+     */
+    private boolean isAtoGkey;
+
+    /**
+     * key生成器
+     */
+    private UniqueKeyGenerate uniqueKeyGenerate;
+
     private ModelFieldInfo() {
     }
 
@@ -108,7 +121,8 @@ public class ModelFieldInfo {
             this.tableInfo = TableHelper.getTableInfo(this.modelClass);
             this.tableName = this.tableInfo.getTableName();
             this.aliasName = Utils.getSpecialColName(this.tableName, tableInfo.getDbType(), this.fieldName);
-            this.isUniqueField = this.field.getDeclaredAnnotation(BaseUnique.class) != null;
+            BaseUnique baseUnique = this.field.getDeclaredAnnotation(BaseUnique.class);
+            this.isUniqueField =  baseUnique != null;
             this.fieldGenericClass = Utils.getGenericityClass(field);
             this.fieldType = this.field.getType();
             this.fieldTypeIsAbstract = this.fieldType.isInterface();
@@ -122,6 +136,20 @@ public class ModelFieldInfo {
                 }
             }else if(Collection.class.isAssignableFrom(this.fieldType)){
                 newc = LambdaCreateUtils.createConstructor(this.fieldType);
+            }
+
+            //处理自动生成主键
+            if(this.isUniqueField){
+                Class<? extends UniqueKeyGenerate> keyGenerateClass = baseUnique.keyGenerateClass();
+                KeyGenerate keyGenerate = baseUnique.keyGenerate();
+                if(keyGenerateClass != VoidKey.class){
+                    uniqueKeyGenerate = keyGenerateClass.newInstance();
+                }else if(keyGenerate != keyGenerate.VOID_KEY){
+                    Class<UniqueKeyGenerate> gkeyClass = keyGenerate.getGkeyClass();
+                    uniqueKeyGenerate = gkeyClass.newInstance();
+                }
+
+                this.isAtoGkey = this.uniqueKeyGenerate != null;
             }
 
         }catch (Throwable e){
@@ -217,5 +245,13 @@ public class ModelFieldInfo {
         if(convertProxy != null){
             this.convertProxy = convertProxy;
         }
+    }
+
+    public boolean isAtoGkey() {
+        return isAtoGkey;
+    }
+
+    public UniqueKeyGenerate getUniqueKeyGenerate() {
+        return uniqueKeyGenerate;
     }
 }

@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.anno.fun.params.math.Mod;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 
@@ -27,6 +28,7 @@ public class ModelInfo<T> {
     List<ModelFieldInfo> arraysModels = new ArrayList<ModelFieldInfo>();
     List<ModelFieldInfo> listModels = new ArrayList<ModelFieldInfo>();
     List<ModelFieldInfo> setModels = new ArrayList<ModelFieldInfo>();
+    List<ModelFieldInfo> gkeyUniqueModels = new ArrayList<>();
 
     public ModelInfo(Class<T> modelClass) {
         this.modelClass = modelClass;
@@ -60,6 +62,10 @@ public class ModelInfo<T> {
                     put(onesColNameMap, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
                     if (modelFieldInfo.isUniqueField()) {
                         put(uniqueColNameMap, modelFieldInfo, fieldNameAsAliasNameFieldInfo);
+                    }
+                    //添加自动生成key策略
+                    if(modelFieldInfo.isAtoGkey()){
+                        gkeyUniqueModels.add(modelFieldInfo);
                     }
                 }
             }
@@ -179,6 +185,10 @@ public class ModelInfo<T> {
             }
         }
         return unique;
+    }
+
+    public List<ModelFieldInfo> getGkeyUniqueModels() {
+        return gkeyUniqueModels;
     }
 
     private Predicate<ModelFieldInfo> filter(List<String> colNames) {

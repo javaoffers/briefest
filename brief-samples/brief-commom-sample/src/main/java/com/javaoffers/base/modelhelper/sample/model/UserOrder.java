@@ -2,6 +2,7 @@ package com.javaoffers.base.modelhelper.sample.model;
 
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
+import com.javaoffers.brief.modelhelper.core.KeyGenerate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,11 @@ public class UserOrder {
 
     @BaseUnique("id")
     private int orderId;
+    /**
+     * 测试自动生成唯一key
+     */
+    @BaseUnique(keyGenerate = KeyGenerate.SNOWFLAKE)
+    private Long orderMark;
 
     private String orderName;
     private String orderMoney;

@@ -30,6 +30,7 @@ public @interface BaseUnique {
     /**
      * Default key generator. VoidKey is an invalid key.
      * Usually controlled by the server itself.
+     * You can customize the generation strategy through keyGenerateClass
      * @return
      */
     Class<? extends UniqueKeyGenerate> keyGenerateClass() default VoidKey.class;

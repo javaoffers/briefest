@@ -19,7 +19,6 @@ public interface DataSourceExecutor {
                 e.printStackTrace();
                 throw new JdbcException(e.getMessage());
             }
-
         }
     }
 }

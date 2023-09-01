@@ -7,11 +7,13 @@ import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.EncryptData;
 import com.javaoffers.base.modelhelper.sample.model.EncryptDataAutoUpdate;
 import com.javaoffers.base.modelhelper.sample.model.User;
+import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.encrypt.BriefEncipher;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedierDataSource;
+import com.javaoffers.brief.modelhelper.speedier.transaction.TransactionManagement;
 import org.junit.Test;
 
 import java.util.Date;
@@ -30,12 +32,42 @@ public class BriefSpeedierSample {
     BriefUserMapper crudUserMapper = speedier.newCustomCrudMapper(BriefUserMapper.class);
     //Use the default mapper
     BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+    //Use the default mapper
+    BriefMapper<UserOrder> userOrderBriefMapper = speedier.newDefaultCrudMapper(UserOrder.class);
 
     BriefEncryptDataMapper briefEncryptDataMapper = speedier.newCustomCrudMapper(BriefEncryptDataMapper.class);
 
     BriefMapper<EncryptDataAutoUpdate> autoUpdateBriefMapper = speedier.newDefaultCrudMapper(EncryptDataAutoUpdate.class);
 
     @Test
+    public void testAll(){
+        testGenMapper();
+        testAutoUpdate();
+        testBriefSpeedier();
+        testBriefEncrypt();
+        testTransaction(true);
+        testTransaction(false);
+    }
+
+    public void testTransaction(boolean isCommit){
+        TransactionManagement transactionManagement = speedier.getTransactionManagement();
+        transactionManagement.openTransaction();
+        User user = new User();
+        user.setName("testTransaction : "+isCommit);
+        userBriefMapper.general().save(user);
+
+        UserOrder userOrder = new UserOrder();
+        userOrder.setOrderName("testTransactionOrder : "+isCommit);
+        userOrderBriefMapper.general().save(userOrder);
+        if(isCommit){
+            transactionManagement.commitTransaction();
+        }else{
+            transactionManagement.rollbackTransaction();
+        }
+
+
+    }
+
     public void testGenMapper(){
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
         BriefSpeedier speedier2 = BriefSpeedier.getInstance(dataSource);
@@ -47,7 +79,7 @@ public class BriefSpeedierSample {
         print(userBriefMapper2.hashCode());
     }
 
-    @Test
+
     public void testBriefSpeedier(){
 
         List<User> userList = crudUserMapper.select().colAll().where().limitPage(1, 10).exs();
@@ -75,7 +107,7 @@ public class BriefSpeedierSample {
 
     }
 
-    @Test
+
     public void testBriefEncrypt(){
         String key = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF";
         BriefEncipher

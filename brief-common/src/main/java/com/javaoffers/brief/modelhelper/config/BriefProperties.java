@@ -41,13 +41,21 @@ public class BriefProperties  {
         return bp;
     }
 
-    public static void setIsPrintSql(String boolStr){
-        put(ConfigPropertiesConstants.IS_PRINT_SQL, boolStr.trim().toLowerCase());
+    /**
+     * 是否打印sql
+     * @param isPrintSql
+     */
+    public static void setIsPrintSql(String isPrintSql){
+        put(ConfigPropertiesConstants.IS_PRINT_SQL, isPrintSql.trim().toLowerCase());
         initIsPrintSql();
     }
 
-    public static void setIsPrintSqlCost(String boolStr){
-        put(ConfigPropertiesConstants.IS_PRINT_SQL_COST, boolStr.trim().toLowerCase());
+    /**
+     * 是否打印sql耗时
+     * @param isPrintSqlCost
+     */
+    public static void setIsPrintSqlCost(String isPrintSqlCost){
+        put(ConfigPropertiesConstants.IS_PRINT_SQL_COST, isPrintSqlCost.trim().toLowerCase());
         initIsPrintSqlCost();
     }
 

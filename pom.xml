@@ -5,7 +5,7 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>brief</artifactId>
   <packaging>pom</packaging>
-  <version>3.6.3-SNAPSHOT</version>
+  <version>3.6.3</version>
   <modules>
     <module>brief-helper</module>
     <module>brief-core</module>
@@ -69,7 +69,7 @@
     <url>git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</url>
     <developerConnection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</developerConnection>
     <connection>scm:git:https://github.com/caomingjie-code/Mybatis-ModelHelper.git</connection>
-    <tag>vy</tag>
+    <tag>v3.6.3</tag>
   </scm>
 
   <!--name 和 id 指定你 https://oss.sonatype.org 的登录名称， email 你创建gpg私钥时填写的email就可以-->

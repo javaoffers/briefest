@@ -15,7 +15,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>${brief.version}</version>
+            <version>3.6.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>

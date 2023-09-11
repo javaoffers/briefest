@@ -15,19 +15,19 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
-            <version>${brief.version}</version>
+            <version>3.6.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-encipher</artifactId>
-            <version>${brief.version}</version>
+            <version>3.6.3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-speedier</artifactId>
-            <version>${brief.version}</version>
+            <version>3.6.3-SNAPSHOT</version>
         </dependency>
 
         <!-- junit -->

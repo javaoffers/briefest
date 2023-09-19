@@ -932,8 +932,7 @@ public class FunAnnoParserSample {
 <p>
 内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
 
-https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
-). 
+https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-mybatis-sample/src/main/java/com/javaoffers/base/modelhelper/sample/HelpSample.java). 
 </p>
 
 ```

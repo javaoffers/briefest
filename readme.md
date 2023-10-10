@@ -1,4 +1,4 @@
-<img src="note-doc/img/qq.jpg" width="400px"/>
+
 <a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a>
 
 # Brief

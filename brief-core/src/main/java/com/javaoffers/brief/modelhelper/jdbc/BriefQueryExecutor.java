@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
+import org.apache.commons.collections4.CollectionUtils;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -31,7 +32,11 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
 
     @Override
     public T query(BaseSQLInfo sql) {
-        return null;
+        List<T> ts = this.queryList(sql);
+        if(CollectionUtils.isEmpty(ts)){
+            return null;
+        }
+        return ts.get(0);
     }
 
     @Override

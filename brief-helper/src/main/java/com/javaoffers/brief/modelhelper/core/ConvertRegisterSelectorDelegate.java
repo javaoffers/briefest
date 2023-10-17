@@ -80,7 +80,7 @@ public class ConvertRegisterSelectorDelegate {
 
             //src 升级
             for (Class srcc : srcSupers) {
-                convert = selector(srcc, des);
+                convert = selectorOnly(srcc, des);
                 if (convert != null) {
                     break;
                 }
@@ -89,7 +89,7 @@ public class ConvertRegisterSelectorDelegate {
             if (convert == null) {
                 Set<Class<?>> desSupers = ReflectionUtils.getChilds(des);
                 for (Class dess : desSupers) {
-                    convert = selector(src, dess);
+                    convert = selectorOnly(src, dess);
                     if (convert != null) {
                         break;
                     }
@@ -100,7 +100,7 @@ public class ConvertRegisterSelectorDelegate {
             if(convert == null){
                 LinkedList<Class> desSupers = getSupers(des);
                 for(Class desSupper : desSupers){
-                    convert = selector(src, desSupper);
+                    convert = selectorOnly(src, desSupper);
                     if(convert != null){
                         break;
                     }
@@ -113,6 +113,10 @@ public class ConvertRegisterSelectorDelegate {
             }
         }
         return convert;
+    }
+
+    private Convert selectorOnly(Class src, Class des) {
+        return applicationContext.selector(new ConverDescriptor(src, des));
     }
 
     private LinkedList<Class> getSupers(Class c) {

@@ -123,7 +123,7 @@ public class User {
 
     private ExtraInfo extraInfo; //json column
 
-    private List<UserOrder> orders;
+    private List<UserOrder> orders; //多表关联零配置
 
     // .... getter setter
 }

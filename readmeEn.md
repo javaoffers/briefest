@@ -125,7 +125,7 @@ public class User {
 
     private ExtraInfo extraInfo; //json column
 
-    private List<UserOrder> orders;
+    private List<UserOrder> orders; //Multi-table association zero configuration
 
     // .... getter setter
 }

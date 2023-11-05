@@ -28,12 +28,4 @@ public class ExtraInfo implements JsonColumn {
         this.age = age;
     }
 
-//    @Test
-//    public void t(){
-//        ExtraInfo extraInfo = new ExtraInfo();
-//        extraInfo.setAge(30);
-//        extraInfo.setNickName("mingJie");
-//        String s = GsonUtils.gson.toJson(extraInfo);
-//        System.out.println(s);
-//    }
 }

@@ -76,7 +76,7 @@ public class ConvertRegisterSelectorDelegate {
     private Convert selector(Class src, Class des) {
         Convert convert = applicationContext.selector(new ConverDescriptor(src, des));
         if (convert == null) {
-            LinkedList<Class> srcSupers = getSupers(src);
+            Set<Class> srcSupers = Utils.getSupperClass(src);
 
             //src 升级
             for (Class srcc : srcSupers) {
@@ -98,7 +98,7 @@ public class ConvertRegisterSelectorDelegate {
 
             //des特殊升级
             if(convert == null){
-                LinkedList<Class> desSupers = getSupers(des);
+                Set<Class> desSupers = Utils.getSupperClass(des);
                 for(Class desSupper : desSupers){
                     convert = selectorOnly(src, desSupper);
                     if(convert != null){

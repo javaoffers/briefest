@@ -11,7 +11,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -291,4 +293,23 @@ public class Utils {
         return aClass;
     }
 
+    public static Set<Class> getSupperClass(Class clazz){
+        HashSet<Class> classes = new HashSet<>();
+        Class superclass = clazz.getSuperclass();
+        if(superclass == null){
+            return classes;
+        }
+        classes.add(superclass);
+        classes.addAll(getSupperClass(superclass));
+        Class[] interfaces = clazz.getInterfaces();
+        if(interfaces==null || interfaces.length == 0){
+            return classes;
+        }
+        for(Class inte : interfaces){
+            classes.add(inte);
+            classes.addAll(getSupperClass(inte));
+        }
+        return classes;
+
+    }
 }

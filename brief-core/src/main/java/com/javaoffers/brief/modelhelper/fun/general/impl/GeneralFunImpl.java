@@ -58,6 +58,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private String primaryColNmae;
 
+    private Field numOrStringField;
+
     private Field primaryField;
 
     private TableInfo tableInfo;
@@ -72,9 +74,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.deleteFun = deleteFun;
         this.tableName = TableHelper.getTableName(mClass);
         this.tableInfo = TableHelper.getTableInfo(mClass);
+        Collection<Field> fields = this.tableInfo.getFieldNameAndField().values();
+        for(Field field : fields){
+            Class<?> type = field.getType();
+            if(type.isAssignableFrom(Number.class) || type.isAssignableFrom(String.class)){
+                this.numOrStringField = field;
+            }
+        }
         Map<String, ColumnInfo> primaryColNames = this.tableInfo.getPrimaryColNames();
         if(MapUtils.isEmpty(primaryColNames)){
-            throw new PrimaryKeyNotFoundException(this.tableName + " not primary key ");
+            return;
         }
         this.primaryColNmae = primaryColNames.keySet().iterator().next();
         this.primaryField = this.tableInfo.getColNameAndFieldOfModel().get(this.primaryColNmae).get(0);
@@ -142,7 +151,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public void saveOrUpdate(Collection<T> models) {
-
+        assertPrimary();
         if (CollectionUtils.isEmpty(models)) {
             return;
         }
@@ -277,6 +286,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public <ID extends Serializable> int logicRemoveByIds(Collection<ID> ids) {
+        assertPrimary();
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
@@ -291,26 +301,17 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public int removeByIds(Collection ids) {
+        assertPrimary();
         if (CollectionUtils.isEmpty(ids)) {
             return 0;
         }
-        TableInfo tableInfo = getTableInfo(mClass);
-        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
         DeleteWhereFun<T, GetterFun<T, Object>, Object> where = deleteFun.where();
-        AtomicBoolean status = new AtomicBoolean(false);
-        primaryColNames.forEach((colName, colInfo) -> {
-            if (!status.get()) {
-                status.set(true);
-                Map<String, Object> param = new HashMap<>();
-                String newColNameTag = getNewColNameTag();
-                param.putIfAbsent(newColNameTag, ids);
-                where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
-            }
-        });
-        if (status.get()) {
-            return where.ex();
-        }
-        return 0;
+        Map<String, Object> param = new HashMap<>();
+        String newColNameTag = getNewColNameTag();
+        param.putIfAbsent(newColNameTag, ids);
+        where.condSQL(this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
+
+        return where.ex();
     }
 
     @Override
@@ -438,26 +439,18 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public List<T> queryByIds(Collection ids) {
+        assertPrimary();
         if (CollectionUtils.isEmpty(ids)) {
             return Collections.EMPTY_LIST;
         }
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
-        Map<String, ColumnInfo> primaryColNames = TableHelper.getTableInfo(mClass).getPrimaryColNames();
-        AtomicBoolean status = new AtomicBoolean(false);
-        primaryColNames.forEach((colName, colInfo) -> {
-            if (!status.get()) {
-                HashMap<String, Object> param = new HashMap<>();
-                String newColNameTag = getNewColNameTag();
-                param.put(newColNameTag, ids);
-                status.set(true);
-                where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
-            }
-        });
-        if (status.get()) {
-            List<T> exs = where.exs();
-            if (exs != null && exs.size() > 0) {
-                return exs;
-            }
+        HashMap<String, Object> param = new HashMap<>();
+        String newColNameTag = getNewColNameTag();
+        param.put(newColNameTag, ids);
+        where.condSQL(this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
+        List<T> exs = where.exs();
+        if (exs != null && exs.size() > 0) {
+            return exs;
         }
         return Collections.EMPTY_LIST;
     }
@@ -488,32 +481,32 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public Number count() {
-        T ex = selectFun.col("count(1) as " + primaryField.getName()).where().ex();
-        return getNumber(primaryField, ex);
+        T ex = selectFun.col("count(1) as " + this.numOrStringField.getName()).where().ex();
+        return getNumber(numOrStringField, ex);
     }
 
     @Override
     public Number count(C c) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
-        T ex = selectFun.col("count(" + colNameAndAliasName.getLeft() + ") as " + primaryField.getName()).where().ex();
-        return getNumber(primaryField, ex);
+        T ex = selectFun.col("count(" + colNameAndAliasName.getLeft() + ") as " + numOrStringField.getName()).where().ex();
+        return getNumber(numOrStringField, ex);
     }
 
     @Override
     public Number countDistinct(C c) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
-        T ex = selectFun.col("count(Distinct(" + colNameAndAliasName.getLeft() + ")) as " + primaryField.getName()).where().ex();
-        return getNumber(primaryField, ex);
+        T ex = selectFun.col("count(Distinct(" + colNameAndAliasName.getLeft() + ")) as " + numOrStringField.getName()).where().ex();
+        return getNumber(numOrStringField, ex);
     }
 
     @Override
     public Number count(T model) {
-        WhereSelectFun<T, Object> where = selectFun.col("count(1) as " + primaryField.getName()).where();
+        WhereSelectFun<T, Object> where = selectFun.col("count(1) as " + numOrStringField.getName()).where();
         if (parseWhere(model, where).get()) {
             T ex = where.ex();
-            return getNumber(primaryField, ex);
+            return getNumber(numOrStringField, ex);
         }
         return 0L;
     }
@@ -522,10 +515,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     public Number count(C c, T model) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
-        WhereSelectFun<T, Object> where = selectFun.col("count(" + colNameAndAliasName.getLeft() + ") as " + primaryField.getName()).where();
+        WhereSelectFun<T, Object> where = selectFun.col("count(" + colNameAndAliasName.getLeft() + ") as " + numOrStringField.getName()).where();
         if (parseWhere(model, where).get()) {
             T ex = where.ex();
-            return getNumber(primaryField, ex);
+            return getNumber(numOrStringField, ex);
         }
         return 0L;
     }
@@ -534,10 +527,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     public Number countDistinct(C c, T model) {
         Assert.isTrue(c != null, " count is null .");
         Pair<String, String> colNameAndAliasName = TableHelper.getColNameAndAliasName(c);
-        WhereSelectFun<T, Object> where = selectFun.col("count(Distinct(" + colNameAndAliasName.getLeft() + ")) as " + primaryField.getName()).where();
+        WhereSelectFun<T, Object> where = selectFun.col("count(Distinct(" + colNameAndAliasName.getLeft() + ")) as " + numOrStringField.getName()).where();
         if (parseWhere(model, where).get()) {
             T ex = where.ex();
-            return getNumber(primaryField, ex);
+            return getNumber(numOrStringField, ex);
         }
         return 0L;
     }
@@ -741,4 +734,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
     }
 
+    /**
+     * Primary key must exist.
+     */
+    private void assertPrimary(){
+        if(this.primaryColNmae == null || this.primaryField == null){
+            throw new PrimaryKeyNotFoundException(this.tableName + " not primary key ");
+        }
+    }
 }

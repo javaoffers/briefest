@@ -267,7 +267,7 @@ public class TableHelper {
             if(connName.contains("h2")){
                 parseH2TableInfo(connection, tableInfo);
             }else{
-                parseMysqlTableInfo(connection, tableName, tableInfo);
+                parseMysqlTableInfo(connection, tableInfo);
             }
 
             tableInfoMap.put(modelClazz, tableInfo);
@@ -372,11 +372,11 @@ public class TableHelper {
         });
     }
 
-    private static void parseMysqlTableInfo(Connection connection, String tableName, TableInfo tableInfo) throws SQLException {
+    private static void parseMysqlTableInfo(Connection connection,  TableInfo tableInfo) throws SQLException {
         tableInfo.setDbType(DBType.MYSQL);
         DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableName, null);
-        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableName);
+        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableInfo.getTableName(), null);
+        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableInfo.getTableName());
         LinkedList<String> primaryKeyList = new LinkedList<>();
         while (primaryKeys.next()) {
             String primaryColName = primaryKeys.getString(ColumnLabel.COLUMN_NAME);
@@ -384,7 +384,7 @@ public class TableHelper {
         }
         while (tableResultSet.next()) {
             // Get table field structure
-            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableName, "%");
+            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableInfo.getTableName(), "%");
             while (columnResultSet.next()) {
                 // Col Name
                 String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME).toLowerCase();

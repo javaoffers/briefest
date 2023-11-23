@@ -8,7 +8,7 @@ import java.sql.Connection;
 /**
  * @author mingJie
  */
-public interface DBContext {
+public interface DataSourceParser {
 
     /**
      * 解析TableInfo
@@ -24,5 +24,11 @@ public interface DBContext {
      * @return
      */
     String getSpecialColName(String tableName, String colName);
+
+    /**
+     *
+     * @return
+     */
+    String onDuplicate(Class modelClass, Object model);
 
 }

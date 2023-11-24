@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
 
 @SpringBootApplication
 @RequestMapping
@@ -75,7 +77,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     private void inEmptyList(){
-        List<Integer> emptyList = Lists.newArrayList();
+        List<String> emptyList = Lists.newArrayList();
         List<User> exs = this.crudUserMapper.select().colAll().where().in(User::getWork, emptyList).exs();
         LOGUtils.printLog(exs);
     }
@@ -90,7 +92,8 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         exs = this.crudUserMapper.select().colAll().where().likeLeft(User::getId, "1").exs();
         exs = this.crudUserMapper.select().colAll().where().likeRight(User::getId, "1").exs();
 
-        exs = this.crudUserMapper.select()
+        exs = this.crudUserMapper
+                .select()
                 .col(User::getId)
                 .innerJoin(UserTeacher::new)
                 .colAll()

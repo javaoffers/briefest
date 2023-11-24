@@ -76,9 +76,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.tableInfo = TableHelper.getTableInfo(mClass);
         Collection<Field> fields = this.tableInfo.getFieldNameAndField().values();
         for(Field field : fields){
-            Class<?> type = field.getType();
-            if(type.isAssignableFrom(Number.class) || type.isAssignableFrom(String.class)){
+            Class<?> type = Utils.baseClassUpgrade(field.getType());
+            if(Number.class.isAssignableFrom(type) || String.class.isAssignableFrom(type)){
                 this.numOrStringField = field;
+                break;
             }
         }
         Map<String, ColumnInfo> primaryColNames = this.tableInfo.getPrimaryColNames();

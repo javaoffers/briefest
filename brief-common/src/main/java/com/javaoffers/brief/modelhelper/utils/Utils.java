@@ -312,4 +312,53 @@ public class Utils {
         return classes;
 
     }
+
+    /**
+     * @param baseClass
+     * @return
+     * @see java.lang.Boolean#TYPE
+     * * @see     java.lang.Character#TYPE
+     * * @see     java.lang.Byte#TYPE
+     * * @see     java.lang.Short#TYPE
+     * * @see     java.lang.Integer#TYPE
+     * * @see     java.lang.Long#TYPE
+     * * @see     java.lang.Float#TYPE
+     * * @see     java.lang.Double#TYPE
+     * * @see     java.lang.Void#TYPE
+     */
+    public static Class baseClassUpgrade(Class baseClass) {
+        if (baseClass.isPrimitive()) {
+            if (boolean.class == baseClass) {
+                return Boolean.class;
+            }
+            if (char.class == baseClass) {
+                return Character.class;
+            }
+            if (byte.class == baseClass) {
+                return Byte.class;
+            }
+            if (short.class == baseClass) {
+                return Short.class;
+            }
+            if (int.class == baseClass) {
+                return Integer.class;
+            }
+            if (long.class == baseClass) {
+                return Long.class;
+            }
+            if (float.class == baseClass) {
+                return Float.class;
+            }
+            if (double.class == baseClass) {
+                return Double.class;
+            }
+            if (void.class == baseClass) {
+                return Void.class;
+            }
+        } else if (baseClass.isEnum()) {
+            return Enum.class;
+        }
+        return baseClass;
+    }
+
 }

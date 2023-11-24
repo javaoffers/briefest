@@ -169,8 +169,8 @@ public class ConvertRegisterSelectorDelegate {
     public <T> T converterObject(Class<T> des, @NotNull Object srcValue) {
         Class<T> orgDes = des;
         //基础类型转换为包装类型，如果存在基础类型
-        des = baseClassUpgrade(des);
-        Class src = baseClassUpgrade(srcValue.getClass());
+        des = Utils.baseClassUpgrade(des);
+        Class src = Utils.baseClassUpgrade(srcValue.getClass());
 
         if (des == src || des.isAssignableFrom(src)) {
             return (T) srcValue;
@@ -207,9 +207,9 @@ public class ConvertRegisterSelectorDelegate {
         //源类型
         Class<T> orgDes = des;
         //基础类型转换为包装类型，如果存在基础类型
-        des = baseClassUpgrade(des);
+        des = Utils.baseClassUpgrade(des);
         Convert convert = null;
-        Class srcUpgrade = baseClassUpgrade(srcValue.getClass());
+        Class srcUpgrade = Utils.baseClassUpgrade(srcValue.getClass());
 
         if (des == srcUpgrade || des.isAssignableFrom(srcUpgrade)) {
             convert = convertSame;
@@ -249,9 +249,9 @@ public class ConvertRegisterSelectorDelegate {
         //源类型
         Class<T> orgDes = des;
         //基础类型转换为包装类型，如果存在基础类型
-        des = baseClassUpgrade(des);
+        des = Utils.baseClassUpgrade(des);
         Convert convert = null;
-        Class srcUpgrade = baseClassUpgrade(srcValue.getClass());
+        Class srcUpgrade = Utils.baseClassUpgrade(srcValue.getClass());
 
         if (des == srcUpgrade || des.isAssignableFrom(srcUpgrade)) {
             convert = convertSame;
@@ -267,55 +267,6 @@ public class ConvertRegisterSelectorDelegate {
         ConvertDelegate<T> convertDelegate = new ConvertDelegate<>(srcUpgrade, orgDes, convert);
         return convertDelegate;
     }
-
-    /**
-     * @param baseClass
-     * @return
-     * @see java.lang.Boolean#TYPE
-     * * @see     java.lang.Character#TYPE
-     * * @see     java.lang.Byte#TYPE
-     * * @see     java.lang.Short#TYPE
-     * * @see     java.lang.Integer#TYPE
-     * * @see     java.lang.Long#TYPE
-     * * @see     java.lang.Float#TYPE
-     * * @see     java.lang.Double#TYPE
-     * * @see     java.lang.Void#TYPE
-     */
-    private Class baseClassUpgrade(Class baseClass) {
-        if (baseClass.isPrimitive()) {
-            if (boolean.class == baseClass) {
-                return Boolean.class;
-            }
-            if (char.class == baseClass) {
-                return Character.class;
-            }
-            if (byte.class == baseClass) {
-                return Byte.class;
-            }
-            if (short.class == baseClass) {
-                return Short.class;
-            }
-            if (int.class == baseClass) {
-                return Integer.class;
-            }
-            if (long.class == baseClass) {
-                return Long.class;
-            }
-            if (float.class == baseClass) {
-                return Float.class;
-            }
-            if (double.class == baseClass) {
-                return Double.class;
-            }
-            if (void.class == baseClass) {
-                return Void.class;
-            }
-        } else if (baseClass.isEnum()) {
-            return Enum.class;
-        }
-        return baseClass;
-    }
-
 
     public static Class getProcessingConvertDesClass() {
         return processingConvertClass.get();

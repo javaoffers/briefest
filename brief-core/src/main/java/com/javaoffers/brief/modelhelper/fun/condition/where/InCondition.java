@@ -55,16 +55,24 @@ public  class InCondition<V> extends WhereOnCondition implements Condition {
         StringBuilder sql = new StringBuilder(colName);
         sql.append(tag.getTag());
         sql.append(" (");
-        for(int i=0; value!=null && i<value.size(); i++){
-            long idx = getNextLong();
-            getParams().put(idx+"", value.get(i));
-            sql.append("#{");
-            sql.append(idx);
-            sql.append("}");
-            if(i+1 != value.size()){
-                sql.append(",");
+        int i=0;
+        if(value!=null && i<value.size()){
+            for(; i<value.size(); i++){
+                long idx = getNextLong();
+                getParams().put(idx+"", value.get(i));
+                sql.append("#{");
+                sql.append(idx);
+                sql.append("}");
+                if(i+1 != value.size()){
+                    sql.append(",");
+                }
             }
+        }else{
+            // in (null) 永远是false(正确的语法应该是is (not) null).
+            // 当集合为空时用in (null) 来表示where条件为false. 避免 in () 这种语法错误.
+            sql.append(" null ");
         }
+
         sql.append(") ");
         return sql.toString();
     }

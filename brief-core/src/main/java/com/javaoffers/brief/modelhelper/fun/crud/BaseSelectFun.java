@@ -3,7 +3,7 @@ package com.javaoffers.brief.modelhelper.fun.crud;
 import com.javaoffers.brief.modelhelper.anno.internal.NotNull;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
-
+@SuppressWarnings({"unchecked"})
 public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
 
     /**
@@ -11,6 +11,7 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param col
      * @return
      */
+    @SuppressWarnings({"unchecked"})
     public SmartSelectFun<M, C, V> col(@NotNull C col);
 
     /**

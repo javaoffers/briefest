@@ -9,6 +9,7 @@ import com.javaoffers.base.modelhelper.sample.model.UserTeacher;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
@@ -16,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -50,7 +52,9 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         }
     }
 
+
     public void testAll() {
+        inEmptyList();
         List<User> query = this.crudUserMapper.general().query(1, 1);
         User id_as_countId = this.crudUserMapper.select().col("id as countId").where().limitPage(1, 1).ex();
         testLike();
@@ -68,6 +72,12 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         selectCount();
 
         print("total count : "+ count);
+    }
+
+    private void inEmptyList(){
+        List<Integer> emptyList = Lists.newArrayList();
+        List<User> exs = this.crudUserMapper.select().colAll().where().in(User::getWork, emptyList).exs();
+        LOGUtils.printLog(exs);
     }
 
     private void selectCount() {

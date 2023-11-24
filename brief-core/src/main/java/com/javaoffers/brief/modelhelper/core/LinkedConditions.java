@@ -44,6 +44,7 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> {
         } else if (condition instanceof UpdateCondition) {
             ((UpdateCondition) condition).setHeadCondition((HeadCondition) this.peekFirst());
         } else if(condition instanceof HeadCondition && this.peekFirst() instanceof HeadCondition){
+            //说明开始了一个新的批次.通常在addBatch时会重新添加一个新的head
             this.pollFirst();
             this.addFirst(condition);
             return true;

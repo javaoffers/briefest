@@ -1,6 +1,7 @@
-package com.javaoffers.brief.modelhelper.utils;
+package com.javaoffers.brief.modelhelper.interceptor;
 
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 
 import java.util.ArrayList;
 import java.util.List;

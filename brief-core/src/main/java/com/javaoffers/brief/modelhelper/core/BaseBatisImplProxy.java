@@ -1,20 +1,14 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
 import com.javaoffers.brief.modelhelper.filter.SqlMetaInfo;
 import com.javaoffers.brief.modelhelper.filter.impl.ChainFilterWrap;
 import com.javaoffers.brief.modelhelper.filter.impl.ChainProcessor;
-import com.javaoffers.brief.modelhelper.utils.JqlChainFilterUtils;
-import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import com.javaoffers.brief.modelhelper.utils.JqlChainFilterLoader;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
 import java.util.function.Supplier;
 
 /**
@@ -26,7 +20,7 @@ public class BaseBatisImplProxy<T, ID> implements BaseBatis<T> {
     static List<JqlChainFilter> jqlChainFilterList = new ArrayList<>();
 
     static {
-        jqlChainFilterList = JqlChainFilterUtils.getJqlChainFilter();
+        jqlChainFilterList = JqlChainFilterLoader.getJqlChainFilter();
     }
 
     private BaseBatis baseBatis;

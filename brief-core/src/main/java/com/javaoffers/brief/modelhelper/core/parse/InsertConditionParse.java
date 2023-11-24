@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
@@ -22,11 +22,11 @@ public class InsertConditionParse extends AbstractParseCondition {
     public static ConditionTag conditionTag  = ConditionTag.INSERT_INTO;
 
     @Override
-    public SQLInfo doParse(LinkedList<Condition> conditions) {
+    public SQLStatement doParse(LinkedList<Condition> conditions) {
         return parseInsert(conditions);
     }
 
-    private  SQLInfo parseInsert(LinkedList<Condition> conditions) {
+    private SQLStatement parseInsert(LinkedList<Condition> conditions) {
         InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition)conditions.pollFirst();
 
         String insertIntoTableSql = insertIntoTableCondition.getSql();
@@ -102,26 +102,26 @@ public class InsertConditionParse extends AbstractParseCondition {
         }
         Assert.isTrue(moreSql.size() == paramsList.size()," data asymmetry ");
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-        HashMap<String, SQLInfo> batch = new HashMap<>();
+        HashMap<String, SQLStatement> batch = new HashMap<>();
         for(int i =0; i < moreSql.size(); i++){
             String sql = insertIntoTableSql + moreSql.get(i);
             if(isDupUpdateSql){
                 sql = sql + dupUpdateSql.get(i);
             }
             Map<String, Object> sqlParam = paramsList.get(i);
-            SQLInfo sqlInfo = batch.get(sql);
-            if(sqlInfo == null){
+            SQLStatement sqlStatement = batch.get(sql);
+            if(sqlStatement == null){
                 ArrayList parems = new ArrayList<>();
                 parems.add(sqlParam);
-                sqlInfo = SQLInfo.builder()
+                sqlStatement = SQLStatement.builder()
                         .aClass(insertIntoTableCondition.getModelClass())
                         .params(parems)
                         .sql(sql)
                         .status(true)
                         .build();
-                batch.put(sql, sqlInfo);
+                batch.put(sql, sqlStatement);
             }else{
-                sqlInfo.getParams().add(sqlParam);
+                sqlStatement.getParams().add(sqlParam);
             }
 
         }

@@ -11,6 +11,7 @@
     <modules>
         <module>brief-mybatis</module>
         <module>brief-spring-jdbc</module>
+        <module>brief-mysql</module>
     </modules>
 
     <build>

@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.WhereConditionMark;
@@ -23,23 +23,23 @@ import java.util.LinkedList;
 public class UpdateConditionParse extends AbstractParseCondition {
     public static ConditionTag conditionTag  = ConditionTag.UPDATE;
     @Override
-    public SQLInfo doParse(LinkedList<Condition> conditions) {
+    public SQLStatement doParse(LinkedList<Condition> conditions) {
         return parseUpdate(conditions);
     }
 
-     SQLInfo parseUpdate(LinkedList<Condition> conditions) {
+     SQLStatement parseUpdate(LinkedList<Condition> conditions) {
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-        SQLInfo sqlInfo = parseUpdate2(conditions);
-        moreSQLInfo.addSqlInfo(sqlInfo);
+        SQLStatement sqlStatement = parseUpdate2(conditions);
+        moreSQLInfo.addSqlInfo(sqlStatement);
         Condition condition = null;
         while((condition = conditions.peek()) != null){
-            sqlInfo = parseUpdate2(conditions);
-            moreSQLInfo.addSqlInfo(sqlInfo);
+            sqlStatement = parseUpdate2(conditions);
+            moreSQLInfo.addSqlInfo(sqlStatement);
         }
         return moreSQLInfo;
     }
 
-     SQLInfo parseUpdate2(LinkedList<Condition> conditions) {
+     SQLStatement parseUpdate2(LinkedList<Condition> conditions) {
         Condition condition = conditions.pollFirst();
         String updateTableSql = null;
         Class modelClass = null;
@@ -91,7 +91,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                     break;
                 }
             }
-            return SQLInfo.builder().sql(updateAppender.toString())
+            return SQLStatement.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
                     .status(status)
@@ -112,7 +112,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                     break;
                 }
             }
-            return SQLInfo.builder().sql(updateAppender.toString())
+            return SQLStatement.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
                     .status(status)

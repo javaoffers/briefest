@@ -2,8 +2,8 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl;
 
 import com.javaoffers.brief.modelhelper.core.BaseBatis;
 import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.brief.modelhelper.core.ConditionParse;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
@@ -431,10 +431,10 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public List<M> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.pollFirst());
-        SQLInfo sqlInfo = ConditionParse.conditionParse(this.conditions);
-        JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
-        JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
-        return instance.queryData(sqlInfo.getSql(), sqlInfo.getParams().get(0));
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.peekFirst());
+        SQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
+        JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
+        return instance.queryData(sqlStatement.getSql(), sqlStatement.getParams().get(0));
     }
 }

@@ -2,11 +2,11 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
 import com.javaoffers.brief.modelhelper.core.BaseBatis;
 import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.brief.modelhelper.core.ConditionParse;
+import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
@@ -28,11 +28,11 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
-        SQLInfo sqlInfo = ((MoreSQLInfo) ConditionParse.conditionParse(conditions)).getSqlInfos().get(0);
-        JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
-        JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
-        List<Id> list = instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        SQLStatement sqlStatement = ((MoreSQLInfo) StatementParserAdepter.statementParse(conditions)).getSqlStatements().get(0);
+        JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
+        JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
+        List<Id> list = instance.batchInsert(sqlStatement.getSql(), sqlStatement.getParams());
         if(CollectionUtils.isEmpty(list)){
             return Id.EMPTY_ID;
         }

@@ -7,30 +7,30 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class MoreSQLInfo extends SQLInfo {
+public class MoreSQLInfo extends SQLStatement {
 
-    private List<SQLInfo> sqlInfos = new LinkedList<>();
+    private List<SQLStatement> sqlStatements = new LinkedList<>();
 
     public MoreSQLInfo() {
         super();
     }
 
-    public void addSqlInfo(SQLInfo sqlInfo){
-        if(sqlInfo!=null && sqlInfo.isStatus()){
-            sqlInfos.add(sqlInfo);
+    public void addSqlInfo(SQLStatement sqlStatement){
+        if(sqlStatement !=null && sqlStatement.isStatus()){
+            sqlStatements.add(sqlStatement);
         }
     }
 
-    public void addAllSqlInfo(Collection<SQLInfo> sqlInfos){
-        if(!CollectionUtils.isEmpty(sqlInfos)){
-            for(SQLInfo sqlInfo : sqlInfos){
-                this.addSqlInfo(sqlInfo);
+    public void addAllSqlInfo(Collection<SQLStatement> sqlStatements){
+        if(!CollectionUtils.isEmpty(sqlStatements)){
+            for(SQLStatement sqlStatement : sqlStatements){
+                this.addSqlInfo(sqlStatement);
             }
         }
     }
 
-    public List<SQLInfo> getSqlInfos(){
-        return sqlInfos;
+    public List<SQLStatement> getSqlStatements(){
+        return sqlStatements;
     }
 
 }

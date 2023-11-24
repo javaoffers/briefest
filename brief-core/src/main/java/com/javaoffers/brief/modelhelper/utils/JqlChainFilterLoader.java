@@ -14,7 +14,7 @@ import java.util.Set;
 /**
  * create by cmj
  */
-public class JqlChainFilterUtils {
+public class JqlChainFilterLoader {
 
     public static List<JqlChainFilter> getJqlChainFilter() {
         return (List)BriefProperties.getJqlFilters();

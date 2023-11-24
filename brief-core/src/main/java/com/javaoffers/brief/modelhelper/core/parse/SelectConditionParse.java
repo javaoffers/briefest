@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.JoinTableCondition;
@@ -23,11 +23,11 @@ import java.util.LinkedList;
 public class SelectConditionParse extends AbstractParseCondition {
     public static ConditionTag conditionTag  = ConditionTag.SELECT_FROM;
     @Override
-    public SQLInfo doParse(LinkedList<Condition> conditions) {
+    public SQLStatement doParse(LinkedList<Condition> conditions) {
         return parseSelect(conditions);
     }
 
-    private  SQLInfo parseSelect(LinkedList<Condition> conditions) {
+    private SQLStatement parseSelect(LinkedList<Condition> conditions) {
         HashMap<String, Object> params = new HashMap<>();
         String and = ConditionTag.AND.getTag();
 
@@ -81,7 +81,7 @@ public class SelectConditionParse extends AbstractParseCondition {
         // where
         parseWhereCondition(conditions, params, selectCols);
 
-        return SQLInfo.builder().aClass(((SelectTableCondition) condition).getmClass())
+        return SQLStatement.builder().aClass(((SelectTableCondition) condition).getmClass())
                 .params(Arrays.asList(params))
                 .sql(selectCols.toString())
                 .status(true)

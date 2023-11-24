@@ -2,9 +2,9 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl.delete;
 
 import com.javaoffers.brief.modelhelper.core.BaseBatis;
 import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.brief.modelhelper.core.ConditionParse;
+import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
@@ -290,11 +290,11 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
 
     @Override
     public Integer ex() {
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
-        SQLInfo sqlInfo = ConditionParse.conditionParse(conditions);
-        JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());
-        JqlLogger.infoSql("PAM: {}", sqlInfo.getParams());
-        Integer count = instance.batchUpdate(sqlInfo.getSql(), sqlInfo.getParams());
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        SQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions);
+        JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
+        JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
+        Integer count = instance.batchUpdate(sqlStatement.getSql(), sqlStatement.getParams());
         return count;
     }
 }

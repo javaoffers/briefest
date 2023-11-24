@@ -17,10 +17,10 @@ import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
 import com.javaoffers.brief.modelhelper.core.BaseBatis;
 import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.brief.modelhelper.core.ConditionParse;
+import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -320,13 +320,13 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
 
     @Override
     public Integer ex() {
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
-        MoreSQLInfo moreSqlInfo = (MoreSQLInfo) ConditionParse.conditionParse(conditions);
-        List<SQLInfo> sqlInfos = moreSqlInfo.getSqlInfos();
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        MoreSQLInfo moreSqlInfo = (MoreSQLInfo) StatementParserAdepter.statementParse(conditions);
+        List<SQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
-        for(SQLInfo sqlInfo : sqlInfos){
-            String sql = sqlInfo.getSql();
-            List<Map<String, Object>> params = sqlInfo.getParams();
+        for(SQLStatement sqlStatement : sqlStatements){
+            String sql = sqlStatement.getSql();
+            List<Map<String, Object>> params = sqlStatement.getParams();
             List<Map<String, Object>> paramBatch = sqlbatch.get(sql);
             if(paramBatch == null){
                 paramBatch = new LinkedList<Map<String, Object>>();
@@ -353,7 +353,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     @Override
     public SmartUpdateFun<M, GetterFun<M, Object>, V> addBatch() {
         conditions.add(new AddPatchMarkCondition());
-        conditions.add(((HeadCondition)this.conditions.peekFirst()).clone());
+        conditions.add(((HeadCondition)this.conditions.peekFirst()).clone());//为了重新设置原子递增.
         return new SmartUpdateFunImpl(modelClass, conditions,isUpdateNull);
     }
 }

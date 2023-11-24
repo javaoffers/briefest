@@ -8,16 +8,16 @@ import java.util.Map;
  * @Description: 封装
  * @Auther: create by cmj on 2022/5/22 17:43
  */
-public class SQLInfo {
+public class SQLStatement implements BaseSQLStatement{
     boolean status; //有效状态
     Class aClass;
     String sql;
     List<Map<String,Object>> params = new LinkedList<>();
 
-    public SQLInfo() {
+    public SQLStatement() {
     }
 
-    public SQLInfo(boolean status, Class aClass, String sql, List<Map<String, Object>> params){
+    public SQLStatement(boolean status, Class aClass, String sql, List<Map<String, Object>> params){
         this.status = status;
         this.aClass = aClass;
         this.sql = sql;
@@ -93,8 +93,8 @@ public class SQLInfo {
             return this;
         }
 
-        public SQLInfo build() {
-            return new SQLInfo(status, aClass, sql, params);
+        public SQLStatement build() {
+            return new SQLStatement(status, aClass, sql, params);
         }
     }
 }

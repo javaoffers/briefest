@@ -2,11 +2,11 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
 import com.javaoffers.brief.modelhelper.core.BaseBatis;
 import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
-import com.javaoffers.brief.modelhelper.core.ConditionParse;
+import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLInfo;
+import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ExecutMoreFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
@@ -35,9 +35,9 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.pollFirst());
-        MoreSQLInfo sqlInfos = (MoreSQLInfo) ConditionParse.conditionParse(conditions);
-        List<SQLInfo> sqlInfosList = sqlInfos.getSqlInfos();
+        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        MoreSQLInfo sqlInfos = (MoreSQLInfo) StatementParserAdepter.statementParse(conditions);
+        List<SQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
         List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {
             JqlLogger.infoSql("SQL: {}", sqlInfo.getSql());

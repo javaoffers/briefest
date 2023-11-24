@@ -1,5 +1,10 @@
 package com.javaoffers.brief.modelhelper.fun;
 
+import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.ModelInfo;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
+
 import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -15,6 +20,8 @@ public class HeadCondition implements Condition {
     private AtomicLong nextTag = new AtomicLong(0);
 
     private Class modelClass;
+
+    private DBType dbType;
 
     public HeadCondition(DataSource dataSource, Class modelClass) {
         this.dataSource = dataSource;

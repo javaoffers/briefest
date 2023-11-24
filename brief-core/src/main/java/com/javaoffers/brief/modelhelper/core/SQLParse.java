@@ -5,7 +5,7 @@ import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
 import com.javaoffers.brief.modelhelper.utils.GsonUtils;
-import com.javaoffers.brief.modelhelper.utils.InterceptorLoader;
+import com.javaoffers.brief.modelhelper.interceptor.InterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -107,12 +107,9 @@ public class SQLParse{
                 objects.add(paramsRight);
             }
         }
-
-
         return SQL;
 
     }
-
 
     public static SQL getSQL(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();

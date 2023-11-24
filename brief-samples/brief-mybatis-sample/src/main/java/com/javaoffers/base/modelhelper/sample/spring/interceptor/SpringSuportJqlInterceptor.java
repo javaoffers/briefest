@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.utils.InterceptorLoader;
+import com.javaoffers.brief.modelhelper.interceptor.InterceptorLoader;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;

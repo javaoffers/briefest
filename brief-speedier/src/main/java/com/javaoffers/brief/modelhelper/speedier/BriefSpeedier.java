@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.speedier;
 
-import com.javaoffers.brief.modelhelper.config.BriefProperties;
+import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
 import com.javaoffers.brief.modelhelper.speedier.transaction.TransactionManagement;
@@ -11,8 +11,6 @@ import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 快速开始.
@@ -22,12 +20,11 @@ public class BriefSpeedier {
     /**
      * 事务管理
      */
-    private TransactionManagement transactionManagement;
+    private SmartBriefContext briefContext;
 
     /**
      * cache.
      */
-    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     /**
      * Create a default BriefMapper
@@ -38,17 +35,17 @@ public class BriefSpeedier {
      */
     public <T> BriefMapper<T> newDefaultCrudMapper(Class<T> modelClass) {
         BriefMapper proxy = null;
-        if ((proxy = cache.get(modelClass)) == null) {
+        if ((proxy = briefContext.getBriefMapper(modelClass)) == null) {
             synchronized (modelClass) {
-                if((proxy = cache.get(modelClass)) == null){
+                if((proxy = briefContext.getBriefMapper(modelClass)) == null){
                     Assert.isTrue(!BriefMapper.class.isAssignableFrom(modelClass), modelClass.getName() + " can't be BriefMapper subclass");
                     //First create crudMapper implementation
                     BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(BriefMapper.class);
                     //Generate crudMapper agent
                     SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
-                            this.transactionManagement.getDataSource(), modelClass);
+                            briefContext.getDataSource(), modelClass);
                     proxy = JdkProxyUtils.createProxy(BriefMapper.class, speedierMapperProxy);
-                    cache.put(modelClass, proxy);
+                    briefContext.getCacheMapper().put(modelClass, proxy);
                 }
             }
         }
@@ -57,7 +54,7 @@ public class BriefSpeedier {
     }
 
     public TransactionManagement getTransactionManagement() {
-        return transactionManagement;
+        return (TransactionManagement)briefContext.getBriefTransaction();
     }
 
     /**
@@ -69,10 +66,10 @@ public class BriefSpeedier {
      */
     public <M extends BriefMapper> M newCustomCrudMapper(Class<M> mapperClass) {
         Assert.isTrue(BriefMapper.class.isAssignableFrom(mapperClass), mapperClass.getName() + " must be BriefMapper subclass");
-        M proxyBriefMapper = (M) cache.get(mapperClass);
+        M proxyBriefMapper = (M) briefContext.getBriefMapper(mapperClass);
         if(proxyBriefMapper == null){
             synchronized (mapperClass){
-                proxyBriefMapper = (M) cache.get(mapperClass);
+                proxyBriefMapper = (M) briefContext.getBriefMapper(mapperClass);
                 if(proxyBriefMapper == null){
                     Type[] types = mapperClass.getGenericInterfaces();
                     ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl) types[0];
@@ -81,18 +78,20 @@ public class BriefSpeedier {
                     BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(mapperClass);
                     //Generate crudMapper agent
                     SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
-                            this.transactionManagement.getDataSource(), (Class) modelclass);
+                            this.briefContext.getDataSource(), (Class) modelclass);
                     proxyBriefMapper = JdkProxyUtils.createProxy(mapperClass, speedierMapperProxy);
-                    cache.put(mapperClass, proxyBriefMapper);
+                    briefContext.getCacheMapper().put(mapperClass, proxyBriefMapper);
                 }
             }
         }
-
         return proxyBriefMapper;
     }
 
     public static BriefSpeedier getInstance(BriefSpeedierConfigProperties briefConfigProperties){
-        return getInstance(briefConfigProperties.getDataSource());
+        BriefSpeedier briefSpeedier = new BriefSpeedier();
+        DataSource dataSource = briefConfigProperties.getDataSource();
+        briefSpeedier.briefContext = new SmartBriefContext(briefConfigProperties, dataSource, new TransactionManagement(dataSource));
+        return briefSpeedier;
     }
 
     /**
@@ -103,8 +102,7 @@ public class BriefSpeedier {
      */
     public static BriefSpeedier getInstance(DataSource dataSource) {
         BriefSpeedier briefSpeedier = new BriefSpeedier();
-        briefSpeedier.transactionManagement = new TransactionManagement(dataSource);
-        BriefProperties.freshAll();
+        briefSpeedier.briefContext = new SmartBriefContext(dataSource, new TransactionManagement(dataSource));
         return briefSpeedier;
     }
 

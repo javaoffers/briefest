@@ -1,11 +1,13 @@
 package com.javaoffers.brief.modelhelper.speedier.config;
 
+import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
+
 import javax.sql.DataSource;
 
 /**
  * @author mingJie
  */
-public class BriefSpeedierConfigProperties {
+public class BriefSpeedierConfigProperties extends SmartBriefProperties {
 
     /**
      * 数据源

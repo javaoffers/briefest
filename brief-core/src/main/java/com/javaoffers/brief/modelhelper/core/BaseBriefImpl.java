@@ -1,10 +1,8 @@
 package com.javaoffers.brief.modelhelper.core;
 
-import com.javaoffers.brief.modelhelper.config.BriefProperties;
-import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
-import com.javaoffers.brief.modelhelper.exception.BriefException;
+import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
-import com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 
@@ -19,25 +17,22 @@ import java.util.Map;
  * @Description: core implementation class
  * @Auther: create by cmj on 2022/05/22 02:56
  */
-public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
+public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextPostProcess {
 
     private static JdbcExecutorFactory jdbcExecutorFactory;
-    static {
-        jdbcExecutorFactory = BriefProperties.getJdbcExecutorFactory();
-    }
 
     private JdbcExecutor<T> jdbcExecutor;
 
-    public static <T, ID> BaseBatis getInstance(HeadCondition headCondition) {
+    public static <T, ID> BaseBrief getInstance(HeadCondition headCondition) {
         return getInstance(headCondition.getDataSource(), headCondition.getModelClass());
     }
 
-    private static <T, ID> BaseBatis getInstance(DataSource dataSource, Class mClass) {
-        BaseBatisImpl batis = new BaseBatisImpl(dataSource,mClass);
-        return new BaseBatisImplProxy(batis, mClass);
+    private static <T, ID> BaseBrief getInstance(DataSource dataSource, Class mClass) {
+        BaseBriefImpl batis = new BaseBriefImpl(dataSource,mClass);
+        return new BaseBriefImplProxy(batis, mClass);
     }
 
-    private BaseBatisImpl(DataSource dataSource,Class modelClass) {
+    private BaseBriefImpl(DataSource dataSource, Class modelClass) {
         this.jdbcExecutor = jdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass);
     }
 
@@ -97,4 +92,8 @@ public class BaseBatisImpl<T, ID> implements BaseBatis<T> {
         return this.jdbcExecutor.batchSave(pss);
     }
 
+    @Override
+    public void postProcess(BriefContext briefContext) {
+        jdbcExecutorFactory = briefContext.getBriefProperties().getJdbcExecutorFactory();
+    }
 }

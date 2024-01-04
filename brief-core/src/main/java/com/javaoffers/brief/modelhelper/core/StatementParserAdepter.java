@@ -29,8 +29,6 @@ public class StatementParserAdepter {
         crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
         crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
         crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());
-
-        dbTypeStatementParser.putAll();
     }
 
     public static SQLStatement statementParse(LinkedList<Condition> conditions) {

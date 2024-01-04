@@ -9,7 +9,7 @@ import java.util.Map;
  * @param <T> model
  * @Auther: create by cmj on 2022/05/22 02:49
  */
-public interface BaseBatis<T>{
+public interface BaseBrief<T>{
 	
     /*****************************************************************************/
 	public int saveData(String sql);

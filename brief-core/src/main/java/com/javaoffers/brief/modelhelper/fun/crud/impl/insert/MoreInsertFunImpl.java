@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
-import com.javaoffers.brief.modelhelper.core.BaseBatis;
-import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBrief;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
@@ -35,7 +35,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
         MoreSQLInfo sqlInfos = (MoreSQLInfo) StatementParserAdepter.statementParse(conditions);
         List<SQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
         List<Id> list = new ArrayList<>();

@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.config;
+package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import org.apache.commons.lang3.StringUtils;
@@ -21,10 +21,10 @@ public class BriefMybatisConfigContext {
                String propertyTmp = property.replaceAll(":", ".");
                String value = environment.getProperty(propertyTmp, "");
                if(StringUtils.isNotBlank(value)){
-                   BriefProperties.put(property, value);
+                   SmartBriefProperties.put(property, value);
                }
            }
-           BriefProperties.freshAll();
+           SmartBriefProperties.freshAll();
        }catch (Exception e){
            e.printStackTrace();
        }

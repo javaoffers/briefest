@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.speedier.transaction;
 
+import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.exception.BriefTransactionException;
-import com.javaoffers.brief.modelhelper.speedier.BriefSpeedierDataSource;
 
 import javax.sql.DataSource;
 import java.io.PrintWriter;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * affairs management
  * @author mingJie
  */
-public class TransactionManagement implements BriefTransaction{
+public class TransactionManagement implements BriefTransaction {
     /**
      * The data source.
      */

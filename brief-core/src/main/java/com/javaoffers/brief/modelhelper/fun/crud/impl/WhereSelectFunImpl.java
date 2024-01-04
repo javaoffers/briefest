@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl;
 
-import com.javaoffers.brief.modelhelper.core.BaseBatis;
-import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBrief;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
@@ -431,7 +431,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public List<M> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) this.conditions.peekFirst());
+        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
         SQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
         JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
         JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());

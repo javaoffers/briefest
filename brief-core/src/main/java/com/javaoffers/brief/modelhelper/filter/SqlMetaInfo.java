@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.filter;
 
-import com.javaoffers.brief.modelhelper.core.BaseBatis;
+import com.javaoffers.brief.modelhelper.core.BaseBrief;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class SqlMetaInfo {
 
-    private BaseBatis baseBatis;
+    private BaseBrief baseBrief;
     private String sql;
     private List<Map<String,Object>> params = new ArrayList<>();
     private Class modelClass;
@@ -52,12 +52,12 @@ public class SqlMetaInfo {
         this.modelClass = modelClass;
     }
 
-    public void setBaseBatis(BaseBatis baseBatis) {
-        this.baseBatis = baseBatis;
+    public void setBaseBrief(BaseBrief baseBrief) {
+        this.baseBrief = baseBrief;
     }
 
-    public BaseBatis getBaseBatis(){
-        return this.baseBatis;
+    public BaseBrief getBaseBrief(){
+        return this.baseBrief;
     }
 
 }

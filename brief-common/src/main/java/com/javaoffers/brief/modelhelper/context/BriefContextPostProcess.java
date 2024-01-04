@@ -1,7 +1,7 @@
-package com.javaoffers.brief.modelhelper.config;
+package com.javaoffers.brief.modelhelper.context;
 
 /**
- * 后置处理器.
+ * brief上下文后置处理器. 不对外提供功能
  * @author mingJie
  */
 public interface BriefContextPostProcess {

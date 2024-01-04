@@ -1,8 +1,9 @@
-package com.javaoffers.brief.modelhelper.config;
+package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
 import com.javaoffers.brief.modelhelper.filter.Filter;
+import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
 import com.javaoffers.brief.modelhelper.utils.Utils;
@@ -20,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description: brief 初始化配置信息.
  * @author: create by cmj on 2023/8/5 13:20
  */
-public class BriefProperties {
+public class SmartBriefProperties implements BriefProperties{
 
     private final Map<String, Object> properties = new ConcurrentHashMap<>();
     private final Properties bp = System.getProperties();
@@ -37,7 +38,7 @@ public class BriefProperties {
      * @param value
      * @return
      */
-    public BriefProperties put(String key, String value) {
+    public SmartBriefProperties put(String key, String value) {
         bp.setProperty(key, value);
         properties.put(key, value);
         return this;
@@ -48,7 +49,7 @@ public class BriefProperties {
      *
      * @param isPrintSql
      */
-    public BriefProperties setIsPrintSql(String isPrintSql) {
+    public SmartBriefProperties setIsPrintSql(String isPrintSql) {
         put(ConfigPropertiesConstants.IS_PRINT_SQL, isPrintSql.trim().toLowerCase());
         return this;
     }
@@ -58,18 +59,19 @@ public class BriefProperties {
      *
      * @param isPrintSqlCost
      */
-    public BriefProperties setIsPrintSqlCost(String isPrintSqlCost) {
+    public SmartBriefProperties setIsPrintSqlCost(String isPrintSqlCost) {
         put(ConfigPropertiesConstants.IS_PRINT_SQL_COST, isPrintSqlCost.trim().toLowerCase());
         return this;
     }
 
     //加载自定义jdbc处理器.
-    public BriefProperties setJdbcExecutorFactory(String jdbcExecutorFactoryClassName) {
+    public SmartBriefProperties setJdbcExecutorFactory(String jdbcExecutorFactoryClassName) {
         put(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY, jdbcExecutorFactoryClassName);
         return this;
     }
 
-    public BriefProperties setSlowSqlLogTime(String slowLogTime) {
+    //慢sql打印时间
+    public SmartBriefProperties setSlowSqlLogTime(String slowLogTime) {
         put(ConfigPropertiesConstants.SLOW_LOG_TIME, slowLogTime);
         return this;
     }
@@ -104,14 +106,17 @@ public class BriefProperties {
         return isPrintSqlCost;
     }
 
+    //初始化是否打印sql
     public void initIsPrintSql() {
         isPrintSql = Boolean.parseBoolean(bp.getProperty(ConfigPropertiesConstants.IS_PRINT_SQL, "true"));
     }
 
+    //初始化打印sql耗时
     public void initIsPrintSqlCost() {
         isPrintSqlCost = Boolean.parseBoolean(bp.getProperty(ConfigPropertiesConstants.IS_PRINT_SQL_COST, "true"));
     }
 
+    //初始化jdbc执行工厂
     public void initJdbcExecutorFactory() {
         String jdbcExecutorFactoryClassName = bp.getProperty(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY,
                 "com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutorFactory");
@@ -134,6 +139,7 @@ public class BriefProperties {
 
     //初始化jql过滤器
     public void initJqlFilters() {
+        //加载客户自定义的。
         List<Filter> jqlChainFilterList = new ArrayList<>();
         String jqlFilters = bp.getProperty(ConfigPropertiesConstants.JQL_FILTER);
         if (jqlFilters != null) {
@@ -142,15 +148,17 @@ public class BriefProperties {
             for (String jqlFilterClassName : jqlFilterArray) {
                 try {
                     Class<?> jqlFilterClass = Class.forName(jqlFilterClassName);
-                    Filter jqlChainFilter = (Filter) jqlFilterClass.newInstance();
-                    jqlChainFilterList.add(jqlChainFilter);
+                    if(JqlChainFilter.class.isAssignableFrom(jqlFilterClass)){
+                        Filter jqlChainFilter = (Filter) jqlFilterClass.newInstance();
+                        jqlChainFilterList.add(jqlChainFilter);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
-        String jqlClassName = "com.javaoffers.brief.modelhelper.filter.JqlChainFilter";
-        Set<Class<? extends Filter>> childs = ReflectionUtils.getChilds(Utils.getClass(jqlClassName));
+        //加载内部的
+        Set<Class<? extends JqlChainFilter>> childs = ReflectionUtils.getChilds(JqlChainFilter.class);
         if (CollectionUtils.isNotEmpty(childs)) {
             for (Class clazz : childs) {
                 try {

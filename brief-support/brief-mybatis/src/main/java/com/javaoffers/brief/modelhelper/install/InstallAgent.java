@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.install;
 
 import com.javaoffers.brief.modelhelper.aggent.InstallModelHelper;
-import com.javaoffers.brief.modelhelper.config.BriefMybatisConfigContext;
+import com.javaoffers.brief.modelhelper.context.BriefMybatisConfigContext;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.beans.factory.config.BeanPostProcessor;

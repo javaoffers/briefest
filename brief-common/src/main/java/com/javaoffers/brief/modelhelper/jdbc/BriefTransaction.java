@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.speedier.transaction;
+package com.javaoffers.brief.modelhelper.jdbc;
 
 /**
  * @author mingJie

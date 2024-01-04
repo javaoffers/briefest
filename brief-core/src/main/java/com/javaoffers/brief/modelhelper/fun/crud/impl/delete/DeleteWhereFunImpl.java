@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.delete;
 
-import com.javaoffers.brief.modelhelper.core.BaseBatis;
-import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBrief;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.SQLStatement;
@@ -290,7 +290,7 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
 
     @Override
     public Integer ex() {
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
         SQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions);
         JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
         JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());

@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
-import com.javaoffers.brief.modelhelper.core.BaseBatis;
-import com.javaoffers.brief.modelhelper.core.BaseBatisImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBrief;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
@@ -28,7 +28,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        BaseBatis instance = BaseBatisImpl.getInstance((HeadCondition) conditions.peekFirst());
+        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
         SQLStatement sqlStatement = ((MoreSQLInfo) StatementParserAdepter.statementParse(conditions)).getSqlStatements().get(0);
         JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
         JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());

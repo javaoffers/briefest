@@ -142,7 +142,7 @@ public class SmartJqlChainFilter implements JqlChainFilter {
                                 String sqlStr = sql.toString();
                                 JqlLogger.infoSql("SQL: {}", sqlStr);
                                 JqlLogger.infoSql("PAM: {}", params);
-                                metaInfo.getBaseBatis().updateData(sqlStr, params);
+                                metaInfo.getBaseBrief().updateData(sqlStr, params);
                             }
                         }
                     }

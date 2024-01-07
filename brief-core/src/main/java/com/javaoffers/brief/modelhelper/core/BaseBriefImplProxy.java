@@ -31,6 +31,9 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextPos
         this.modelClass = modelClass;
     }
 
+    public BaseBriefImplProxy() {
+    }
+
     private <R> R doProxy(SqlMetaInfo sqlMetaInfo, Supplier<R> supplier){
         sqlMetaInfo.setBaseBrief(this);
         ChainFilterWrap<R, SqlMetaInfo> head = null;

@@ -34,10 +34,12 @@ public class SmartBriefContext implements BriefContext{
     private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     //加载器
-    private List<BriefPropertiesLoader> briefPropertiesLoaderList = new ArrayList<BriefPropertiesLoader>((Set)ReflectionUtils.getChilds(BriefPropertiesLoader.class));
+    private List<BriefPropertiesLoader> briefPropertiesLoaderList =
+            new ArrayList<BriefPropertiesLoader>((Set)ReflectionUtils.getChildInstance(BriefPropertiesLoader.class));
 
     //briefContext后置处理器
-    private List<BriefContextPostProcess> briefContextPostProcessList = new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChilds(BriefContextPostProcess.class));
+    private List<BriefContextPostProcess> briefContextPostProcessList =
+            new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, boolean encryptState, DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = smartBriefProperties;

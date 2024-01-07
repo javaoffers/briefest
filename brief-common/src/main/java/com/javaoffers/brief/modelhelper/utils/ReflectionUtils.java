@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.exception.NewInstanceException;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.MethodParameterNamesScanner;
@@ -31,5 +32,20 @@ public class ReflectionUtils {
         return new HashSet<Class<? extends T>>(subTypesOf);
     }
 
+    public static<T> Set<T> getChildInstance(Class<T> c){
+        Set<Class<? extends T>> subTypesOf = reflections.getSubTypesOf(c);
+        HashSet<T> instanceSet = new HashSet<>();
+        for(Class clazz : subTypesOf){
+            try {
+                T t = (T) clazz.newInstance();
+                instanceSet.add(t);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new NewInstanceException(e.getMessage());
+            }
+
+        }
+        return instanceSet;
+    }
 
 }

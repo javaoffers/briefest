@@ -23,6 +23,9 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextPostProce
 
     private JdbcExecutor<T> jdbcExecutor;
 
+    public BaseBriefImpl() {
+    }
+
     public static <T, ID> BaseBrief getInstance(HeadCondition headCondition) {
         return getInstance(headCondition.getDataSource(), headCondition.getModelClass());
     }

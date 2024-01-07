@@ -1,7 +1,9 @@
 package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
+import com.javaoffers.brief.modelhelper.jdbc.spring.SpringBriefContext;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Field;
@@ -12,19 +14,10 @@ import java.lang.reflect.Field;
  */
 public class BriefMybatisConfigContext {
 
-   public static void init(Environment environment){
+   public static void init(ConfigurableListableBeanFactory beanFactory){
        try {
-           Field[] declaredFields = ConfigPropertiesConstants.class.getDeclaredFields();
-           for(Field field : declaredFields){
-               field.setAccessible(true);
-               String property = (String)field.get(null);
-               String propertyTmp = property.replaceAll(":", ".");
-               String value = environment.getProperty(propertyTmp, "");
-               if(StringUtils.isNotBlank(value)){
-                   SmartBriefProperties.put(property, value);
-               }
-           }
-           SmartBriefProperties.freshAll();
+           SmartBriefContext smartBriefContext = new SpringBriefContext(beanFactory);
+           smartBriefContext.fresh();
        }catch (Exception e){
            e.printStackTrace();
        }

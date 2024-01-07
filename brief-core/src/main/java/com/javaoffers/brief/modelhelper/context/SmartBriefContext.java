@@ -25,7 +25,7 @@ public class SmartBriefContext implements BriefContext{
     public volatile boolean encryptState = false;
 
     //数据源
-    public DataSource dataSource;
+    public DataSource primaryDataSource;
 
     //brief事务
     public BriefTransaction briefTransaction;
@@ -42,21 +42,21 @@ public class SmartBriefContext implements BriefContext{
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, boolean encryptState, DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = smartBriefProperties;
         this.encryptState = encryptState;
-        this.dataSource = dataSource;
+        this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
         fresh();
     }
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = smartBriefProperties;
-        this.dataSource = dataSource;
+        this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
         fresh();
     }
 
     public SmartBriefContext( DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = new SmartBriefProperties();
-        this.dataSource = dataSource;
+        this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
         fresh();
     }
@@ -72,7 +72,7 @@ public class SmartBriefContext implements BriefContext{
 
     @Override
     public DataSource getDataSource() {
-        return this.dataSource;
+        return this.primaryDataSource;
     }
 
     @Override
@@ -101,14 +101,14 @@ public class SmartBriefContext implements BriefContext{
         briefProperties.initJdbcExecutorFactory();
         briefProperties.initIsPrintSql();
         briefProperties.initIsPrintSqlCost();
-        initBriefPropertiesLoader();//执行加载器
+        initLoader();//执行加载器
     }
 
     /**
      * 通过{@code BriefPropertiesLoader 加载配置到 briefProperties}
      * 只需要实现接口{@code BriefPropertiesLoader} 即可. 子类会被调用执行.
      */
-    private void initBriefPropertiesLoader() {
+    private void initLoader() {
 
         //加载配置
         for(BriefPropertiesLoader briefPropertiesLoader : briefPropertiesLoaderList){
@@ -119,8 +119,5 @@ public class SmartBriefContext implements BriefContext{
         for(BriefContextPostProcess briefContextPostProcess : briefContextPostProcessList){
             briefContextPostProcess.postProcess(this);
         }
-
-
-
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.lang.Nullable;
 
 import javax.sql.DataSource;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -24,12 +25,9 @@ public class InstallAgent implements BeanFactoryPostProcessor, BeanPostProcessor
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-       if(status.compareAndSet(true,false)){
-           InstallModelHelper.install();
-           Environment environment = beanFactory.getBean(Environment.class);
-           BriefMybatisConfigContext.init(environment);
-       }
+        if (status.compareAndSet(true, false)) {
+            InstallModelHelper.install();
+            BriefMybatisConfigContext.init(beanFactory);
+        }
     }
-
-
 }

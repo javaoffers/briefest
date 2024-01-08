@@ -46,21 +46,18 @@ public class SmartBriefContext implements BriefContext{
         this.encryptState = encryptState;
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
-        fresh();
     }
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = smartBriefProperties;
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
-        fresh();
     }
 
     public SmartBriefContext( DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = new SmartBriefProperties();
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
-        fresh();
     }
 
     public SmartBriefProperties getBriefProperties() {

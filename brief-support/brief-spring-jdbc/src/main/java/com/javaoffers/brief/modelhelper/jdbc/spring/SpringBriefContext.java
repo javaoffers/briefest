@@ -5,6 +5,8 @@ import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
 import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
+import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
+import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.core.env.Environment;
@@ -21,6 +23,7 @@ public class SpringBriefContext extends SmartBriefContext {
 
     public SpringBriefContext(ConfigurableListableBeanFactory beanFactory) {
         super(beanFactory.getBean(DataSource.class), null);
+        this.beanFactory = beanFactory;
     }
 
     @Override
@@ -52,5 +55,15 @@ public class SpringBriefContext extends SmartBriefContext {
     @Override
     public BriefTransaction getBriefTransaction() {
         throw new UnsupportedOperationException(" Transactions are controlled by Spring");
+    }
+
+    @Override
+    public BriefMapper getBriefMapper(Class briefMapperClass) {
+        BriefMapper briefMapper = super.getBriefMapper(briefMapperClass);
+        if(briefMapper == null){
+            super.getCacheMapper().putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
+            briefMapper = super.getBriefMapper(briefMapperClass);
+        }
+        return briefMapper;
     }
 }

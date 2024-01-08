@@ -22,12 +22,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AutoConfigureAfter(DataSource.class)
 public class InstallAgent implements BeanFactoryPostProcessor, BeanPostProcessor {
     private AtomicBoolean status = new AtomicBoolean(true);
-
+    ConfigurableListableBeanFactory beanFactory;
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
+    }
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         if (status.compareAndSet(true, false)) {
             InstallModelHelper.install();
             BriefMybatisConfigContext.init(beanFactory);
         }
+        return bean;
     }
 }

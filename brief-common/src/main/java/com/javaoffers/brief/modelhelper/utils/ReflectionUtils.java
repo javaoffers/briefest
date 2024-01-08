@@ -7,6 +7,7 @@ import org.reflections.scanners.MethodParameterNamesScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,7 +38,9 @@ public class ReflectionUtils {
         HashSet<T> instanceSet = new HashSet<>();
         for(Class clazz : subTypesOf){
             try {
-                T t = (T) clazz.newInstance();
+                Constructor constructor = clazz.getDeclaredConstructor();
+                constructor.setAccessible(true);
+                T t = (T) constructor.newInstance();
                 instanceSet.add(t);
             }catch (Exception e){
                 e.printStackTrace();

@@ -26,7 +26,7 @@ public interface BriefContext {
     public BriefTransaction getBriefTransaction();
 
     //缓存BriefMapper
-    public BaseMapper getBriefMapper(Class<?> briefMapper);
+    public <T extends BaseMapper> T getBriefMapper(Class<?> briefMapper);
 
     /**
      * 通过{@code BriefPropertiesLoader 加载配置到 briefProperties}

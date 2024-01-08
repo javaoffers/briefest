@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.proxy;
 
+import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.exception.ParseDataSourceException;
@@ -30,13 +32,15 @@ import java.util.Map;
  * @Description: 解析CrudMapper
  * @Auther: create by cmj on 2022/5/3 00:47
  */
-public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
+public class CrudMapperProxy<T> implements InvocationHandler, Serializable, BriefContextPostProcess {
 
     private MapperProxy<T> mapperProxy;
 
     private static final Class crudClass = BriefMapper.class;
 
     private static Map<Method,String> isMapperMethod = BriefUtils.getMapperMethod();
+
+    private static BriefContext briefContext;
 
     private Class clazz;
 
@@ -53,6 +57,9 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
     public CrudMapperProxy( MapperProxy<T> mapperProxy,Class clazz) {
         this.mapperProxy = mapperProxy;
         this.clazz = clazz;
+    }
+
+    private CrudMapperProxy() {
     }
 
     private void parseTableInfo(MapperProxy<T> mapperProxy, Class clazz) {
@@ -72,7 +79,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
             Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
             this.modelClass = modelclass;
-            this.briefMapperJql = BriefUtils.newCrudMapper(clazz);
+            this.briefMapperJql = briefContext.getBriefMapper(clazz);
             Connection connection = this.dataSource.getConnection();
             try {
                 List<Class> modelClass = HelperUtils.parseAllModelClass((Class) this.modelClass);
@@ -157,5 +164,10 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable {
             CrudMapperMethodThreadLocal.delExcutorDataSource();
         }
 
+    }
+
+    @Override
+    public void postProcess(BriefContext briefContext) {
+        CrudMapperProxy.briefContext = briefContext;
     }
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.interceptor.InterceptorLoader;
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +19,7 @@ import java.util.List;
 @SpringBootApplication
 @RequestMapping
 @MapperScan("com.javaoffers.base.modelhelper.sample.mapper")
-public class SpringSuportJqlInterceptor implements InitializingBean {
+public class SpringSuportJqlInterceptor implements InitializingBean , JqlInterceptorLoader{
 
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
@@ -33,11 +33,6 @@ public class SpringSuportJqlInterceptor implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        LogInterceptor logInterceptor = new LogInterceptor();
-        ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
-        jqlInterceptors.add(logInterceptor);
-        InterceptorLoader.init(jqlInterceptors);
-
         List<User> query = this.crudUserMapper.general().query(1, 1);
         print(query);
 
@@ -46,5 +41,11 @@ public class SpringSuportJqlInterceptor implements InitializingBean {
 
     public void print(Object user) throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(user));
+    }
+
+    @Override
+    public JqlInterceptor loadJqlInterceptor() {
+        LogInterceptor logInterceptor = new LogInterceptor();
+        return logInterceptor;
     }
 }

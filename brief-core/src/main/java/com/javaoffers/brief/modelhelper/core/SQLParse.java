@@ -2,10 +2,12 @@ package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
+import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
 import com.javaoffers.brief.modelhelper.utils.GsonUtils;
-import com.javaoffers.brief.modelhelper.interceptor.InterceptorLoader;
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -18,16 +20,14 @@ import java.util.regex.Pattern;
  * @Description: 解析sql
  * @Auther: create by cmj on 2022/05/22 02:45
  */
-public class SQLParse{
+public class SQLParse implements BriefContextPostProcess {
     private String sql;
     private String param;
     public final static String p = "(\\#\\{[0-9a-zA-Z-_]+\\})";
     public final static Pattern compile = Pattern.compile(p);
     private static List<JqlInterceptor> jqlInterceptorList;
 
-    static {
-        jqlInterceptorList = InterceptorLoader.loadJqlInterceptor();
-    }
+    SQLParse() { }
 
     private static String parseSql(String sql) {
         String s = sql.replaceAll(p, "?");
@@ -117,4 +117,8 @@ public class SQLParse{
         return SQLParse.parseSqlParams(sql, maps);
     }
 
+    @Override
+    public void postProcess(BriefContext briefContext) {
+        jqlInterceptorList = briefContext.getJqlInterceptors();
+    }
 }

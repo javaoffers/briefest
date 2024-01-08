@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.context;
 
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
 
@@ -33,6 +34,11 @@ public interface BriefContext {
      * 只需要实现接口{@code BriefPropertiesLoader} 即可. 子类会被调用执行.
      */
     public List<BriefPropertiesLoader> getBriefPropertiesLoader();
+
+    /**
+     * 获取jql拦截器.
+     */
+    public List<JqlInterceptor> getJqlInterceptors();
 
     /**
      * 执行fresh方法后开始生效。

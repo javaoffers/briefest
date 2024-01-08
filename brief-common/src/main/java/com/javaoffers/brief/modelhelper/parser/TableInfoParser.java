@@ -6,9 +6,10 @@ import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import java.sql.Connection;
 
 /**
+ * 解析TableInfo. 不同的DB会有不同的解析.
  * @author mingJie
  */
-public interface DataSourceParser  extends DBTypeLabel {
+public interface TableInfoParser extends DBTypeLabel {
 
     /**
      * 解析TableInfo

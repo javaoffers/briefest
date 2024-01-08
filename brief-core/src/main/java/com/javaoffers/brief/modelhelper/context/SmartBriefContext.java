@@ -1,7 +1,9 @@
 package com.javaoffers.brief.modelhelper.context;
 
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
 
 import javax.sql.DataSource;
@@ -40,6 +42,10 @@ public class SmartBriefContext implements BriefContext{
     //briefContext后置处理器
     private List<BriefContextPostProcess> briefContextPostProcessList =
             new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
+
+    //jql拦截器
+    private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
+
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, boolean encryptState, DataSource dataSource, BriefTransaction briefTransaction) {
         this.briefProperties = smartBriefProperties;
@@ -87,6 +93,11 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public List<BriefPropertiesLoader> getBriefPropertiesLoader() {
         return this.briefPropertiesLoaderList;
+    }
+
+    @Override
+    public List<JqlInterceptor> getJqlInterceptors() {
+        return this.coreInterceptorsList;
     }
 
     public Map<Class, BriefMapper> getCacheMapper() {

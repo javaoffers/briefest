@@ -91,6 +91,7 @@ public class BriefSpeedier {
         BriefSpeedier briefSpeedier = new BriefSpeedier();
         DataSource dataSource = briefConfigProperties.getDataSource();
         briefSpeedier.briefContext = new SmartBriefContext(briefConfigProperties, dataSource, new TransactionManagement(dataSource));
+        briefSpeedier.briefContext.fresh();
         return briefSpeedier;
     }
 
@@ -103,6 +104,7 @@ public class BriefSpeedier {
     public static BriefSpeedier getInstance(DataSource dataSource) {
         BriefSpeedier briefSpeedier = new BriefSpeedier();
         briefSpeedier.briefContext = new SmartBriefContext(dataSource, new TransactionManagement(dataSource));
+        briefSpeedier.briefContext.fresh();
         return briefSpeedier;
     }
 
@@ -115,4 +117,5 @@ public class BriefSpeedier {
     public static BriefSpeedier getInstance(BriefSpeedierDataSource dataSource) {
         return getInstance((DataSource) dataSource);
     }
+
 }

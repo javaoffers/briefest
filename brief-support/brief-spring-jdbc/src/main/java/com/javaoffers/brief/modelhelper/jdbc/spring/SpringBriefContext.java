@@ -67,8 +67,13 @@ public class SpringBriefContext extends SmartBriefContext {
         super.initLoader();
 
         //加载spring容器中的JqlInterceptor
-        Map<String, JqlInterceptor> beansOfType = beanFactory.getBeansOfType(JqlInterceptor.class);
-        this.getJqlInterceptors().addAll(beansOfType.values());
+        String[] beanNamesForType = beanFactory.getBeanNamesForType(JqlInterceptor.class);
+        if(beanNamesForType==null || beanNamesForType.length == 0){
+            for(String beanName : beanNamesForType){
+                this.getJqlInterceptors().add(beanFactory.getBean(beanName,JqlInterceptor.class));
+            }
+        }
+
 
     }
 

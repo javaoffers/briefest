@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.encrypt;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
+import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class JqlAesInterceptorImpl implements JqlAesInterceptor {
+public class JqlAesInterceptorImpl implements JqlAesInterceptor , JqlInterceptorLoader {
 
     private static volatile List<SqlAesProcessorImpl> sqlAesProcessors = new ArrayList<>();
 
@@ -32,5 +33,10 @@ public class JqlAesInterceptorImpl implements JqlAesInterceptor {
                 }
             }
         }
+    }
+
+    @Override
+    public JqlInterceptor loadJqlInterceptor() {
+        return this;
     }
 }

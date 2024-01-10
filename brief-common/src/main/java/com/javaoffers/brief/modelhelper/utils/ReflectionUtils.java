@@ -35,18 +35,33 @@ public class ReflectionUtils {
     }
 
     public static<T> Set<T> getChildInstance(Class<T> c){
-        Set<Class<? extends T>> subTypesOf = reflections.getSubTypesOf(c);
+        Set<Class<T>> subTypesOf = getChildClassWithOutAbstract(c);
         HashSet<T> instanceSet = new HashSet<>();
         for(Class clazz : subTypesOf){
             try {
-                if(Modifier.isAbstract(clazz.getModifiers())){
-                    instanceSet.addAll(getChildInstance(clazz));
-                    continue;
-                }
                 Constructor constructor = clazz.getDeclaredConstructor();
                 constructor.setAccessible(true);
                 T t = (T) constructor.newInstance();
                 instanceSet.add(t);
+            }catch (Exception e){
+                e.printStackTrace();
+                throw new NewInstanceException(e.getMessage());
+            }
+
+        }
+        return instanceSet;
+    }
+
+    public static<T> Set<Class<T>> getChildClassWithOutAbstract(Class<T> c){
+        Set<Class<? extends T>> subTypesOf = reflections.getSubTypesOf(c);
+        HashSet<Class<T>> instanceSet = new HashSet<>();
+        for(Class clazz : subTypesOf){
+            try {
+                if(Modifier.isAbstract(clazz.getModifiers())){
+                    instanceSet.addAll(getChildClassWithOutAbstract(clazz));
+                    continue;
+                }
+                instanceSet.add(clazz);
             }catch (Exception e){
                 e.printStackTrace();
                 throw new NewInstanceException(e.getMessage());

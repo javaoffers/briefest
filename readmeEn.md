@@ -1011,11 +1011,22 @@ Custom interceptors is very simple, you only need to implement the interface
 <code>JqlInterceptor</code>，And then perform <code>InterceptorLoader.init()</code> Initialize your interceptor.
 </p>
 
+
 ```java
  LogInterceptor logInterceptor = new LogInterceptor();
- ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
- jqlInterceptors.add(logInterceptor);
- InterceptorLoader.init(jqlInterceptors);
+ smartBriefContext.getJqlInterceptors().add(logInterceptor)
+```
+
+```java
+//spring environment. Bean objects will be automatically assembled
+@Component
+public class LogInterceptor implements JqlInterceptor {
+    @Override
+    public void handler(BaseSQLInfo baseSQLInfo) {
+        System.out.println("LogInterceptor: SQL :  "+ baseSQLInfo.getSql());
+        System.out.println("LogInterceptor: Param: " +baseSQLInfo.getParams());
+    }
+}
 ```
 
 

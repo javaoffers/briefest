@@ -7,7 +7,7 @@ import com.javaoffers.brief.modelhelper.utils.DBTypeLabel;
 import java.util.LinkedList;
 
 /**
- * 解析执行 crud.
+ * 将conditions解析为sql信息 {@code BaseSQLStatement}.
  * @author mingJie
  */
 public interface StatementParser<T extends Condition, R extends BaseSQLStatement>  extends DBTypeLabel {

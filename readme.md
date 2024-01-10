@@ -1009,9 +1009,19 @@ sql和参数在真正执行前会被拦截器所拦截. 可以在自己定义的
 
 ```java
  LogInterceptor logInterceptor = new LogInterceptor();
- ArrayList<JqlInterceptor> jqlInterceptors = new ArrayList<>();
- jqlInterceptors.add(logInterceptor);
- InterceptorLoader.init(jqlInterceptors);
+ smartBriefContext.getJqlInterceptors().add(logInterceptor)
+```
+
+```java
+//spring 环境. 会自动装配bean对象
+@Component
+public class LogInterceptor implements JqlInterceptor {
+    @Override
+    public void handler(BaseSQLInfo baseSQLInfo) {
+        System.out.println("LogInterceptor: SQL :  "+ baseSQLInfo.getSql());
+        System.out.println("LogInterceptor: Param: " +baseSQLInfo.getParams());
+    }
+}
 ```
 
 

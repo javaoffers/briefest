@@ -8,7 +8,7 @@ import com.javaoffers.brief.modelhelper.utils.DBTypeLabel;
  * 比如{@code LimitWordCondition} 不同的数据库语法不同,因此需要特殊解析进行处理.
  * @author mingJie
  */
-public interface ConditionParser<T extends Condition> extends DBTypeLabel {
+public interface MarkConditionParser<T extends Condition> extends DBTypeLabel {
 
     /**
      * 处理具体的condition

@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 /**
- * 加载Jql拦截器,外部不可用.
+ * 加载Jql拦截器,外部不可用. 主要加载brief内部自定义的
  */
 public interface JqlInterceptorLoader extends BriefContextPostProcess {
 
@@ -28,8 +28,6 @@ public interface JqlInterceptorLoader extends BriefContextPostProcess {
         if(jqlInterceptor != null){
             jqlInterceptors.add(jqlInterceptor);
         }
-        //加载外部jql拦截器,通过配置加载
-
     }
 
     /**

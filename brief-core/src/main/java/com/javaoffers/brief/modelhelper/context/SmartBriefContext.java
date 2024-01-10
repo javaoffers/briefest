@@ -118,7 +118,7 @@ public class SmartBriefContext implements BriefContext{
      * 通过{@code BriefPropertiesLoader 加载配置到 briefProperties}
      * 只需要实现接口{@code BriefPropertiesLoader} 即可. 子类会被调用执行.
      */
-    private void initLoader() {
+    protected void initLoader() {
 
         //加载配置
         for(BriefPropertiesLoader briefPropertiesLoader : briefPropertiesLoaderList){

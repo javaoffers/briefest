@@ -19,7 +19,7 @@ import java.util.List;
 @SpringBootApplication
 @RequestMapping
 @MapperScan("com.javaoffers.base.modelhelper.sample.mapper")
-public class SpringSuportJqlInterceptor implements InitializingBean , JqlInterceptorLoader{
+public class SpringSuportJqlInterceptor implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
     public static boolean status = true;
@@ -43,9 +43,4 @@ public class SpringSuportJqlInterceptor implements InitializingBean , JqlInterce
         System.out.println(objectMapper.writeValueAsString(user));
     }
 
-    @Override
-    public JqlInterceptor loadJqlInterceptor() {
-        LogInterceptor logInterceptor = new LogInterceptor();
-        return logInterceptor;
-    }
 }

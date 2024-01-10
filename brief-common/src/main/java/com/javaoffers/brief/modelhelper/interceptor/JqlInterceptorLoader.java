@@ -11,6 +11,7 @@ import java.util.ServiceLoader;
 
 /**
  * 加载Jql拦截器,外部不可用. 主要加载brief内部自定义的.
+ * 只需要实现JqlInterceptorLoader中的loadJqlInterceptor方法即可.
  */
 public interface JqlInterceptorLoader extends BriefContextPostProcess {
 

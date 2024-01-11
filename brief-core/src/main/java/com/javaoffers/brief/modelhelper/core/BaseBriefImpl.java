@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
+import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
+import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
@@ -97,6 +99,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextPostProce
 
     @Override
     public void postProcess(BriefContext briefContext) {
-        jdbcExecutorFactory = briefContext.getBriefProperties().getJdbcExecutorFactory();
+        SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
+        jdbcExecutorFactory = smartBriefContext.getBriefProperties(SmartBriefProperties.class).get(0).getJdbcExecutorFactory();
     }
 }

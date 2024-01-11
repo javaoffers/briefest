@@ -1,7 +1,10 @@
 package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
+import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
+import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.filter.ChainFilter;
 import com.javaoffers.brief.modelhelper.filter.Filter;
 import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
@@ -18,7 +21,7 @@ import java.util.function.Supplier;
  * @description: 包装代理， 没有用jdk代理实现是因为性能问题. 通过该类来扩展额外的功能。
  * @author: create by cmj on 2023/5/28 20:31
  */
-public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextPostProcess {
+public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAware {
 
     private static List<Filter> jqlChainFilterList = new ArrayList<>();
 
@@ -123,7 +126,8 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextPos
     }
 
     @Override
-    public void postProcess(BriefContext briefContext) {
-        jqlChainFilterList = briefContext.getBriefProperties().getJqlFilters();
+    public void setBriefContext(BriefContext briefContext) {
+        SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
+        jqlChainFilterList =  smartBriefContext.getBriefProperties(SmartBriefProperties.class).get(0).getJqlFilters();
     }
 }

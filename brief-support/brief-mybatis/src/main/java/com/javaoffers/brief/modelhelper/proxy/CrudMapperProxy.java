@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.proxy;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
@@ -32,7 +33,7 @@ import java.util.Map;
  * @Description: 解析CrudMapper
  * @Auther: create by cmj on 2022/5/3 00:47
  */
-public class CrudMapperProxy<T> implements InvocationHandler, Serializable, BriefContextPostProcess {
+public class CrudMapperProxy<T> implements InvocationHandler, Serializable, BriefContextAware {
 
     private MapperProxy<T> mapperProxy;
 
@@ -167,7 +168,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
     }
 
     @Override
-    public void postProcess(BriefContext briefContext) {
+    public void setBriefContext(BriefContext briefContext) {
         CrudMapperProxy.briefContext = briefContext;
     }
 }

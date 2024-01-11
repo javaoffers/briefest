@@ -30,6 +30,10 @@ public class SpringBriefContext extends SmartBriefContext {
         this.beanFactory = beanFactory;
     }
 
+    public ConfigurableListableBeanFactory getBeanFactory() {
+        return beanFactory;
+    }
+
     @Override
     public void fresh() {
         parseSpringConfig();
@@ -42,7 +46,7 @@ public class SpringBriefContext extends SmartBriefContext {
     private void parseSpringConfig() {
         try {
             // {@code ConfigPropertiesConstants}
-            SmartBriefProperties briefProperties = this.getBriefProperties();
+            SmartBriefProperties briefProperties = this.getBriefProperties(SmartBriefProperties.class).get(0);
             Environment environment = beanFactory.getBean(Environment.class);
             Field[] declaredFields = ConfigPropertiesConstants.class.getDeclaredFields();
             for(Field field : declaredFields){
@@ -63,25 +67,11 @@ public class SpringBriefContext extends SmartBriefContext {
     }
 
     @Override
-    protected void initLoader() {
+    protected void initContextPostProcess() {
         //加载内部的,brief本身的
-        super.initLoader();
+        super.initContextPostProcess();
 
-        //加载spring容器中的 BriefContextPostProcess
-        String[] beanNamesForBriefContextPostProcess = beanFactory.getBeanNamesForType(BriefContextPostProcess.class);
-        if(beanNamesForBriefContextPostProcess==null || beanNamesForBriefContextPostProcess.length == 0){
-            for(String beanName : beanNamesForBriefContextPostProcess){
-                beanFactory.getBean(beanName,BriefContextPostProcess.class).postProcess(this);
-            }
-        }
 
-        //加载spring容器中的JqlInterceptor
-        String[] beanNamesForType = beanFactory.getBeanNamesForType(JqlInterceptor.class);
-        if(beanNamesForType==null || beanNamesForType.length == 0){
-            for(String beanName : beanNamesForType){
-                this.getJqlInterceptors().add(beanFactory.getBean(beanName,JqlInterceptor.class));
-            }
-        }
 
     }
 

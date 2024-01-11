@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * brief context . 用于初始化化brief启动前的必要信息. 是brief的上下文，代表brief的应用.
@@ -21,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SmartBriefContext implements BriefContext{
 
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
-    private final SmartBriefProperties briefProperties ;
+    private final List<BriefProperties> briefPropertiesList = new ArrayList<>() ;
 
     //是否开启加密.
     public volatile boolean encryptState = false;
@@ -43,31 +44,35 @@ public class SmartBriefContext implements BriefContext{
     private List<BriefContextPostProcess> briefContextPostProcessList =
             new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
 
+    //briefContextAware
+    private List<BriefContextAware> briefContextAwareList =
+            new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
+
     //jql拦截器
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, boolean encryptState, DataSource dataSource, BriefTransaction briefTransaction) {
-        this.briefProperties = smartBriefProperties;
+        this.briefPropertiesList.add(smartBriefProperties);
         this.encryptState = encryptState;
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
     }
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource, BriefTransaction briefTransaction) {
-        this.briefProperties = smartBriefProperties;
+        this.briefPropertiesList.add(smartBriefProperties);
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
     }
 
     public SmartBriefContext( DataSource dataSource, BriefTransaction briefTransaction) {
-        this.briefProperties = new SmartBriefProperties();
+        this.briefPropertiesList.add(new SmartBriefProperties());
         this.primaryDataSource = dataSource;
         this.briefTransaction = briefTransaction;
     }
 
-    public SmartBriefProperties getBriefProperties() {
-        return briefProperties;
+    public List<BriefProperties> getBriefPropertiesList() {
+        return briefPropertiesList;
     }
 
     @Override
@@ -104,30 +109,53 @@ public class SmartBriefContext implements BriefContext{
         return cache;
     }
 
+    public <T extends BriefProperties> List<T> getBriefProperties(Class<T> clazz){
+        List collect = this.getBriefPropertiesList().stream().filter(briefProperties -> {
+            return clazz.isAssignableFrom(briefProperties.getClass());
+        }).collect(Collectors.toList());
+        return collect;
+    }
+
     @Override
     public void fresh() {
-        briefProperties.initJqlFilters();
-        briefProperties.initShowLogTime();
-        briefProperties.initJdbcExecutorFactory();
-        briefProperties.initIsPrintSql();
-        briefProperties.initIsPrintSqlCost();
-        initLoader();//执行加载器
+        initProperties();//初始化配置信息
+        initContextPostProcess();//执行加载器
+        finish();//已经可以对外提供功能了.
+    }
+
+    //初始化配置信息.
+    private void initProperties() {
+
+        //加载配置
+        for(BriefPropertiesLoader briefPropertiesLoader : briefPropertiesLoaderList){
+            briefPropertiesList.add(briefPropertiesLoader.startLoader());
+
+        }
+        //初始化配置
+        for(BriefProperties briefProperties : briefPropertiesList){
+            briefProperties.fresh();
+        }
+    }
+
+    /**
+     * 测试briefContext已经创建成功. 已经可以对外提供功能了.
+     */
+    private void finish() {
+        for(BriefContextAware briefContextAware : briefContextAwareList){
+            briefContextAware.setBriefContext(this);
+        }
     }
 
     /**
      * 通过{@code BriefPropertiesLoader 加载配置到 briefProperties}
      * 只需要实现接口{@code BriefPropertiesLoader} 即可. 子类会被调用执行.
      */
-    protected void initLoader() {
-
-        //加载配置
-        for(BriefPropertiesLoader briefPropertiesLoader : briefPropertiesLoaderList){
-            briefPropertiesLoader.startLoader(this.briefProperties);
-        }
+    protected void initContextPostProcess() {
 
         //上下文后置处理器
         for(BriefContextPostProcess briefContextPostProcess : briefContextPostProcessList){
             briefContextPostProcess.postProcess(this);
         }
+
     }
 }

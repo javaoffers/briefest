@@ -21,37 +21,8 @@ public interface BriefProperties {
     public BriefProperties put(String key, String value);
 
     /**
-     * 获取配置Jdbc执行工厂
-     * @return
+     * 刷新完成创建.
      */
-    public JdbcExecutorFactory getJdbcExecutorFactory();
-    /**
-     * 获取慢sql日志时间
-     *
-     * @return
-     */
-    public long getSlowSqlLogTime();
-
-    /**
-     * 获取jql过滤器
-     *
-     * @return
-     */
-    public List<Filter> getJqlFilters();
-
-    /**
-     * 是否打印sql
-     * @return
-     */
-    public boolean isPrintSql();
-
-    /**
-     * 是否打印sql耗时
-     * @return
-     */
-    public boolean isPrintSqlCost();
-
-
-
+    public void fresh();
 
 }

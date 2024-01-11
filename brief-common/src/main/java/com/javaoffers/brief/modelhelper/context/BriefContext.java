@@ -15,7 +15,7 @@ import java.util.List;
 public interface BriefContext {
 
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
-    public BriefProperties getBriefProperties();
+    public List<BriefProperties> getBriefPropertiesList();
 
     //是否开启加密.
     boolean getEncryptState();

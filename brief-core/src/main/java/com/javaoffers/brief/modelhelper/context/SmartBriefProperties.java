@@ -44,6 +44,15 @@ public class SmartBriefProperties implements BriefProperties{
         return this;
     }
 
+    @Override
+    public void fresh() {
+        this.initJqlFilters();
+        this.initShowLogTime();
+        this.initJdbcExecutorFactory();
+        this.initIsPrintSql();
+        this.initIsPrintSqlCost();
+    }
+
     /**
      * 是否打印sql
      *

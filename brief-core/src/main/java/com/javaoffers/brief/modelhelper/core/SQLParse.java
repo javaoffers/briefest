@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.core;
 import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
@@ -20,7 +21,7 @@ import java.util.regex.Pattern;
  * @Description: 解析sql
  * @Auther: create by cmj on 2022/05/22 02:45
  */
-public class SQLParse implements BriefContextPostProcess {
+public class SQLParse implements BriefContextAware {
     private String sql;
     private String param;
     public final static String p = "(\\#\\{[0-9a-zA-Z-_]+\\})";
@@ -108,7 +109,6 @@ public class SQLParse implements BriefContextPostProcess {
             }
         }
         return SQL;
-
     }
 
     public static SQL getSQL(String sql, Map<String, Object> map) {
@@ -118,7 +118,7 @@ public class SQLParse implements BriefContextPostProcess {
     }
 
     @Override
-    public void postProcess(BriefContext briefContext) {
+    public void setBriefContext(BriefContext briefContext) {
         jqlInterceptorList = briefContext.getJqlInterceptors();
     }
 }

@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc.spring;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
@@ -66,6 +67,14 @@ public class SpringBriefContext extends SmartBriefContext {
         //加载内部的,brief本身的
         super.initLoader();
 
+        //加载spring容器中的 BriefContextPostProcess
+        String[] beanNamesForBriefContextPostProcess = beanFactory.getBeanNamesForType(BriefContextPostProcess.class);
+        if(beanNamesForBriefContextPostProcess==null || beanNamesForBriefContextPostProcess.length == 0){
+            for(String beanName : beanNamesForBriefContextPostProcess){
+                beanFactory.getBean(beanName,BriefContextPostProcess.class).postProcess(this);
+            }
+        }
+
         //加载spring容器中的JqlInterceptor
         String[] beanNamesForType = beanFactory.getBeanNamesForType(JqlInterceptor.class);
         if(beanNamesForType==null || beanNamesForType.length == 0){
@@ -73,7 +82,6 @@ public class SpringBriefContext extends SmartBriefContext {
                 this.getJqlInterceptors().add(beanFactory.getBean(beanName,JqlInterceptor.class));
             }
         }
-
 
     }
 

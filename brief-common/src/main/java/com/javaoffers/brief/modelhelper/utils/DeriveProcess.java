@@ -44,11 +44,5 @@ public class DeriveProcess {
             tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
         }
 
-        //isAutoUpdate
-        BaseModel baseModel = colF.getDeclaringClass().getDeclaredAnnotation(BaseModel.class);
-        if(baseModel.autoUpdate()){
-            tableInfo.putDeriveColName(DeriveFlag.AUTO_UPDATE, deriveInfo);
-        }
-
     }
 }

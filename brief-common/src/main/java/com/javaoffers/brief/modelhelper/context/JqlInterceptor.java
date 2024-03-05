@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.interceptor;
+package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 

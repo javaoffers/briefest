@@ -2,8 +2,8 @@ package com.javaoffers.brief.modelhelper.encrypt;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
+import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
+import com.javaoffers.brief.modelhelper.context.JqlInterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 

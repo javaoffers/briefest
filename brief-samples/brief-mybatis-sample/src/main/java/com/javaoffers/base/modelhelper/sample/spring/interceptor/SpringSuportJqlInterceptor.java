@@ -4,8 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.User;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
@@ -13,7 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication

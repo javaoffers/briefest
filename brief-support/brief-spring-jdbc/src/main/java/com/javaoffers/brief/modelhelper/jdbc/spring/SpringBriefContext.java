@@ -1,12 +1,9 @@
 package com.javaoffers.brief.modelhelper.jdbc.spring;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -15,8 +12,6 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
 
 /**
  * spring brief context
@@ -26,7 +21,7 @@ public class SpringBriefContext extends SmartBriefContext {
     private ConfigurableListableBeanFactory beanFactory;
 
     public SpringBriefContext(ConfigurableListableBeanFactory beanFactory) {
-        super(beanFactory.getBean(DataSource.class), null);
+        super(beanFactory.getBean(DataSource.class));
         this.beanFactory = beanFactory;
     }
 
@@ -34,16 +29,25 @@ public class SpringBriefContext extends SmartBriefContext {
         return beanFactory;
     }
 
+    public BriefMapper getBriefMapper(Class briefMapperClass) {
+        BriefMapper briefMapper = super.getBriefMapper(briefMapperClass);
+        if(briefMapper == null){
+            super.getCacheMapper().putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
+            briefMapper = super.getBriefMapper(briefMapperClass);
+        }
+        return briefMapper;
+    }
+
     @Override
     public void fresh() {
-        parseSpringConfig();
+        loadSpringEnvironment();
         super.fresh();
     }
 
     /**
      * Parse the configuration in the spring environment and support brief
      */
-    private void parseSpringConfig() {
+    private void loadSpringEnvironment() {
         try {
             // {@code ConfigPropertiesConstants}
             SmartBriefProperties briefProperties = this.getBriefProperties(SmartBriefProperties.class).get(0);
@@ -66,30 +70,4 @@ public class SpringBriefContext extends SmartBriefContext {
         }
     }
 
-    @Override
-    protected void initContextPostProcess() {
-        //加载内部的,brief本身的
-        super.initContextPostProcess();
-
-
-
-    }
-
-    /**
-     * 事务由spring控制
-     */
-    @Override
-    public BriefTransaction getBriefTransaction() {
-        throw new UnsupportedOperationException(" Transactions are controlled by Spring");
-    }
-
-    @Override
-    public BriefMapper getBriefMapper(Class briefMapperClass) {
-        BriefMapper briefMapper = super.getBriefMapper(briefMapperClass);
-        if(briefMapper == null){
-            super.getCacheMapper().putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
-            briefMapper = super.getBriefMapper(briefMapperClass);
-        }
-        return briefMapper;
-    }
 }

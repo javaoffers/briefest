@@ -1,13 +1,6 @@
-package com.javaoffers.brief.modelhelper.interceptor;
+package com.javaoffers.brief.modelhelper.context;
 
-import com.javaoffers.brief.modelhelper.context.BriefContext;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.utils.Lists;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
 
 /**
  * 加载Jql拦截器,外部不可用. 主要加载brief内部自定义的.

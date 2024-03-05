@@ -3,7 +3,7 @@ package com.javaoffers.brief.modelhelper.speedier;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
-import com.javaoffers.brief.modelhelper.speedier.transaction.TransactionManagement;
+import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
 import com.javaoffers.brief.modelhelper.utils.Assert;
@@ -20,7 +20,7 @@ public class BriefSpeedier {
     /**
      * 事务管理
      */
-    private SmartBriefContext briefContext;
+    private SpeedierBriefContext briefContext;
 
     /**
      * cache.
@@ -53,8 +53,8 @@ public class BriefSpeedier {
         return proxy;
     }
 
-    public TransactionManagement getTransactionManagement() {
-        return (TransactionManagement)briefContext.getBriefTransaction();
+    public SpeedierTransactionManagement getTransactionManagement() {
+        return briefContext.getTransactionManagement();
     }
 
     /**
@@ -90,7 +90,8 @@ public class BriefSpeedier {
     public static BriefSpeedier getInstance(BriefSpeedierConfigProperties briefConfigProperties){
         BriefSpeedier briefSpeedier = new BriefSpeedier();
         DataSource dataSource = briefConfigProperties.getDataSource();
-        briefSpeedier.briefContext = new SmartBriefContext(briefConfigProperties, dataSource, new TransactionManagement(dataSource));
+        briefSpeedier.briefContext = new SpeedierBriefContext(dataSource);
+        briefSpeedier.briefContext.getBriefPropertiesList().add(briefConfigProperties);
         briefSpeedier.briefContext.fresh();
         return briefSpeedier;
     }
@@ -103,7 +104,7 @@ public class BriefSpeedier {
      */
     public static BriefSpeedier getInstance(DataSource dataSource) {
         BriefSpeedier briefSpeedier = new BriefSpeedier();
-        briefSpeedier.briefContext = new SmartBriefContext(dataSource, new TransactionManagement(dataSource));
+        briefSpeedier.briefContext = new SpeedierBriefContext(dataSource);
         briefSpeedier.briefContext.fresh();
         return briefSpeedier;
     }

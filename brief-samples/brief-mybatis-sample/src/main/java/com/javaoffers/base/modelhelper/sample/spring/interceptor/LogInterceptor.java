@@ -1,8 +1,7 @@
 package com.javaoffers.base.modelhelper.sample.spring.interceptor;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import org.springframework.stereotype.Component;
+import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
 
 /**
  * 支持spring环境.

@@ -1,6 +1,5 @@
 package com.javaoffers.brief.modelhelper.speedier.transaction;
 
-import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.exception.BriefTransactionException;
 
 import javax.sql.DataSource;
@@ -16,13 +15,13 @@ import java.util.logging.Logger;
  * affairs management
  * @author mingJie
  */
-public class TransactionManagement implements BriefTransaction {
+public class SpeedierTransactionManagement implements BriefTransaction {
     /**
      * The data source.
      */
     private TransactionDataSource dataSource;
 
-    public TransactionManagement(DataSource dataSource) {
+    public SpeedierTransactionManagement(DataSource dataSource) {
         this.dataSource = new TransactionDataSource(dataSource);
     }
 

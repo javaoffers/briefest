@@ -13,7 +13,7 @@ import com.javaoffers.brief.modelhelper.encrypt.BriefEncipher;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedierDataSource;
-import com.javaoffers.brief.modelhelper.speedier.transaction.TransactionManagement;
+import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
 import org.junit.Test;
 
 import java.util.Date;
@@ -50,7 +50,7 @@ public class BriefSpeedierSample {
     }
 
     public void testTransaction(boolean isCommit){
-        TransactionManagement transactionManagement = speedier.getTransactionManagement();
+        SpeedierTransactionManagement transactionManagement = speedier.getTransactionManagement();
         transactionManagement.openTransaction();
         User user = new User();
         user.setName("testTransaction : "+isCommit);

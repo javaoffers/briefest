@@ -2,8 +2,7 @@ package com.javaoffers.brief.modelhelper.jdbc.spring;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
+import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 
 /**

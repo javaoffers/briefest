@@ -4,11 +4,9 @@ import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
+import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
 import com.javaoffers.brief.modelhelper.utils.GsonUtils;
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptorLoader;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;

@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.context;
 
-import com.javaoffers.brief.modelhelper.interceptor.JqlInterceptor;
-import com.javaoffers.brief.modelhelper.jdbc.BriefTransaction;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
+import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
 
@@ -24,23 +23,17 @@ public class SmartBriefContext implements BriefContext{
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
     private final List<BriefProperties> briefPropertiesList = new ArrayList<>() ;
 
-    //是否开启加密.
-    public volatile boolean encryptState = false;
-
     //数据源
     public DataSource primaryDataSource;
-
-    //brief事务
-    public BriefTransaction briefTransaction;
 
     //缓存BriefMapper
     private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
-    //加载器
+    //briefProperties加载器
     private List<BriefPropertiesLoader> briefPropertiesLoaderList =
             new ArrayList<BriefPropertiesLoader>((Set)ReflectionUtils.getChildInstance(BriefPropertiesLoader.class));
 
-    //briefContext后置处理器
+    //briefContextPostProcess后置处理器
     private List<BriefContextPostProcess> briefContextPostProcessList =
             new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
 
@@ -48,36 +41,21 @@ public class SmartBriefContext implements BriefContext{
     private List<BriefContextAware> briefContextAwareList =
             new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
 
-    //jql拦截器
+    //jqlInterceptor拦截器
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
-
-    public SmartBriefContext(SmartBriefProperties smartBriefProperties, boolean encryptState, DataSource dataSource, BriefTransaction briefTransaction) {
-        this.briefPropertiesList.add(smartBriefProperties);
-        this.encryptState = encryptState;
-        this.primaryDataSource = dataSource;
-        this.briefTransaction = briefTransaction;
-    }
-
-    public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource, BriefTransaction briefTransaction) {
+    public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
         this.briefPropertiesList.add(smartBriefProperties);
         this.primaryDataSource = dataSource;
-        this.briefTransaction = briefTransaction;
     }
 
-    public SmartBriefContext( DataSource dataSource, BriefTransaction briefTransaction) {
+    public SmartBriefContext( DataSource dataSource) {
         this.briefPropertiesList.add(new SmartBriefProperties());
         this.primaryDataSource = dataSource;
-        this.briefTransaction = briefTransaction;
     }
 
     public List<BriefProperties> getBriefPropertiesList() {
         return briefPropertiesList;
-    }
-
-    @Override
-    public boolean getEncryptState() {
-        return this.encryptState;
     }
 
     @Override
@@ -86,18 +64,13 @@ public class SmartBriefContext implements BriefContext{
     }
 
     @Override
-    public BriefTransaction getBriefTransaction() {
-        return this.briefTransaction;
-    }
-
-    @Override
     public BriefMapper getBriefMapper(Class briefMapper) {
-        return this.cache.get(briefMapper);
-    }
-
-    @Override
-    public List<BriefPropertiesLoader> getBriefPropertiesLoader() {
-        return this.briefPropertiesLoaderList;
+        BriefMapper mapper = cache.get(briefMapper);
+        if(mapper == null){
+            cache.putIfAbsent(briefMapper, BriefUtils.newCrudMapper(briefMapper));
+            mapper = cache.get(briefMapper);
+        }
+        return mapper;
     }
 
     @Override
@@ -119,8 +92,8 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public void fresh() {
         initProperties();//初始化配置信息
-        initContextPostProcess();//执行加载器
-        finish();//已经可以对外提供功能了.
+        initContextPostProcess();//执行content后置处理器
+        finish();//已经可以对外提供功能了. 释放content可用.
     }
 
     //初始化配置信息.

@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.speedier;
+package com.javaoffers.brief.modelhelper.mapper;
 
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
@@ -19,7 +19,7 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 
-public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
+public class SmartMapperProxy implements InvocationHandler, Serializable {
 
     private static final Map<Method, String> mapperMethod = BriefUtils.getMapperMethod();
 
@@ -96,7 +96,7 @@ public class SpeedierMapperProxy  implements InvocationHandler, Serializable {
         }
     }
 
-    SpeedierMapperProxy(BriefMapper briefMapperJql, DataSource dataSource, Class modelClass) {
+    public SmartMapperProxy(BriefMapper briefMapperJql, DataSource dataSource, Class modelClass) {
         this.briefMapperJql = briefMapperJql;
         this.dataSource = dataSource;
         this.modelClass = modelClass;

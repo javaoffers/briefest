@@ -1,11 +1,16 @@
 package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
+import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
+import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
+import com.javaoffers.brief.modelhelper.utils.Utils;
 
 import javax.sql.DataSource;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,10 +69,14 @@ public class SmartBriefContext implements BriefContext{
     }
 
     @Override
-    public BriefMapper getBriefMapper(Class briefMapper) {
+    public  BriefMapper getBriefMapper(Class briefMapper) {
+        Assert.isTrue(BriefMapper.class.isAssignableFrom(briefMapper), briefMapper.getName() + " must be BriefMapper subclass");
         BriefMapper mapper = cache.get(briefMapper);
         if(mapper == null){
-            cache.putIfAbsent(briefMapper, BriefUtils.newCrudMapper(briefMapper));
+            Type modelClass = Utils.getModelClass(briefMapper);
+            BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(briefMapper);
+            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, getDataSource(), (Class) modelClass);
+            cache.putIfAbsent(briefMapper, (BriefMapper)JdkProxyUtils.createProxy(briefMapper, smartMapperProxy));
             mapper = cache.get(briefMapper);
         }
         return mapper;
@@ -76,10 +85,6 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public List<JqlInterceptor> getJqlInterceptors() {
         return this.coreInterceptorsList;
-    }
-
-    public Map<Class, BriefMapper> getCacheMapper() {
-        return cache;
     }
 
     public <T extends BriefProperties> List<T> getBriefProperties(Class<T> clazz){

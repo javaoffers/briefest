@@ -19,7 +19,7 @@ public interface BriefContext {
     public DataSource getDataSource();
 
     //缓存BriefMapper
-    public <T extends BaseMapper> T getBriefMapper(Class<?> briefMapper);
+    public <T extends BaseMapper> T getBriefMapper(Class<T> briefMapper);
 
     /**
      * 获取jql拦截器.

@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.proxy;
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
+import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.core.CrudMapperConstant;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
 import com.javaoffers.brief.modelhelper.exception.ParseDataSourceException;
@@ -41,7 +42,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
 
     private static Map<Method,String> isMapperMethod = BriefUtils.getMapperMethod();
 
-    private static BriefContext briefContext;
+    private static SmartBriefContext briefContext;
 
     private Class clazz;
 
@@ -169,6 +170,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
 
     @Override
     public void setBriefContext(BriefContext briefContext) {
-        CrudMapperProxy.briefContext = briefContext;
+        CrudMapperProxy.briefContext = (SmartBriefContext) briefContext;
+
     }
 }

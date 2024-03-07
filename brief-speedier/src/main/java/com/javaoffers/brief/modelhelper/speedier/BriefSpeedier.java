@@ -1,16 +1,17 @@
 package com.javaoffers.brief.modelhelper.speedier;
 
-import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
+import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
 import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
 import com.javaoffers.brief.modelhelper.utils.Assert;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 快速开始.
@@ -21,6 +22,9 @@ public class BriefSpeedier {
      * 事务管理
      */
     private SpeedierBriefContext briefContext;
+
+    //缓存BriefMapper
+    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     /**
      * cache.
@@ -34,23 +38,15 @@ public class BriefSpeedier {
      * @return
      */
     public <T> BriefMapper<T> newDefaultCrudMapper(Class<T> modelClass) {
-        BriefMapper proxy = null;
-        if ((proxy = briefContext.getBriefMapper(modelClass)) == null) {
-            synchronized (modelClass) {
-                if((proxy = briefContext.getBriefMapper(modelClass)) == null){
-                    Assert.isTrue(!BriefMapper.class.isAssignableFrom(modelClass), modelClass.getName() + " can't be BriefMapper subclass");
-                    //First create crudMapper implementation
-                    BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(BriefMapper.class);
-                    //Generate crudMapper agent
-                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
-                            briefContext.getDataSource(), modelClass);
-                    proxy = JdkProxyUtils.createProxy(BriefMapper.class, speedierMapperProxy);
-                    briefContext.getCacheMapper().put(modelClass, proxy);
-                }
-            }
+        BriefMapper briefMapper = cache.get(modelClass);
+        if(briefMapper == null){
+            Assert.isTrue(!Modifier.isAbstract(modelClass.getModifiers()), modelClass.getName() + " is Abstract ");
+            BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(BriefMapper.class);
+            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, briefContext.getDataSource(), (Class) modelClass);
+            cache.putIfAbsent(modelClass, JdkProxyUtils.createProxy(BriefMapper.class, smartMapperProxy));
+            briefMapper = cache.get(modelClass);
         }
-
-        return proxy;
+        return briefMapper;
     }
 
     public SpeedierTransactionManagement getTransactionManagement() {
@@ -67,23 +63,6 @@ public class BriefSpeedier {
     public <M extends BriefMapper> M newCustomCrudMapper(Class<M> mapperClass) {
         Assert.isTrue(BriefMapper.class.isAssignableFrom(mapperClass), mapperClass.getName() + " must be BriefMapper subclass");
         M proxyBriefMapper = (M) briefContext.getBriefMapper(mapperClass);
-        if(proxyBriefMapper == null){
-            synchronized (mapperClass){
-                proxyBriefMapper = (M) briefContext.getBriefMapper(mapperClass);
-                if(proxyBriefMapper == null){
-                    Type[] types = mapperClass.getGenericInterfaces();
-                    ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl) types[0];
-                    Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
-                    //First create crudMapper implementation
-                    BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(mapperClass);
-                    //Generate crudMapper agent
-                    SpeedierMapperProxy speedierMapperProxy = new SpeedierMapperProxy(briefMapperImpl,
-                            this.briefContext.getDataSource(), (Class) modelclass);
-                    proxyBriefMapper = JdkProxyUtils.createProxy(mapperClass, speedierMapperProxy);
-                    briefContext.getCacheMapper().put(mapperClass, proxyBriefMapper);
-                }
-            }
-        }
         return proxyBriefMapper;
     }
 

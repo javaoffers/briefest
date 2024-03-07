@@ -29,15 +29,6 @@ public class SpringBriefContext extends SmartBriefContext {
         return beanFactory;
     }
 
-    public BriefMapper getBriefMapper(Class briefMapperClass) {
-        BriefMapper briefMapper = super.getBriefMapper(briefMapperClass);
-        if(briefMapper == null){
-            super.getCacheMapper().putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
-            briefMapper = super.getBriefMapper(briefMapperClass);
-        }
-        return briefMapper;
-    }
-
     @Override
     public void fresh() {
         loadSpringEnvironment();

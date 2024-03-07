@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.exception.ClassNotFindException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -252,6 +253,19 @@ public class Utils {
         }
 
         return type2;
+    }
+
+    /**
+     * Get the model class through the interface
+     * @param briefMapperClass
+     * @return
+     */
+    public static Type getModelClass(Class briefMapperClass){
+        Assert.isTrue(briefMapperClass.isInterface(), briefMapperClass.getName() + " must be a Interface");
+        Type[] types = briefMapperClass.getGenericInterfaces();
+        ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl) types[0];
+        Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
+        return modelclass;
     }
 
     /**

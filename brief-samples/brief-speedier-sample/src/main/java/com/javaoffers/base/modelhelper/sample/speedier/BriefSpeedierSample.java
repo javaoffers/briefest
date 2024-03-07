@@ -41,31 +41,31 @@ public class BriefSpeedierSample {
 
     @Test
     public void testAll(){
-        testGenMapper();
-        testAutoUpdate();
+        //testGenMapper();
+        //testAutoUpdate();
         testBriefSpeedier();
         testBriefEncrypt();
         testTransaction(true);
         testTransaction(false);
     }
 
+    //自动更新功能下掉.
+    @Deprecated
     public void testTransaction(boolean isCommit){
-        SpeedierTransactionManagement transactionManagement = speedier.getTransactionManagement();
-        transactionManagement.openTransaction();
-        User user = new User();
-        user.setName("testTransaction : "+isCommit);
-        userBriefMapper.general().save(user);
-
-        UserOrder userOrder = new UserOrder();
-        userOrder.setOrderName("testTransactionOrder : "+isCommit);
-        userOrderBriefMapper.general().save(userOrder);
-        if(isCommit){
-            transactionManagement.commitTransaction();
-        }else{
-            transactionManagement.rollbackTransaction();
-        }
-
-
+//        SpeedierTransactionManagement transactionManagement = speedier.getTransactionManagement();
+//        transactionManagement.openTransaction();
+//        User user = new User();
+//        user.setName("testTransaction : "+isCommit);
+//        userBriefMapper.general().save(user);
+//
+//        UserOrder userOrder = new UserOrder();
+//        userOrder.setOrderName("testTransactionOrder : "+isCommit);
+//        userOrderBriefMapper.general().save(userOrder);
+//        if(isCommit){
+//            transactionManagement.commitTransaction();
+//        }else{
+//            transactionManagement.rollbackTransaction();
+//        }
     }
 
     public void testGenMapper(){
@@ -91,13 +91,13 @@ public class BriefSpeedierSample {
         user.setWork(Work.JAVA);
         Id save = crudUserMapper.general().save(user);
         print(save.toLong());
-        Number countNum = crudUserMapper.general().count();
-        //数据量不要太大. 如果想测试一下数据量无限制可以将countNum.intValue() < 10000 条件注释掉.
-        for(int i=0; i<1000 && countNum.intValue() < 10000; i++) {
-            List<User> users = crudUserMapper.queryAll();
-            print("size "+users.size());
-            print(user);
-        }
+//        Number countNum = crudUserMapper.general().count();
+//        //数据量不要太大. 如果想测试一下数据量无限制可以将countNum.intValue() < 10000 条件注释掉.
+//        for(int i=0; i<1 && countNum.intValue() < 10000; i++) {
+//            List<User> users = crudUserMapper.queryAll();
+//            print("size "+users.size());
+//            print(user);
+//        }
 
         userList = userBriefMapper.select().colAll().where().limitPage(1, 10).exs();
         print(userList);

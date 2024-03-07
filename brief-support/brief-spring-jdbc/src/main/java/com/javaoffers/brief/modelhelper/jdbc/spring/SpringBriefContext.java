@@ -12,6 +12,8 @@ import org.springframework.core.env.Environment;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * spring brief context
@@ -19,6 +21,9 @@ import java.lang.reflect.Field;
 public class SpringBriefContext extends SmartBriefContext {
 
     private ConfigurableListableBeanFactory beanFactory;
+
+    //缓存BriefMapper
+    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     public SpringBriefContext(ConfigurableListableBeanFactory beanFactory) {
         super(beanFactory.getBean(DataSource.class));
@@ -33,6 +38,16 @@ public class SpringBriefContext extends SmartBriefContext {
     public void fresh() {
         loadSpringEnvironment();
         super.fresh();
+    }
+
+    @Override
+    public BriefMapper getBriefMapper(Class briefMapperClass) {
+        BriefMapper briefMapper = cache.get(briefMapperClass);
+        if(briefMapper == null){
+            cache.putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
+            briefMapper = cache.get(briefMapperClass);
+        }
+        return briefMapper;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
+import com.javaoffers.brief.modelhelper.filter.ChainFilter;
 import com.javaoffers.brief.modelhelper.filter.Filter;
 import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
@@ -25,7 +26,7 @@ public class SmartBriefProperties implements BriefProperties{
 
     private final Map<String, Object> properties = new ConcurrentHashMap<>();
     private final Properties bp = System.getProperties();
-    private volatile List<Filter> jqlChainFilterList = new ArrayList<>();
+    private volatile List<ChainFilter> jqlChainFilterList = new ArrayList<>();
     private volatile long showLogTime = 10;
     private volatile JdbcExecutorFactory jdbcExecutorFactory;
     private volatile boolean isPrintSql;
@@ -58,7 +59,7 @@ public class SmartBriefProperties implements BriefProperties{
      *
      * @param isPrintSql
      */
-    public SmartBriefProperties setIsPrintSql(String isPrintSql) {
+    public SmartBriefProperties isPrintSql(String isPrintSql) {
         put(ConfigPropertiesConstants.IS_PRINT_SQL, isPrintSql.trim().toLowerCase());
         return this;
     }
@@ -68,7 +69,7 @@ public class SmartBriefProperties implements BriefProperties{
      *
      * @param isPrintSqlCost
      */
-    public SmartBriefProperties setIsPrintSqlCost(String isPrintSqlCost) {
+    public SmartBriefProperties isPrintSqlCost(String isPrintSqlCost) {
         put(ConfigPropertiesConstants.IS_PRINT_SQL_COST, isPrintSqlCost.trim().toLowerCase());
         return this;
     }
@@ -94,7 +95,7 @@ public class SmartBriefProperties implements BriefProperties{
      *
      * @return
      */
-    public long getSlowSqlLogTime() {
+    public long getSlowSqlTimeThreshold() {
         return showLogTime;
     }
 
@@ -103,7 +104,7 @@ public class SmartBriefProperties implements BriefProperties{
      *
      * @return
      */
-    public List<Filter> getJqlFilters() {
+    public List<ChainFilter> getJqlFilters() {
         return jqlChainFilterList;
     }
 
@@ -149,7 +150,7 @@ public class SmartBriefProperties implements BriefProperties{
     //初始化jql过滤器
     public void initJqlFilters() {
         //加载客户自定义的。
-        List<Filter> jqlChainFilterList = new ArrayList<>();
+        List<ChainFilter> jqlChainFilterList = new ArrayList<>();
         String jqlFilters = bp.getProperty(ConfigPropertiesConstants.JQL_FILTER);
         if (jqlFilters != null) {
 
@@ -158,7 +159,7 @@ public class SmartBriefProperties implements BriefProperties{
                 try {
                     Class<?> jqlFilterClass = Class.forName(jqlFilterClassName);
                     if(JqlChainFilter.class.isAssignableFrom(jqlFilterClass)){
-                        Filter jqlChainFilter = (Filter) jqlFilterClass.newInstance();
+                        ChainFilter jqlChainFilter = (ChainFilter) jqlFilterClass.newInstance();
                         jqlChainFilterList.add(jqlChainFilter);
                     }
                 } catch (Exception e) {
@@ -171,7 +172,7 @@ public class SmartBriefProperties implements BriefProperties{
         if (CollectionUtils.isNotEmpty(childs)) {
             for (Class clazz : childs) {
                 try {
-                    Filter o1 = (Filter) clazz.newInstance();
+                    ChainFilter o1 = (ChainFilter) clazz.newInstance();
                     jqlChainFilterList.add(o1);
                 } catch (Exception e) {
                     e.printStackTrace();

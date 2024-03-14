@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.context;
 
+import com.javaoffers.brief.modelhelper.filter.ChainFilter;
 import com.javaoffers.brief.modelhelper.filter.Filter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 
@@ -18,7 +19,37 @@ public interface BriefProperties {
      * @param value
      * @return
      */
-    public BriefProperties put(String key, String value);
+    default BriefProperties put(String key, String value){return this;};
+
+    /**
+     * 获取jdbc执行工厂.
+     * @return
+     */
+    public JdbcExecutorFactory getJdbcExecutorFactory();
+
+    /**
+     * 是否要打印sql
+     * @return
+     */
+    public boolean isPrintSql();
+
+    /**
+     * 是否打印sql耗时
+     * @return
+     */
+    public boolean isPrintSqlCost();
+
+    /**
+     * 获取链过滤器.
+     * @return
+     */
+    public List<ChainFilter> getJqlFilters();
+
+    /**
+     * 获取慢sql时间阈值
+     * @return
+     */
+    public long getSlowSqlTimeThreshold();
 
     /**
      * 刷新完成创建.

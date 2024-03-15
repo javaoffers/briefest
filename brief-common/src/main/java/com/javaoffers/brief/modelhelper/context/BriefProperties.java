@@ -1,7 +1,6 @@
 package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.filter.ChainFilter;
-import com.javaoffers.brief.modelhelper.filter.Filter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 
 import java.util.List;
@@ -46,7 +45,7 @@ public interface BriefProperties {
     public List<ChainFilter> getJqlFilters();
 
     /**
-     * 获取慢sql时间阈值
+     * 获取慢sql时间阈值, 单位是毫秒.
      * @return
      */
     public long getSlowSqlTimeThreshold();

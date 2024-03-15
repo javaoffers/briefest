@@ -6,5 +6,6 @@ package com.javaoffers.brief.modelhelper.context;
  */
 public interface BriefPropertiesLoader {
 
-    BriefProperties startLoader();
+    void startLoader(BriefProperties briefProperties);
+
 }

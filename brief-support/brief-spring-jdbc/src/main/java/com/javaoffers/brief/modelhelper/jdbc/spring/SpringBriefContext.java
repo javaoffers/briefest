@@ -56,7 +56,7 @@ public class SpringBriefContext extends SmartBriefContext {
     private void loadSpringEnvironment() {
         try {
             // {@code ConfigPropertiesConstants}
-            SmartBriefProperties briefProperties = this.getBriefProperties(SmartBriefProperties.class).get(0);
+            SmartBriefProperties briefProperties = this.getBriefProperties();
             Environment environment = beanFactory.getBean(Environment.class);
             Field[] declaredFields = ConfigPropertiesConstants.class.getDeclaredFields();
             for(Field field : declaredFields){

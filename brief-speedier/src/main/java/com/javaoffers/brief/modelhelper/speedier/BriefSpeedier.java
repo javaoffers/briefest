@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.speedier;
 
+import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.speedier.config.BriefSpeedierConfigProperties;
@@ -69,8 +70,7 @@ public class BriefSpeedier {
     public static BriefSpeedier getInstance(BriefSpeedierConfigProperties briefConfigProperties){
         BriefSpeedier briefSpeedier = new BriefSpeedier();
         DataSource dataSource = briefConfigProperties.getDataSource();
-        briefSpeedier.briefContext = new SpeedierBriefContext(dataSource);
-        briefSpeedier.briefContext.getBriefPropertiesList().add(briefConfigProperties);
+        briefSpeedier.briefContext = new SpeedierBriefContext(briefConfigProperties, dataSource);
         briefSpeedier.briefContext.fresh();
         return briefSpeedier;
     }

@@ -12,13 +12,24 @@ import java.util.List;
  */
 public interface BriefContext {
 
-    //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
-    public List<BriefProperties> getBriefPropertiesList();
+    /**
+     * brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
+     * @return
+     */
+    public BriefProperties getBriefProperties();
 
-    //数据源
+    /**
+     * 数据源
+     * @return
+     */
     public DataSource getDataSource();
 
-    //缓存BriefMapper
+    /**
+     * 缓存BriefMapper
+     * @param briefMapper
+     * @param <T>
+     * @return
+     */
     public <T extends BaseMapper> T getBriefMapper(Class<T> briefMapper);
 
     /**

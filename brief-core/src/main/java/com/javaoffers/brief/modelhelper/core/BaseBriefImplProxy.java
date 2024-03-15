@@ -23,7 +23,7 @@ import java.util.function.Supplier;
  */
 public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAware {
 
-    private static List<Filter> jqlChainFilterList = new ArrayList<>();
+    private static List<ChainFilter> jqlChainFilterList = new ArrayList<>();
 
     private BaseBrief baseBrief;
 
@@ -128,6 +128,6 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     @Override
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
-        jqlChainFilterList =  smartBriefContext.getBriefProperties(SmartBriefProperties.class).get(0).getJqlFilters();
+        jqlChainFilterList =  smartBriefContext.getBriefProperties().getJqlFilters();
     }
 }

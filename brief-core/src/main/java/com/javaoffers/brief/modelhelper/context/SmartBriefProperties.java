@@ -149,7 +149,7 @@ public class SmartBriefProperties implements BriefProperties{
 
     //初始化jql过滤器
     public void initJqlFilters() {
-        //加载客户自定义的。
+        //加载环境变量中的.因此客户可以自定义指定. 多个用逗号分割
         List<ChainFilter> jqlChainFilterList = new ArrayList<>();
         String jqlFilters = bp.getProperty(ConfigPropertiesConstants.JQL_FILTER);
         if (jqlFilters != null) {

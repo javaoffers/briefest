@@ -33,6 +33,6 @@ public class JqlLogger implements BriefContextAware {
     @Override
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext)briefContext;
-        briefProperties = smartBriefContext.getBriefProperties(SmartBriefProperties.class).get(0);
+        briefProperties = smartBriefContext.getBriefProperties();
     }
 }

@@ -100,6 +100,6 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextPostProce
     @Override
     public void postProcess(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
-        jdbcExecutorFactory = smartBriefContext.getBriefProperties(SmartBriefProperties.class).get(0).getJdbcExecutorFactory();
+        jdbcExecutorFactory = smartBriefContext.getBriefProperties().getJdbcExecutorFactory();
     }
 }

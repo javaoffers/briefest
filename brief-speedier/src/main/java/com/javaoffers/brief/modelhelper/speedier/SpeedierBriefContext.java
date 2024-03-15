@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.speedier;
 
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
+import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
@@ -27,6 +28,9 @@ public class SpeedierBriefContext extends SmartBriefContext {
         this.speedierTransactionManagement = new SpeedierTransactionManagement(dataSource);
     }
 
+    public SpeedierBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
+        super(smartBriefProperties, dataSource);
+    }
 
     public SpeedierTransactionManagement getTransactionManagement(){
          return this.speedierTransactionManagement;

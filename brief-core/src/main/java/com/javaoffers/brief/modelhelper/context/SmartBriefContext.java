@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 public class SmartBriefContext implements BriefContext{
 
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
-    private final List<BriefProperties> briefPropertiesList = new ArrayList<>() ;
+    private SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
 
     //数据源
     public DataSource primaryDataSource;
@@ -50,17 +50,16 @@ public class SmartBriefContext implements BriefContext{
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
-        this.briefPropertiesList.add(smartBriefProperties);
+        this.smartBriefProperties = smartBriefProperties;
         this.primaryDataSource = dataSource;
     }
 
     public SmartBriefContext( DataSource dataSource) {
-        this.briefPropertiesList.add(new SmartBriefProperties());
         this.primaryDataSource = dataSource;
     }
 
-    public List<BriefProperties> getBriefPropertiesList() {
-        return briefPropertiesList;
+    public SmartBriefProperties getBriefProperties() {
+        return smartBriefProperties;
     }
 
     @Override
@@ -87,12 +86,6 @@ public class SmartBriefContext implements BriefContext{
         return this.coreInterceptorsList;
     }
 
-    public <T extends BriefProperties> List<T> getBriefProperties(Class<T> clazz){
-        List collect = this.getBriefPropertiesList().stream().filter(briefProperties -> {
-            return clazz.isAssignableFrom(briefProperties.getClass());
-        }).collect(Collectors.toList());
-        return collect;
-    }
 
     @Override
     public void fresh() {
@@ -103,16 +96,13 @@ public class SmartBriefContext implements BriefContext{
 
     //初始化配置信息.
     private void initProperties() {
-
-        //加载配置
+        //加载配置. 在briefPropertiesLoader中初始化配置信息
         for(BriefPropertiesLoader briefPropertiesLoader : briefPropertiesLoaderList){
-            briefPropertiesList.add(briefPropertiesLoader.startLoader());
+            briefPropertiesLoader.startLoader(this.getBriefProperties());
+        }
+        //发布可用
+        this.smartBriefProperties.fresh();
 
-        }
-        //初始化配置
-        for(BriefProperties briefProperties : briefPropertiesList){
-            briefProperties.fresh();
-        }
     }
 
     /**

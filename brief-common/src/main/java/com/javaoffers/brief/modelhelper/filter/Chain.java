@@ -8,6 +8,4 @@ public interface Chain<R,S> {
 
     R doChain();
 
-    S getMetaInfo();
-
 }

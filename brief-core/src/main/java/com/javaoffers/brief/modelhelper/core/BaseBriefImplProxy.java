@@ -25,6 +25,8 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
 
     private static List<ChainFilter> jqlChainFilterList = new ArrayList<>();
 
+    private ChainProcessor<Object, SqlMetaInfo> chainProcessor;
+
     private BaseBrief baseBrief;
 
     private Class modelClass;
@@ -39,30 +41,8 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
 
     private <R> R doProxy(SqlMetaInfo sqlMetaInfo, Supplier<R> supplier){
         sqlMetaInfo.setBaseBrief(this);
-        ChainFilterWrap<R, SqlMetaInfo> head = null;
-        ChainFilterWrap<R, SqlMetaInfo> next = null;
-        for(Filter jqlChainFilter : jqlChainFilterList){
-            ChainFilterWrap<R, SqlMetaInfo> filterWrap = new ChainFilterWrap(sqlMetaInfo, (ChainFilter)jqlChainFilter);
-            if(head == null){
-                head = filterWrap;
-                next = filterWrap;
-            }else {
-                next.setNextChain(filterWrap);
-                next = filterWrap;
-            }
-        }
 
-        JqlChainFilter last = objectSqlMetaInfoChain -> supplier.get();
-        ChainFilterWrap<R, SqlMetaInfo> lastChainFilterSrap = new ChainFilterWrap(sqlMetaInfo, last);
-
-        if(head == null){
-            head = lastChainFilterSrap;
-        }else{
-            next.setNextChain(lastChainFilterSrap);
-        }
-        //拦截器
-        ChainProcessor<R, SqlMetaInfo> chainProcessor = new ChainProcessor<R, SqlMetaInfo>(head);
-        return chainProcessor.doChain();
+        return (R)chainProcessor.doChain();
     }
 
     @Override
@@ -129,5 +109,28 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
         jqlChainFilterList =  smartBriefContext.getBriefProperties().getJqlFilters();
+        ChainFilterWrap<Object, SqlMetaInfo> head = null;
+        ChainFilterWrap<Object, SqlMetaInfo> next = null;
+        for(ChainFilter jqlChainFilter : jqlChainFilterList){
+            ChainFilterWrap<Object, SqlMetaInfo> filterWrap = new ChainFilterWrap(jqlChainFilter);
+            if(head == null){
+                head = filterWrap;
+                next = filterWrap;
+            }else {
+                next.setNextChain(filterWrap);
+                next = filterWrap;
+            }
+        }
+
+
+        ChainFilterWrap<Object, SqlMetaInfo> lastChainFilterSrap = new ChainFilterWrap();
+
+        if(head == null){
+            head = lastChainFilterSrap;
+        }else{
+            next.setNextChain(lastChainFilterSrap);
+        }
+        //拦截器
+        chainProcessor = new ChainProcessor<Object, SqlMetaInfo>(head);
     }
 }

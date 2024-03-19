@@ -9,7 +9,6 @@ import com.javaoffers.brief.modelhelper.filter.ChainFilter;
  */
 public class ChainFilterWrap<R,S> implements Chain<R,S> {
 
-    private S  s;
 
     private ChainFilter<R,S> chainFilter;
 
@@ -18,11 +17,6 @@ public class ChainFilterWrap<R,S> implements Chain<R,S> {
     public ChainFilterWrap(ChainFilter<R,S> chainFilter, ChainFilterWrap<R,S> nextChain) {
         this.chainFilter = chainFilter;
         this.nextChain = nextChain;
-    }
-
-    public ChainFilterWrap(S s, ChainFilter<R, S> chainFilter) {
-        this.s = s;
-        this.chainFilter = chainFilter;
     }
 
     public ChainFilterWrap(ChainFilter<R,S> chainFilter) {
@@ -51,8 +45,4 @@ public class ChainFilterWrap<R,S> implements Chain<R,S> {
         return chainFilter.filter(nextChain);
     }
 
-    @Override
-    public S getMetaInfo() {
-        return s;
-    }
 }

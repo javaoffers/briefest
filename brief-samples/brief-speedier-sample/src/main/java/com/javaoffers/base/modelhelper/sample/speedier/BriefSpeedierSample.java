@@ -10,12 +10,15 @@ import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.encrypt.BriefEncipher;
+import com.javaoffers.brief.modelhelper.fun.crud.WhereSelectFun;
+import com.javaoffers.brief.modelhelper.fun.crud.impl.LeftWhereSelectFunImpl;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedierDataSource;
 import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
 import org.junit.Test;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -104,7 +107,6 @@ public class BriefSpeedierSample {
 
         Number count = userBriefMapper.general().count();
         print(count);
-
     }
 
 
@@ -142,9 +144,6 @@ public class BriefSpeedierSample {
         encryptData.setId(null);
         //Not updated, as has already been canceled difference update functionality;
         encryptData.setEncryptNum("098712345");
-
-
-
 
         print(encryptData);
     }

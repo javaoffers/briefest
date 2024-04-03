@@ -1,27 +1,8 @@
 package com.javaoffers.brief.modelhelper.filter;
 
-import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
-import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import com.javaoffers.brief.modelhelper.utils.Assert;
-import com.javaoffers.brief.modelhelper.utils.CglibProxyUtils;
-import com.javaoffers.brief.modelhelper.utils.ColNameAndColValueUtils;
-import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
-import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import com.javaoffers.brief.modelhelper.utils.TableInfo;
-import net.sf.cglib.proxy.MethodProxy;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.collections4.MapUtils;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @description: SmartJqlChainFilter
@@ -30,9 +11,10 @@ import java.util.concurrent.ConcurrentHashMap;
  * </p>
  * @author: create by cmj on 2023/6/1 20:31
  */
-public class SmartJqlChainFilter implements JqlChainFilter {
+public class SmartJqlChainFilter implements JqlExecutorFilter {
+
     @Override
-    public Object filter(Chain<Object, SqlMetaInfo> chain) {
+    public Object filter(JqlExecutorChain<Object, SqlMetaInfo> chain) {
         long cost = 0;
         SqlMetaInfo metaInfo = chain.getMetaInfo();
         Class modelClass = metaInfo.getModelClass();
@@ -47,5 +29,11 @@ public class SmartJqlChainFilter implements JqlChainFilter {
             }
         }
         return o;
+    }
+
+
+
+    public Object filter(Object o) {
+        return null;
     }
 }

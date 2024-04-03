@@ -1,6 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.spring.filter;
 
-import com.javaoffers.brief.modelhelper.filter.Chain;
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
 import com.javaoffers.brief.modelhelper.filter.SqlMetaInfo;
 
@@ -10,7 +10,7 @@ import com.javaoffers.brief.modelhelper.filter.SqlMetaInfo;
  */
 public class JqlSampleFilter implements JqlChainFilter {
     @Override
-    public Object filter(Chain<Object, SqlMetaInfo> chain) {
+    public Object filter(JqlExecutorChain<Object, SqlMetaInfo> chain) {
         System.out.println("-------------------------- 0 0 ---------------------- ");
         return chain.doChain();
 

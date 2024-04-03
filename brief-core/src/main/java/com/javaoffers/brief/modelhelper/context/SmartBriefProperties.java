@@ -2,12 +2,9 @@ package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
-import com.javaoffers.brief.modelhelper.filter.ChainFilter;
-import com.javaoffers.brief.modelhelper.filter.Filter;
-import com.javaoffers.brief.modelhelper.filter.JqlChainFilter;
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
-import com.javaoffers.brief.modelhelper.utils.Utils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -26,7 +23,7 @@ public class SmartBriefProperties implements BriefProperties{
 
     private final Map<String, Object> properties = new ConcurrentHashMap<>();
     private final Properties bp = System.getProperties();
-    private volatile List<ChainFilter> jqlChainFilterList = new ArrayList<>();
+    private volatile List<JqlExecutorFilter> jqlChainFilterList = new ArrayList<>();
     private volatile long showLogTime = 10;
     private volatile JdbcExecutorFactory jdbcExecutorFactory;
     private volatile boolean isPrintSql;
@@ -104,7 +101,8 @@ public class SmartBriefProperties implements BriefProperties{
      *
      * @return
      */
-    public List<ChainFilter> getJqlFilters() {
+    @Override
+    public List<JqlExecutorFilter> getJqlExecutorFilters() {
         return jqlChainFilterList;
     }
 
@@ -150,7 +148,7 @@ public class SmartBriefProperties implements BriefProperties{
     //初始化jql过滤器
     public void initJqlFilters() {
         //加载环境变量中的.因此客户可以自定义指定. 多个用逗号分割
-        List<ChainFilter> jqlChainFilterList = new ArrayList<>();
+        List<JqlExecutorFilter> jqlChainFilterList = new ArrayList<>();
         String jqlFilters = bp.getProperty(ConfigPropertiesConstants.JQL_FILTER);
         if (jqlFilters != null) {
 
@@ -158,8 +156,8 @@ public class SmartBriefProperties implements BriefProperties{
             for (String jqlFilterClassName : jqlFilterArray) {
                 try {
                     Class<?> jqlFilterClass = Class.forName(jqlFilterClassName);
-                    if(JqlChainFilter.class.isAssignableFrom(jqlFilterClass)){
-                        ChainFilter jqlChainFilter = (ChainFilter) jqlFilterClass.newInstance();
+                    if(JqlExecutorFilter.class.isAssignableFrom(jqlFilterClass)){
+                        JqlExecutorFilter jqlChainFilter = (JqlExecutorFilter) jqlFilterClass.newInstance();
                         jqlChainFilterList.add(jqlChainFilter);
                     }
                 } catch (Exception e) {
@@ -168,11 +166,11 @@ public class SmartBriefProperties implements BriefProperties{
             }
         }
         //加载内部的
-        Set<Class<? extends JqlChainFilter>> childs = ReflectionUtils.getChilds(JqlChainFilter.class);
+        Set<Class<? extends JqlExecutorFilter>> childs = ReflectionUtils.getChilds(JqlExecutorFilter.class);
         if (CollectionUtils.isNotEmpty(childs)) {
             for (Class clazz : childs) {
                 try {
-                    ChainFilter o1 = (ChainFilter) clazz.newInstance();
+                    JqlExecutorFilter o1 = (JqlExecutorFilter) clazz.newInstance();
                     jqlChainFilterList.add(o1);
                 } catch (Exception e) {
                     e.printStackTrace();

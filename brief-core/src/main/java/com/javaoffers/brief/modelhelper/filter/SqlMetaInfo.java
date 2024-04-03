@@ -52,12 +52,4 @@ public class SqlMetaInfo {
         this.modelClass = modelClass;
     }
 
-    public void setBaseBrief(BaseBrief baseBrief) {
-        this.baseBrief = baseBrief;
-    }
-
-    public BaseBrief getBaseBrief(){
-        return this.baseBrief;
-    }
-
 }

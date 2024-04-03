@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.filter.impl;
 
-import com.javaoffers.brief.modelhelper.filter.TableHelperFilter;
+import com.javaoffers.brief.modelhelper.filter.JqlFunFilter;
 import com.javaoffers.brief.modelhelper.utils.BlurUtils;
 
 import java.lang.reflect.Field;
@@ -10,7 +10,7 @@ import java.lang.reflect.Field;
  * Avoid will refresh the database data update or save
  * @author: create by cmj on 2023/3/25 20:39
  */
-public class AsSqlFunFilterImpl implements TableHelperFilter {
+public class AsSqlFunFilterImpl implements JqlFunFilter {
 
     @Override
     public Boolean filter(Field field) {

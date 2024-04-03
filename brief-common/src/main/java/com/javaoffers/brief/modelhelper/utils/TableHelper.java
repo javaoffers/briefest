@@ -8,6 +8,7 @@ import com.javaoffers.brief.modelhelper.constants.ModelHelpperConstants;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.exception.ParseTableException;
+import com.javaoffers.brief.modelhelper.filter.JqlFunFilter;
 import com.javaoffers.brief.modelhelper.filter.impl.AsSqlFunFilterImpl;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConstructorFun;
@@ -23,14 +24,12 @@ import java.lang.reflect.Method;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
@@ -50,7 +49,7 @@ public class TableHelper {
 
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
-    private final static List<AsSqlFunFilterImpl> TABLE_HELPER_FILTER = new ArrayList<>();
+    private final static List<JqlFunFilter> TABLE_HELPER_FILTER = new ArrayList<>();
 
     static {
         TABLE_HELPER_FILTER.add(new AsSqlFunFilterImpl());
@@ -310,7 +309,7 @@ public class TableHelper {
                 //Avoid save or update operations that affect the database record,
                 // so we see it as SQL fun
                 if(!isFunSql){
-                    for(AsSqlFunFilterImpl fieldFilter : TABLE_HELPER_FILTER){
+                    for(JqlFunFilter fieldFilter : TABLE_HELPER_FILTER){
                         if(fieldFilter.filter(colF)){
                             colName = tableName+"."+colName;
                             isFunSql = true;

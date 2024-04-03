@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.context;
 
-import com.javaoffers.brief.modelhelper.filter.ChainFilter;
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 
 import java.util.List;
@@ -42,7 +43,7 @@ public interface BriefProperties {
      * 获取链过滤器.
      * @return
      */
-    public List<ChainFilter> getJqlFilters();
+    public List<? extends JqlExecutorFilter> getJqlExecutorFilters();
 
     /**
      * 获取慢sql时间阈值, 单位是毫秒.

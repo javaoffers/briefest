@@ -13,6 +13,6 @@ import java.util.LinkedList;
 public interface StatementParser<T extends Condition, R extends BaseSQLStatement>  extends DBTypeLabel {
 
     //解析生成数据片段.
-    public BaseSQLStatement statementParse(LinkedList<T> conditions, R  baseSqlStatement);
+    public R parse(LinkedList<T> conditions);
 
 }

@@ -1,6 +1,8 @@
 package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
+import com.javaoffers.brief.modelhelper.parser.StatementParser;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -36,6 +38,11 @@ public interface BriefContext {
      * 获取jql拦截器.
      */
     public List<JqlInterceptor> getJqlInterceptors();
+
+    /**
+     * 获取statement parse
+     */
+    public StatementParser getStatementParser(DBType dbType);
 
     /**
      * 执行fresh方法后开始生效。

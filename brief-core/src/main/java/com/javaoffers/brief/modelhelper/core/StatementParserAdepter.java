@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
 import com.javaoffers.brief.modelhelper.core.parse.DeleteConditionParse;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;
 import com.javaoffers.brief.modelhelper.core.parse.ParseCondition;
@@ -19,45 +21,20 @@ import java.util.LinkedList;
  * @Description: 用于解析Condition
  * @Auther: create by cmj on 2022/5/22 13:47
  */
-public class StatementParserAdepter {
+public class StatementParserAdepter implements BriefContextPostProcess {
 
-    static final EnumMap<ConditionTag, ParseCondition> crudConditionParse = new EnumMap<ConditionTag, ParseCondition>(ConditionTag.class);
-    static final EnumMap<DBType, StatementParser> dbTypeStatementParser = new EnumMap<DBType, StatementParser>(DBType.class);
+    private static BriefContext briefContext;
 
-    static {
-        crudConditionParse.put(SelectConditionParse.conditionTag, new SelectConditionParse());
-        crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
-        crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
-        crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());
-    }
-
-    public static SQLStatement statementParse(LinkedList<Condition> conditions) {
+    public static BaseSQLStatement statementParse(LinkedList<Condition> conditions) {
         HeadCondition headCondition = (HeadCondition)conditions.pollFirst();
         DBType dbType = TableHelper.getTableInfo(headCondition.getModelClass()).getDbType();
+        return briefContext.getStatementParser(dbType).parse(conditions);
 
-        //判断类型
-        Condition condition = conditions.get(0);
-
-        ConditionTag conditionTag = condition.getConditionTag();
-        return crudConditionParse.get(conditionTag).parse(conditions);
-//        switch (conditionTag) {
-//            case SELECT_FROM:
-//                //解析select
-//                return parseSelect(conditions);
-//            case INSERT_INTO:
-//                return parseInsert(conditions);
-//            case UPDATE:
-//                return parseUpdate(conditions);
-//            case DELETE_FROM:
-//                return parseDelete(conditions);
-//        }
     }
 
 
-
-
-
-
-
-
+    @Override
+    public void postProcess(BriefContext briefContext) {
+        StatementParserAdepter.briefContext = briefContext;
+    }
 }

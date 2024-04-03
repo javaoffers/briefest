@@ -2,19 +2,12 @@ package com.javaoffers.brief.modelhelper.context;
 
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
-import com.javaoffers.brief.modelhelper.utils.Assert;
-import com.javaoffers.brief.modelhelper.utils.BriefUtils;
-import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
-import com.javaoffers.brief.modelhelper.utils.Lists;
-import com.javaoffers.brief.modelhelper.utils.ReflectionUtils;
-import com.javaoffers.brief.modelhelper.utils.Utils;
+import com.javaoffers.brief.modelhelper.parser.StatementParser;
+import com.javaoffers.brief.modelhelper.utils.*;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -48,6 +41,9 @@ public class SmartBriefContext implements BriefContext{
 
     //jqlInterceptor拦截器
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
+
+    //DBType
+    private final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
         this.smartBriefProperties = smartBriefProperties;
@@ -86,6 +82,14 @@ public class SmartBriefContext implements BriefContext{
         return this.coreInterceptorsList;
     }
 
+    @Override
+    public StatementParser getStatementParser(DBType dbType) {
+        return statementParserMap.get(dbType);
+    }
+
+    public Map<DBType, StatementParser> getStatementParserMap(){
+        return this.statementParserMap;
+    }
 
     @Override
     public void fresh() {

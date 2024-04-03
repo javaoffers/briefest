@@ -1,10 +1,6 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.delete;
 
-import com.javaoffers.brief.modelhelper.core.BaseBrief;
-import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
-import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
-import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.*;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
@@ -291,7 +287,7 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     @Override
     public Integer ex() {
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
-        SQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions);
+        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions);
         JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
         JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
         Integer count = instance.batchUpdate(sqlStatement.getSql(), sqlStatement.getParams());

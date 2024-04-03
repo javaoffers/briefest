@@ -2,14 +2,10 @@ package com.javaoffers.brief.modelhelper.log;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
-import com.javaoffers.brief.modelhelper.context.BriefProperties;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class JqlLogger implements BriefContextAware {
     public static Logger log = LoggerFactory.getLogger(JqlLogger.class);
@@ -34,5 +30,6 @@ public class JqlLogger implements BriefContextAware {
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext)briefContext;
         briefProperties = smartBriefContext.getBriefProperties();
+        time = briefProperties.getSlowSqlTimeThreshold();
     }
 }

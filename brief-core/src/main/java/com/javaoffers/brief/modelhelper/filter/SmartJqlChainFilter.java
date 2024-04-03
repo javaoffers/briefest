@@ -14,10 +14,8 @@ import java.util.List;
 public class SmartJqlChainFilter implements JqlExecutorFilter {
 
     @Override
-    public Object filter(JqlExecutorChain<Object, SqlMetaInfo> chain) {
+    public Object filter(JqlExecutorChain chain) {
         long cost = 0;
-        SqlMetaInfo metaInfo = chain.getMetaInfo();
-        Class modelClass = metaInfo.getModelClass();
         long startTime = System.currentTimeMillis();
         Object o = chain.doChain();
         long endTime = System.currentTimeMillis();
@@ -32,8 +30,4 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
     }
 
 
-
-    public Object filter(Object o) {
-        return null;
-    }
 }

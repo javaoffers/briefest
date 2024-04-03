@@ -1,7 +1,5 @@
 package com.javaoffers.brief.modelhelper.filter;
 
-import com.javaoffers.brief.modelhelper.core.BaseBrief;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +8,12 @@ import java.util.Map;
  * @description:
  * @author: create by cmj on 2023/6/1 17:27
  */
-public class SqlMetaInfo {
+public class JqlMetaInfo {
 
-    private BaseBrief baseBrief;
     private String sql;
+
     private List<Map<String,Object>> params = new ArrayList<>();
+
     private Class modelClass;
 
     public String getSql() {
@@ -41,13 +40,13 @@ public class SqlMetaInfo {
         this.modelClass = modelClass;
     }
 
-    public SqlMetaInfo(String sql, List<Map<String, Object>> params, Class modelClass) {
+    public JqlMetaInfo(String sql, List<Map<String, Object>> params, Class modelClass) {
         this.sql = sql;
         this.params = params;
         this.modelClass = modelClass;
     }
 
-    public SqlMetaInfo(String sql, Class modelClass) {
+    public JqlMetaInfo(String sql, Class modelClass) {
         this.sql = sql;
         this.modelClass = modelClass;
     }

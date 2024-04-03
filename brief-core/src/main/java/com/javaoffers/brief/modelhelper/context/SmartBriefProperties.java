@@ -24,7 +24,7 @@ public class SmartBriefProperties implements BriefProperties{
     private final Map<String, Object> properties = new ConcurrentHashMap<>();
     private final Properties bp = System.getProperties();
     private volatile List<JqlExecutorFilter> jqlChainFilterList = new ArrayList<>();
-    private volatile long showLogTime = 10;
+    private volatile long showLogTime = -1;
     private volatile JdbcExecutorFactory jdbcExecutorFactory;
     private volatile boolean isPrintSql;
     private volatile boolean isPrintSqlCost;

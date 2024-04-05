@@ -6,10 +6,12 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
+import com.javaoffers.brief.modelhelper.parser.TableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.*;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
+import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -99,6 +101,11 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public StatementParser getStatementParser(DBType dbType) {
         return statementParserMap.get(dbType);
+    }
+
+    @Override
+    public TableInfoParser getTableInfoParser(Connection connection) {
+        return null;
     }
 
     public Map<DBType, StatementParser> getStatementParserMap(){

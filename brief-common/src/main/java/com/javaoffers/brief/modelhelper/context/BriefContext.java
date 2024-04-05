@@ -4,9 +4,11 @@ import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
+import com.javaoffers.brief.modelhelper.parser.TableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -57,6 +59,13 @@ public interface BriefContext {
      * 获取statement parse
      */
     public StatementParser getStatementParser(DBType dbType);
+
+    /**
+     * 获取Table解析器
+     * @param connection
+     * @return
+     */
+    public TableInfoParser getTableInfoParser(Connection connection);
 
     /**
      * 执行fresh方法后开始生效。

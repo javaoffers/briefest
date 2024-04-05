@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class JoinTableCondition implements Condition {
 
-    private String leftJoinTableName; //表名称
+    private String joinTableName; //表名称
 
     private ConditionTag tag;
 
@@ -23,7 +23,7 @@ public class JoinTableCondition implements Condition {
 
     @Override
     public String getSql() {
-        return getConditionTag().getTag() + leftJoinTableName +" ";
+        return getConditionTag().getTag() + joinTableName +" ";
     }
 
     @Override
@@ -32,18 +32,18 @@ public class JoinTableCondition implements Condition {
     }
 
     public String getLeftJoinTableName() {
-        return leftJoinTableName;
+        return joinTableName;
     }
 
     @Override
     public String toString() {
         return "LeftJoinTableCondition{" +
-                "leftJoinTableName='" + leftJoinTableName + '\'' +
+                "leftJoinTableName='" + joinTableName + '\'' +
                 '}';
     }
 
-    public JoinTableCondition(String leftJoinTableName, ConditionTag tag) {
-        this.leftJoinTableName = leftJoinTableName;
+    public JoinTableCondition(String joinTableName, ConditionTag tag) {
+        this.joinTableName = joinTableName;
         this.tag = tag;
     }
 }

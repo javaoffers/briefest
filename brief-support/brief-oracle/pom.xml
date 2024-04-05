@@ -16,7 +16,11 @@
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
             <version>3.6.5-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-core</artifactId>
+            <version>3.6.5-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

@@ -9,13 +9,13 @@ import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
  */
 public class LimitWordCondition<V> extends WhereOnCondition<V> implements IgnoreAndOrWordCondition {
 
-    private int pageNum;
+    public int pageNum;
 
-    private int pageSize;
+    public int pageSize;
 
-    private int startIndex;
+    public int startIndex;
 
-    private int len;
+    public int len;
 
     public LimitWordCondition(int pageNum, int pageSize) {
         if(pageNum < 1){

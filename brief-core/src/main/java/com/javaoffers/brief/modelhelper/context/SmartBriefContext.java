@@ -1,5 +1,8 @@
 package com.javaoffers.brief.modelhelper.context;
 
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
+import com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutorFactory;
+import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
@@ -39,6 +42,9 @@ public class SmartBriefContext implements BriefContext{
     private List<BriefContextAware> briefContextAwareList =
             new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
 
+    //jqlChainFilterList
+    private  List<JqlExecutorFilter> jqlExecutorFilters = new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class));
+
     //jqlInterceptor拦截器
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
@@ -63,6 +69,10 @@ public class SmartBriefContext implements BriefContext{
         return this.primaryDataSource;
     }
 
+    public JdbcExecutorFactory getJdbcExecutorFactory(){
+        return BriefJdbcExecutorFactory.instance;
+    }
+
     @Override
     public  BriefMapper getBriefMapper(Class briefMapper) {
         Assert.isTrue(BriefMapper.class.isAssignableFrom(briefMapper), briefMapper.getName() + " must be BriefMapper subclass");
@@ -80,6 +90,10 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public List<JqlInterceptor> getJqlInterceptors() {
         return this.coreInterceptorsList;
+    }
+
+    public List<JqlExecutorFilter> getJqlExecutorFilters(){
+        return this.jqlExecutorFilters;
     }
 
     @Override

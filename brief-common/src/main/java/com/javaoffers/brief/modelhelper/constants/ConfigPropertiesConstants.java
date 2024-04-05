@@ -11,11 +11,4 @@ public interface ConfigPropertiesConstants {
     String IS_PRINT_SQL = "brief:print-sql";
 
     String IS_PRINT_SQL_COST = "brief:print-cost";
-
-    String JQL_FILTER = "brief:filter:jql-filter";
-
-    /**
-     * com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor
-     */
-    String JDBC_EXECUTOR_FACTORY = "brief:jdbc-executor-factory";
 }

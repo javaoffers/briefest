@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.constants.ConfigPropertiesConstants;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.context.SmartBriefProperties;
 import com.javaoffers.brief.modelhelper.exception.BriefException;
+import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.utils.BriefUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -41,6 +42,11 @@ public class SpringBriefContext extends SmartBriefContext {
     }
 
     @Override
+    public JdbcExecutorFactory getJdbcExecutorFactory() {
+        return SpringJdbcExecutorFactory.instance;
+    }
+
+    @Override
     public BriefMapper getBriefMapper(Class briefMapperClass) {
         BriefMapper briefMapper = cache.get(briefMapperClass);
         if(briefMapper == null){
@@ -68,8 +74,6 @@ public class SpringBriefContext extends SmartBriefContext {
                     briefProperties.put(property, value);
                 }
             }
-            //spring-jdbc-factory
-            briefProperties.setJdbcExecutorFactory(SpringJdbcExecutorFactory.class.getName());
         }catch (Exception e){
             e.printStackTrace();
             throw new BriefException(e.getMessage());

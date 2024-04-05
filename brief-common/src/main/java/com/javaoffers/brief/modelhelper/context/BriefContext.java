@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.context;
 
+import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
+import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
@@ -27,6 +29,12 @@ public interface BriefContext {
     public DataSource getDataSource();
 
     /**
+     * 获取执行工厂
+     * @return
+     */
+    public JdbcExecutorFactory getJdbcExecutorFactory();
+
+    /**
      * 缓存BriefMapper
      * @param briefMapper
      * @param <T>
@@ -38,6 +46,12 @@ public interface BriefContext {
      * 获取jql拦截器.
      */
     public List<JqlInterceptor> getJqlInterceptors();
+
+    /**
+     * 获取jqlExecutorFilters
+     * @return
+     */
+    public List<JqlExecutorFilter> getJqlExecutorFilters();
 
     /**
      * 获取statement parse

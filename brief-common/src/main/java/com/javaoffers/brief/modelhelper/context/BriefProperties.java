@@ -22,12 +22,6 @@ public interface BriefProperties {
     default BriefProperties put(String key, String value){return this;};
 
     /**
-     * 获取jdbc执行工厂.
-     * @return
-     */
-    public JdbcExecutorFactory getJdbcExecutorFactory();
-
-    /**
      * 是否要打印sql
      * @return
      */
@@ -38,12 +32,6 @@ public interface BriefProperties {
      * @return
      */
     public boolean isPrintSqlCost();
-
-    /**
-     * 获取链过滤器.
-     * @return
-     */
-    public List<? extends JqlExecutorFilter> getJqlExecutorFilters();
 
     /**
      * 获取慢sql时间阈值, 单位是毫秒.

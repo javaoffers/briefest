@@ -23,9 +23,7 @@ public class SmartBriefProperties implements BriefProperties{
 
     private final Map<String, Object> properties = new ConcurrentHashMap<>();
     private final Properties bp = System.getProperties();
-    private volatile List<JqlExecutorFilter> jqlChainFilterList = new ArrayList<>();
     private volatile long showLogTime = -1;
-    private volatile JdbcExecutorFactory jdbcExecutorFactory;
     private volatile boolean isPrintSql;
     private volatile boolean isPrintSqlCost;
 
@@ -44,9 +42,7 @@ public class SmartBriefProperties implements BriefProperties{
 
     @Override
     public void fresh() {
-        this.initJqlFilters();
         this.initShowLogTime();
-        this.initJdbcExecutorFactory();
         this.initIsPrintSql();
         this.initIsPrintSqlCost();
     }
@@ -71,20 +67,11 @@ public class SmartBriefProperties implements BriefProperties{
         return this;
     }
 
-    //加载自定义jdbc处理器.
-    public SmartBriefProperties setJdbcExecutorFactory(String jdbcExecutorFactoryClassName) {
-        put(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY, jdbcExecutorFactoryClassName);
-        return this;
-    }
 
     //慢sql打印时间
     public SmartBriefProperties setSlowSqlLogTime(String slowLogTime) {
         put(ConfigPropertiesConstants.SLOW_LOG_TIME, slowLogTime);
         return this;
-    }
-
-    public JdbcExecutorFactory getJdbcExecutorFactory() {
-        return jdbcExecutorFactory;
     }
 
     /**
@@ -96,15 +83,6 @@ public class SmartBriefProperties implements BriefProperties{
         return showLogTime;
     }
 
-    /**
-     * 获取jql过滤器
-     *
-     * @return
-     */
-    @Override
-    public List<JqlExecutorFilter> getJqlExecutorFilters() {
-        return jqlChainFilterList;
-    }
 
     public boolean isPrintSql() {
         return isPrintSql;
@@ -124,18 +102,6 @@ public class SmartBriefProperties implements BriefProperties{
         isPrintSqlCost = Boolean.parseBoolean(bp.getProperty(ConfigPropertiesConstants.IS_PRINT_SQL_COST, "true"));
     }
 
-    //初始化jdbc执行工厂
-    public void initJdbcExecutorFactory() {
-        String jdbcExecutorFactoryClassName = bp.getProperty(ConfigPropertiesConstants.JDBC_EXECUTOR_FACTORY,
-                "com.javaoffers.brief.modelhelper.jdbc.BriefJdbcExecutorFactory");
-        try {
-            Class<?> jef = Class.forName(jdbcExecutorFactoryClassName);
-            jdbcExecutorFactory = (JdbcExecutorFactory) jef.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new BriefException(e.getMessage());
-        }
-    }
 
     //初始化慢sql时间
     public void initShowLogTime() {
@@ -145,38 +111,4 @@ public class SmartBriefProperties implements BriefProperties{
         }
     }
 
-    //初始化jql过滤器
-    public void initJqlFilters() {
-        //加载环境变量中的.因此客户可以自定义指定. 多个用逗号分割
-        List<JqlExecutorFilter> jqlChainFilterList = new ArrayList<>();
-        String jqlFilters = bp.getProperty(ConfigPropertiesConstants.JQL_FILTER);
-        if (jqlFilters != null) {
-
-            String[] jqlFilterArray = jqlFilters.replaceAll(" ", "").split(",");
-            for (String jqlFilterClassName : jqlFilterArray) {
-                try {
-                    Class<?> jqlFilterClass = Class.forName(jqlFilterClassName);
-                    if(JqlExecutorFilter.class.isAssignableFrom(jqlFilterClass)){
-                        JqlExecutorFilter jqlChainFilter = (JqlExecutorFilter) jqlFilterClass.newInstance();
-                        jqlChainFilterList.add(jqlChainFilter);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        //加载内部的
-        Set<Class<? extends JqlExecutorFilter>> childs = ReflectionUtils.getChilds(JqlExecutorFilter.class);
-        if (CollectionUtils.isNotEmpty(childs)) {
-            for (Class clazz : childs) {
-                try {
-                    JqlExecutorFilter o1 = (JqlExecutorFilter) clazz.newInstance();
-                    jqlChainFilterList.add(o1);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        this.jqlChainFilterList = jqlChainFilterList;
-    }
 }

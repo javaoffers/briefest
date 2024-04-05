@@ -100,6 +100,6 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     @Override
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
-        jqlExecutorChains =  smartBriefContext.getBriefProperties().getJqlExecutorFilters();
+        jqlExecutorChains =  smartBriefContext.getJqlExecutorFilters();
     }
 }

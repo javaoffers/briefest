@@ -9,6 +9,9 @@ import javax.sql.DataSource;
  * @author mingJie
  */
 public class SpringJdbcExecutorFactory implements JdbcExecutorFactory {
+
+    public static final SpringJdbcExecutorFactory instance = new SpringJdbcExecutorFactory();
+
     @Override
     public <T> JdbcExecutor<T> createJdbcExecutor(DataSource dataSource, Class<T> modelClass) {
         return new SpringJdbcExecutor(dataSource, modelClass);

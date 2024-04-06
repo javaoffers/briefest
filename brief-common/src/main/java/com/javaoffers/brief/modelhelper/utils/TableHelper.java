@@ -5,6 +5,8 @@ import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.brief.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.brief.modelhelper.constants.ModelHelpperConstants;
+import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.exception.ParseTableException;
@@ -37,7 +39,7 @@ import java.util.function.Function;
  * @Description: Table Information Auxiliary Class
  * @Auther: create by cmj on 2022/5/2 02:05
  */
-public class TableHelper {
+public class TableHelper implements BriefContextAware {
 
     private final  static Map<Class, ModelInfo> modelInfoMap = new ConcurrentHashMap<>();
 
@@ -50,6 +52,8 @@ public class TableHelper {
     private final static Map<Class, Boolean> modelIsParse = new ConcurrentHashMap<>();
 
     private final static List<JqlFunFilter> TABLE_HELPER_FILTER = new ArrayList<>();
+
+    private static BriefContext briefContext ;
 
     static {
         TABLE_HELPER_FILTER.add(new AsSqlFunFilterImpl());
@@ -263,11 +267,7 @@ public class TableHelper {
         try {
             TableInfo tableInfo = new TableInfo(tableName);
             String connName = connection.getClass().getName();
-            if(connName.contains("h2")){
-                parseH2TableInfo(connection, tableInfo);
-            }else{
-                parseMysqlTableInfo(connection, tableInfo);
-            }
+            briefContext.getTableInfoParser().parseTableInfo(connection, tableInfo);
 
             tableInfoMap.put(modelClazz, tableInfo);
             Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
@@ -347,61 +347,9 @@ public class TableHelper {
         modelIsParse.put(modelClazz, true);
     }
 
-    private static void parseH2TableInfo(Connection connection, TableInfo tableInfo) throws SQLException, NoSuchFieldException, IllegalAccessException {
-        tableInfo.setDbType(DBType.H2);
-        Object md = connection.prepareStatement("  show columns from tb_account; ").executeQuery().getMetaData();
-        Field resultF = md.getClass().getDeclaredField("result");
-        resultF.setAccessible(true);
-        Object result  = resultF.get(md);
-        Field rowsF = result.getClass().getDeclaredField("rows");
-        rowsF.setAccessible(true);
-        List<Object> rows = (List)rowsF.get(result);
-        rows.forEach(row->{
-            String columnName = String.valueOf(Array.get(row,0)).replaceAll("'","").toLowerCase();
-            String columnType = String.valueOf(Array.get(row,1)).replaceAll("'","");
-            String defaultValue = null;
-            boolean isAutoincrement = String.valueOf(Array.get(row,4)).contains("SYSTEM_SEQUENCE");
-            boolean isPrimary = String.valueOf(Array.get(row,3)).contains("PRI");
-            ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
-            tableInfo.getColumnInfos().add(columnInfo);
-            tableInfo.putColNames(columnName, columnInfo);
-            if(isPrimary){
-                tableInfo.putPrimaryColNames(columnName, columnInfo);
-            }
-        });
-    }
 
-    private static void parseMysqlTableInfo(Connection connection,  TableInfo tableInfo) throws SQLException {
-        tableInfo.setDbType(DBType.MYSQL);
-        DatabaseMetaData metaData = connection.getMetaData();
-        ResultSet tableResultSet = metaData.getTables(connection.getCatalog(), connection.getSchema(), tableInfo.getTableName(), null);
-        ResultSet primaryKeys = metaData.getPrimaryKeys(connection.getCatalog(), connection.getSchema(), tableInfo.getTableName());
-        LinkedList<String> primaryKeyList = new LinkedList<>();
-        while (primaryKeys.next()) {
-            String primaryColName = primaryKeys.getString(ColumnLabel.COLUMN_NAME);
-            primaryKeyList.add(primaryColName);
-        }
-        while (tableResultSet.next()) {
-            // Get table field structure
-            ResultSet columnResultSet = metaData.getColumns(connection.getCatalog(), "", tableInfo.getTableName(), "%");
-            while (columnResultSet.next()) {
-                // Col Name
-                String columnName = columnResultSet.getString(ColumnLabel.COLUMN_NAME).toLowerCase();
-                // type of data
-                String columnType = columnResultSet.getString(ColumnLabel.TYPE_NAME);
-                //the default value of the field
-                Object defaultValue = columnResultSet.getString(ColumnLabel.COLUMN_DEF);
-                //Whether to auto increment
-                boolean isAutoincrement = "YES".equalsIgnoreCase(columnResultSet.getString(ColumnLabel.IS_AUTOINCREMENT));
-                ColumnInfo columnInfo = new ColumnInfo(columnName, columnType, isAutoincrement, defaultValue);
-                tableInfo.getColumnInfos().add(columnInfo);
-                tableInfo.putColNames(columnName, columnInfo);
-                if (primaryKeyList.contains(columnName)) {
-                    tableInfo.putPrimaryColNames(columnName, columnInfo);
-                }
-            }
-        }
-    }
+
+
 
     /**
      * turn underscore
@@ -553,5 +501,10 @@ public class TableHelper {
      */
     public static <T> ModelInfo<T> getModelInfo(Class<T> m2c){
         return modelInfoMap.get(m2c);
+    }
+
+    @Override
+    public void setBriefContext(BriefContext briefContext) {
+        TableHelper.briefContext = briefContext;
     }
 }

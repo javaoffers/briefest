@@ -53,6 +53,10 @@ public class SmartBriefContext implements BriefContext{
     //DBType
     private final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
 
+    //SmartTableInfoParser
+    private final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
+
+
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
         this.smartBriefProperties = smartBriefProperties;
         this.primaryDataSource = dataSource;
@@ -104,8 +108,8 @@ public class SmartBriefContext implements BriefContext{
     }
 
     @Override
-    public TableInfoParser getTableInfoParser(Connection connection) {
-        return null;
+    public SmartTableInfoParser getTableInfoParser() {
+        return smartTableInfoParser;
     }
 
     public Map<DBType, StatementParser> getStatementParserMap(){
@@ -114,9 +118,12 @@ public class SmartBriefContext implements BriefContext{
 
     @Override
     public void fresh() {
-        initProperties();//初始化配置信息
-        initContextPostProcess();//执行content后置处理器
-        finish();//已经可以对外提供功能了. 释放content可用.
+        //初始化配置信息
+        initProperties();
+        //执行content后置处理器
+        initContextPostProcess();
+        //已经可以对外提供功能了. 释放content可用.
+        finish();
     }
 
     //初始化配置信息.

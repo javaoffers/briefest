@@ -62,10 +62,9 @@ public interface BriefContext {
 
     /**
      * 获取Table解析器
-     * @param connection
      * @return
      */
-    public TableInfoParser getTableInfoParser(Connection connection);
+    public TableInfoParser getTableInfoParser();
 
     /**
      * 执行fresh方法后开始生效。

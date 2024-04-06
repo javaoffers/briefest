@@ -115,7 +115,7 @@ public class TableInfo {
         this.colNames.put(colName, columnInfo);
     }
 
-    Set<ColumnInfo> getColumnInfos() {
+    public Set<ColumnInfo> getColumnInfos() {
         return columnInfos;
     }
 
@@ -229,7 +229,7 @@ public class TableInfo {
         return colNameAnnoInfos.getOrDefault(colName, new ColNameAnnoInfo());
     }
 
-    void putPrimaryColNames(String primaryCol, ColumnInfo columnInfo) {
+    public void putPrimaryColNames(String primaryCol, ColumnInfo columnInfo) {
         primaryColNames.put(primaryCol, columnInfo);
     }
 

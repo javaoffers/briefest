@@ -17,11 +17,11 @@ import java.util.stream.Collectors;
 public class SmartTableInfoParser implements TableInfoParser {
 
     //TableInfoParser
-    private final Map<DBType, TableInfoParser> tableInfoParserMap = new HashMap<>();
-
+    private static final Map<DBType, TableInfoParser> tableInfoParserMap = new HashMap<>();
     //加载TableInfoParser
-    {
-        Set<TableInfoParser> childInstance = ReflectionUtils.getChildInstance(TableInfoParser.class);
+    static Set<TableInfoParser> childInstance = ReflectionUtils.getChildInstance(TableInfoParser.class);
+
+    static {
         childInstance.stream().filter(tableInfoParser -> {
             return !(tableInfoParser instanceof SmartTableInfoParser);
         }).forEach(tableInfoParser -> {

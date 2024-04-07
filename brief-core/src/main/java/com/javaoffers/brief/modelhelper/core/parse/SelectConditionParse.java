@@ -52,7 +52,7 @@ public class SelectConditionParse extends AbstractParseCondition {
         //是否存在 join table
         while (conditions.peekFirst() instanceof JoinTableCondition) {
             Condition leftJoin = conditions.pollFirst();
-            parseSelectClo(conditions, selectCols);
+            parseSelectCloWithDelimiter(conditions, selectCols);
             //append join table name
             fromTables.append(leftJoin.getSql());
             //指定on条件
@@ -97,6 +97,22 @@ public class SelectConditionParse extends AbstractParseCondition {
     }
 
     public void parseSelectClo(LinkedList<Condition> conditions, StringBuilder selectB) {
+        SelectColumnCondition selectCol;
+
+        for (; conditions.peekFirst() instanceof SelectColumnCondition; ) {
+            selectCol = (SelectColumnCondition) conditions.pollFirst();
+            String sql = selectCol.getSql();
+            if(selectCol instanceof KeyWordCondition){
+                selectB.append(sql);
+            }else{
+                selectB.append(sql);
+                break;
+            }
+        }
+        parseSelectCloWithDelimiter(conditions, selectB);
+    }
+
+    public void parseSelectCloWithDelimiter(LinkedList<Condition> conditions, StringBuilder selectB) {
         SelectColumnCondition selectCol;
         for (; conditions.peekFirst() instanceof SelectColumnCondition; ) {
             selectCol = (SelectColumnCondition) conditions.pollFirst();

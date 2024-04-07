@@ -73,7 +73,6 @@
   - 新的写法，支持mapper接口类写default默认方法。
   - 强大的自动类型转换功能。
   - 插入/更新自动识别优化为批处理执行
-  - 提供可选自动识别差异数据实时更新能力
   - 多表查询不需要配置。自动映射一对一，一对多，多对多。
   - 支持逻辑删除、乐观锁。
   - 集成了常用的API，无需开发即可直接使用。
@@ -328,44 +327,6 @@ this.crudUserMapper.general().updateBatchById(user);
 <p>
 通过上面的案例，我们可以在业务中很好的控制字段的更新。
 </p>
-
-#### 追踪差异更新
-<p>
-    可以实时追踪差异更新. 当model数据发生变化时进行自动更新. 想使用此功能只需要将<code>@BaseModel</code>
-    的autoUpdate = true. 开启后查询的每一条带有主键id的数据都是具有差异更新能力的. 在操作的过程中如果将
-    主键id设置为null, 则model数据将失去差异更新能力并且不会恢复即使你还原了主键id.  
-</p>
-
-```java
-
-   @Data
-   @BaseModel(value = "encrypt_data",autoUpdate = true)
-   public class EncryptDataAutoUpdate {
-   
-       @BaseUnique
-       private Integer id;
-   
-       private String encryptNum;
-   }
-   EncryptDataAutoUpdate encryptData = new EncryptDataAutoUpdate();
-   encryptData.setEncryptNum("12345678");
-   Id id = autoUpdateBriefMapper.general().save(encryptData);
-   EncryptDataAutoUpdate autoUpdate = autoUpdateBriefMapper.general().queryById(id);
-   print(autoUpdate);
-   //Not updated, because there is no difference
-   autoUpdate.setEncryptNum("12345678");
-   //Will be updated
-   autoUpdate.setEncryptNum("87654321900");
-   print(autoUpdate);
-   
-   encryptData = this.autoUpdateBriefMapper.general().queryById(id);
-   print(encryptData);
-   //Cancel the differences to update
-   encryptData.setId(null);
-   //Not updated, as has already been canceled difference update functionality;
-   encryptData.setEncryptNum("098712345");
-
-```
 
 #### 删除操作
 <p>

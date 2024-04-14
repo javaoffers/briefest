@@ -77,6 +77,8 @@ public class BriefSaveExecutor implements SaveExecutor {
                         ps.setObject(++pi, ov);
                     }
                     ps.addBatch();
+                    i++;
+                    j++;
                 }
             } else if(size == 1) {
                 Object[] p = argsParam.get(0);

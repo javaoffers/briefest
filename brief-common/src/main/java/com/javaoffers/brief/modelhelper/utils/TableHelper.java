@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.utils;
 
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
+import com.javaoffers.brief.modelhelper.anno.NoneCol;
 import com.javaoffers.brief.modelhelper.anno.fun.parse.FunAnnoParser;
 import com.javaoffers.brief.modelhelper.anno.fun.parse.ParseSqlFunResult;
 import com.javaoffers.brief.modelhelper.constants.ModelHelpperConstants;
@@ -266,13 +267,18 @@ public class TableHelper implements BriefContextAware {
 
         try {
             TableInfo tableInfo = new TableInfo(tableName);
-            String connName = connection.getClass().getName();
             briefContext.getTableInfoParser().parseTableInfo(connection, tableInfo);
 
             tableInfoMap.put(modelClazz, tableInfo);
             Field[] colFs = Utils.getFields(modelClazz).toArray(new Field[]{});
             boolean uniqueStatus = false;
             for (Field colF : colFs) {
+
+                //Ignore fields
+                if(colF.getDeclaredAnnotation(NoneCol.class) != null){
+                    continue;
+                }
+
                 String colName = conLine(colF.getName());
                 BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
                 if (baseUnique != null) {

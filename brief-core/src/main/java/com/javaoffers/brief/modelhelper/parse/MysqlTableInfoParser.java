@@ -46,6 +46,7 @@ public class MysqlTableInfoParser implements TableInfoParser {
                 }
             }
         }catch (Exception e){
+            e.printStackTrace();
             throw new BriefException("parse mysql db Table Info error");
         }
 

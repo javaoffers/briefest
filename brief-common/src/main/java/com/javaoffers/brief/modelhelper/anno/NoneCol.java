@@ -7,7 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Not a table field. Will be ignored when performing db operations
+ * Not a table field or sql statement. Will be ignored when performing db operations
  * @author mingJie
  */
 @Target({ElementType.FIELD})

@@ -106,7 +106,6 @@ public class BriefSaveExecutor implements SaveExecutor {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new SqlParseException(e.getMessage());
         } finally {
             if (connection == null && oldAutoCommit != null) {

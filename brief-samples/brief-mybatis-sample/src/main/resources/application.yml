@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/base?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://10.189.84.36:3306/base?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
     password: zqbxcmj
   resources:

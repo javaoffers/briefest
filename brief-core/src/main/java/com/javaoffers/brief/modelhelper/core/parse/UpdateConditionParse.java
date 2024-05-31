@@ -8,7 +8,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.mark.WhereConditionMark;
 import com.javaoffers.brief.modelhelper.fun.condition.where.AddPatchMarkCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateColValueCondition;
-import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondtionMark;
+import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateSetCondition;
 import org.apache.commons.lang3.StringUtils;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 
@@ -43,8 +43,8 @@ public class UpdateConditionParse extends AbstractParseCondition {
         Condition condition = conditions.pollFirst();
         String updateTableSql = null;
         Class modelClass = null;
-        if(condition instanceof UpdateCondtionMark){
-            UpdateCondtionMark updateCondtionMark = (UpdateCondtionMark) condition;
+        if(condition instanceof UpdateSetCondition){
+            UpdateSetCondition updateCondtionMark = (UpdateSetCondition) condition;
             updateTableSql = updateCondtionMark.getSql();
             modelClass = updateCondtionMark.getModelCalss();
         }
@@ -53,10 +53,10 @@ public class UpdateConditionParse extends AbstractParseCondition {
         if(condition == null || (!(condition instanceof UpdateColValueCondition)
                 && !(condition instanceof UpdateAllColValueCondition))){
             //没有要更新的字段跳到下一个UpdateCondtionMark
-            while (condition != null && !(condition instanceof UpdateCondtionMark)){
+            while (condition != null && !(condition instanceof UpdateSetCondition)){
                 condition = conditions.pollFirst();
             }
-            if(condition instanceof UpdateCondtionMark){
+            if(condition instanceof UpdateSetCondition){
                 conditions.addFirst(condition);
             }
             return null;
@@ -84,7 +84,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                 else if(condition instanceof WhereConditionMark){
                     conditions.addFirst(condition);
                     parseWhereCondition(conditions, upateParam, updateAppender);
-                    if(conditions.size()>0 && conditions.peekFirst() instanceof UpdateCondtionMark) {
+                    if(conditions.size()>0 && conditions.peekFirst() instanceof UpdateSetCondition) {
                         break;
                     }
                 }else if(condition instanceof AddPatchMarkCondition){

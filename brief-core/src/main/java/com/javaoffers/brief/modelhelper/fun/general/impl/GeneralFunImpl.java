@@ -3,10 +3,7 @@ package com.javaoffers.brief.modelhelper.fun.general.impl;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.*;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.core.Id;
-import com.javaoffers.brief.modelhelper.exception.GetColValueException;
-import com.javaoffers.brief.modelhelper.exception.ParseParamException;
-import com.javaoffers.brief.modelhelper.exception.PrimaryKeyNotFoundException;
-import com.javaoffers.brief.modelhelper.exception.UpdateFieldsException;
+import com.javaoffers.brief.modelhelper.exception.*;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereModifyFun;
@@ -15,7 +12,9 @@ import com.javaoffers.brief.modelhelper.fun.crud.delete.DeleteWhereFun;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.SelectFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.delete.DeleteFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.insert.InsertFunImpl;
+import com.javaoffers.brief.modelhelper.fun.crud.impl.insert.MoreInsertFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.update.UpdateFunImpl;
+import com.javaoffers.brief.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.brief.modelhelper.utils.*;
@@ -121,16 +120,6 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public void saveOrReplace(T model) {
-        if (model == null) {
-            return;
-        }
-        ArrayList<T> models = new ArrayList<>();
-        models.add(model);
-        this.saveOrModify(models);
-    }
-
-    @Override
     public List<Id> saveBatch(Collection<T> models) {
         if (CollectionUtils.isEmpty(models)) {
             return Collections.EMPTY_LIST;
@@ -147,85 +136,24 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         if (CollectionUtils.isEmpty(models)) {
             return;
         }
-        insertFun.colAll(models).dupUpdate().exs();
+        //mysql and h2 for on duc
+        if(tableInfo.getDbType() == DBType.MYSQL || tableInfo.getDbType() == DBType.H2){
+            MoreInsertFun<T, GetterFun<T, Object>, Object> moreInserFun = insertFun.colAll(models);
+            if(moreInserFun instanceof MoreInsertFunImpl){
+                ((MoreInsertFunImpl) moreInserFun).dupUpdate().exs();
+            }
+
+        }else {
+            List<T> updateList = saveWithFails(models);
+            this.modifyBatchById(updateList);
+        }
+
     }
 
     @Override
     public void saveOrUpdate(Collection<T> models) {
-        assertPrimary();
-        if (CollectionUtils.isEmpty(models)) {
-            return;
-        }
-        //copy
-        models = new ArrayList<>(models);
-        TableInfo tableInfo = TableHelper.getTableInfo(mClass);
-        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        if (MapUtils.isEmpty(primaryColNames)) {
-            return;
-        }
-        AtomicBoolean status = new AtomicBoolean(false);
-        WhereSelectFun<T, Object> where = this.selectFun.col(primaryColNmae + " as " + primaryField.getName()).where();
-        Map<String, List<Field>> originalColNameOfModelField = tableInfo.getOriginalColNameOfModelField();
-        Map<String, T> uniqueKeyMap = new HashMap<>();
-        List<Object> uniqueKeyValues = new ArrayList<>();
-        for (T model : models) {
-            primaryColNames.keySet().forEach(uniqueIdColName -> {
-                List<Field> uniqueIdField = originalColNameOfModelField.get(uniqueIdColName);
-                List<Object> values = new ArrayList<>();
-                uniqueIdField.forEach(field -> {
-                    try {
-                        Object uniqueValue = field.get(model);
-                        if (uniqueValue != null) {
-                            values.add(uniqueValue);
-                            uniqueKeyMap.put(uniqueValue.toString(), model);
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                        throw new ParseParamException(e.getMessage());
-                    }
-                });
-                uniqueKeyValues.addAll(values);
-            });
-        }
-
-        if (CollectionUtils.isNotEmpty(uniqueKeyValues)) {
-            HashMap<String, Object> param = new HashMap<>();
-            String newColNameTag = getNewColNameTag();
-            param.put(newColNameTag, uniqueKeyValues);
-            where.condSQL(primaryColNmae + " in ( #{" + newColNameTag + "} )", param);
-            status.set(true);
-        }
-
-        List<T> needUpdate = new ArrayList<>();
-        //Divide data into update/insert
-        if (status.get()) {
-            //query by unique ids
-            List<T> exs = where.exs();
-            exs.forEach(model -> {
-                try {
-                    Object o = primaryField.get(model);
-                    T m = uniqueKeyMap.get(o.toString());
-                    if (m != null) {
-                        needUpdate.add(m);
-                    }
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    throw new ParseParamException(e.getMessage());
-                }
-            });
-            // need save
-            models.removeAll(needUpdate);
-        }
-        this.saveBatch(models);
-        this.updateBatchById(needUpdate);
-    }
-
-    @Override
-    public void saveOrReplace(Collection<T> models) {
-        if (CollectionUtils.isEmpty(models)) {
-            return;
-        }
-        insertFun.colAll(models).dupReplace().exs();
+        List<T> updateList = saveWithFails(models);
+        this.updateBatchById(updateList);
     }
 
     @Override
@@ -385,6 +313,26 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
         WhereSelectFun<T, Object> where = whereInfo.getRight();
         return where.exs();
+    }
+
+    @Override
+    public T queryOne(T model) {
+        List<T> list = query(model);
+        if(CollectionUtils.isEmpty(list)){
+            return null;
+        }
+        return list.get(0);
+    }
+
+    @Override
+    public T queryOnlyOne(T model) {
+        List<T> list = query(model);
+        if(CollectionUtils.isEmpty(list)){
+           return null;
+        }else if(list.size() != 1){
+            throw new QueryDataException("There are multiple query data");
+        }
+        return list.get(0);
     }
 
     @Override
@@ -743,4 +691,21 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             throw new PrimaryKeyNotFoundException(this.tableName + " not primary key ");
         }
     }
+
+    private List<T> saveWithFails(Collection<T> models) {
+        List<T> updateList = Lists.newArrayList();
+        for(T model : models){
+            try {
+                this.save(model);
+            }catch (Exception e){
+                if(e.getMessage().toLowerCase().contains("duplicate")){
+                    updateList.add(model);
+                }else{
+                    throw e;
+                }
+            }
+        }
+        return updateList;
+    }
+
 }

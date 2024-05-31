@@ -14,6 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TableInfo {
 
     /**
+     * modelClazz
+     */
+    private Class<?> modelClazz;
+
+    /**
      * database type
      */
     private DBType dbType;
@@ -127,6 +132,15 @@ public class TableInfo {
         this.dbType = dbType;
     }
 
+    public TableInfo setModelClass(Class clazz){
+        this.modelClazz = clazz;
+        return this;
+    }
+
+    public Class<?> getModelClass(){
+        return this.modelClazz;
+    }
+
     public Map<String, String> getFieldNameColNameOfModel() {
         return fieldNameMappingcolNameOfModel;
     }
@@ -143,14 +157,6 @@ public class TableInfo {
         return colNameMappingModelFields;
     }
 
-    public boolean isAutoincrement(String colName) {
-        ColumnInfo columnInfo = getColumnInfo(colName);
-        return columnInfo.isAutoincrement();
-    }
-
-    public Object getDefaultValue(String colName) {
-        return getColumnInfo(colName).getDefaultValue();
-    }
 
     private ColumnInfo getColumnInfo(String colName) {
         ColumnInfo columnInfo = this.getColNames().get(colName);

@@ -1,4 +1,5 @@
 import brief.BriefInitializer;
+import brief.entity.BriefAccount;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
@@ -163,7 +164,8 @@ public class TestStarter {
     }
     private static void testBriefSelectOne() {
         for (int i = 0; i < queryCount; i++) {
-            BriefInitializer.selectOne();
+            BriefAccount briefAccount = BriefInitializer.selectOne();
+            System.out.println(briefAccount);
         }
     }
 

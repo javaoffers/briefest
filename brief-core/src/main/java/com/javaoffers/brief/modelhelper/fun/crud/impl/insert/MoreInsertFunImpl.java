@@ -16,6 +16,9 @@ import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateM
 import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.fun.crud.insert.MoreInsertFun;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
+import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -100,15 +103,12 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         this.conditions = conditions;
     }
 
-    @Override
+    /**
+     * for mysql and h2 : Do optimization
+     */
     public ExecutMoreFun<Id> dupUpdate() {
         this.conditions.add(new OnDuplicateKeyUpdateMark());
         return this;
     }
 
-    @Override
-    public ExecutMoreFun<Id> dupReplace() {
-        this.conditions.add(new ReplaceIntoMark());
-        return this;
-    }
 }

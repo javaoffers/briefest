@@ -42,14 +42,6 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public void saveOrUpdate(T model);
 
     /**
-     * save or replace
-     * sql: replace into
-     * @param model class
-     * @return   primary key id. or modify count num. so return void
-     */
-    public void saveOrReplace(T model);
-
-    /**
      * save model
      * @param models class
      * @return primary key ids
@@ -71,14 +63,6 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @return  primary key id. or modify count num. so return void
      */
     public void saveOrUpdate(Collection<T> models);
-
-    /**
-     * save or replace
-     * sql: replace into
-     * @param models class
-     * @return primary key id. or modify count num. so return void
-     */
-    public void saveOrReplace(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based on properties of the model
@@ -219,6 +203,23 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @return return query result
      */
     public List<T> query(T model);
+
+    /**
+     * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+     * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+     * @param model model
+     * @return return query result
+     */
+    public T queryOne(T model);
+
+    /**
+     * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.
+     * <>Note that properties such as Collection<Model> will be ignored, even if they are not null </>
+     * <>if more than one throw error</>
+     * @param model model
+     * @return return query result
+     */
+    public T queryOnlyOne(T model);
 
     /**
      * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.

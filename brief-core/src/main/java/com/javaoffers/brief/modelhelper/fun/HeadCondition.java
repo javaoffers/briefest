@@ -21,8 +21,6 @@ public class HeadCondition implements Condition {
 
     private Class modelClass;
 
-    private DBType dbType;
-
     public HeadCondition(DataSource dataSource, Class modelClass) {
         this.dataSource = dataSource;
         this.modelClass = modelClass;

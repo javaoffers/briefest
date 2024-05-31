@@ -11,6 +11,7 @@ import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.core.Id;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -46,11 +47,12 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         testGkeyForInsert();
-        //transactionInsert();
-        //testInsertUpdate();
+        transactionInsert();
+        testInsertUpdate();
         testBatchInsert();
         testInsert();
         testEnum();
+        testG();
         if(status){
             System.exit(0);
         }
@@ -149,7 +151,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         }
         List<User> batchUser = new LinkedList<>();
 
-        for(int i=0; i < 10000; i++){
+        for(int i=0; i < 10; i++){
             User jom = User.builder()
                     .name("HomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHomHom"+i)
                     .money(i+"")
@@ -213,6 +215,13 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
         LOGUtils.printLog(exs);
         LOGUtils.printLog(exs1);
+    }
+
+    public void testG(){
+        User user = this.crudUserMapper.general().query(1, 1).get(0);
+        LOGUtils.printLog(user);
+        this.crudUserMapper.general().saveOrUpdate(Lists.newArrayList(user,user));
+        this.crudUserMapper.general().saveOrModify(Lists.newArrayList(user,user));
     }
 
 
@@ -279,7 +288,9 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         user2.setName("duplicate2");
         user3.setName("duplicate3");
         user3.setBirthday(null);
-        crudUserMapper.insert().colAll(user2, user3).dupUpdate().exs();
+//        crudUserMapper.insert().colAll(user2, user3).dupUpdate().exs();
+        crudUserMapper.general().saveOrModify(Lists.newArrayList(user2, user3));
+
         List<Long> collect = users.stream().map(User::getId).collect(Collectors.toList());
         List<User> users1 = crudUserMapper.general().queryByIds(collect);
         print(users1);

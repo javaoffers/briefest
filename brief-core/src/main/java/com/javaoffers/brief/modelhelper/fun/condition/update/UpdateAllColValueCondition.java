@@ -92,13 +92,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                         break;
                     }
                 }
-                //Self-incrementing elements are not allowed to be 0
-                if(     columnInfo.isAutoincrement()
-                        && oValue instanceof Number
-                        && ((Number) oValue).longValue() == 0L
-                ){
-                    return;
-                }
+
                 if(statusNull.get() == 0){
                     updateSqlNull.append(ConditionTag.SET.getTag());
                     statusNull.incrementAndGet();

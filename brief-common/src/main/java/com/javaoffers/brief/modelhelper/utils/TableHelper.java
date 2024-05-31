@@ -21,12 +21,9 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.sql.DataSource;
 import java.lang.invoke.SerializedLambda;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -262,11 +259,11 @@ public class TableHelper implements BriefContextAware {
         String tableName = table.value();
         if (StringUtils.isBlank(tableName)) {
             String simpleName = modelClazz.getSimpleName();
-            tableName = conLine(simpleName);
+            tableName = Utils.conLine(simpleName);
         }
 
         try {
-            TableInfo tableInfo = new TableInfo(tableName);
+            TableInfo tableInfo = new TableInfo(tableName).setModelClass(modelClazz);
             briefContext.getTableInfoParser().parseTableInfo(connection, tableInfo);
 
             tableInfoMap.put(modelClazz, tableInfo);
@@ -275,18 +272,17 @@ public class TableHelper implements BriefContextAware {
             for (Field colF : colFs) {
 
                 //Ignore fields
-                if(colF.getDeclaredAnnotation(NoneCol.class) != null){
+                if(colF.getDeclaredAnnotation(NoneCol.class) != null) {
                     continue;
                 }
 
-                String colName = conLine(colF.getName());
+                String colName = Utils.conLine(colF.getName());
                 BaseUnique baseUnique = colF.getDeclaredAnnotation(BaseUnique.class);
                 if (baseUnique != null) {
                     uniqueStatus = true;
                     if (StringUtils.isNotBlank(baseUnique.value())) {
                         colName = baseUnique.value();
                     }
-
                 }
                 //parse @ColName and @funAnno
                 ParseSqlFunResult parseColName = FunAnnoParser.parse(tableInfo, modelClazz, colF, colName);
@@ -351,50 +347,6 @@ public class TableHelper implements BriefContextAware {
             throw new ParseTableException(e.getMessage(), e);
         }
         modelIsParse.put(modelClazz, true);
-    }
-
-
-
-
-
-    /**
-     * turn underscore
-     *
-     * @param info
-     * @return
-     */
-    private static String conLine(String info) {
-        if (info.contains("_")) {
-            return info;
-        }
-
-        String[] split = info.split("");
-        StringBuilder builder = new StringBuilder();
-        String last = null;
-        for (String s : split) {
-            if (StringUtils.isAllUpperCase(s)) {
-                if (builder.length() != 0 && StringUtils.isAllLowerCase(last)) {
-                    s = s.toLowerCase();
-                    s = "_" + s;
-                }
-            }
-            builder.append(s);
-            last = s;
-        }
-        info = builder.toString();
-        String defaultCase = "NO";
-        String YES = "YES";
-        String ignoreCase = System.getProperty("LowerCase", defaultCase);
-        String upperCase = System.getProperty("UpperCase", defaultCase);
-        if (YES.equalsIgnoreCase(ignoreCase)) {
-            info = info.toLowerCase();
-        }else if(YES.equalsIgnoreCase(upperCase)){
-            info = info.toUpperCase();
-        }else{
-            //如果没有设置大小写,则默认为小写
-            info = info.toLowerCase();
-        }
-        return info;
     }
 
     /**

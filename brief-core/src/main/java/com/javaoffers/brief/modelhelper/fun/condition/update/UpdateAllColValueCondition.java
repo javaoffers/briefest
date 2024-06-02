@@ -101,7 +101,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 }
 
                 String colNameTag = getNextTag();
-                updateSqlNull.append(cloName);
+                String expressionCloName = "`"+cloName+"`";
+                updateSqlNull.append(expressionCloName);
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(colNameTag);
                 updateSqlNull.append("}");
@@ -116,7 +117,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                     }else{
                         updateSql.append(", ");
                     }
-                    updateSql.append(cloName);
+                    updateSql.append(expressionCloName);
                     updateSql.append(" = #{");
                     updateSql.append(colNameTag);
                     updateSql.append("}");

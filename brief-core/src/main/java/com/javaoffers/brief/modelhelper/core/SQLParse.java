@@ -56,17 +56,7 @@ public class SQLParse implements BriefContextAware {
                 Object[] params = new Object[keys.size()];
                 for (int k = 0; k < keys.size(); k++) {
                     String paramKey = keys.get(k);
-                    Object o = pm.get(paramKey);
-                    if (o instanceof Id) {
-                        o = ((Id) o).value();
-                    } else if (o instanceof Enum) {
-                        o = EnumValueUtils.getEnumValue(((Enum) o));
-                    } else if(o instanceof Version){
-                        o = ((Version) o).longValue();
-                    } else if(o instanceof JsonColumn){
-                        o = GsonUtils.gson.toJson(o);
-                    }
-                    params[k] = o;
+                    params[k] = pm.get(paramKey);
                 }
                 objects.add(params);
             } else {
@@ -76,30 +66,8 @@ public class SQLParse implements BriefContextAware {
                 Object[] paramsRight = new Object[keys.size()];
                 for (int k = 0; k < keys.size(); k++) {
                     String paramKey = keys.get(k);
-
-                    Object oLeft = pmLeft.get(paramKey);
-                    if (oLeft instanceof Id) {
-                        oLeft = ((Id) oLeft).value();
-                    } else if (oLeft instanceof Enum) {
-                        oLeft = EnumValueUtils.getEnumValue(((Enum) oLeft));
-                    }else if(oLeft instanceof Version){
-                        oLeft = ((Version) oLeft).longValue();
-                    } else if(oLeft instanceof JsonColumn){
-                        oLeft = GsonUtils.gson.toJson(oLeft);
-                    }
-                    paramsLeft[k] = oLeft;
-
-                    Object oRight = pmRight.get(paramKey);
-                    if (oRight instanceof Id) {
-                        oRight = ((Id) oRight).value();
-                    } else if (oRight instanceof Enum) {
-                        oRight = EnumValueUtils.getEnumValue(((Enum) oRight));
-                    }else if(oRight instanceof Version){
-                        oRight = ((Version) oRight).longValue();
-                    } else if(oRight instanceof JsonColumn){
-                        oRight = GsonUtils.gson.toJson(oRight);
-                    }
-                    paramsRight[k] = oRight;
+                    paramsLeft[k] = pmLeft.get(paramKey);;
+                    paramsRight[k] = pmRight.get(paramKey);
 
                 }
                 objects.add(paramsLeft);

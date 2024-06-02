@@ -8,6 +8,7 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * create by cmj
@@ -75,10 +76,12 @@ public class InsertAllColValueCondition implements InsertCondition {
                 e.printStackTrace();
             }
         });
+        //给字段增加``
         Set<String> colNamesSet = param.keySet();
-        this.sqlColNames = "( "+ String.join(", ", colNamesSet)+" )";
+        List<String> expressionColNamesSet = param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
+        this.sqlColNames = "( "+ String.join(", ", expressionColNamesSet)+" )";
         byte status = 0;
-        for(String colName : colNamesSet){
+        for(String colName : expressionColNamesSet){
             if(status != 0){
                 this.onDuplicate.append(",");
             }

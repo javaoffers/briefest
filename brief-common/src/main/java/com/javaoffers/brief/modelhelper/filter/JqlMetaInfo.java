@@ -1,5 +1,8 @@
 package com.javaoffers.brief.modelhelper.filter;
 
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +18,8 @@ public class JqlMetaInfo {
     private List<Map<String,Object>> params = new ArrayList<>();
 
     private Class modelClass;
+
+    private TableInfo tableInfo;
 
     public String getSql() {
         return sql;
@@ -40,10 +45,15 @@ public class JqlMetaInfo {
         this.modelClass = modelClass;
     }
 
+    public TableInfo getTableInfo() {
+        return tableInfo;
+    }
+
     public JqlMetaInfo(String sql, List<Map<String, Object>> params, Class modelClass) {
         this.sql = sql;
         this.params = params;
         this.modelClass = modelClass;
+        this.tableInfo = TableHelper.getTableInfo(modelClass);
     }
 
     public JqlMetaInfo(String sql, Class modelClass) {

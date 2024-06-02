@@ -10,6 +10,7 @@ import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -32,69 +33,69 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     public BaseBriefImplProxy() {
     }
 
-    private <R> R doProxy(JqlMetaInfo jqlMetaInfo, Supplier<R> supplier){
+    private <R> R doProxy(JqlMetaInfo jqlMetaInfo, Function<JqlMetaInfo, R> supplier){
         JqlExecutorChain<R> jqlExecutorChain = new JqlExecutorChain(supplier, jqlExecutorChains, jqlMetaInfo);
         return jqlExecutorChain.doChain();
     }
 
     @Override
     public int saveData(String sql) {
-       return doProxy(new JqlMetaInfo(sql,modelClass), ()->{return baseBrief.saveData(sql);});
+       return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.saveData(jmi.getSql());});
     }
 
     @Override
     public int saveData(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return doProxy(new JqlMetaInfo(sql,maps, modelClass), ()->{return baseBrief.saveData(sql , map);});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.saveData(jmi.getSql() , map);});
     }
 
     @Override
     public int deleteData(String sql) {
-        return doProxy(new JqlMetaInfo(sql,modelClass), ()->{return baseBrief.deleteData(sql);});
+        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.deleteData(jmi.getSql());});
     }
 
     @Override
     public int deleteData(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return doProxy(new JqlMetaInfo(sql,maps, modelClass), ()->{return baseBrief.deleteData(sql , map);});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.deleteData(jmi.getSql() , map);});
     }
 
     @Override
     public int updateData(String sql) {
-        return doProxy(new JqlMetaInfo(sql,modelClass), ()->{return baseBrief.updateData(sql);});
+        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.updateData(jmi.getSql());});
     }
 
     @Override
     public int updateData(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return doProxy(new JqlMetaInfo(sql,maps, modelClass), ()->{return baseBrief.updateData(sql , map);});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.updateData(jmi.getSql() , map);});
     }
 
     @Override
     public List<T> queryData(String sql) {
-        return doProxy(new JqlMetaInfo(sql,modelClass), ()->{return baseBrief.queryData(sql);});
+        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.queryData(jmi.getSql());});
     }
 
     @Override
     public List<T> queryData(String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return doProxy(new JqlMetaInfo(sql,maps, modelClass), ()->{return baseBrief.queryData(sql , map);});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.queryData(jmi.getSql() , map);});
     }
 
     @Override
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {
         JqlMetaInfo jqlMetaInfo = new JqlMetaInfo(sql,paramMap, modelClass);
-        return doProxy(jqlMetaInfo, ()-> baseBrief.batchUpdate(sql ,paramMap));
+        return doProxy(jqlMetaInfo, (jmi)-> baseBrief.batchUpdate(jmi.getSql() ,paramMap));
     }
 
     @Override
     public List<Id> batchInsert(String sql, List<Map<String, Object>> paramMap) {
         JqlMetaInfo jqlMetaInfo = new JqlMetaInfo(sql,paramMap, modelClass);
-        return doProxy(jqlMetaInfo, ()-> baseBrief.batchInsert(sql ,paramMap));
+        return doProxy(jqlMetaInfo, (jmi)-> baseBrief.batchInsert(jmi.getSql() ,paramMap));
     }
 
     @Override

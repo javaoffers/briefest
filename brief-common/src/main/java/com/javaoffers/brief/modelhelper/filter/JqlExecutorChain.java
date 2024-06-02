@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.filter;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -9,7 +10,7 @@ import java.util.function.Supplier;
  */
 public class JqlExecutorChain<R> {
 
-   private Supplier<R> supplier;
+   private Function<JqlMetaInfo, R> supplier;
 
    private List<JqlExecutorFilter> filterList;
 
@@ -17,7 +18,7 @@ public class JqlExecutorChain<R> {
 
    private JqlMetaInfo jqlMetaInfo;
 
-   public JqlExecutorChain(Supplier<R> supplier,
+   public JqlExecutorChain(Function<JqlMetaInfo, R> supplier,
                            List<JqlExecutorFilter> filterList,
                            JqlMetaInfo jqlMetaInfo) {
       this.supplier = supplier;
@@ -39,7 +40,7 @@ public class JqlExecutorChain<R> {
    }
 
    private R doFinal(){
-      return supplier.get();
+      return supplier.apply(jqlMetaInfo);
    }
 
 }

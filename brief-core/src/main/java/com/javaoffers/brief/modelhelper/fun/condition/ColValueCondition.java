@@ -24,7 +24,7 @@ public class ColValueCondition implements Condition {
 
     @Override
     public String getSql() {
-        return this.getConditionTag().getTag() + colName;
+        return this.getConditionTag().getTag() + getExpressionColName();
     }
 
     @Override
@@ -45,5 +45,9 @@ public class ColValueCondition implements Condition {
 
     public String getColName() {
         return colName;
+    }
+
+    public String getExpressionColName(){
+        return "`"+colName+"`";
     }
 }

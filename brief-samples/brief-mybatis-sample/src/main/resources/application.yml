@@ -6,6 +6,19 @@ spring:
     url: jdbc:mysql://10.189.84.36:3306/base?useUnicode=true&characterEncoding=utf8&serverTimezone=GMT%2B8&useSSL=false&allowMultiQueries=true&zeroDateTimeBehavior=convertToNull
     username: root
     password: zqbxcmj
+
+#spring:
+#  datasource:
+#    driver-class-name: org.h2.Driver
+#    username: sa
+#    password: password
+#    url: jdbc:h2:mem:mydb;MODE=MySQL;
+#    schema: h2.sql
+#    data: h2.sql
+#  h2:
+#    console:
+#      enabled: true
+
   resources:
     static-locations : classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/,classpath:/static/page/,classpath:/templates/
 #配置mybatis

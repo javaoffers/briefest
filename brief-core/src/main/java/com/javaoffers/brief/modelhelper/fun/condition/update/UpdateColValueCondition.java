@@ -11,7 +11,7 @@ public class UpdateColValueCondition extends ColValueCondition {
 
     @Override
     public String getSql() {
-        return getColName() + " = #{" + getColName() +"} ";
+        return getExpressionColName() + " = #{" + this.getColName() +"} ";
     }
 
 }

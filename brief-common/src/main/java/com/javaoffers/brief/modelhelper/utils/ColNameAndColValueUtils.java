@@ -35,9 +35,6 @@ public class ColNameAndColValueUtils {
                     }
                     o = field.get(model);
                     if (o != null) {
-                        if (o instanceof Number && colInfo.isAutoincrement() && ((Number) o).longValue() == 0L) {
-                            continue;
-                        }
                         break;
                     }
                 } catch (Exception e) {
@@ -54,16 +51,14 @@ public class ColNameAndColValueUtils {
 
 
     /**
-     * parse ColName and ColValue for model
+     * parse ColName and ColValue for model. fill where condition
      * @param <T> model (May is the proxy model where open auto update )
      * @param modelClass The real model class
      * @return  ColName and ColValue
      */
     public static <T> Map<String, Object> parseColNameAndColValue(T model, Class modelClass) {
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
-        Map<String, ColumnInfo> originalColNames = tableInfo.getColNames();
         Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
-        AtomicBoolean status = new AtomicBoolean(false);
         //key: colName, value: colValue
         HashMap<String, Object> colNameAndColValues = new HashMap<>();
         if (colNameOfModelField != null && colNameOfModelField.size() > 0) {
@@ -76,16 +71,6 @@ public class ColNameAndColValueUtils {
                             continue;
                         }
                         o = field.get(model);
-                        if (o != null) {
-                            //Self-incrementing elements are not allowed to be 0
-                            if (originalColNames.get(colName) != null
-                                    && originalColNames.get(colName).isAutoincrement()
-                                    && o instanceof Number
-                                    && ((Number) o).longValue() == 0L) {
-                                return;
-                            }
-                            break;
-                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

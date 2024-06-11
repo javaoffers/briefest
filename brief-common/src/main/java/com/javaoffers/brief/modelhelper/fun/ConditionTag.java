@@ -66,8 +66,10 @@ public enum ConditionTag {
 
     INSERT_COL_VALUE(2004,"", CategoryTag.INSERT_INTO),
 
+    @Deprecated
     ON_DUPLICATE_KEY_UPDATE(2005," on duplicate key update ", CategoryTag.INSERT_INTO),
 
+    @Deprecated
     REPLACE_INTO(2006," replace into ", CategoryTag.INSERT_INTO),
 
     /**update**/

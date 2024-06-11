@@ -8,13 +8,11 @@ import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import java.util.Collections;
 import java.util.Map;
 
-public class UpdateCondtionMark implements Condition {
+public class UpdateSetCondition implements Condition {
 
     private String tableName;
 
     private Class modelCalss;
-
-    private HeadCondition headCondition;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -31,18 +29,13 @@ public class UpdateCondtionMark implements Condition {
         return Collections.EMPTY_MAP;
     }
 
-    public UpdateCondtionMark( Class modelCalss, HeadCondition headCondition) {
+    public UpdateSetCondition(Class modelCalss) {
         this.tableName = TableHelper.getTableName(modelCalss);
         this.modelCalss = modelCalss;
-        this.headCondition = headCondition;
     }
 
     public Class getModelCalss(){
         return this.modelCalss;
     }
 
-    public long getNextLong(){
-        Assert.isTrue(this.headCondition != null ,"head condition is null");
-        return this.headCondition.getNextLong();
-    }
 }

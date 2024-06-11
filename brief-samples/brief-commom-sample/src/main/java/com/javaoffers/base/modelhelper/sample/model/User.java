@@ -275,8 +275,8 @@ public class User {
     )
     private String moneyDes;
 
-    @ColName("'{\"nickName\":\"mingJie\",\"age\":30}'")
-    private ExtraInfo extraInfo;
+//    @ColName("'{\"nickName\":\"mingJie\",\"age\":30}'")
+//    private ExtraInfo extraInfo;
 
     private List<UserOrder> orders;
 

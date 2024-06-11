@@ -353,7 +353,6 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     @Override
     public SmartUpdateFun<M, GetterFun<M, Object>, V> addBatch() {
         conditions.add(new AddPatchMarkCondition());
-        conditions.add(((HeadCondition)this.conditions.peekFirst()).clone());//为了重新设置原子递增.
         return new SmartUpdateFunImpl(modelClass, conditions,isUpdateNull);
     }
 }

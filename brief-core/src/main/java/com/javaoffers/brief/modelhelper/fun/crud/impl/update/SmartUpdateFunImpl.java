@@ -5,7 +5,7 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCondition;
-import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondtionMark;
+import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateSetCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.update.OneUpdateFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.PrepareWhereModifyFun;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
@@ -39,9 +39,8 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.mClass = mClass;
         this.isUpdateNull = isUpdateNull;
         this.tableName = TableHelper.getTableName(mClass);
-        HeadCondition headCondition = new HeadCondition(dataSource,mClass);
-        this.conditions.add(headCondition);
-        this.conditions.add(new UpdateCondtionMark(mClass,headCondition));
+        this.conditions.add(new HeadCondition(dataSource,mClass));
+        this.conditions.add(new UpdateSetCondition(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }
@@ -51,7 +50,8 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
         this.isUpdateNull = isUpdateNull;
         this.conditions = conditions;
         this.tableName = TableHelper.getTableName(mClass);
-        this.conditions.add(new UpdateCondtionMark(mClass, (HeadCondition) this.conditions.peekFirst()));
+        this.conditions.add(((HeadCondition)this.conditions.peekFirst()).clone());//为了重新设置原子递增.
+        this.conditions.add(new UpdateSetCondition(mClass));
         this.prepareWhereModifyFun = new PrepareWhereModifyFunImpl<M,C,V>(conditions, mClass);
         this.oneUpdateFun = new OneUpdateFunImpl<M,C,V>(conditions,mClass,isUpdateNull);
     }

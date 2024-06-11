@@ -167,7 +167,7 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
                 .addBatch()
                 .colAll(user)
                 .where()
-                .eq(User::getId,2)
+                .eq(User::getId,user.getId())
                 .ex();
 
         print(user);

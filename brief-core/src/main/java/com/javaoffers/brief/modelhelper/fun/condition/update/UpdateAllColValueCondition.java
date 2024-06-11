@@ -92,13 +92,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                         break;
                     }
                 }
-                //Self-incrementing elements are not allowed to be 0
-                if(     columnInfo.isAutoincrement()
-                        && oValue instanceof Number
-                        && ((Number) oValue).longValue() == 0L
-                ){
-                    return;
-                }
+
                 if(statusNull.get() == 0){
                     updateSqlNull.append(ConditionTag.SET.getTag());
                     statusNull.incrementAndGet();
@@ -107,7 +101,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 }
 
                 String colNameTag = getNextTag();
-                updateSqlNull.append(cloName);
+                String expressionCloName = "`"+cloName+"`";
+                updateSqlNull.append(expressionCloName);
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(colNameTag);
                 updateSqlNull.append("}");
@@ -122,7 +117,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                     }else{
                         updateSql.append(", ");
                     }
-                    updateSql.append(cloName);
+                    updateSql.append(expressionCloName);
                     updateSql.append(" = #{");
                     updateSql.append(colNameTag);
                     updateSql.append("}");

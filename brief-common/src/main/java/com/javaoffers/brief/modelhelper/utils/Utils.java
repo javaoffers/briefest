@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.exception.BaseException;
 import com.javaoffers.brief.modelhelper.exception.ClassNotFindException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
@@ -99,7 +100,7 @@ public class Utils {
         return result;
     }
 
-    public static boolean isBaseModel(Field fd) throws Exception {
+    public static boolean isBaseModel(Field fd)  {
         Boolean isBaseModel = SOFT_CACHE_FIELDS_IS_MODEL.get(fd);
         if (isBaseModel != null) {
             return isBaseModel;
@@ -373,6 +374,46 @@ public class Utils {
             return Enum.class;
         }
         return baseClass;
+    }
+
+    /**
+     * turn underscore
+     *
+     * @param info
+     * @return
+     */
+    public static String conLine(String info) {
+        if (info.contains("_")) {
+            return info;
+        }
+
+        String[] split = info.split("");
+        StringBuilder builder = new StringBuilder();
+        String last = null;
+        for (String s : split) {
+            if (StringUtils.isAllUpperCase(s)) {
+                if (builder.length() != 0 && StringUtils.isAllLowerCase(last)) {
+                    s = s.toLowerCase();
+                    s = "_" + s;
+                }
+            }
+            builder.append(s);
+            last = s;
+        }
+        info = builder.toString();
+        String defaultCase = "NO";
+        String YES = "YES";
+        String ignoreCase = System.getProperty("LowerCase", defaultCase);
+        String upperCase = System.getProperty("UpperCase", defaultCase);
+        if (YES.equalsIgnoreCase(ignoreCase)) {
+            info = info.toLowerCase();
+        }else if(YES.equalsIgnoreCase(upperCase)){
+            info = info.toUpperCase();
+        }else{
+            //如果没有设置大小写,则默认为小写
+            info = info.toLowerCase();
+        }
+        return info;
     }
 
 }

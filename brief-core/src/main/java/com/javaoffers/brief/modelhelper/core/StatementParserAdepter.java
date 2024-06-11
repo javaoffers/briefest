@@ -27,9 +27,13 @@ public class StatementParserAdepter implements BriefContextPostProcess {
 
     public static BaseSQLStatement statementParse(LinkedList<Condition> conditions) {
         HeadCondition headCondition = (HeadCondition)conditions.pollFirst();
+        Condition conditionTag = conditions.peekFirst();
         DBType dbType = TableHelper.getTableInfo(headCondition.getModelClass()).getDbType();
-        return briefContext.getStatementParser(dbType).parse(conditions);
-
+        BaseSQLStatement sqlStatement = briefContext.getStatementParser(dbType).parse(conditions);
+        //for reuse select(), delete()...
+        conditions.add(headCondition.clone());
+        conditions.add(conditionTag);
+        return sqlStatement;
     }
 
 

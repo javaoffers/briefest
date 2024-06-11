@@ -41,7 +41,8 @@ public class InsertConditionParse extends AbstractParseCondition {
         StringBuilder duplicateSqlForColValCondition =
                 new StringBuilder();
         boolean isDupUpdateSql = false;
-        for(Condition condition : conditions){
+        Condition condition = null;
+        while( (condition = conditions.pollFirst()) != null){
             if(condition instanceof ColValueCondition){
                 Map<String, Object> params = condition.getParams();//只有一个值
                 Assert.isTrue(params.size() == 1,"必须存在一个值");

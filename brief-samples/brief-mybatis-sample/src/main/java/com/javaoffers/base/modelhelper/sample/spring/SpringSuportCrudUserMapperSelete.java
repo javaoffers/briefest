@@ -58,7 +58,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     public void testAll() {
         List<User> exs = this.crudUserMapper.select().col(User::getId).where().limitPage(1, 1).exs();
 
-//        inEmptyList();
+        inEmptyList();
         List<User> query = this.crudUserMapper.general().query(1, 1);
         User id_as_countId = this.crudUserMapper.select().col("id as countId").where().limitPage(1, 1).ex();
         testLike();

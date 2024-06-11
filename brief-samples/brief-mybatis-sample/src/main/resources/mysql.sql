@@ -13,6 +13,10 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 INSERT INTO `user` VALUES (1, 'ling', '2022-07-05 00:30:31', '2022-09-09 03:51:23','1000', '1','8', 'JAVA');
 
+INSERT INTO `user` ( `id`, `name`, `birthday`, `create_time`, `money`, `sex`,`month`,`work` , `is_del`, `version`)
+VALUES (id, 'ling', '2022-07-05 00:30:31', '2022-09-09 03:51:23','1000', '1','8', 'JAVA', '1', '1');
+
+
 CREATE TABLE `user_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `order_name` varchar(255) COLLATE utf8_bin DEFAULT NULL,

@@ -324,48 +324,6 @@ this.crudUserMapper.general().updateBatchById(user);
 Through the above case, we can very good control in the business field of updates.
 </p>
 
-#### Update tracking difference
-<p>
-    Differences can real-time tracking updates. When data change model for automatic updates.
-    Want to use this feature only needs to be  <code>@BaseModel</code> autoUpdate = true.
-    After open the query each with a primary key id data are able to provide a different update.
-    In the process of operation if the primary key id is set to null, 
-    The differences will lose the ability to update the model data and not reply even if you restore the primary key id.
-    
-</p>
-
-```java
-
-   @Data
-   @BaseModel(value = "encrypt_data",autoUpdate = true)
-   public class EncryptDataAutoUpdate {
-   
-       @BaseUnique
-       private Integer id;
-   
-       private String encryptNum;
-   }
-   EncryptDataAutoUpdate encryptData = new EncryptDataAutoUpdate();
-   encryptData.setEncryptNum("12345678");
-   Id id = autoUpdateBriefMapper.general().save(encryptData);
-
-   EncryptDataAutoUpdate autoUpdate = autoUpdateBriefMapper.general().queryById(id);
-   print(autoUpdate);
-   //Not updated, because there is no difference
-   autoUpdate.setEncryptNum("12345678");
-   //Will be updated
-   autoUpdate.setEncryptNum("87654321900");
-   print(autoUpdate);
-   
-   encryptData = this.autoUpdateBriefMapper.general().queryById(id);
-   print(encryptData);
-   //Cancel the differences to update
-   encryptData.setId(null);
-   //Not updated, as has already been canceled difference update functionality;
-   encryptData.setEncryptNum("098712345");
-
-```
-
 
 #### Delete operation
 <p>

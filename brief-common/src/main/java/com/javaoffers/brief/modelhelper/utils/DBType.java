@@ -14,11 +14,12 @@ public enum DBType {
     MYSQL,
 
     H2,
+
+    ORACLE,
     ;
 
     //processingTranslation
     public Object processingTranslation(JqlMetaInfo jqlMetaInfo, String key, Object value){
-        String sql = jqlMetaInfo.getSql();
         if (value instanceof Id) {
             value = ((Id) value).value();
         } else if (value instanceof Enum) {

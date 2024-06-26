@@ -25,9 +25,10 @@ public class OracleSelectConditionParse extends SelectConditionParse {
             LimitWordCondition limit = (LimitWordCondition)conditions.pollLast();
 
             //生成oracle 分页语法
-            OracleLimitWordCondition oracleLimit = new OracleLimitWordCondition(limit.pageNum, limit.pageSize);
+            OracleLimitWordCondition oracleLimitWordCondition = new OracleLimitWordCondition(limit.pageNum, limit.pageSize);
+            oracleLimitWordCondition.setHeadCondition(((LimitWordCondition<?>) condition).getHeadCondition());
 
-            conditions.addLast(oracleLimit);
+            conditions.addLast(oracleLimitWordCondition);
 
         }
     }

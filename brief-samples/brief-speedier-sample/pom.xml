@@ -12,6 +12,12 @@
 
         <dependency>
             <groupId>com.javaoffers</groupId>
+            <artifactId>brief-oracle</artifactId>
+            <version>3.6.5-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
             <version>3.6.5-SNAPSHOT</version>
         </dependency>

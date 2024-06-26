@@ -8,7 +8,7 @@ import lombok.Data;
  * Used for testing automatic updates
  */
 @Data
-@BaseModel(value = "encrypt_data",autoUpdate = true)
+@BaseModel(value = "encrypt_data")
 public class EncryptDataAutoUpdate {
 
     @BaseUnique

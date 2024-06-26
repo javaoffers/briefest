@@ -5,7 +5,6 @@ import com.javaoffers.base.modelhelper.sample.constant.Work;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefEncryptDataMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.EncryptData;
-import com.javaoffers.base.modelhelper.sample.model.EncryptDataAutoUpdate;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.brief.modelhelper.core.Id;
@@ -39,8 +38,6 @@ public class BriefSpeedierSample {
     BriefMapper<UserOrder> userOrderBriefMapper = speedier.newDefaultCrudMapper(UserOrder.class);
 
     BriefEncryptDataMapper briefEncryptDataMapper = speedier.newCustomCrudMapper(BriefEncryptDataMapper.class);
-
-    BriefMapper<EncryptDataAutoUpdate> autoUpdateBriefMapper = speedier.newDefaultCrudMapper(EncryptDataAutoUpdate.class);
 
     @Test
     public void testAll(){
@@ -123,29 +120,6 @@ public class BriefSpeedierSample {
         EncryptData encryptData1 = this.briefEncryptDataMapper.general().queryById(id);
         print(encryptData1);
 
-    }
-
-    public void testAutoUpdate(){
-        EncryptDataAutoUpdate encryptData = new EncryptDataAutoUpdate();
-        encryptData.setEncryptNum("12345678");
-        Id id = autoUpdateBriefMapper.general().save(encryptData);
-
-        EncryptDataAutoUpdate autoUpdate = autoUpdateBriefMapper.general().queryById(id);
-        print(autoUpdate);
-        //Not updated, because there is no difference
-        autoUpdate.setEncryptNum("12345678");
-        //Will be updated
-        autoUpdate.setEncryptNum("87654321900");
-        print(autoUpdate);
-
-        encryptData = this.autoUpdateBriefMapper.general().queryById(id);
-        print(encryptData);
-        //Cancel the differences to update
-        encryptData.setId(null);
-        //Not updated, as has already been canceled difference update functionality;
-        encryptData.setEncryptNum("098712345");
-
-        print(encryptData);
     }
 
     public void print(Object user) {

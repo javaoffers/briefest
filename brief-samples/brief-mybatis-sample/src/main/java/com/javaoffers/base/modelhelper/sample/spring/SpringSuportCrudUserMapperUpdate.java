@@ -39,33 +39,12 @@ public class SpringSuportCrudUserMapperUpdate implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testAutoUpdate();
         testNpdateNull();
         testUpdate();
         testBatchUpdate();
         if(status){
             System.exit(0);
         }
-
-    }
-
-    public void testAutoUpdate() throws JsonProcessingException {
-        EncryptDataAutoUpdate encryptDataAutoUpdate = new EncryptDataAutoUpdate();
-        encryptDataAutoUpdate.setEncryptNum("12345678");
-        Id id = this.encryptDataAuMapper.general().save(encryptDataAutoUpdate);
-
-        EncryptDataAutoUpdate autoUpdate = this.encryptDataAuMapper.general().queryById(id);
-        print(autoUpdate);
-
-        //Update tracking difference
-        autoUpdate.setEncryptNum("12345678"); //Not updated, because there is no difference
-        autoUpdate.setEncryptNum("0987654321");//he data will be real-time updated differences
-
-        //Cancel the update tracking differences
-        autoUpdate.setId(null);
-        autoUpdate.setEncryptNum("1987654320");//Not updated update thought has cancelled differences
-
-
 
     }
 

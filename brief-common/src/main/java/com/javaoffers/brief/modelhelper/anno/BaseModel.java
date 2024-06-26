@@ -17,11 +17,4 @@ public @interface BaseModel {
      * Note: This property is useful in CrudMapper scenarios
      */
     String value() default "";
-
-    /**
-     * Update automatically identify differences.
-     * If open. When you call a setter method automatically refresh the db
-     */
-    boolean autoUpdate() default false;
-
 }

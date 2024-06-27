@@ -137,12 +137,11 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return;
         }
         //mysql and h2 for on duc
-        if(tableInfo.getDbType() == DBType.MYSQL || tableInfo.getDbType() == DBType.H2){
+        if(tableInfo.getDbType().isSupportDuplicateModify()){
             MoreInsertFun<T, GetterFun<T, Object>, Object> moreInserFun = insertFun.colAll(models);
             if(moreInserFun instanceof MoreInsertFunImpl){
                 ((MoreInsertFunImpl) moreInserFun).dupUpdate().exs();
             }
-
         }else {
             List<T> updateList = saveWithFails(models);
             this.modifyBatchById(updateList);

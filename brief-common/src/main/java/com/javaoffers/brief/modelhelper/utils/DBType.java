@@ -11,11 +11,23 @@ import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
  */
 public enum DBType {
 
-    MYSQL,
+    MYSQL {
+        @Override
+        public boolean isSupportDuplicateModify() {
+            return true;
+        }
+    },
 
-    H2,
+    H2 {
+        @Override
+        public boolean isSupportDuplicateModify() {
+            return true;
+        }
+    },
 
     ORACLE,
+
+    SQL_SERVER,
     ;
 
     //processingTranslation
@@ -30,6 +42,11 @@ public enum DBType {
             value = GsonUtils.gson.toJson(value);
         }
         return value;
+    }
+
+    //Whether to support conflict updates
+    public boolean isSupportDuplicateModify(){
+        return false;
     }
 
 }

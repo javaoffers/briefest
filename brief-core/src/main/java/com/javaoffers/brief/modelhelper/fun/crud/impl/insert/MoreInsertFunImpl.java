@@ -111,4 +111,10 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         return this;
     }
 
+//    @Override
+//    public ExecutMoreFun<Id> dupReplace() {
+//        this.conditions.add(new ReplaceIntoMark());
+//        return this;
+//    }
+
 }

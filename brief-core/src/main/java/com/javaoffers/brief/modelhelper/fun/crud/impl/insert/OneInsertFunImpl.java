@@ -65,9 +65,9 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
         return this;
     }
 
-    @Override
-    public ExecutOneFun<Id> dupReplace() {
-        this.conditions.add(new ReplaceIntoMark());
-        return this;
-    }
+//    @Override
+//    public ExecutOneFun<Id> dupReplace() {
+//        this.conditions.add(new ReplaceIntoMark());
+//        return this;
+//    }
 }

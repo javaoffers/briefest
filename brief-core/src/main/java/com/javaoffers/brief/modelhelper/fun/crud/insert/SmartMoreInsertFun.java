@@ -17,6 +17,6 @@ public interface SmartMoreInsertFun<M, C extends GetterFun<M, Object>, V> extend
      * delete before insert if the primary key or unique constraint is repeated
      * @return this
      */
-    ExecutOneFun<Id> dupReplace();
+//    ExecutOneFun<Id> dupReplace();
 
 }

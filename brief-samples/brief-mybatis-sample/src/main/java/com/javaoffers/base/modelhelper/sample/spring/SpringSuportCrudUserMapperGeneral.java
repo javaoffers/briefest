@@ -90,7 +90,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         Teacher teacher = crudTeacherMapper.general().query(1, 1).get(0);
         print(teacher);
         teacher.setStatus(RowStatus.PRESENCE);
-        crudTeacherMapper.general().updateById(teacher);
+        crudTeacherMapper.general().replaceById(teacher);
         Teacher teacher1 = crudTeacherMapper.general().queryById(teacher.getId());
         print(teacher1);
         crudTeacherMapper.general().logicRemoveById(teacher.getId());
@@ -103,19 +103,19 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         List<User> query = this.crudUserMapper.general().query(1, 2);
         User user = query.get(0);
         Long id = user.getId();
-        this.crudUserMapper.general().saveOrUpdate(user);
+        this.crudUserMapper.general().saveOrReplace(user);
         user.setWork(null);
-        this.crudUserMapper.general().saveOrUpdate(user);
+        this.crudUserMapper.general().saveOrReplace(user);
         user.setWork(Work.JAVA);
         user.setIdImpl(null);
         user.setId(null);
-        this.crudUserMapper.general().saveOrUpdate(user);
-        this.crudUserMapper.general().saveOrUpdate(query);
+        this.crudUserMapper.general().saveOrReplace(user);
+        this.crudUserMapper.general().saveOrReplace(query);
 
-        this.crudUserMapper.general().updateById(user);// not update, because id has no value
+        this.crudUserMapper.general().replaceById(user);// not update, because id has no value
         user.setId(id);
         user.setWork(null);
-        this.crudUserMapper.general().updateById(user);// will update
+        this.crudUserMapper.general().replaceById(user);// will update
     }
 
     public void testSaveModify(){

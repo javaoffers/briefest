@@ -112,11 +112,11 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public void saveOrUpdate(T model) {
+    public void saveOrReplace(T model) {
         if (model == null) {
             return;
         }
-        this.saveOrUpdate(Lists.newArrayList(model));
+        this.saveOrReplace(Lists.newArrayList(model));
     }
 
     @Override
@@ -139,9 +139,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         //mysql and h2 for on duc
         if(tableInfo.getDbType().isSupportDuplicateModify()){
             MoreInsertFun<T, GetterFun<T, Object>, Object> moreInserFun = insertFun.colAll(models);
-            if(moreInserFun instanceof MoreInsertFunImpl){
-                ((MoreInsertFunImpl) moreInserFun).dupUpdate().exs();
-            }
+            ((MoreInsertFunImpl) moreInserFun).dupUpdate().exs();
         }else {
             List<T> updateList = saveWithFails(models);
             this.modifyBatchById(updateList);
@@ -150,9 +148,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public void saveOrUpdate(Collection<T> models) {
+    public void saveOrReplace(Collection<T> models) {
         List<T> updateList = saveWithFails(models);
-        this.updateBatchById(updateList);
+        this.replaceBatchById(updateList);
     }
 
     @Override
@@ -251,7 +249,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int updateById(T model) {
+    public int replaceById(T model) {
         if (model == null) {
             return 0;
         }
@@ -264,7 +262,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int updateBatchById(Collection<T> models) {
+    public int replaceBatchById(Collection<T> models) {
         return renovateBatchById(models, true);
     }
 
@@ -277,7 +275,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int vsUpdateById(T model) {
+    public int vsReplaceById(T model) {
         if (model == null) {
             return 0;
         }
@@ -293,7 +291,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int vsUpdateByIds(Collection<T> models) {
+    public int vsReplaceByIds(Collection<T> models) {
         if (CollectionUtils.isEmpty(models)) {
             return 0;
         }

@@ -13,16 +13,13 @@ public class SqlServerSelectConditionParse extends SelectConditionParse {
         //检测是否有分页
         Condition condition = conditions.peekLast();
         if(condition instanceof LimitWordCondition){
-
             //弹出mysql的limit语法
             LimitWordCondition limit = (LimitWordCondition)conditions.pollLast();
 
             //生成oracle 分页语法
             SqlServerLimitWordCondition oracleLimitWordCondition = new SqlServerLimitWordCondition(limit.pageNum, limit.pageSize);
             oracleLimitWordCondition.setHeadCondition(((LimitWordCondition<?>) condition).getHeadCondition());
-
             conditions.addLast(oracleLimitWordCondition);
-
         }
     }
 }

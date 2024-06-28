@@ -34,12 +34,12 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public void saveOrModify(T model);
 
     /**
-     * save or update.
+     * save or update .
      * By the @UniqueId field to query data, if the query not null then to update, or to insert.
      * @param model class
      * @return  primary key id. or modify count num. so return void
      */
-    public void saveOrUpdate(T model);
+    public void saveOrReplace(T model);
 
     /**
      * save model
@@ -62,7 +62,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @param models class
      * @return  primary key id. or modify count num. so return void
      */
-    public void saveOrUpdate(Collection<T> models);
+    public void saveOrReplace(Collection<T> models);
 
     /**
      * delete model.Where conditions will be generated based on properties of the model
@@ -139,7 +139,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @param model model
      * @return The number of bars affected by the update
      */
-    public int updateById(T model);
+    public int replaceById(T model);
 
     /**
      * batch update. Empty fields will not be able to update the database.
@@ -155,7 +155,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @param models models
      * @return Affect the number of bars
      */
-    public int updateBatchById(Collection<T> models);
+    public int replaceBatchById(Collection<T> models);
 
 
     /**
@@ -178,7 +178,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @param model model
      * @return The number of bars affected by the update
      */
-    public int vsUpdateById(T model);
+    public int vsReplaceById(T model);
 
     /**
      * Support version update. (will not update null to db)
@@ -194,7 +194,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @param models models
      * @return Affect the number of bars
      */
-    public int vsUpdateByIds(Collection<T> models);
+    public int vsReplaceByIds(Collection<T> models);
 
     /**
      * Query the main model, be careful not to include child models. Non-null properties will generate a where statement.

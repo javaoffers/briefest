@@ -1,19 +1,25 @@
-package com.javaoffers.brief.modelhelper.fun.condition.insert;
+package com.javaoffers.brief.modelhelper.oracle;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertCondition;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
  * create by cmj
  */
-public class InsertAllColValueCondition implements InsertCondition {
+public class OracleInsertAllColValueCondition implements InsertCondition {
 
     private Object model;
 
@@ -26,7 +32,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private HashMap<String, Object> param = new LinkedHashMap<>();
 
-    private StringBuilder onDuplicate = new StringBuilder(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
+    private StringBuilder onDuplicate = new StringBuilder();
 
     @Override
     public ConditionTag getConditionTag() {
@@ -48,7 +54,7 @@ public class InsertAllColValueCondition implements InsertCondition {
         return this.sqlValues;
     }
 
-    public InsertAllColValueCondition(Class modelClass, Object model) {
+    public OracleInsertAllColValueCondition(Class modelClass, Object model) {
         this.model = model;
         this.modelClass = modelClass;
     }
@@ -71,7 +77,6 @@ public class InsertAllColValueCondition implements InsertCondition {
                         break;
                     }
                 }
-
                 if(oValue != null){
                     param.put(colName, oValue);
                 }
@@ -123,13 +128,5 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     public String getOnDuplicate() {
         return onDuplicate.toString();
-    }
-
-    public Object getModel() {
-        return model;
-    }
-
-    public Class getModelClass() {
-        return modelClass;
     }
 }

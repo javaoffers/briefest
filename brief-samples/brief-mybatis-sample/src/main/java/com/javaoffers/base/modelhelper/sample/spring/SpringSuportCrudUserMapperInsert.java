@@ -220,7 +220,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     public void testG(){
         User user = this.crudUserMapper.general().query(1, 1).get(0);
         LOGUtils.printLog(user);
-        this.crudUserMapper.general().saveOrUpdate(Lists.newArrayList(user,user));
+        this.crudUserMapper.general().saveOrReplace(Lists.newArrayList(user,user));
         this.crudUserMapper.general().saveOrModify(Lists.newArrayList(user,user));
     }
 
@@ -278,7 +278,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         print(user);
 
         duplicateUpdate.setName("replaceInto");
-        Id ex2 = crudUserMapper.insert().colAll(duplicateUpdate).dupReplace().ex();
+        Id ex2 = crudUserMapper.insert().colAll(duplicateUpdate).dupUpdate().ex();
         User user1 = crudUserMapper.general().queryById(ex2);
         print(user1);
 
@@ -301,17 +301,17 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         print(user2);
 
         crudUserMapper.insert().col(User::getId, user2.getId()).col(User::getName,"duplicate5")
-                .dupReplace().ex();
+                .dupUpdate().ex();
         User user4 = crudUserMapper.general().queryById(user2.getId());
         print(user4);
 
         user2.setName("duplicate6");
-        crudUserMapper.insert().colAll(user2).dupReplace().ex();
+        crudUserMapper.insert().colAll(user2).dupUpdate().ex();
         User user5 = crudUserMapper.general().queryById(user2.getId());
         print(user5);
 
         user2.setName("duplicate7");
-        crudUserMapper.insert().colAll(user2).dupReplace().ex();
+        crudUserMapper.insert().colAll(user2).dupUpdate().ex();
 
         User user6 = crudUserMapper.general().queryById(user2.getId());
         print(user6);

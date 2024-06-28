@@ -93,9 +93,9 @@ public class SmartMoreInsertFunImpl<M> implements SmartMoreInsertFun<M, GetterFu
         return this;
     }
 
-    @Override
-    public ExecutOneFun<Id> dupReplace() {
-        this.conditions.add(new ReplaceIntoMark());
-        return this;
-    }
+//    @Override
+//    public ExecutOneFun<Id> dupReplace() {
+//        this.conditions.add(new ReplaceIntoMark());
+//        return this;
+//    }
 }

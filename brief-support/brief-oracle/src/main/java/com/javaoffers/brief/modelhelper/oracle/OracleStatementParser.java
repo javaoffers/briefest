@@ -21,7 +21,7 @@ public class OracleStatementParser implements StatementParser<Condition, BaseSQL
     static {
         crudConditionParse.put(SelectConditionParse.conditionTag, new OracleSelectConditionParse());
         crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
-        crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
+        crudConditionParse.put(InsertConditionParse.conditionTag, new OracleInsertConditionParse());
         crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());
     }
 

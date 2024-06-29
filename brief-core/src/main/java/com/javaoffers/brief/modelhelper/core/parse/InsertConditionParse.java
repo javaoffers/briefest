@@ -31,16 +31,17 @@ public class InsertConditionParse extends AbstractParseCondition {
 
         String insertIntoTableSql = insertIntoTableCondition.getSql();
 
-        StringBuilder insertColNamesAppender = new StringBuilder();
         ArrayList<String> moreSql = new ArrayList<>();
+        StringBuilder insertColNamesAppender = new StringBuilder();
         StringBuilder insertValueAppender = new StringBuilder();
         ArrayList<Map<String, Object>> paramsList = new ArrayList<>();
         HashMap<String, Object> valuesParam = new HashMap<>();
         boolean isColValueCondition = false;
+        boolean isDupUpdateSql = conditions.peekLast() instanceof OnDuplicateKeyUpdateMark;
+
         List<String> dupUpdateSql = new ArrayList<>();
-        StringBuilder duplicateSqlForColValCondition =
-                new StringBuilder();
-        boolean isDupUpdateSql = false;
+        StringBuilder duplicateSqlForColValCondition = new StringBuilder();
+
         Condition condition = null;
         while( (condition = conditions.pollFirst()) != null){
             if(condition instanceof ColValueCondition){
@@ -48,7 +49,6 @@ public class InsertConditionParse extends AbstractParseCondition {
                 Assert.isTrue(params.size() == 1,"必须存在一个值");
                 if(insertColNamesAppender.length() == 0){
                     isColValueCondition = true;
-                    //insertColNamesAppender.append(insertIntoTableSql);
                     insertColNamesAppender.append("(");
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
                     insertValueAppender.append("(");
@@ -77,21 +77,24 @@ public class InsertConditionParse extends AbstractParseCondition {
                 insertValueAppender = new StringBuilder();
                 insertColNamesAppender = new StringBuilder();
                 InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
-                allColValueCondition.init();
+                allColValueCondition.init(isDupUpdateSql);
 
-                //insertColNamesAppender.append(insertIntoTableSql);
+                // ( colName ,,, )
                 insertColNamesAppender.append(allColValueCondition.getSql());
+
+                // values (colName ,,,)
                 insertValueAppender.append(ConditionTag.VALUES.getTag());
                 insertValueAppender.append(allColValueCondition.getValuesSql());
-
                 paramsList.add(allColValueCondition.getParams());
+
+                // (colName ,,, ) values (colName ,,,)
                 moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-                dupUpdateSql.add(allColValueCondition.getOnDuplicate());
-            }else if(condition instanceof OnDuplicateKeyUpdateMark){
-                isDupUpdateSql = true;
-                if(duplicateSqlForColValCondition.length() > 0){
-                    dupUpdateSql.add(duplicateSqlForColValCondition.toString());
+
+                //on duplicate key update
+                if(isDupUpdateSql){
+                    dupUpdateSql.add(allColValueCondition.getOnDuplicate());
                 }
+
             }else if(condition instanceof ReplaceIntoMark){
                 ReplaceIntoMark replaceIntoMark = (ReplaceIntoMark) condition;
                 insertIntoTableSql = replaceIntoMark.getSql() + insertIntoTableCondition.getTableName();
@@ -102,8 +105,13 @@ public class InsertConditionParse extends AbstractParseCondition {
             insertColNamesAppender.append(")");
             insertValueAppender.append(")");
             paramsList.add(valuesParam);
+            // (colName ,,, ) values (colName ,,,)
             moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
+            if(isDupUpdateSql){
+                dupUpdateSql.add(duplicateSqlForColValCondition.toString());
+            }
         }
+
         Assert.isTrue(moreSql.size() == paramsList.size()," data asymmetry ");
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
         HashMap<String, SQLStatement> batch = new HashMap<>();
@@ -114,6 +122,7 @@ public class InsertConditionParse extends AbstractParseCondition {
             }
             Map<String, Object> sqlParam = paramsList.get(i);
             SQLStatement sqlStatement = batch.get(sql);
+
             if(sqlStatement == null){
                 ArrayList parems = new ArrayList<>();
                 parems.add(sqlParam);

@@ -25,7 +25,7 @@ import java.util.Set;
  */
 public class OracleInsertConditionParse extends InsertConditionParse {
 
-    public static ConditionTag conditionTag  = ConditionTag.INSERT_INTO;
+    public static ConditionTag conditionTag = ConditionTag.INSERT_INTO;
 
     @Override
     public SQLStatement doParse(LinkedList<Condition> conditions) {
@@ -33,172 +33,115 @@ public class OracleInsertConditionParse extends InsertConditionParse {
     }
 
     private SQLStatement parseInsert(LinkedList<Condition> conditions) {
-        InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition)conditions.pollFirst();
+        InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition) conditions.pollFirst();
 
         String insertIntoTableSql = insertIntoTableCondition.getSql(); //insert into table
-        StringBuilder insertColNamesAppender = new StringBuilder();
+        StringBuilder insertColNamesAppender = new StringBuilder(); // ( colName ,,, )
         ArrayList<String> moreSql = new ArrayList<>();
-        StringBuilder insertValueAppender = new StringBuilder();
+        StringBuilder insertValueAppender = new StringBuilder(); // values ( #{xx} ,,, )
         ArrayList<Map<String, Object>> paramsList = new ArrayList<>(); // for colAll(xx)
         HashMap<String, Object> valuesParam = new HashMap<>(); // for col(xx)
         boolean isColValueCondition = false;
+        boolean isDupUpdateSql = conditions.peekLast() instanceof OnDuplicateKeyUpdateMark;// for dupUpdate
+        // insert into or merge into
+        insertIntoTableSql = isDupUpdateSql ?
+                insertIntoTableSql.replaceAll(ConditionTag.INSERT_INTO.getTag(), ConditionTag.MERGE_INTO.getTag()) : insertIntoTableSql;
 
-        if(conditions.peekLast() instanceof OnDuplicateKeyUpdateMark){
-            List<String> dupUpdateSql = new ArrayList<>();
-            Condition condition = null;
-            while( (condition = conditions.pollFirst()) != null){
-                if(condition instanceof ColValueCondition){
-                    Map<String, Object> params = condition.getParams();//只有一个值
-                    Assert.isTrue(params.size() == 1,"必须存在一个值");
-                    if(insertColNamesAppender.length() == 0){
-                        isColValueCondition = true;
-                        //insertColNamesAppender.append(insertIntoTableSql);
-                        insertColNamesAppender.append("(");
-                        insertValueAppender.append(ConditionTag.VALUES.getTag());
-                        insertValueAppender.append("(");
+        Condition condition = null;
+        while ((condition = conditions.pollFirst()) != null) {
+            if (condition instanceof ColValueCondition) {
+                ColValueCondition colValueCondition = (ColValueCondition) condition;
+                Map<String, Object> params = condition.getParams();//只有一个值
+                Assert.isTrue(params.size() == 1, "必须存在一个值");
+                if (insertColNamesAppender.length() == 0) {
+                    isColValueCondition = true;
+                    // ( colName ,,,)
+                    insertColNamesAppender.append("(");
 
-                    }else{
-                        insertColNamesAppender.append(",");
-                        insertValueAppender.append(",");
-
-                    }
-                    insertColNamesAppender.append(condition.getSql());
-                    Set<String> strings = params.keySet();
-                    String key = strings.iterator().next();
-                    insertValueAppender.append("#{");
-                    insertValueAppender.append(key);
-                    insertValueAppender.append("}");
-                    valuesParam.put(key,params.get(key));
-
-                } else if(condition instanceof InsertAllColValueCondition){
-                    insertValueAppender = new StringBuilder();
-                    insertColNamesAppender = new StringBuilder();
-                    InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
-                    Class modelClass = allColValueCondition.getModelClass();
-                    Object model = allColValueCondition.getModel();
-                    OracleInsertAllColValueCondition oracleColAllValueCondition = new OracleInsertAllColValueCondition(modelClass, model);
-
-                    //insertColNamesAppender.append(insertIntoTableSql);
-                    insertColNamesAppender.append(allColValueCondition.getSql());
+                    // values (#{xx},,,)
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append(allColValueCondition.getValuesSql());
+                    insertValueAppender.append("(");
 
-                    paramsList.add(allColValueCondition.getParams());
-                    moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-                    dupUpdateSql.add(allColValueCondition.getOnDuplicate());
+                } else {
+                    insertColNamesAppender.append(",");
+                    insertValueAppender.append(",");
+
                 }
-            }
+                insertColNamesAppender.append(colValueCondition.getSql());// colName
+                Set<String> strings = params.keySet();
+                String key = strings.iterator().next();
+                insertValueAppender.append("#{");
+                insertValueAppender.append(key);
+                insertValueAppender.append("}");
+                valuesParam.put(key, params.get(key));
 
-            if(isColValueCondition){
-                insertColNamesAppender.append(")");
-                insertValueAppender.append(")");
-                paramsList.add(valuesParam);
-                moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-            }
-            Assert.isTrue(moreSql.size() == paramsList.size()," data asymmetry ");
-            MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-            HashMap<String, SQLStatement> batch = new HashMap<>();
-            for(int i =0; i < moreSql.size(); i++){
-                String sql = insertIntoTableSql + moreSql.get(i);
+            } else if (condition instanceof InsertAllColValueCondition) {
+
+                InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
+                Class modelClass = allColValueCondition.getModelClass();
+                Object model = allColValueCondition.getModel();
+                OracleInsertAllColValueCondition oracleColAllValueCondition = new OracleInsertAllColValueCondition(modelClass, model);
+                oracleColAllValueCondition.init(isDupUpdateSql);
                 if(isDupUpdateSql){
-                    sql = sql + dupUpdateSql.get(i);
-                }
-                Map<String, Object> sqlParam = paramsList.get(i);
-                SQLStatement sqlStatement = batch.get(sql);
-                if(sqlStatement == null){
-                    ArrayList parems = new ArrayList<>();
-                    parems.add(sqlParam);
-                    sqlStatement = SQLStatement.builder()
-                            .aClass(insertIntoTableCondition.getModelClass())
-                            .params(parems)
-                            .sql(sql)
-                            .status(true)
-                            .build();
-                    batch.put(sql, sqlStatement);
-                }else{
-                    sqlStatement.getParams().add(sqlParam);
-                }
-
-            }
-            moreSQLInfo.addAllSqlInfo(batch.values());
-            return moreSQLInfo;
-        }else{
-            Condition condition = null;
-            while( (condition = conditions.pollFirst()) != null){
-                if(condition instanceof ColValueCondition){
-                    Map<String, Object> params = condition.getParams();//只有一个值
-                    Assert.isTrue(params.size() == 1,"必须存在一个值");
-                    if(insertColNamesAppender.length() == 0){
-                        isColValueCondition = true;
-                        insertColNamesAppender.append("(");
-
-                        //VALUES(
-                        insertValueAppender.append(ConditionTag.VALUES.getTag());
-                        insertValueAppender.append("(");
-
-                    }else{
-                        insertColNamesAppender.append(",");
-                        insertValueAppender.append(",");
-
-                    }
-                    insertColNamesAppender.append(condition.getSql());
-                    Set<String> strings = params.keySet();
-                    String key = strings.iterator().next();
-                    insertValueAppender.append("#{");
-                    insertValueAppender.append(key);
-                    insertValueAppender.append("}");
-                    valuesParam.put(key,params.get(key));
-
-                } else if(condition instanceof InsertAllColValueCondition){
-
-                    insertColNamesAppender = new StringBuilder();
-                    // VALUES (
                     insertValueAppender = new StringBuilder();
-                    InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
-                    Class modelClass = allColValueCondition.getModelClass();
-                    Object model = allColValueCondition.getModel();
-                    OracleInsertAllColValueCondition oracleColAllValueCondition = new OracleInsertAllColValueCondition(modelClass, model);
-
+                    insertColNamesAppender = new StringBuilder();
+                    // ( colName ,,,)
                     insertColNamesAppender.append(allColValueCondition.getSql());
+                    // values ( #{xx} ,,,)
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
                     insertValueAppender.append(allColValueCondition.getValuesSql());
-
-                    paramsList.add(allColValueCondition.getParams());
+                    // (colName ,,, ) values ( #{xx} ,,,)
                     moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
+                }else{
+                    moreSql.add(oracleColAllValueCondition.getOnDuplicate());
                 }
+                paramsList.add(allColValueCondition.getParams());
             }
+        }
 
+        if (isColValueCondition) {
+            insertColNamesAppender.append(")");
+            insertValueAppender.append(")");
+            paramsList.add(valuesParam);
             if(isColValueCondition){
-                insertColNamesAppender.append(")");
-                insertValueAppender.append(")");
-                paramsList.add(valuesParam);
+                OracleInsertAllColValueCondition oracleInsertAllColValueCondition =
+                        new OracleInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
+                oracleInsertAllColValueCondition.setParam(valuesParam);
+                oracleInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
+                oracleInsertAllColValueCondition.setSqlValues(insertValueAppender.toString());
+                oracleInsertAllColValueCondition.parseDupInsertSql();
+                moreSql.add(oracleInsertAllColValueCondition.getOnDuplicate());
+            }else {
+                // ( colName ,,,) values ( #{xx},,,)
                 moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
             }
-            Assert.isTrue(moreSql.size() == paramsList.size()," data asymmetry ");
-            MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-            HashMap<String, SQLStatement> batch = new HashMap<>();
-            for(int i =0; i < moreSql.size(); i++){
-                // INSERT INTO table ...
-                String sql = insertIntoTableSql + moreSql.get(i);
-                Map<String, Object> sqlParam = paramsList.get(i);
-                SQLStatement sqlStatement = batch.get(sql);
-                if(sqlStatement == null){
-                    ArrayList parems = new ArrayList<>();
-                    parems.add(sqlParam);
-                    sqlStatement = SQLStatement.builder()
-                            .aClass(insertIntoTableCondition.getModelClass())
-                            .params(parems)
-                            .sql(sql)
-                            .status(true)
-                            .build();
-                    batch.put(sql, sqlStatement);
-                }else{
-                    sqlStatement.getParams().add(sqlParam);
-                }
-            }
-            moreSQLInfo.addAllSqlInfo(batch.values());
-            return moreSQLInfo;
         }
+
+        Assert.isTrue(moreSql.size() == paramsList.size(), " data asymmetry ");
+        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+        HashMap<String, SQLStatement> batch = new HashMap<>();
+        for (int i = 0; i < moreSql.size(); i++) {
+            String sql = insertIntoTableSql + moreSql.get(i);
+            Map<String, Object> sqlParam = paramsList.get(i);
+            SQLStatement sqlStatement = batch.get(sql);
+            if (sqlStatement == null) {
+                ArrayList parems = new ArrayList<>();
+                parems.add(sqlParam);
+                sqlStatement = SQLStatement.builder()
+                        .aClass(insertIntoTableCondition.getModelClass())
+                        .params(parems)
+                        .sql(sql)
+                        .status(true)
+                        .build();
+                batch.put(sql, sqlStatement);
+            } else {
+                sqlStatement.getParams().add(sqlParam);
+            }
+
+        }
+        moreSQLInfo.addAllSqlInfo(batch.values());
+        return moreSQLInfo;
+
 
     }
 

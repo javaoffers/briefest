@@ -28,6 +28,8 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private StringBuilder onDuplicate = new StringBuilder(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
 
+    private List<String> expressionColNames;
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.VALUES;
@@ -54,47 +56,24 @@ public class InsertAllColValueCondition implements InsertCondition {
     }
 
     //Initialize information to ensure that sql is generated during parsing
-    public void init() {
+    public void init(boolean isDuplicate) {
         //生成唯一key
-        gkeyProcess(modelClass, model);
+        gkeyProcess();
         //left: colName. right: fieldName
-        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
-        colAllAndFieldOnly.forEach((colName, fields)->{
-            try {
-                Object oValue = null;
-                for(int i = 0; i < fields.size(); i++){
-                    Field field = fields.get(i);
-                    Object o = field.get(model);
-                    //take the first non-null value
-                    if(o != null){
-                        oValue = o;
-                        break;
-                    }
-                }
-
-                if(oValue != null){
-                    param.put(colName, oValue);
-                }
-
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+        parseParams();
         //给字段增加``
-        Set<String> colNamesSet = param.keySet();
-        List<String> expressionColNamesSet = param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
-        this.sqlColNames = "( "+ String.join(", ", expressionColNamesSet)+" )";
-        byte status = 0;
-        for(String colName : expressionColNamesSet){
-            if(status != 0){
-                this.onDuplicate.append(",");
-            }
-            status += 1;
-            this.onDuplicate.append(colName);
-            this.onDuplicate.append( " = values(");
-            this.onDuplicate.append(colName);
-            this.onDuplicate.append(")");
+        parseInsertSql();
+        //parse dup
+        if(isDuplicate){
+            parseDupInsertSql();
         }
+
+    }
+
+    private void parseInsertSql() {
+        Set<String> colNamesSet = param.keySet();
+        this.expressionColNames = param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
+        this.sqlColNames = "( "+ String.join(", ", expressionColNames)+" )";
         StringBuilder valuesAppender = new StringBuilder("(");
         LinkedList<String> colNames = new LinkedList<>();
         for(String colName : colNamesSet){
@@ -105,7 +84,45 @@ public class InsertAllColValueCondition implements InsertCondition {
         this.sqlValues = valuesAppender.toString();
     }
 
-    private void gkeyProcess(Class modelClass, Object model) {
+    public void parseDupInsertSql() {
+        int status = 0;
+        for(String colName : expressionColNames){
+            if(status != 0){
+                this.onDuplicate.append(",");
+            }
+            status += 1;
+            this.onDuplicate.append(colName);
+            this.onDuplicate.append( " = values(");
+            this.onDuplicate.append(colName);
+            this.onDuplicate.append(")");
+        }
+    }
+
+    public void parseParams() {
+        Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
+        colAllAndFieldOnly.forEach((colName, fields)->{
+            try {
+                Object oValue = null;
+                for(int i = 0; i < fields.size(); i++){
+                    Field field = fields.get(i);
+                    Object o = field.get(this.model);
+                    //take the first non-null value
+                    if(o != null){
+                        oValue = o;
+                        break;
+                    }
+                }
+                if(oValue != null){
+                    this.param.put(colName, oValue);
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+    }
+
+
+    public void gkeyProcess() {
         ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
         List<ModelFieldInfo> gkeyUniqueModels = modelInfo.getGkeyUniqueModels();
         if(CollectionUtils.isNotEmpty(gkeyUniqueModels)){

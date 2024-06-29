@@ -25,7 +25,12 @@ public enum DBType {
         }
     },
 
-    ORACLE,
+    ORACLE{
+        @Override
+        public boolean isSupportDuplicateModify() {
+            return true;
+        }
+    },
 
     SQL_SERVER,
     ;

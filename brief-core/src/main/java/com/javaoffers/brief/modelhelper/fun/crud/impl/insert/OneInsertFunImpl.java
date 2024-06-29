@@ -61,7 +61,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public ExecutOneFun<Id> dupUpdate() {
-        this.conditions.add(new OnDuplicateKeyUpdateMark());
+        this.conditions.add(new OnDuplicateKeyUpdateMark(this.mClass));
         return this;
     }
 

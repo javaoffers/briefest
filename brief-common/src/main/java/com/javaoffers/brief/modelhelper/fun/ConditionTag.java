@@ -66,11 +66,20 @@ public enum ConditionTag {
 
     INSERT_COL_VALUE(2004,"", CategoryTag.INSERT_INTO),
 
-    @Deprecated
     ON_DUPLICATE_KEY_UPDATE(2005," on duplicate key update ", CategoryTag.INSERT_INTO),
 
     @Deprecated
     REPLACE_INTO(2006," replace into ", CategoryTag.INSERT_INTO),
+
+    USING(2007, " USING ", CategoryTag.INSERT_INTO),
+
+    WHEN_MATCHED_THEN(2008, " WHEN MATCHED THEN ", CategoryTag.INSERT_INTO),
+
+    WHEN_NOT_MATCHED_THEN(2009, " WHEN NOT MATCHED THEN ", CategoryTag.INSERT_INTO),
+
+    INSERT(2010, " INSERT ", CategoryTag.INSERT_INTO),
+
+    MERGE_INTO(2011, " MERGE INTO ", CategoryTag.INSERT_INTO),
 
     /**update**/
     UPDATE(2100, " update ", CategoryTag.UPDATE_SET),
@@ -92,9 +101,13 @@ public enum ConditionTag {
     RK(602," ) ", CategoryTag.WHERE_ON),
     BLANK(603,"", CategoryTag.WHERE_ON),
     COMMA(604,", ", CategoryTag.WHERE_ON),
+    QUOTE(605, "`", CategoryTag.WHERE_ON),
+    QUOTATION(606, "'", CategoryTag.WHERE_ON),
+    PERIOD(607, ".", CategoryTag.WHERE_ON),
 
     /**key word**/
-    DISTINCT(700," distinct ",CategoryTag.SELECT_COL)
+    DISTINCT(700," distinct ",CategoryTag.SELECT_COL),
+    AS(701," as ",CategoryTag.SELECT_COL),
 
     ;
 

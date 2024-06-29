@@ -89,7 +89,7 @@ public class SmartMoreInsertFunImpl<M> implements SmartMoreInsertFun<M, GetterFu
 
     @Override
     public ExecutOneFun<Id> dupUpdate() {
-        this.conditions.add(new OnDuplicateKeyUpdateMark());
+        this.conditions.add(new OnDuplicateKeyUpdateMark(this.mClass));
         return this;
     }
 

@@ -107,7 +107,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
      * for mysql and h2 : Do optimization
      */
     public ExecutMoreFun<Id> dupUpdate() {
-        this.conditions.add(new OnDuplicateKeyUpdateMark());
+        this.conditions.add(new OnDuplicateKeyUpdateMark(this.mClass));
         return this;
     }
 

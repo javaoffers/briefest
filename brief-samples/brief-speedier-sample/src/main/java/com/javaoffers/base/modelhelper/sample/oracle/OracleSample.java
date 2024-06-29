@@ -50,5 +50,12 @@ public class OracleSample {
         BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
         List<User> query = userBriefMapper.general().query(2, 100);
 
+        User oracle = User.builder().name("oracle").build();
+
+        userBriefMapper.general().saveOrModify(oracle);
+
+        oracle.setId(1L);
+        userBriefMapper.general().saveOrModify(oracle);
+
     }
 }

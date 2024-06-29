@@ -71,9 +71,9 @@ public class InsertAllColValueCondition implements InsertCondition {
     }
 
     private void parseInsertSql() {
-        Set<String> colNamesSet = param.keySet();
-        this.expressionColNames = param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
-        this.sqlColNames = "( "+ String.join(", ", expressionColNames)+" )";
+        Set<String> colNamesSet = this.param.keySet();
+        this.expressionColNames = this.param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
+        this.sqlColNames = "( "+ String.join(", ", this.expressionColNames)+" )";
         StringBuilder valuesAppender = new StringBuilder("(");
         LinkedList<String> colNames = new LinkedList<>();
         for(String colName : colNamesSet){
@@ -86,7 +86,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     public void parseDupInsertSql() {
         int status = 0;
-        for(String colName : expressionColNames){
+        for(String colName : this.expressionColNames){
             if(status != 0){
                 this.onDuplicate.append(",");
             }
@@ -123,30 +123,30 @@ public class InsertAllColValueCondition implements InsertCondition {
 
 
     public void gkeyProcess() {
-        ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
+        ModelInfo modelInfo = TableHelper.getModelInfo(this.modelClass);
         List<ModelFieldInfo> gkeyUniqueModels = modelInfo.getGkeyUniqueModels();
         if(CollectionUtils.isNotEmpty(gkeyUniqueModels)){
             gkeyUniqueModels.forEach(gkeyUniqueModel->{
-                Object uniqueValue = gkeyUniqueModel.getGetter().getter(model);
+                Object uniqueValue = gkeyUniqueModel.getGetter().getter(this.model);
                 if(uniqueValue == null
                         ||(uniqueValue instanceof Number && uniqueValue.toString().equals("0"))){
 
                     uniqueValue = gkeyUniqueModel.getUniqueKeyGenerate().generate();
-                    gkeyUniqueModel.getSetter().setter(model, uniqueValue);
+                    gkeyUniqueModel.getSetter().setter(this.model, uniqueValue);
                 }
             });
         }
     }
 
     public String getOnDuplicate() {
-        return onDuplicate.toString();
+        return this.onDuplicate.toString();
     }
 
     public Object getModel() {
-        return model;
+        return this.model;
     }
 
     public Class getModelClass() {
-        return modelClass;
+        return this.modelClass;
     }
 }

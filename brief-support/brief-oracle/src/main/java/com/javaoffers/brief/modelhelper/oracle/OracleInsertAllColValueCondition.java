@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.oracle;
 
+import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.utils.*;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 /**
@@ -28,9 +30,7 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
 
     private String sqlValues;
 
-    private HashMap<String, Object> param = new LinkedHashMap<>();
-
-    private StringBuilder onDuplicate = new StringBuilder(ConditionTag.USING.getTag());
+    private StringBuilder onDuplicate = new StringBuilder();
 
     private ModelInfo modelInfo;
 
@@ -46,7 +46,7 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
 
     @Override
     public Map<String, Object> getParams() {
-        return param;
+        return super.getParams();
     }
 
     @Override
@@ -88,20 +88,25 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
      *     VALUES ('xx', 'New Customer', 'xx');
      */
     public void parseDupInsertSql(){
-        onDuplicate.append(ConditionTag.LK.getTag());
-        //parse: SELECT 1001 AS order_number, 150 AS amount FROM dual
-        onDuplicate.append(ConditionTag.SELECT.getTag());
 
         TableInfo tableInfo = TableHelper.getTableInfo(this.modelClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        List<String> primaryColNameList = this.param.keySet().stream().filter(primaryColNames::containsKey).collect(Collectors.toList());
+        List<String> primaryColNameList = this.getParams().keySet().stream().filter(primaryColNames::containsKey).collect(Collectors.toList());
+        if(primaryColNameList.size() == 0){
+            return;
+        }
+
+        onDuplicate.append(ConditionTag.USING.getTag());
+        onDuplicate.append(ConditionTag.LK.getTag());
+        //parse: SELECT 1001 AS order_number, 150 AS amount FROM dual
+        onDuplicate.append(ConditionTag.SELECT.getTag());
         //处理 on 条件
         StringBuilder onCondition = new StringBuilder();
         onCondition.append(ConditionTag.ON.getTag());
         onCondition.append(ConditionTag.LK.getTag());
         // SELECT 1001 AS order_number, 150 AS amount FROM dual
         primaryColNameList.forEach( uniqueCol->{
-            Object value = this.param.get(uniqueCol);
+            Object value = this.getParams().get(uniqueCol);
             if(value instanceof String){
                 onDuplicate.append(ConditionTag.QUOTATION.getTag());
                 onDuplicate.append(value);
@@ -117,6 +122,8 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
             onCondition.append("src");
             onCondition.append(ConditionTag.PERIOD.getTag()); // .
             onCondition.append(uniqueCol);
+
+            onCondition.append(ConditionTag.EQ.getTag());
 
             onCondition.append(tableInfo.getTableName());
             onCondition.append(ConditionTag.PERIOD.getTag()); // .
@@ -134,9 +141,19 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
         onDuplicate.append(ConditionTag.WHEN_MATCHED_THEN.getTag());
         onDuplicate.append(ConditionTag.UPDATE.getTag());
         onDuplicate.append(ConditionTag.SET.getTag());
-        this.param.forEach((colName,value)->{
+        // update set tb.colName = #{colName}
+        AtomicBoolean status = new AtomicBoolean(false);
+        this.getParams().forEach((colName,value)->{
+            if(status.get()){
+                onDuplicate.append(ConditionTag.COMMA.getTag());
+            }
+            status.set(true);
             onDuplicate.append(tableInfo.getTableName());
             onDuplicate.append(ConditionTag.PERIOD.getTag());
+            onDuplicate.append(colName);
+
+            onDuplicate.append(ConditionTag.EQ.getTag());
+
             onDuplicate.append("#{");
             onDuplicate.append(colName);
             onDuplicate.append("}");
@@ -153,11 +170,11 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
 
     //解析普通插入
     public void parseInsertSql(){
-        Set<String> colNamesSet = param.keySet();
+        Set<String> colNamesSet = this.getParams().keySet();
         //给字段增加``
         List<String> expressionColNamesSet =
-                param.keySet().stream()
-                .map(colName -> ConditionTag.QUOTE + colName + ConditionTag.QUOTE) // `xx`
+                this.getParams().keySet().stream()
+                .map(colName -> ConditionTag.QUOTE.getTag() + colName + ConditionTag.QUOTE.getTag()) // `xx`
                 .collect(Collectors.toList());
         //解析 ( colName ,,,)
         this.sqlColNames = ConditionTag.LK.getTag()+ String.join(ConditionTag.COMMA.getTag(), expressionColNamesSet)+ConditionTag.RK.getTag();
@@ -186,6 +203,7 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
     }
 
     public void setParam(HashMap<String, Object> param) {
-        this.param = param;
+        super.getParams().clear();
+        super.getParams().putAll(param);
     }
 }

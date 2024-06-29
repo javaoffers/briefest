@@ -42,8 +42,9 @@ public class OracleInsertConditionParse extends InsertConditionParse {
         ArrayList<Map<String, Object>> paramsList = new ArrayList<>(); // for colAll(xx)
         HashMap<String, Object> valuesParam = new HashMap<>(); // for col(xx)
         boolean isColValueCondition = false;
-        List<String> dupUpdateSql = new ArrayList<>();
+
         if(conditions.peekLast() instanceof OnDuplicateKeyUpdateMark){
+            List<String> dupUpdateSql = new ArrayList<>();
             Condition condition = null;
             while( (condition = conditions.pollFirst()) != null){
                 if(condition instanceof ColValueCondition){
@@ -129,8 +130,9 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                     Assert.isTrue(params.size() == 1,"必须存在一个值");
                     if(insertColNamesAppender.length() == 0){
                         isColValueCondition = true;
-                        //insertColNamesAppender.append(insertIntoTableSql);
                         insertColNamesAppender.append("(");
+
+                        //VALUES(
                         insertValueAppender.append(ConditionTag.VALUES.getTag());
                         insertValueAppender.append("(");
 
@@ -148,21 +150,21 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                     valuesParam.put(key,params.get(key));
 
                 } else if(condition instanceof InsertAllColValueCondition){
-                    insertValueAppender = new StringBuilder();
+
                     insertColNamesAppender = new StringBuilder();
+                    // VALUES (
+                    insertValueAppender = new StringBuilder();
                     InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
                     Class modelClass = allColValueCondition.getModelClass();
                     Object model = allColValueCondition.getModel();
                     OracleInsertAllColValueCondition oracleColAllValueCondition = new OracleInsertAllColValueCondition(modelClass, model);
 
-                    //insertColNamesAppender.append(insertIntoTableSql);
                     insertColNamesAppender.append(allColValueCondition.getSql());
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
                     insertValueAppender.append(allColValueCondition.getValuesSql());
 
                     paramsList.add(allColValueCondition.getParams());
                     moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-                    dupUpdateSql.add(allColValueCondition.getOnDuplicate());
                 }
             }
 
@@ -176,6 +178,7 @@ public class OracleInsertConditionParse extends InsertConditionParse {
             MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
             HashMap<String, SQLStatement> batch = new HashMap<>();
             for(int i =0; i < moreSql.size(); i++){
+                // INSERT INTO table ...
                 String sql = insertIntoTableSql + moreSql.get(i);
                 Map<String, Object> sqlParam = paramsList.get(i);
                 SQLStatement sqlStatement = batch.get(sql);

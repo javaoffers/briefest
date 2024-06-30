@@ -147,9 +147,5 @@ public class SqlServerInsertConditionParse extends InsertConditionParse {
         }
         moreSQLInfo.addAllSqlInfo(batch.values());
         return moreSQLInfo;
-
-
     }
-
-
 }

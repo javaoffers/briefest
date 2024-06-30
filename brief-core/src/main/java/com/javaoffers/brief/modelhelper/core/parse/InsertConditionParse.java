@@ -69,9 +69,7 @@ public class InsertConditionParse extends AbstractParseCondition {
                 duplicateSqlForColValCondition.append(condition.getSql());
                 duplicateSqlForColValCondition.append(" = ");
                 duplicateSqlForColValCondition.append("values(");
-                duplicateSqlForColValCondition.append("#{");
-                duplicateSqlForColValCondition.append(key);
-                duplicateSqlForColValCondition.append("}");
+                duplicateSqlForColValCondition.append(condition.getSql());
                 duplicateSqlForColValCondition.append(") ");
             } else if(condition instanceof InsertAllColValueCondition){
                 insertValueAppender = new StringBuilder();
@@ -92,12 +90,8 @@ public class InsertConditionParse extends AbstractParseCondition {
 
                 //on duplicate key update
                 if(isDupUpdateSql){
-                    dupUpdateSql.add(allColValueCondition.getOnDuplicate());
+                    dupUpdateSql.add(allColValueCondition.getOnDuplicateString());
                 }
-
-            }else if(condition instanceof ReplaceIntoMark){
-                ReplaceIntoMark replaceIntoMark = (ReplaceIntoMark) condition;
-                insertIntoTableSql = replaceIntoMark.getSql() + insertIntoTableCondition.getTableName();
             }
         }
 

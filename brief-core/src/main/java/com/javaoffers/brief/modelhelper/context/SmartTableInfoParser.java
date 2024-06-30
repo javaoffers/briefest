@@ -87,7 +87,7 @@ public class SmartTableInfoParser implements TableInfoParser {
         try {
             String url = connection.getMetaData().getURL();
             List<DBType> dbTypeList = tableInfoParserMap.keySet().stream().filter(dbType -> {
-                return url.contains(dbType.name().toLowerCase());
+                return url.contains(dbType.toString().toLowerCase());
             }).collect(Collectors.toList());
 
             if(dbTypeList.size() != 1){

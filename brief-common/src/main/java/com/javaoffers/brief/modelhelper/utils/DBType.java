@@ -32,7 +32,17 @@ public enum DBType {
         }
     },
 
-    SQL_SERVER,
+    SQL_SERVER {
+        @Override
+        public String toString() {
+            return "sqlserver";
+        }
+
+        @Override
+        public boolean isSupportDuplicateModify() {
+            return true;
+        }
+    },
     ;
 
     //processingTranslation
@@ -52,6 +62,10 @@ public enum DBType {
     //Whether to support conflict updates
     public boolean isSupportDuplicateModify(){
         return false;
+    }
+
+    public String toString(){
+        return name();
     }
 
 }

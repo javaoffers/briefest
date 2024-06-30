@@ -28,8 +28,12 @@ public class SqlServerLimitWordCondition extends LimitWordCondition {
      */
     @Override
     public String getSql() {
+        String startIndexTag = getNextTag();
+        String lenTag = getNextTag();
+        this.getParams().put(startIndexTag, super.startIndex);
+        this.getParams().put(lenTag, super.len);
         // A 是表的别名
-        return " OFFSET  " + super.startIndex + " ROWS FETCH NEXT " + super.len + " ROWS ONLY";
+        return " OFFSET  #{" + startIndexTag + "} ROWS FETCH NEXT #{" + lenTag + "} ROWS ONLY";
     }
 
 }

@@ -31,13 +31,13 @@ public class BriefSpeedierSample {
     static BriefSpeedierDataSource dataSource = BriefSpeedierDataSource.getInstance(driver6, jdbcUrl, username, password);
     BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
     //Using custom mapper
-    BriefUserMapper crudUserMapper = speedier.newCustomCrudMapper(BriefUserMapper.class);
+    BriefUserMapper crudUserMapper = speedier.newCustomBriefMapper(BriefUserMapper.class);
     //Use the default mapper
-    BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
+    BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
     //Use the default mapper
-    BriefMapper<UserOrder> userOrderBriefMapper = speedier.newDefaultCrudMapper(UserOrder.class);
+    BriefMapper<UserOrder> userOrderBriefMapper = speedier.newDefaultBriefMapper(UserOrder.class);
 
-    BriefEncryptDataMapper briefEncryptDataMapper = speedier.newCustomCrudMapper(BriefEncryptDataMapper.class);
+    BriefEncryptDataMapper briefEncryptDataMapper = speedier.newCustomBriefMapper(BriefEncryptDataMapper.class);
 
     @Test
     public void testAll(){
@@ -72,8 +72,8 @@ public class BriefSpeedierSample {
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
         BriefSpeedier speedier2 = BriefSpeedier.getInstance(dataSource);
 
-        BriefMapper<User> userBriefMapper = speedier.newDefaultCrudMapper(User.class);
-        BriefMapper<User> userBriefMapper2 = speedier2.newDefaultCrudMapper(User.class);
+        BriefMapper<User> userBriefMapper = speedier.newDefaultBriefMapper(User.class);
+        BriefMapper<User> userBriefMapper2 = speedier2.newDefaultBriefMapper(User.class);
 
         print(userBriefMapper.hashCode());
         print(userBriefMapper2.hashCode());

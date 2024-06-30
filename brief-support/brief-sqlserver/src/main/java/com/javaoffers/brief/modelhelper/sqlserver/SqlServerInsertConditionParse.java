@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.oracle;
+package com.javaoffers.brief.modelhelper.sqlserver;
 
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQLStatement;
@@ -9,22 +9,16 @@ import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
-import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @description:
  * @author: create by cmj on 2022/10/23 10:44
  */
-public class OracleInsertConditionParse extends InsertConditionParse {
+public class SqlServerInsertConditionParse extends InsertConditionParse {
 
     public static ConditionTag conditionTag = ConditionTag.INSERT_INTO;
 
@@ -63,6 +57,7 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                 } else {
                     insertColNamesAppender.append(",");
                     insertValueAppender.append(",");
+
                 }
                 insertColNamesAppender.append(colValueCondition.getSql());// colName
                 Set<String> strings = params.keySet();
@@ -77,23 +72,23 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                 InsertAllColValueCondition allColValueCondition = (InsertAllColValueCondition) condition;
                 Class modelClass = allColValueCondition.getModelClass();
                 Object model = allColValueCondition.getModel();
-                OracleInsertAllColValueCondition oracleColAllValueCondition = new OracleInsertAllColValueCondition(modelClass, model);
-                oracleColAllValueCondition.init(isDupUpdateSql);
-                if(StringUtils.isBlank(oracleColAllValueCondition.getOnDuplicate())){
+                SqlServerInsertAllColValueCondition sqlServerInsertAllColValueCondition = new SqlServerInsertAllColValueCondition(modelClass, model);
+                sqlServerInsertAllColValueCondition.init(isDupUpdateSql);
+                if(StringUtils.isBlank(sqlServerInsertAllColValueCondition.getOnDuplicate())){
                     isDupUpdateSql = false; //no primary col
                     insertValueAppender = new StringBuilder();
                     insertColNamesAppender = new StringBuilder();
                     // ( colName ,,,)
-                    insertColNamesAppender.append(oracleColAllValueCondition.getSql());
+                    insertColNamesAppender.append(sqlServerInsertAllColValueCondition.getSql());
                     // values ( #{xx} ,,,)
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append(oracleColAllValueCondition.getValuesSql());
+                    insertValueAppender.append(sqlServerInsertAllColValueCondition.getValuesSql());
                     // (colName ,,, ) values ( #{xx} ,,,)
                     moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
                 } else {
-                    moreSql.add(oracleColAllValueCondition.getOnDuplicateString());
+                    moreSql.add(sqlServerInsertAllColValueCondition.getOnDuplicateString());
                 }
-                paramsList.add(oracleColAllValueCondition.getParams());
+                paramsList.add(sqlServerInsertAllColValueCondition.getParams());
             }
         }
 
@@ -102,15 +97,15 @@ public class OracleInsertConditionParse extends InsertConditionParse {
             insertValueAppender.append(")");
             paramsList.add(valuesParam);
             if(isDupUpdateSql){
-                OracleInsertAllColValueCondition oracleInsertAllColValueCondition =
-                        new OracleInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
-                oracleInsertAllColValueCondition.setParam(valuesParam);
-                oracleInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
-                oracleInsertAllColValueCondition.setSqlValues(insertValueAppender.toString());
-                oracleInsertAllColValueCondition.parseDupInsertSql();
+                SqlServerInsertAllColValueCondition sqlServerInsertAllColValueCondition =
+                        new SqlServerInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
+                sqlServerInsertAllColValueCondition.setParam(valuesParam);
+                sqlServerInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
+                sqlServerInsertAllColValueCondition.setSqlValues(insertValueAppender.toString());
+                sqlServerInsertAllColValueCondition.parseDupInsertSql();
                 // merge info
-                if(StringUtils.isNotBlank(oracleInsertAllColValueCondition.getOnDuplicate())){
-                    moreSql.add(oracleInsertAllColValueCondition.getOnDuplicateString());
+                if(StringUtils.isNotBlank(sqlServerInsertAllColValueCondition.getOnDuplicate())){
+                    moreSql.add(sqlServerInsertAllColValueCondition.getOnDuplicateString());
                 }else{
                     // 保存数据中没有唯一索引，
                     isDupUpdateSql = false;

@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.oracle;
+package com.javaoffers.brief.modelhelper.sqlserver;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
@@ -13,25 +13,10 @@ import java.util.stream.Collectors;
 /**
  * create by cmj
  */
-public class OracleInsertAllColValueCondition extends InsertAllColValueCondition {
+public class SqlServerInsertAllColValueCondition extends InsertAllColValueCondition {
 
-    public OracleInsertAllColValueCondition(Class modelClass, Object model) {
+    public SqlServerInsertAllColValueCondition(Class modelClass, Object model) {
         super(modelClass, model);
-    }
-
-    //Initialize information to ensure that sql is generated during parsing
-    public void init(boolean isDupUpdate) {
-        TableHelper.getModelInfo(getModelClass());
-        //生成唯一key
-        gkeyProcess();
-        //left: colName. right: fieldName
-        parseParams();
-        // parse:（col ,,,）values (#{xx},,,). note: no insert into keyword
-        parseInsertSql();
-        //parse merge into
-        if(isDupUpdate){
-            parseDupInsertSql();
-        }
     }
 
     /**
@@ -54,7 +39,8 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
         if(primaryColNameList.size() == 0){
             return;
         }
-        StringBuilder onDuplicate = getOnDuplicate();
+
+        StringBuilder onDuplicate = this.getOnDuplicate();
         onDuplicate.append(ConditionTag.USING.getTag());
         onDuplicate.append(ConditionTag.LK.getTag());
         //parse: SELECT 1001 AS order_number, 150 AS amount FROM dual
@@ -88,9 +74,8 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
             onCondition.append(ConditionTag.PERIOD.getTag()); // .
             onCondition.append(uniqueCol);
         });
-        onDuplicate.append(ConditionTag.SELECT_FROM.getTag());// from
-        onDuplicate.append("dual ");
         onDuplicate.append(ConditionTag.RK.getTag());
+        onDuplicate.append(ConditionTag.AS.getTag());
         onDuplicate.append("src ");
 
         onCondition.append(ConditionTag.RK.getTag()); // )
@@ -126,7 +111,6 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
         onDuplicate.append(this.getSqlValues());
 
     }
-
 
     public void setParam(HashMap<String, Object> param) {
         super.getParams().clear();

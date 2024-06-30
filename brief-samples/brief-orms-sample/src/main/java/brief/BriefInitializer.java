@@ -19,7 +19,7 @@ public class BriefInitializer {
     public static void init() {
         DataSource dataSource = DataSourceFactory.getDataSource();
         BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
-        briefMapper = speedier.newDefaultCrudMapper(BriefAccount.class);
+        briefMapper = speedier.newDefaultBriefMapper(BriefAccount.class);
     }
 
 

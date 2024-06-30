@@ -1,4 +1,4 @@
-package com.javaoffers.brief.modelhelper.parse;
+package com.javaoffers.brief.modelhelper.sqlserver;
 
 import com.javaoffers.brief.modelhelper.context.SmartTableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
@@ -6,7 +6,7 @@ import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.sql.Connection;
 
-public class OracleTableInfoParser extends SmartTableInfoParser {
+public class SqlServerTableInfoParser extends SmartTableInfoParser {
 
     @Override
     public void parseTableInfo(Connection connection, TableInfo tableInfo) {
@@ -15,6 +15,6 @@ public class OracleTableInfoParser extends SmartTableInfoParser {
 
     @Override
     public DBType getDBType() {
-        return DBType.ORACLE;
+        return DBType.SQL_SERVER;
     }
 }

@@ -71,15 +71,15 @@ public enum ConditionTag {
     @Deprecated
     REPLACE_INTO(2006," replace into ", CategoryTag.INSERT_INTO),
 
-    USING(2007, " USING ", CategoryTag.INSERT_INTO),
+    USING(2007, " using ", CategoryTag.INSERT_INTO),
 
-    WHEN_MATCHED_THEN(2008, " WHEN MATCHED THEN ", CategoryTag.INSERT_INTO),
+    WHEN_MATCHED_THEN(2008, " when matched then ", CategoryTag.INSERT_INTO),
 
-    WHEN_NOT_MATCHED_THEN(2009, " WHEN NOT MATCHED THEN ", CategoryTag.INSERT_INTO),
+    WHEN_NOT_MATCHED_THEN(2009, " when not matched then ", CategoryTag.INSERT_INTO),
 
-    INSERT(2010, " INSERT ", CategoryTag.INSERT_INTO),
+    INSERT(2010, " insert ", CategoryTag.INSERT_INTO),
 
-    MERGE_INTO(2011, " MERGE INTO ", CategoryTag.INSERT_INTO),
+    MERGE_INTO(2011, " merge into ", CategoryTag.INSERT_INTO),
 
     /**update**/
     UPDATE(2100, " update ", CategoryTag.UPDATE_SET),

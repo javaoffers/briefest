@@ -38,7 +38,7 @@ public class BriefSpeedier {
      * @param <T>
      * @return
      */
-    public <T> BriefMapper<T> newDefaultCrudMapper(Class<T> modelClass) {
+    public <T> BriefMapper<T> newDefaultBriefMapper(Class<T> modelClass) {
         BriefMapper briefMapper = cache.get(modelClass);
         if(briefMapper == null){
             Assert.isTrue(!Modifier.isAbstract(modelClass.getModifiers()), modelClass.getName() + " is Abstract ");
@@ -61,7 +61,7 @@ public class BriefSpeedier {
      * @param <M>
      * @return
      */
-    public <M extends BriefMapper> M newCustomCrudMapper(Class<M> mapperClass) {
+    public <M extends BriefMapper> M newCustomBriefMapper(Class<M> mapperClass) {
         Assert.isTrue(BriefMapper.class.isAssignableFrom(mapperClass), mapperClass.getName() + " must be BriefMapper subclass");
         M proxyBriefMapper = (M) briefContext.getBriefMapper(mapperClass);
         return proxyBriefMapper;

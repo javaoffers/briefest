@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -26,7 +27,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private HashMap<String, Object> param = new LinkedHashMap<>();
 
-    private StringBuilder onDuplicate = new StringBuilder(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
+    private StringBuilder onDuplicate = new StringBuilder();
 
     private List<String> expressionColNames;
 
@@ -67,37 +68,48 @@ public class InsertAllColValueCondition implements InsertCondition {
         if(isDuplicate){
             parseDupInsertSql();
         }
-
     }
 
-    private void parseInsertSql() {
-        Set<String> colNamesSet = this.param.keySet();
-        this.expressionColNames = this.param.keySet().stream().map(colName->"`"+colName+"`").collect(Collectors.toList());
-        this.sqlColNames = "( "+ String.join(", ", this.expressionColNames)+" )";
-        StringBuilder valuesAppender = new StringBuilder("(");
+    public void parseInsertSql() {
+        Set<String> colNamesSet = this.getParams().keySet();
+        //给字段增加``
+        this.expressionColNames = this.getParams()
+                .keySet()
+                .stream()
+                .map(colName -> ConditionTag.QUOTE.getTag() + colName + ConditionTag.QUOTE.getTag()) // `xx`
+                .collect(Collectors.toList());
+
+        //解析 ( colName ,,,)
+        this.sqlColNames = ConditionTag.LK.getTag()+ String.join(ConditionTag.COMMA.getTag(), this.expressionColNames)+ConditionTag.RK.getTag();
+
+        //解析 ( #{xx}.. ) without values keyword
+        StringBuilder valuesAppender = new StringBuilder(ConditionTag.LK.getTag());
         LinkedList<String> colNames = new LinkedList<>();
         for(String colName : colNamesSet){
             colNames.add("#{"+colName+"}");
         }
-        valuesAppender.append(String.join(",", colNames));
-        valuesAppender.append(")");
+
+        valuesAppender.append(String.join(ConditionTag.COMMA.getTag(), colNames)); // ,
+        valuesAppender.append(ConditionTag.RK.getTag());
         this.sqlValues = valuesAppender.toString();
     }
 
     public void parseDupInsertSql() {
-        int status = 0;
+        this.onDuplicate.append(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
+        String comma  = ConditionTag.BLANK.getTag();
         for(String colName : this.expressionColNames){
-            if(status != 0){
-                this.onDuplicate.append(",");
-            }
-            status += 1;
+            this.onDuplicate.append(comma);
             this.onDuplicate.append(colName);
             this.onDuplicate.append( " = values(");
             this.onDuplicate.append(colName);
             this.onDuplicate.append(")");
+            if(StringUtils.isBlank(comma)){
+               comma = ConditionTag.COMMA.getTag();
+            }
         }
     }
 
+    //解析参数
     public void parseParams() {
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
         colAllAndFieldOnly.forEach((colName, fields)->{
@@ -121,7 +133,7 @@ public class InsertAllColValueCondition implements InsertCondition {
         });
     }
 
-
+    // 生成唯一值
     public void gkeyProcess() {
         ModelInfo modelInfo = TableHelper.getModelInfo(this.modelClass);
         List<ModelFieldInfo> gkeyUniqueModels = modelInfo.getGkeyUniqueModels();
@@ -138,7 +150,11 @@ public class InsertAllColValueCondition implements InsertCondition {
         }
     }
 
-    public String getOnDuplicate() {
+    public StringBuilder getOnDuplicate() {
+        return this.onDuplicate;
+    }
+
+    public String getOnDuplicateString() {
         return this.onDuplicate.toString();
     }
 
@@ -148,5 +164,49 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     public Class getModelClass() {
         return this.modelClass;
+    }
+
+    public void setModel(Object model) {
+        this.model = model;
+    }
+
+    public void setModelClass(Class modelClass) {
+        this.modelClass = modelClass;
+    }
+
+    public void setSqlColNames(String sqlColNames) {
+        this.sqlColNames = sqlColNames;
+    }
+
+    public void setSqlValues(String sqlValues) {
+        this.sqlValues = sqlValues;
+    }
+
+    public void setParam(HashMap<String, Object> param) {
+        this.param = param;
+    }
+
+    public void setOnDuplicate(StringBuilder onDuplicate) {
+        this.onDuplicate = onDuplicate;
+    }
+
+    public void setExpressionColNames(List<String> expressionColNames) {
+        this.expressionColNames = expressionColNames;
+    }
+
+    public String getSqlColNames() {
+        return sqlColNames;
+    }
+
+    public String getSqlValues() {
+        return sqlValues;
+    }
+
+    public HashMap<String, Object> getParam() {
+        return param;
+    }
+
+    public List<String> getExpressionColNames() {
+        return expressionColNames;
     }
 }

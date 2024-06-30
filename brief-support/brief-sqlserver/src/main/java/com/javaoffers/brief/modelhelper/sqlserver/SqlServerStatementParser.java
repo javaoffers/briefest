@@ -25,13 +25,13 @@ public class SqlServerStatementParser implements StatementParser<Condition, Base
     static {
         crudConditionParse.put(SelectConditionParse.conditionTag, new SqlServerSelectConditionParse());
         crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
-        crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
+        crudConditionParse.put(InsertConditionParse.conditionTag, new SqlServerInsertConditionParse());
         crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());
     }
 
     @Override
     public DBType getDBType() {
-        return DBType.ORACLE;
+        return DBType.SQL_SERVER;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class SqlServerStatementParser implements StatementParser<Condition, Base
     public void postProcess(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
         Map<DBType, StatementParser> statementParserMap = smartBriefContext.getStatementParserMap();
-        statementParserMap.put(DBType.SQL_SERVER, this);
+        statementParserMap.put(this.getDBType(), this);
 
     }
 }

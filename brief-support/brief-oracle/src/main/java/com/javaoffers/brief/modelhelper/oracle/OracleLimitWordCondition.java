@@ -30,12 +30,12 @@ public class OracleLimitWordCondition extends LimitWordCondition {
     @Override
     public String getSql() {
         String startIndexTag = getNextTag();
-        String lenTag = getNextTag();
+        String endPositionTag = getNextTag();
         int endPosition = super.len + super.startIndex;
-        this.getParams().put(startIndexTag,  super.startIndex);
-        this.getParams().put(lenTag, endPosition);
+        this.getParams().put(endPositionTag, endPosition);
+        this.getParams().put(startIndexTag, super.startIndex);
         // A 是表的别名
-        return " A where ROWNUM <= " + endPosition + " ) WHERE RN >= " + super.startIndex;
+        return " A where ROWNUM <= #{" + endPositionTag + "} ) WHERE RN >= #{" + startIndexTag + "}";
     }
 
 }

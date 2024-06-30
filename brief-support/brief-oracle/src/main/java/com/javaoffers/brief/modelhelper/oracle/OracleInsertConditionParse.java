@@ -54,15 +54,15 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                 if (insertColNamesAppender.length() == 0) {
                     isColValueCondition = true;
                     // ( colName ,,,)
-                    insertColNamesAppender.append("(");
+                    insertColNamesAppender.append(ConditionTag.LK.getTag());
 
                     // values (#{xx},,,)
                     insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append("(");
+                    insertValueAppender.append(ConditionTag.LK.getTag());
 
                 } else {
-                    insertColNamesAppender.append(",");
-                    insertValueAppender.append(",");
+                    insertColNamesAppender.append(ConditionTag.COMMA.getTag());
+                    insertValueAppender.append(ConditionTag.COMMA.getTag());
                 }
                 insertColNamesAppender.append(colValueCondition.getSql());// colName
                 Set<String> strings = params.keySet();
@@ -98,15 +98,16 @@ public class OracleInsertConditionParse extends InsertConditionParse {
         }
 
         if (isColValueCondition) {
-            insertColNamesAppender.append(")");
-            insertValueAppender.append(")");
+            insertColNamesAppender.append(ConditionTag.RK.getTag());
+            insertValueAppender.append(ConditionTag.RK.getTag());
             paramsList.add(valuesParam);
             if(isDupUpdateSql){
                 OracleInsertAllColValueCondition oracleInsertAllColValueCondition =
                         new OracleInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
                 oracleInsertAllColValueCondition.setParam(valuesParam);
                 oracleInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
-                oracleInsertAllColValueCondition.setSqlValues(insertValueAppender.toString());
+                //insertValueAppender remove values keyword for sql values
+                oracleInsertAllColValueCondition.setSqlValues(insertValueAppender.substring(ConditionTag.VALUES.getTag().length() ));
                 oracleInsertAllColValueCondition.parseDupInsertSql();
                 // merge info
                 if(StringUtils.isNotBlank(oracleInsertAllColValueCondition.getOnDuplicate())){

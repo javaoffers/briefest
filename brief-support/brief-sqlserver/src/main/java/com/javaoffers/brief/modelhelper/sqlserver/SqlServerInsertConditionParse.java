@@ -101,7 +101,8 @@ public class SqlServerInsertConditionParse extends InsertConditionParse {
                         new SqlServerInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
                 sqlServerInsertAllColValueCondition.setParam(valuesParam);
                 sqlServerInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
-                sqlServerInsertAllColValueCondition.setSqlValues(insertValueAppender.toString());
+                //remove values keyword
+                sqlServerInsertAllColValueCondition.setSqlValues(insertValueAppender.toString().substring(ConditionTag.VALUES.getTag().length()));
                 sqlServerInsertAllColValueCondition.parseDupInsertSql();
                 // merge info
                 if(StringUtils.isNotBlank(sqlServerInsertAllColValueCondition.getOnDuplicate())){

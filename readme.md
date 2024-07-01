@@ -3,7 +3,7 @@
 
 # Brief
 <p>
-<code>brief</code> Is a high-performance, lightweight, easy to use, zero configuration orm framework. Let complex SQL disappear, development efficiency maximization of shit and less amount of code and sustainable higher readability and maintainability.
+<code>brief</code> Is a high-performance, lightweight, easy to use, zero configuration orm framework. Let complex SQL disappear, development efficiency maximization  and less amount of code and sustainable higher readability and maintainability.
 This is the reason for the existence of the <code>brief</code>. <code>brief</code>Take you to experience unprecedented silky.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
 </p>
 

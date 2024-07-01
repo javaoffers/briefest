@@ -3,7 +3,7 @@
     <parent>
         <artifactId>brief-samples</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.5</version>
+        <version>3.6.6-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-speedier-sample</artifactId>
@@ -13,31 +13,31 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-oracle</artifactId>
-            <version>3.6.5</version>
+            <version>3.6.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-sqlserver</artifactId>
-            <version>3.6.5</version>
+            <version>3.6.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
-            <version>3.6.5</version>
+            <version>3.6.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-encipher</artifactId>
-            <version>3.6.5</version>
+            <version>3.6.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-speedier</artifactId>
-            <version>3.6.5</version>
+            <version>3.6.6-SNAPSHOT</version>
         </dependency>
 
         <!-- junit -->
@@ -143,7 +143,7 @@
 
 
     <scm>
-        <tag>v3.6.5</tag>
+        <tag>vy</tag>
     </scm>
 
 </project>

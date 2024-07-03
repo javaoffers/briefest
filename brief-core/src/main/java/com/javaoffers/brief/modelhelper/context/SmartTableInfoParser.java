@@ -85,9 +85,9 @@ public class SmartTableInfoParser implements TableInfoParser {
     //通过 connection的url选取对应的db解析器
     public TableInfoParser chose(Connection connection){
         try {
-            String url = connection.getMetaData().getURL();
+            String url = connection.getMetaData().getURL().toLowerCase();
             List<DBType> dbTypeList = tableInfoParserMap.keySet().stream().filter(dbType -> {
-                return url.contains(dbType.toString().toLowerCase());
+                return url.contains("jdbc:"+dbType.toString().toLowerCase());
             }).collect(Collectors.toList());
 
             if(dbTypeList.size() != 1){

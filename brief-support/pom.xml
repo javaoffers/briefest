@@ -13,6 +13,7 @@
         <module>brief-spring-jdbc</module>
         <module>brief-oracle</module>
         <module>brief-sqlserver</module>
+        <module>brief-clickhouse</module>
     </modules>
 
     <build>

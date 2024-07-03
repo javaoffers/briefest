@@ -11,6 +11,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.clickhouse</groupId>
+            <artifactId>clickhouse-jdbc</artifactId>
+            <version>0.6.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-oracle</artifactId>
             <version>3.6.6-SNAPSHOT</version>

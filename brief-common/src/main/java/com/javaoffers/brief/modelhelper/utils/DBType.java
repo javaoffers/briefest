@@ -43,6 +43,20 @@ public enum DBType {
             return true;
         }
     },
+
+    CLICK_HOUSE {
+        @Override
+        public String toString() {
+            return "ch";
+        }
+    },
+
+    CLICKHOUSE {
+        @Override
+        public String toString() {
+            return "clickhouse";
+        }
+    }
     ;
 
     //processingTranslation

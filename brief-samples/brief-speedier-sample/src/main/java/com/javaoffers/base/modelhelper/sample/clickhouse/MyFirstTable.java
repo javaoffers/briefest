@@ -26,6 +26,6 @@ public class MyFirstTable {
     private Long userId;
     private String message;
     @BaseUnique
-    private String timestamp;
+    private Date timestamp;
     private Double metric;
 }

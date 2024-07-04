@@ -332,4 +332,17 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      */
     public Number countDistinct(C c,T model);
 
+    /**
+     * Execute local sql
+     * @param sql
+     * @return message
+     */
+    public String nativeSQL(String sql);
+
+    /**
+     * Execute local sql
+     * @param sql
+     * @return message
+     */
+    public String nativeSQL(String sql, Map<String,Object> param);
 }

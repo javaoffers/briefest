@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.fun.crud.impl.insert.InsertFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.update.UpdateFunImpl;
 import com.javaoffers.brief.modelhelper.fun.general.GeneralFun;
 import com.javaoffers.brief.modelhelper.fun.general.impl.GeneralFunImpl;
+import com.javaoffers.brief.modelhelper.fun.general.impl.NativeFunImpl;
 
 /**
  * create by cmj on 2022-06-22 23:37:17
@@ -30,6 +31,10 @@ public class CrudMapperMethodExcutor {
     }
 
     public static GeneralFun general() {
-        return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(), select(), insert(), update(), delete());
+        return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(),
+                select(),
+                insert(),
+                update(),
+                delete(), new NativeFunImpl());
     }
 }

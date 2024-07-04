@@ -53,6 +53,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private DeleteFunImpl<T> deleteFun;
 
+    private NativeFunImpl nativeFun;
+
     private String tableName;
 
     private String primaryColNmae;
@@ -65,7 +67,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     public GeneralFunImpl(Class<T> mClass, SelectFunImpl<T> selectFun,
                           InsertFunImpl<T> insertFun, UpdateFunImpl<T, C, V> updateFun,
-                          DeleteFunImpl<T> deleteFun) {
+                          DeleteFunImpl<T> deleteFun, NativeFunImpl nativeFun) {
         this.mClass = mClass;
         this.selectFun = selectFun;
         this.insertFun = insertFun;
@@ -73,8 +75,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.deleteFun = deleteFun;
         this.tableName = TableHelper.getTableName(mClass);
         this.tableInfo = TableHelper.getTableInfo(mClass);
+        this.nativeFun = nativeFun;
         Collection<Field> fields = this.tableInfo.getFieldNameAndField().values();
-        for(Field field : fields){
+        for(Field field : fields) {
             Class<?> type = Utils.baseClassUpgrade(field.getType());
             if(Number.class.isAssignableFrom(type) || String.class.isAssignableFrom(type)){
                 this.numOrStringField = field;
@@ -479,6 +482,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return getNumber(numOrStringField, ex);
         }
         return 0L;
+    }
+
+    @Override
+    public String nativeSQL(String sql) {
+        return this.nativeFun.setSqlText(sql).ex();
+    }
+
+    @Override
+    public String nativeSQL(String sql, Map<String, Object> param) {
+        return this.nativeFun.setSqlText(sql).setParamMap(Lists.newArrayList(param)).ex();
     }
 
     private Pair<Boolean, WhereSelectFun<T, Object>> parseQueryWhere(T model) {

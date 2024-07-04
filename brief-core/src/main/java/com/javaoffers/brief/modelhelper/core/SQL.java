@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.List;
@@ -17,10 +18,11 @@ public class SQL implements  BaseSQLInfo{
 	private String sql;//要进行批处理的sql
 	List<Map<String, Object>> paramMap; //原始值. 在执行sql前还又一次修改参数的机会。通过jql拦截器
 	SQLType sqlType;
-	public SQL(String sql , List<Object[]> argsParam) {
-		super();
+	DBType dbType;
+	public SQL(DBType dbType, String sql , List<Object[]> argsParam) {
 		this.argsParam = argsParam;
 		this.sql = sql;
+		this.dbType = dbType;
 		String tmpSql = this.sql.toLowerCase();
 		if(tmpSql.contains(innerJoin) || tmpSql.contains(leftJoin) || tmpSql.contains(rightJoin)) {
 			sqlType = SQLType.JOIN_SELECT;
@@ -50,6 +52,11 @@ public class SQL implements  BaseSQLInfo{
 	@Override
 	public SQLType getSqlType() {
 		return sqlType;
+	}
+
+	@Override
+	public DBType getDbType() {
+		return this.dbType;
 	}
 
 	public int getBatchSize() {

@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface BaseSQLInfo {
     public int getBatchSize();
     public List<Object[]> getArgsParam();
     public SQLType getSqlType();
+    public DBType getDbType();
 }

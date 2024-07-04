@@ -23,7 +23,7 @@ public class ClickHouseStatementParser implements StatementParser<Condition, Bas
     static final EnumMap<ConditionTag, ParseCondition> crudConditionParse = new EnumMap<ConditionTag, ParseCondition>(ConditionTag.class);
 
     static {
-        crudConditionParse.put(SelectConditionParse.conditionTag, new SelectConditionParse());
+        crudConditionParse.put(SelectConditionParse.conditionTag, new CHSelectConditionParse());
         crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
         crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
         crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());

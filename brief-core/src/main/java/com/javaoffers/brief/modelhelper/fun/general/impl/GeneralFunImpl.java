@@ -695,7 +695,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             try {
                 this.save(model);
             }catch (Exception e){
-                if(e.getMessage().toLowerCase().contains("duplicate")){
+                if(e.getMessage()!= null && e.getMessage().toLowerCase().contains("duplicate")){
                     updateList.add(model);
                 }else{
                     throw e;

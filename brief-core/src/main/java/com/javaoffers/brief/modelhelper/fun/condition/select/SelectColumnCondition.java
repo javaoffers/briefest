@@ -49,4 +49,7 @@ public class SelectColumnCondition implements Condition {
         return colName+" : "+getConditionTag().toString();
     }
 
+    public void setColName(String colName) {
+        this.colName = colName;
+    }
 }

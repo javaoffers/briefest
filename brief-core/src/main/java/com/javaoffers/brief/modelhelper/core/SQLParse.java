@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.EnumValueUtils;
 import com.javaoffers.brief.modelhelper.utils.GsonUtils;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,7 +34,7 @@ public class SQLParse implements BriefContextAware {
         return s;
     }
 
-    public static SQL parseSqlParams(String sql, List<Map<String, Object>> paramMap) {
+    public static SQL parseSqlParams(DBType dbType, String sql, List<Map<String, Object>> paramMap) {
         ArrayList<Object[]> objects = new ArrayList<>(paramMap.size());
         ArrayList<String> keys = new ArrayList<>();
         Matcher matcher = compile.matcher(sql);
@@ -43,7 +44,7 @@ public class SQLParse implements BriefContextAware {
             keys.add(paramKey);
         }
         sql = parseSql(sql);
-        SQL SQL = new SQL(sql, objects);
+        SQL SQL = new SQL(dbType, sql, objects);
         SQL.setParamMap(paramMap);
         if(CollectionUtils.isNotEmpty(jqlInterceptorList)){
             for(JqlInterceptor jqlInterceptor : jqlInterceptorList){
@@ -77,10 +78,10 @@ public class SQLParse implements BriefContextAware {
         return SQL;
     }
 
-    public static SQL getSQL(String sql, Map<String, Object> map) {
+    public static SQL getSQL(DBType dbType, String sql, Map<String, Object> map) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return SQLParse.parseSqlParams(sql, maps);
+        return SQLParse.parseSqlParams(dbType, sql, maps);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -24,6 +25,8 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     private JdbcExecutor<T> jdbcExecutor;
 
+    private DBType dbType;
+
     public BaseBriefImpl() {
     }
 
@@ -38,6 +41,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     private BaseBriefImpl(DataSource dataSource, Class modelClass) {
         this.jdbcExecutor = jdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass);
+        this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
     }
 
     /****************************crud****************************/
@@ -47,7 +51,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     @Override
     public int saveData(String sql, Map<String, Object> map) {
-        SQL sql_ = SQLParse.getSQL(sql, map);
+        SQL sql_ = SQLParse.getSQL(this.dbType, sql, map);
         return this.jdbcExecutor.save(sql_).toInt();
     }
 
@@ -57,7 +61,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     @Override
     public int deleteData(String sql, Map<String, Object> map) {
-        SQL sql_ = SQLParse.getSQL(sql, map);
+        SQL sql_ = SQLParse.getSQL(this.dbType, sql, map);
         return this.jdbcExecutor.modify(sql_);
     }
 
@@ -67,7 +71,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     @Override
     public int updateData(String sql, Map<String, Object> map) {
-        SQL sql_ = SQLParse.getSQL(sql, map);
+        SQL sql_ = SQLParse.getSQL(this.dbType, sql, map);
         return this.jdbcExecutor.modify(sql_);
     }
 
@@ -80,19 +84,19 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     public List<T> queryData(String sql, Map<String, Object> paramMap) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
-        SQL querySql = SQLParse.parseSqlParams(sql, paramMapList);
+        SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         return this.jdbcExecutor.queryList(querySql);
     }
 
     /*********************************batch processing*********************************/
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {
-        SQL batchSQL = SQLParse.parseSqlParams(sql, paramMap);
+        SQL batchSQL = SQLParse.parseSqlParams(this.dbType, sql, paramMap);
         return this.jdbcExecutor.batchModify(batchSQL);
     }
 
     @Override
     public List<Id> batchInsert(String sql, List<Map<String, Object>> paramMap) {
-        SQL pss = SQLParse.parseSqlParams(sql, paramMap);
+        SQL pss = SQLParse.parseSqlParams(this.dbType, sql, paramMap);
         return this.jdbcExecutor.batchSave(pss);
     }
 

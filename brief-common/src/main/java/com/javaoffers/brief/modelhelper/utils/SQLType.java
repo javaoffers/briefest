@@ -12,5 +12,10 @@ public enum SQLType {
     /**
      * 普通查询
      */
-    NORMAL_SELECT
+    NORMAL_SELECT,
+
+    /**
+     * DML
+     */
+    DML,
 }

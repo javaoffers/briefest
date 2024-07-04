@@ -14,6 +14,8 @@ public class SQL implements  BaseSQLInfo{
 	final static String innerJoin = ConditionTag.INNER_JOIN.getTag().trim().toLowerCase();
 	final static String leftJoin = ConditionTag.LEFT_JOIN.getTag().trim().toLowerCase();
 	final static String rightJoin = ConditionTag.RIGHT_JOIN.getTag().trim().toLowerCase();
+	final static String normalSelect = ConditionTag.SELECT.getTag().trim().toLowerCase();
+	final static String normalFrom = ConditionTag.SELECT_FROM.getTag().trim().toLowerCase();
 	private List<Object[]> argsParam;//封装参数,object[] 为一批参数，list.size 代表批次数
 	private String sql;//要进行批处理的sql
 	List<Map<String, Object>> paramMap; //原始值. 在执行sql前还又一次修改参数的机会。通过jql拦截器
@@ -26,8 +28,10 @@ public class SQL implements  BaseSQLInfo{
 		String tmpSql = this.sql.toLowerCase();
 		if(tmpSql.contains(innerJoin) || tmpSql.contains(leftJoin) || tmpSql.contains(rightJoin)) {
 			sqlType = SQLType.JOIN_SELECT;
-		} else {
+		} else if (tmpSql.contains(normalSelect) || tmpSql.contains(normalFrom)) {
 			sqlType = SQLType.NORMAL_SELECT;
+		} else {
+			sqlType = SQLType.DML;
 		}
 	}
 

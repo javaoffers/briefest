@@ -7,6 +7,7 @@ import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.fun.ExecutFun;
 import com.javaoffers.brief.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.utils.GsonUtils;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 
@@ -20,7 +21,7 @@ public class NativeFunImpl implements ExecutFun<String> {
 
     private String sqlText;
 
-    private List<Map<String,Object>> paramMap = Collections.emptyList();
+    private Map<String,Object> paramMap = Collections.emptyMap();
 
     private DataSource dataSource;
 
@@ -36,7 +37,7 @@ public class NativeFunImpl implements ExecutFun<String> {
         return this;
     }
 
-    public NativeFunImpl setParamMap(List<Map<String, Object>> paramMap) {
+    public NativeFunImpl setParamMap(Map<String, Object> paramMap) {
         this.paramMap = paramMap;
         return this;
     }
@@ -45,7 +46,7 @@ public class NativeFunImpl implements ExecutFun<String> {
     public String ex() {
         List<String> exs = exs();
         if(exs.size() > 0){
-            return exs.get(0);
+            return exs.stream().collect(Collectors.joining("\t\n"));
         }
         return null;
     }
@@ -57,7 +58,13 @@ public class NativeFunImpl implements ExecutFun<String> {
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        List<Id> list = instance.batchInsert(sqlText, this.paramMap);
-        return list.stream().map(Id::toString).collect(Collectors.toList());
+        List list =  instance.queryData(sqlText,paramMap);
+        return (List<String>) list.stream().map(el->{
+            if(el instanceof List){
+                List ls = (List)el;
+                return ls.stream().map(Object::toString).collect(Collectors.joining("\t\n"));
+            }
+            return GsonUtils.gson.toJson(el);
+        }).collect(Collectors.toList());
     }
 }

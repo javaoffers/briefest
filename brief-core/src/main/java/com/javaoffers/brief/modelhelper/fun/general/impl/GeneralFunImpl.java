@@ -491,7 +491,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public String nativeSQL(String sql, Map<String, Object> param) {
-        return this.nativeFun.setSqlText(sql).setParamMap(Lists.newArrayList(param)).ex();
+        return this.nativeFun.setSqlText(sql).setParamMap(param).ex();
     }
 
     private Pair<Boolean, WhereSelectFun<T, Object>> parseQueryWhere(T model) {

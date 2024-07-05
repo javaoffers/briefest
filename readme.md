@@ -77,7 +77,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - Multi-table query does not need to be configured. Automatically map one-to-one, one-to-many, many-to-many.
   - Supports logical deletion, optimistic locking.
   - Integrated with the commonly used API, to directly using the need for development.
-  - Support mysql, oracle, sql server  grammar standard
+  - Support mysql, h2, oracle, sqlserver ,clickhouse grammar standard
   - Table fields automatic decryption (support like fuzzy query).
   - Field query fuzzy desensitization
   - SQL interceptors, are free to customize

@@ -61,18 +61,41 @@ public class ClickHouseSample {
 
     @Test
     public void testNative(){
-        String showTables = briefMapper.general().nativeSQL("show tables ");
+        String showTables = briefMapper.general().ddlSQL("show tables ");
         LOGUtils.printLog(showTables);
 
-        String databases = briefMapper.general().nativeSQL("show databases;");
+        String databases = briefMapper.general().ddlSQL("show databases;");
         LOGUtils.printLog(databases);
 
-        String data = briefMapper.general().nativeSQL("select * from my_first_table");
+        String data = briefMapper.general().ddlSQL("select * from my_first_table");
         LOGUtils.printLog(data);
 
         HashMap<String, Object> map = Maps.newHashMap();
         map.put("message","Insert a lot of rows per batch");
-        data = briefMapper.general().nativeSQL("select * from my_first_table where message = #{message}", map);
+        data = briefMapper.general().ddlSQL("select * from my_first_table where message = #{message}", map);
         LOGUtils.printLog(data);
+
+        String explain = briefMapper.general().ddlSQL("explain select * from my_first_table");
+        LOGUtils.printLog(explain);
+
+    }
+
+    @Test
+    public void testInsertNative(){
+        String insertInfo = briefMapper.general().ddlSQL("INSERT INTO my_first_table (user_id, message, timestamp, metric) VALUES\n" +
+                "    (201, 'Hello, ClickHouse!',                                 now(),       -1.0    ),\n" +
+                "    (302, 'Insert a lot of rows per batch',                     yesterday(), 1.41421 ),\n" +
+                "    (402, 'Sort your data based on your commonly-used queries', today(),     2.718   ),\n" +
+                "    (501, 'Granules are the smallest chunks of data read',      now() + 5,   3.14159 )");
+        LOGUtils.printLog(insertInfo);
+
+        List<MyFirstTable> exs = briefMapper.select().colAll().where().eq(MyFirstTable::getUserId, 402).exs();
+        LOGUtils.printLog(exs);
+    }
+
+    @Test
+    public void testNativeSql(){
+        String table = briefMapper.general().ddlSQL("show create table my_first_table");
+        LOGUtils.printLog(table);
     }
 }

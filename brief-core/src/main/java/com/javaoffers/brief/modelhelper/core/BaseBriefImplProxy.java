@@ -8,6 +8,7 @@ import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -84,6 +85,18 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
         return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.queryData(jmi.getSql() , map);});
+    }
+
+    @Override
+    public List<String> nativeData(String sql) {
+        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql());});
+    }
+
+    @Override
+    public List<String> nativeData(String sql, Map<String, Object> map) {
+        ArrayList<Map<String, Object>> maps = new ArrayList<>();
+        maps.add(map);
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql() , map);});
     }
 
     @Override

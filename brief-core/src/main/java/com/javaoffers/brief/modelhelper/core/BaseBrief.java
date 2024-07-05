@@ -29,6 +29,10 @@ public interface BaseBrief<T>{
 
 	public List<T> queryData(String sql,Map<String,Object> map);
 
+	public List<String> nativeData(String sql);
+
+	public List<String> nativeData(String sql,Map<String,Object> map);
+
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);
 

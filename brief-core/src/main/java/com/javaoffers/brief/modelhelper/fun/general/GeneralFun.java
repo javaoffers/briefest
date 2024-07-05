@@ -333,16 +333,20 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public Number countDistinct(C c,T model);
 
     /**
-     * Execute local sql.
+     * Execute local sql.  Data Definition Language.
+     * CREATE, ALTER, DROP, TRUNCATE,  GRANT , REVOKE...
+     * NOTE: It is not recommended to execute DQL
      * @param sql
      * @return message
      */
-    public String nativeSQL(String sql);
+    public String ddlSQL(String sql);
 
     /**
-     * Execute local sql.
+     * Execute local sql. Data Definition Language.
+     * CREATE, ALTER, DROP, TRUNCATE,  GRANT , REVOKE...
+     * NOTE: It is not recommended to execute DQL
      * @param sql
      * @return message
      */
-    public String nativeSQL(String sql, Map<String,Object> param);
+    public String ddlSQL(String sql, Map<String,Object> param);
 }

@@ -485,12 +485,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public String nativeSQL(String sql) {
+    public String ddlSQL(String sql) {
         return this.nativeFun.setSqlText(sql).ex();
     }
 
     @Override
-    public String nativeSQL(String sql, Map<String, Object> param) {
+    public String ddlSQL(String sql, Map<String, Object> param) {
         return this.nativeFun.setSqlText(sql).setParamMap(param).ex();
     }
 

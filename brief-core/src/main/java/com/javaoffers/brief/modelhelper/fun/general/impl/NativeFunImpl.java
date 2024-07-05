@@ -48,7 +48,7 @@ public class NativeFunImpl implements ExecutFun<String> {
         if(exs.size() > 0){
             return exs.stream().collect(Collectors.joining("\t\n"));
         }
-        return null;
+        return "OK";
     }
 
     @Override
@@ -58,11 +58,11 @@ public class NativeFunImpl implements ExecutFun<String> {
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        List list =  instance.queryData(sqlText,paramMap);
+        List list =  instance.nativeData(sqlText,paramMap);
         return (List<String>) list.stream().map(el->{
             if(el instanceof List){
                 List ls = (List)el;
-                return ls.stream().map(Object::toString).collect(Collectors.joining("\t\n"));
+                return ls.stream().map(Object::toString).collect(Collectors.joining("\t"));
             }
             return GsonUtils.gson.toJson(el);
         }).collect(Collectors.toList());

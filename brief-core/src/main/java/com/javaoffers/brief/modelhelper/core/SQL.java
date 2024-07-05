@@ -30,8 +30,6 @@ public class SQL implements  BaseSQLInfo{
 			sqlType = SQLType.JOIN_SELECT;
 		} else if (tmpSql.contains(normalSelect) || tmpSql.contains(normalFrom)) {
 			sqlType = SQLType.NORMAL_SELECT;
-		} else {
-			sqlType = SQLType.DML;
 		}
 	}
 
@@ -61,6 +59,10 @@ public class SQL implements  BaseSQLInfo{
 	@Override
 	public DBType getDbType() {
 		return this.dbType;
+	}
+
+	public void setSqlType(SQLType sqlType) {
+		this.sqlType = sqlType;
 	}
 
 	public int getBatchSize() {

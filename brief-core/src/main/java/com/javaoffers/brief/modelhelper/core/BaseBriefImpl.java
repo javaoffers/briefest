@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.SQLType;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import javax.sql.DataSource;
@@ -86,6 +87,20 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         return this.jdbcExecutor.queryList(querySql);
+    }
+
+    @Override
+    public List<String> nativeData(String sql) {
+        return nativeData(sql, new HashMap<>());
+    }
+
+    @Override
+    public List<String> nativeData(String sql, Map<String, Object> paramMap) {
+        List<Map<String, Object>> paramMapList = new ArrayList<>();
+        paramMapList.add(paramMap);
+        SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
+        querySql.setSqlType(SQLType.DML);
+        return (List) this.jdbcExecutor.queryList(querySql);
     }
 
     /*********************************batch processing*********************************/

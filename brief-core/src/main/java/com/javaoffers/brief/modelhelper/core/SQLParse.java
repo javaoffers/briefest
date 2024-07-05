@@ -46,11 +46,12 @@ public class SQLParse implements BriefContextAware {
         sql = parseSql(sql);
         SQL SQL = new SQL(dbType, sql, objects);
         SQL.setParamMap(paramMap);
-        if(CollectionUtils.isNotEmpty(jqlInterceptorList)){
-            for(JqlInterceptor jqlInterceptor : jqlInterceptorList){
-                jqlInterceptor.handler(SQL);
-            }
+
+        //EXECUTE JQL INTERCEPTOR
+        for(JqlInterceptor jqlInterceptor : jqlInterceptorList){
+            jqlInterceptor.handler(SQL);
         }
+
         for (int i = 0, j = paramMap.size() - 1; paramMap != null && i <= j; i++, j--) {
             if (i == j) {
                 Map<String, Object> pm = paramMap.get(i);

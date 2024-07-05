@@ -14,6 +14,7 @@
         <module>brief-oracle</module>
         <module>brief-sqlserver</module>
         <module>brief-clickhouse</module>
+        <module>brief-pgsql</module>
     </modules>
 
     <build>

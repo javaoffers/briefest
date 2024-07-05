@@ -90,16 +90,16 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
-    public List<String> nativeData(String sql) {
-        return nativeData(sql, new HashMap<>());
+    public List<String> nativeData(String sql, SQLType sqlType) {
+        return nativeData(sql, new HashMap<>(), sqlType);
     }
 
     @Override
-    public List<String> nativeData(String sql, Map<String, Object> paramMap) {
+    public List<String> nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
-        querySql.setSqlType(SQLType.DML);
+        querySql.setSqlType(sqlType);
         return (List) this.jdbcExecutor.queryList(querySql);
     }
 

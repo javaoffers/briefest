@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
+import com.javaoffers.brief.modelhelper.utils.SQLType;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +31,9 @@ public interface BaseBrief<T>{
 
 	public List<T> queryData(String sql,Map<String,Object> map);
 
-	public List<String> nativeData(String sql);
+	public List<String> nativeData(String sql, SQLType sqlType);
 
-	public List<String> nativeData(String sql,Map<String,Object> map);
+	public List<String> nativeData(String sql,Map<String,Object> map, SQLType sqlType);
 
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);

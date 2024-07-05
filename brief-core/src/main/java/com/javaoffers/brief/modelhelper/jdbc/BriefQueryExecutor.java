@@ -34,7 +34,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     @Override
     public T query(BaseSQLInfo sql) {
         List<T> ts = this.queryList(sql);
-        if(CollectionUtils.isEmpty(ts)){
+        if (CollectionUtils.isEmpty(ts)) {
             return null;
         }
         return ts.get(0);
@@ -50,42 +50,49 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
             oldAutoCommitStatus = connection.getAutoCommit();
             PreparedStatement ps = connection.prepareStatement(sql.getSql());
             List<Object[]> argsParam = sql.getArgsParam();
-            if(argsParam != null && argsParam.size() == 1){
+            if (argsParam != null && argsParam.size() == 1) {
                 Object[] ov = argsParam.get(0);
-                for(int i=0; i<ov.length; ){
+                for (int i = 0; i < ov.length; ) {
                     Object o = ov[i];
                     ps.setObject(++i, o);
                 }
             }
-            ResultSet rs = ps.executeQuery();
-            switch (sql.getSqlType()){
+            switch (sql.getSqlType()) {
                 case JOIN_SELECT:
-                    return ModelParseUtils.converterResultSet2ModelForJoinSelect(this.modelClass, new BriefResultSetExecutor(rs));
+                    return ModelParseUtils.converterResultSet2ModelForJoinSelect(this.modelClass,
+                            new BriefResultSetExecutor(ps.executeQuery()));
                 case NORMAL_SELECT:
-                    return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass, new BriefResultSetExecutor(rs));
+                    return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass,
+                            new BriefResultSetExecutor(ps.executeQuery()));
                 case DML:
-                    //NOTE: RESULT TYPE OF STRING
+                case DDL:
+                    boolean execute = ps.execute();
                     List dmlResult = Lists.newArrayList();
-                    while (rs.next()){
-                        List dmlCol = Lists.newArrayList();
-                        int columnCount = rs.getMetaData().getColumnCount();
-                        for(int i=1; i<= columnCount; i++){
-                            dmlCol.add(rs.getString(i));
+                    if (execute) {
+                        //NOTE: RESULT TYPE OF STRING
+                        ResultSet rs = ps.getResultSet();
+                        while (rs.next()) {
+                            List dmlCol = Lists.newArrayList();
+                            int columnCount = rs.getMetaData().getColumnCount();
+                            for (int i = 1; i <= columnCount; i++) {
+                                dmlCol.add(rs.getString(i));
+                            }
+                            if (dmlCol.size() > 0) {
+                                dmlResult.add(dmlCol);
+                            }
                         }
-                        if(dmlCol.size() > 0){
-                            dmlResult.add(dmlCol);
-                        }
+                    } else {
+                        //true Indicates successful execution
+                        dmlResult.add(true);
                     }
                     return dmlResult;
                 default:
                     throw new ParseResultSetException("sql type does not exist");
             }
-
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());
-        }finally {
+        } finally {
             closeConnection(connection, oldAutoCommitStatus);
         }
     }
@@ -94,7 +101,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     public Connection getConnection() {
         try {
             return this.dataSource.getConnection();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());
         }

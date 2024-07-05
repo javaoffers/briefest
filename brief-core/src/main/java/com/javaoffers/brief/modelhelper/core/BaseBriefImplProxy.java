@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -88,15 +89,15 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     }
 
     @Override
-    public List<String> nativeData(String sql) {
-        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql());});
+    public List<String> nativeData(String sql, SQLType sqlType) {
+        return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql(), sqlType);});
     }
 
     @Override
-    public List<String> nativeData(String sql, Map<String, Object> map) {
+    public List<String> nativeData(String sql, Map<String, Object> map, SQLType sqlType) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql() , map);});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql() , map, sqlType);});
     }
 
     @Override

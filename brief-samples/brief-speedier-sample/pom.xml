@@ -11,6 +11,18 @@
     <dependencies>
 
         <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-pgsql</artifactId>
+            <version>3.6.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.clickhouse</groupId>
             <artifactId>clickhouse-jdbc</artifactId>
             <version>0.6.0</version>

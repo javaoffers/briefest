@@ -486,12 +486,12 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     @Override
     public String ddlSQL(String sql) {
-        return this.nativeFun.setSqlText(sql).ex();
+        return this.nativeFun.setSqlText(sql, SQLType.DDL).ex();
     }
 
     @Override
     public String ddlSQL(String sql, Map<String, Object> param) {
-        return this.nativeFun.setSqlText(sql).setParamMap(param).ex();
+        return this.nativeFun.setSqlText(sql, SQLType.DDL).setParamMap(param).ex();
     }
 
     private Pair<Boolean, WhereSelectFun<T, Object>> parseQueryWhere(T model) {

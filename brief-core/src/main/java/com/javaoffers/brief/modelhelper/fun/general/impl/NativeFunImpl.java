@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.GsonUtils;
 import com.javaoffers.brief.modelhelper.utils.Lists;
+import com.javaoffers.brief.modelhelper.utils.SQLType;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
@@ -21,6 +22,8 @@ public class NativeFunImpl implements ExecutFun<String> {
 
     private String sqlText;
 
+    private SQLType sqlType;
+
     private Map<String,Object> paramMap = Collections.emptyMap();
 
     private DataSource dataSource;
@@ -32,8 +35,9 @@ public class NativeFunImpl implements ExecutFun<String> {
         this.dataSource = CrudMapperMethodThreadLocal.getExcutorDataSource();
     }
 
-    public NativeFunImpl setSqlText(String sqlText) {
+    public NativeFunImpl setSqlText(String sqlText, SQLType sqlType) {
         this.sqlText = sqlText;
+        this.sqlType = sqlType;
         return this;
     }
 
@@ -58,7 +62,7 @@ public class NativeFunImpl implements ExecutFun<String> {
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        List list =  instance.nativeData(sqlText,paramMap);
+        List list =  instance.nativeData(sqlText,paramMap, this.sqlType);
         return (List<String>) list.stream().map(el->{
             if(el instanceof List){
                 List ls = (List)el;

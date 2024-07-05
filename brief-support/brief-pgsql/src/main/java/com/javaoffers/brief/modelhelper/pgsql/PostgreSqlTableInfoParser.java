@@ -15,6 +15,6 @@ public class PostgreSqlTableInfoParser extends SmartTableInfoParser {
 
     @Override
     public DBType getDBType() {
-        return DBType.ORACLE;
+        return DBType.POSTGRESQL;
     }
 }

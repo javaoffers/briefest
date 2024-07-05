@@ -6,16 +6,28 @@ package com.javaoffers.brief.modelhelper.utils;
 public enum SQLType {
 
     /**
-     * join查询.
+     * JOIN QUERY.
      */
     JOIN_SELECT,
     /**
-     * 普通查询
+     * Ordinary query
      */
     NORMAL_SELECT,
 
     /**
-     * DML
+     * DML: for example
+     * CREATE
+     * ALTER
+     * DROP
+     * TRUNCATE
+     * COMMENT
+     * RENAME
+     */
+    DDL,
+
+    /**
+     * DML: for example
+     * EXPLAIN PLAN
      */
     DML,
 }

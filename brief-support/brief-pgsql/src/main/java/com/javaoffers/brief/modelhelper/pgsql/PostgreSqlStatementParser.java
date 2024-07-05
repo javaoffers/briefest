@@ -25,7 +25,7 @@ public class PostgreSqlStatementParser implements StatementParser<Condition, Bas
     static {
         crudConditionParse.put(SelectConditionParse.conditionTag, new PostgreSqlSelectConditionParse());
         crudConditionParse.put(DeleteConditionParse.conditionTag, new DeleteConditionParse());
-        crudConditionParse.put(InsertConditionParse.conditionTag, new InsertConditionParse());
+        crudConditionParse.put(InsertConditionParse.conditionTag, new PostgreSqlInsertConditionParse());
         crudConditionParse.put(UpdateConditionParse.conditionTag, new UpdateConditionParse());
     }
 

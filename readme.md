@@ -26,7 +26,7 @@ sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/bri
 
   ```java
     <properties>
-         <brief.version>3.6.4</brief.version>
+         <brief.version>3.6.5</brief.version>
     </properties>
    <!--brief Lightweight and can be used alone-->
      <dependency>

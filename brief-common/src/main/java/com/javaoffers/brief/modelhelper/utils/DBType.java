@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 import java.sql.Statement;
@@ -19,6 +20,11 @@ public enum DBType {
         public boolean isSupportDuplicateModify() {
             return true;
         }
+
+        @Override
+        public String getQuote() {
+            return ConditionTag.QUOTE.getTag();
+        }
     },
 
     H2 {
@@ -26,12 +32,22 @@ public enum DBType {
         public boolean isSupportDuplicateModify() {
             return true;
         }
+
+        @Override
+        public String getQuote() {
+            return ConditionTag.QUOTE.getTag();
+        }
     },
 
     ORACLE{
         @Override
         public boolean isSupportDuplicateModify() {
             return true;
+        }
+
+        @Override
+        public String getQuote() {
+            return ConditionTag.QUOTE.getTag();
         }
     },
 
@@ -91,7 +107,7 @@ public enum DBType {
 
     POSTGRESQL{
         public boolean isSupportDuplicateModify(){
-            return true;
+            return false;
         }
     },
 
@@ -123,6 +139,10 @@ public enum DBType {
 
     public String toString(){
         return name();
+    }
+
+    public String getQuote(){
+        return "";
     }
 
 }

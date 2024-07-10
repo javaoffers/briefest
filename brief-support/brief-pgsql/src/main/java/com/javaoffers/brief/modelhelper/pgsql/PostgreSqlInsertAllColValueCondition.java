@@ -22,60 +22,27 @@ public class PostgreSqlInsertAllColValueCondition extends InsertAllColValueCondi
         super(modelClass, model);
     }
 
-    public void parseInsertSql() {
-        Set<String> colNamesSet = this.getParams().keySet();
-        //给字段增加``
-        super.setExpressionColNames(this.getParams()
-                .keySet()
-                .stream()
-                .map(colName ->  colName ) // `xx`
-                .collect(Collectors.toList()));
-
-        //解析 ( colName ,,,)
-        this.setSqlColNames(ConditionTag.LK.getTag()+ String.join(ConditionTag.COMMA.getTag(), this.getExpressionColNames())+ConditionTag.RK.getTag());
-
-        //解析 ( #{xx}.. ) without values keyword
-        StringBuilder valuesAppender = new StringBuilder(ConditionTag.LK.getTag());
-        LinkedList<String> colNames = new LinkedList<>();
-        for(String colName : colNamesSet){
-            colNames.add("#{"+colName+"}");
-        }
-
-        valuesAppender.append(String.join(ConditionTag.COMMA.getTag(), colNames)); // ,
-        valuesAppender.append(ConditionTag.RK.getTag());
-        this.setSqlValues(valuesAppender.toString());
-    }
-
     /**
-     * MERGE INTO orders tgt
-     * USING (
-     *     SELECT 1001 AS order_number, 150 AS amount FROM dual
-     * ) src
-     * ON (tgt.order_number = src.order_number)
-     * WHEN MATCHED THEN
-     *     UPDATE SET tgt.amount = src.amount
-     * WHEN NOT MATCHED THEN
-     *     INSERT (order_number, customer_name, amount)
-     *     VALUES ('xx', 'New Customer', 'xx');
+     * INSERT INTO the_table (id, column_1, column_2)
+     * VALUES (1, 'A', 'X'), (2, 'B', 'Y'), (3, 'C', 'Z')
+     * ON CONFLICT (id) DO UPDATE
+     *   SET column_1 = excluded.column_1,
+     *       column_2 = excluded.column_2;
      */
     public void parseDupInsertSql(){
 
         TableInfo tableInfo = TableHelper.getTableInfo(this.getModelClass());
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        List<String> primaryColNameList = this.getParams().keySet().stream().filter(primaryColNames::containsKey).collect(Collectors.toList());
+        List<String> primaryColNameList = this.getParams().keySet()
+                .stream().filter(primaryColNames::containsKey).collect(Collectors.toList());
         if(primaryColNameList.size() == 0){
             return;
         }
 
         StringBuilder onDuplicate = this.getOnDuplicate();
-        onDuplicate.append(ConditionTag.USING.getTag());
+        onDuplicate.append(ConditionTag.ON_CONFLICT.getTag());
         onDuplicate.append(ConditionTag.LK.getTag());
-        //parse: SELECT 1001 AS order_number, 150 AS amount FROM dual
-        onDuplicate.append(ConditionTag.SELECT.getTag());
-        //处理 on 条件
-        StringBuilder onCondition = new StringBuilder();
-        onCondition.append(ConditionTag.ON.getTag());
-        onCondition.append(ConditionTag.LK.getTag());
+
         // SELECT 1001 AS order_number, 150 AS amount FROM dual
         primaryColNameList.forEach( uniqueCol->{
             Object value = this.getParams().get(uniqueCol);

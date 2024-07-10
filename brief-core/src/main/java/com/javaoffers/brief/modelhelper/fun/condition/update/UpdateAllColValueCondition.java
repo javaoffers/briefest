@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * all Col value update include null value
+ *
  * @author create by cmj
  */
 public class UpdateAllColValueCondition implements UpdateCondition {
@@ -26,9 +28,9 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     Class modelClass;
 
-    Map<String,Object> params = new HashMap<>();
+    Map<String, Object> params = new HashMap<>();
 
-    Map<String,Object> npdateNullParams = new HashMap<>();
+    Map<String, Object> npdateNullParams = new HashMap<>();
 
     Object model;
 
@@ -49,7 +51,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     @Override
     public String getSql() {
-        if(!isUpdateNull && !isExistsNoneNullValue){
+        if (!isUpdateNull && !isExistsNoneNullValue) {
             return "";
         }
         return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
@@ -61,7 +63,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
     }
 
     public UpdateAllColValueCondition(boolean isUpdateNull, Class modelClass, Object model) {
-        Assert.isTrue(model != null , "model is not allowed to be null");
+        Assert.isTrue(model != null, "model is not allowed to be null");
         this.isUpdateNull = isUpdateNull;
         this.modelClass = modelClass;
         this.model = model;
@@ -77,44 +79,45 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(modelClass);
         updateSqlNull.append(tableName);
         updateSql.append(tableName);
+        DBType dbType = tableInfo.getDbType();
+        String quote = dbType.getQuote();
         AtomicInteger status = new AtomicInteger(0);
         AtomicInteger statusNull = new AtomicInteger(0);
         colAllAndFieldOnly.forEach((cloName, fields) -> {
             try {
-                ColumnInfo columnInfo = colNames.get(cloName);
                 Object oValue = null;
-                for(int i = 0; i < fields.size(); i++){
+                for (int i = 0; i < fields.size(); i++) {
                     Field field = fields.get(i);
                     Object o = field.get(model);
                     //take the first non-null value
-                    if(o != null){
+                    if (o != null) {
                         oValue = o;
                         break;
                     }
                 }
 
-                if(statusNull.get() == 0){
+                if (statusNull.get() == 0) {
                     updateSqlNull.append(ConditionTag.SET.getTag());
                     statusNull.incrementAndGet();
-                }else {
+                } else {
                     updateSqlNull.append(", ");
                 }
 
                 String colNameTag = getNextTag();
-                String expressionCloName = "`"+cloName+"`";
+                String expressionCloName = quote + cloName + quote;
                 updateSqlNull.append(expressionCloName);
                 updateSqlNull.append(" = #{");
                 updateSqlNull.append(colNameTag);
                 updateSqlNull.append("}");
 
                 params.put(colNameTag, oValue);
-                if(oValue!=null && StringUtils.isNotBlank(oValue.toString())){
+                if (oValue != null && StringUtils.isNotBlank(oValue.toString())) {
                     npdateNullParams.put(colNameTag, oValue);
                     isExistsNoneNullValue = true;
-                    if(status.get() == 0){
+                    if (status.get() == 0) {
                         updateSql.append(ConditionTag.SET.getTag());
                         status.incrementAndGet();
-                    }else{
+                    } else {
                         updateSql.append(", ");
                     }
                     updateSql.append(expressionCloName);
@@ -128,7 +131,7 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         });
     }
 
-    public String getNextTag(){
+    public String getNextTag() {
         return this.headCondition.getNextTag();
     }
 }

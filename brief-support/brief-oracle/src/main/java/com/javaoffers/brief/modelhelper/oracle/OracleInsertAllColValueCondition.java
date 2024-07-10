@@ -21,7 +21,6 @@ public class OracleInsertAllColValueCondition extends InsertAllColValueCondition
 
     //Initialize information to ensure that sql is generated during parsing
     public void init(boolean isDupUpdate) {
-        TableHelper.getModelInfo(getModelClass());
         //生成唯一key
         gkeyProcess();
         //left: colName. right: fieldName

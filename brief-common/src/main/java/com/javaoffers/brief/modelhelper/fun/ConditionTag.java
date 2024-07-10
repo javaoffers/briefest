@@ -81,6 +81,8 @@ public enum ConditionTag {
 
     MERGE_INTO(2011, " merge into ", CategoryTag.INSERT_INTO),
 
+    ON_CONFLICT(2012, " on conflict ", CategoryTag.INSERT_INTO),
+
     /**update**/
     UPDATE(2100, " update ", CategoryTag.UPDATE_SET),
 
@@ -108,6 +110,7 @@ public enum ConditionTag {
     /**key word**/
     DISTINCT(700," distinct ",CategoryTag.SELECT_COL),
     AS(701," as ",CategoryTag.SELECT_COL),
+    DO(702," do ",CategoryTag.SELECT_COL),
 
     ;
 

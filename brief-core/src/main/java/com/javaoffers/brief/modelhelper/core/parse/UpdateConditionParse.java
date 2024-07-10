@@ -31,8 +31,8 @@ public class UpdateConditionParse extends AbstractParseCondition {
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
         SQLStatement sqlStatement = parseUpdate2(conditions);
         moreSQLInfo.addSqlInfo(sqlStatement);
-        Condition condition = null;
-        while((condition = conditions.peek()) != null){
+
+        while(( conditions.peek()) != null){
             sqlStatement = parseUpdate2(conditions);
             moreSQLInfo.addSqlInfo(sqlStatement);
         }

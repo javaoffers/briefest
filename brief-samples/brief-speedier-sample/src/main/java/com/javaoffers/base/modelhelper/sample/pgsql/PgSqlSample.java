@@ -41,7 +41,7 @@ public class PgSqlSample {
     @Test
     public void testConnection() throws Exception {
         String ddlSQL = briefMapper.general().ddlSQL(
-                "CREATE TABLE teacher5 (\n" +
+                "CREATE TABLE teacher (\n" +
                         "    id SERIAL PRIMARY KEY,\n" +
                         "    name VARCHAR(100),\n" +
                         "    status INT\n" +
@@ -55,7 +55,10 @@ public class PgSqlSample {
         teacher.setId(1);
         teacher.setName("Hello");
         teacher.setStatus(RowStatus.PRESENCE);
-        Id save = briefMapper.general().save(teacher);
-        LOGUtils.printLog(save);
+        briefMapper.general().saveOrModify(teacher);
+
+
+        //Id save = briefMapper.general().save(teacher);
+//        LOGUtils.printLog(save);
     }
 }

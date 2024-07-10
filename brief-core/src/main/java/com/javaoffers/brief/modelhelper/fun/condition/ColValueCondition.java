@@ -3,6 +3,9 @@ package com.javaoffers.brief.modelhelper.fun.condition;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
+import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.HashMap;
@@ -11,11 +14,13 @@ import java.util.Map;
 /**
  * create by cmj.
  */
-public class ColValueCondition implements Condition {
+public class ColValueCondition implements UpdateCondition {
 
     private String colName;
 
-    private Object value ;
+    private Object value;
+
+    private DBType dbType;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -40,14 +45,17 @@ public class ColValueCondition implements Condition {
         this.value = value;
     }
 
-    public ColValueCondition() {
-    }
-
     public String getColName() {
         return colName;
     }
 
-    public String getExpressionColName(){
-        return "`"+colName+"`";
+    public String getExpressionColName() {
+        return this.dbType.getQuote() + colName + this.dbType.getQuote();
+    }
+
+    @Override
+    public void setHeadCondition(HeadCondition headCondition) {
+        Class modelClass = headCondition.getModelClass();
+        this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
     }
 }

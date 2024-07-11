@@ -91,6 +91,7 @@ public class OracleInsertConditionParse extends InsertConditionParse {
                     // (colName ,,, ) values ( #{xx} ,,,)
                     moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
                 } else {
+                    // oracle 的merge方法和insert方法使用完全不同. 并不是在insert 语句后面追加merge sql
                     moreSql.add(oracleColAllValueCondition.getOnDuplicateString());
                 }
                 paramsList.add(oracleColAllValueCondition.getParams());

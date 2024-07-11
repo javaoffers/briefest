@@ -10,7 +10,6 @@ import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCo
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +22,6 @@ import java.util.Set;
  * @author: create by cmj on 2022/10/23 10:44
  */
 public class PostgreSqlInsertConditionParse extends InsertConditionParse {
-
-    public static ConditionTag conditionTag = ConditionTag.INSERT_INTO;
 
     @Override
     public SQLStatement doParse(LinkedList<Condition> conditions) {
@@ -78,20 +75,18 @@ public class PostgreSqlInsertConditionParse extends InsertConditionParse {
                 PostgreSqlInsertAllColValueCondition postgreSqlInsertAllColValueCondition
                         = new PostgreSqlInsertAllColValueCondition(modelClass, model);
                 postgreSqlInsertAllColValueCondition.init(isDupUpdateSql);
-                if(StringUtils.isBlank(postgreSqlInsertAllColValueCondition.getOnDuplicate())){
-                    isDupUpdateSql = false; //no primary col
-                    insertValueAppender = new StringBuilder();
-                    insertColNamesAppender = new StringBuilder();
-                    // ( colName ,,,)
-                    insertColNamesAppender.append(postgreSqlInsertAllColValueCondition.getSql());
-                    // values ( #{xx} ,,,)
-                    insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append(postgreSqlInsertAllColValueCondition.getValuesSql());
-                    // (colName ,,, ) values ( #{xx} ,,,)
-                    moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-                } else {
-                    moreSql.add(postgreSqlInsertAllColValueCondition.getOnDuplicateString());
-                }
+
+                insertValueAppender = new StringBuilder();
+                insertColNamesAppender = new StringBuilder();
+                // ( colName ,,,)
+                insertColNamesAppender.append(postgreSqlInsertAllColValueCondition.getSql());
+                // values ( #{xx} ,,,)
+                insertValueAppender.append(ConditionTag.VALUES.getTag());
+                insertValueAppender.append(postgreSqlInsertAllColValueCondition.getValuesSql());
+                // (colName ,,, ) values ( #{xx} ,,,)
+                moreSql.add(
+                        insertColNamesAppender.append(insertValueAppender)
+                        .append(postgreSqlInsertAllColValueCondition.getOnDuplicateString()).toString());
                 paramsList.add(postgreSqlInsertAllColValueCondition.getParams());
             }
         }
@@ -101,31 +96,19 @@ public class PostgreSqlInsertConditionParse extends InsertConditionParse {
             insertValueAppender.append(ConditionTag.RK.getTag());
             paramsList.add(valuesParam);
             if(isDupUpdateSql){
-                InsertAllColValueCondition oracleInsertAllColValueCondition =
-                        new InsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
+                PostgreSqlInsertAllColValueCondition oracleInsertAllColValueCondition =
+                        new PostgreSqlInsertAllColValueCondition(insertIntoTableCondition.getModelClass(), null);
                 oracleInsertAllColValueCondition.setParam(valuesParam);
                 oracleInsertAllColValueCondition.setSqlColNames(insertColNamesAppender.toString());
                 //insertValueAppender remove values keyword for sql values
                 oracleInsertAllColValueCondition.setSqlValues(insertValueAppender.substring(ConditionTag.VALUES.getTag().length() ));
                 oracleInsertAllColValueCondition.parseDupInsertSql();
-                // merge info
-                if(StringUtils.isNotBlank(oracleInsertAllColValueCondition.getOnDuplicate())){
-                    moreSql.add(oracleInsertAllColValueCondition.getOnDuplicateString());
-                }else{
-                    // 保存数据中没有唯一索引，
-                    isDupUpdateSql = false;
-                }
+                insertValueAppender.append(oracleInsertAllColValueCondition.getOnDuplicate());
             }
+            // ( colName ,,,) values ( #{xx},,,)
+            moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
 
-            if(!isDupUpdateSql) {
-                // ( colName ,,,) values ( #{xx},,,)
-                moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-            }
         }
-
-        // insert into or merge into
-        insertIntoTableSql = isDupUpdateSql ?
-                insertIntoTableSql.replaceAll(ConditionTag.INSERT_INTO.getTag(), ConditionTag.MERGE_INTO.getTag()) : insertIntoTableSql;
 
         Assert.isTrue(moreSql.size() == paramsList.size(), " data asymmetry ");
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();

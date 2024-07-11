@@ -12,6 +12,7 @@ import org.junit.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -57,8 +58,41 @@ public class PgSqlSample {
         teacher.setStatus(RowStatus.PRESENCE);
         briefMapper.general().saveOrModify(teacher);
 
+        briefMapper.insert()
+                .col(Teacher::getId, 1)
+                .col(Teacher::getName, "GOOD")
+                .dupUpdate()
+                .ex();
+
+        briefMapper.insert()
+                .col(Teacher::getId, 2)
+                .col(Teacher::getName, "GOOD")
+                .dupUpdate()
+                .ex();
+
+        briefMapper.insert()
+                .col(Teacher::getId, Math.random()*10000)
+                .col(Teacher::getName, "GOOD")
+                .ex();
 
         //Id save = briefMapper.general().save(teacher);
 //        LOGUtils.printLog(save);
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        List<Teacher> list = briefMapper.general().query(1, 10);
+        if(list.size() == 0){
+            testInsert();
+            list = briefMapper.general().query(1, 10);
+        }
+
+        Teacher teacher = list.get(0);
+        teacher.setName("Hello Word");
+
+        briefMapper.update().npdateNull().colAll(teacher).where().eq(Teacher::getId, teacher.getId()).ex();
+
+        Teacher teacher1 = briefMapper.general().queryById(teacher.getId());
+        LOGUtils.printLog(teacher1);
     }
 }

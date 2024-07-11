@@ -7,10 +7,9 @@ import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -39,70 +38,32 @@ public class PostgreSqlInsertAllColValueCondition extends InsertAllColValueCondi
             return;
         }
 
+        //ON CONFLICT (id) DO UPDATE SET
         StringBuilder onDuplicate = this.getOnDuplicate();
         onDuplicate.append(ConditionTag.ON_CONFLICT.getTag());
         onDuplicate.append(ConditionTag.LK.getTag());
-
-        // SELECT 1001 AS order_number, 150 AS amount FROM dual
-        primaryColNameList.forEach( uniqueCol->{
-            Object value = this.getParams().get(uniqueCol);
-            if(value instanceof String){
-                onDuplicate.append(ConditionTag.QUOTATION.getTag());
-                onDuplicate.append(value);
-                onDuplicate.append(ConditionTag.QUOTATION.getTag());
-            }else{
-                onDuplicate.append(value);
-            }
-            onDuplicate.append(ConditionTag.AS.getTag());
-            onDuplicate.append(uniqueCol);
-
-
-            // 拼接 ON (tgt.order_number = src.order_number)
-            onCondition.append("src");
-            onCondition.append(ConditionTag.PERIOD.getTag()); // .
-            onCondition.append(uniqueCol);
-
-            onCondition.append(ConditionTag.EQ.getTag());
-
-            onCondition.append(tableInfo.getTableName());
-            onCondition.append(ConditionTag.PERIOD.getTag()); // .
-            onCondition.append(uniqueCol);
-        });
+        onDuplicate.append(String.join(",", primaryColNameList));
         onDuplicate.append(ConditionTag.RK.getTag());
-        onDuplicate.append(ConditionTag.AS.getTag());
-        onDuplicate.append("src ");
-
-        onCondition.append(ConditionTag.RK.getTag()); // )
-        onDuplicate.append(onCondition); // 拼接 on 条件
-
-        //WHEN MATCHED THEN
-        onDuplicate.append(ConditionTag.WHEN_MATCHED_THEN.getTag());
+        onDuplicate.append(ConditionTag.DO.getTag());
         onDuplicate.append(ConditionTag.UPDATE.getTag());
         onDuplicate.append(ConditionTag.SET.getTag());
-        // update set tb.colName = #{colName}
-        Set<Map.Entry<String, Object>> params = this.getParams().entrySet();
-        ConditionTag comma = ConditionTag.BLANK;
-        for(Map.Entry<String, Object> entry : params){
-            String colName = entry.getKey();
-            onDuplicate.append(comma.getTag());
-            onDuplicate.append(tableInfo.getTableName());
-            onDuplicate.append(ConditionTag.PERIOD.getTag());
+
+        //column_1 = excluded.column_1,
+        String quote = tableInfo.getDbType().getQuote();
+        Map<String, Object> params = getParams();
+        AtomicReference<String> comma = new AtomicReference<>("");
+        params.forEach((colName, value) -> {
+            onDuplicate.append(comma.get());
+            onDuplicate.append(quote);
             onDuplicate.append(colName);
+            onDuplicate.append(quote);
             onDuplicate.append(ConditionTag.EQ.getTag());
             onDuplicate.append("#{");
             onDuplicate.append(colName);
             onDuplicate.append("}");
-            if(comma == ConditionTag.BLANK){
-                comma = ConditionTag.COMMA;
-            }
-        }
+            comma.set(ConditionTag.COMMA.getTag());
+        });
 
-        //WHEN NOT MATCHED THEN
-        onDuplicate.append(ConditionTag.WHEN_NOT_MATCHED_THEN.getTag());
-        onDuplicate.append(ConditionTag.INSERT.getTag());
-        onDuplicate.append(this.getSqlColNames());
-        onDuplicate.append(ConditionTag.VALUES.getTag());
-        onDuplicate.append(this.getSqlValues());
 
     }
 

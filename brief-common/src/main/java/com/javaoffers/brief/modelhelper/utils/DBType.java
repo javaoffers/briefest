@@ -107,7 +107,7 @@ public enum DBType {
 
     POSTGRESQL{
         public boolean isSupportDuplicateModify(){
-            return false;
+            return true;
         }
     },
 

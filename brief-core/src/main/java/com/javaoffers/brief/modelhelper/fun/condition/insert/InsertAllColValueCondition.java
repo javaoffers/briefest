@@ -208,10 +208,6 @@ public class InsertAllColValueCondition implements InsertCondition {
         return sqlValues;
     }
 
-    public HashMap<String, Object> getParam() {
-        return param;
-    }
-
     public List<String> getExpressionColNames() {
         return expressionColNames;
     }

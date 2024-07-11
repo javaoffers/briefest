@@ -16,7 +16,7 @@ public class PostgreSqlSelectConditionParse extends SelectConditionParse {
             //弹出mysql的limit语法
             LimitWordCondition limit = (LimitWordCondition)conditions.pollLast();
 
-            //生成oracle 分页语法
+            //生成 pgsql 分页语法
             PostgreSqlLimitWordCondition postgreSqlLimitWordCondition = new PostgreSqlLimitWordCondition(limit.pageNum, limit.pageSize);
             postgreSqlLimitWordCondition.setHeadCondition(((LimitWordCondition<?>) condition).getHeadCondition());
             conditions.addLast(postgreSqlLimitWordCondition);

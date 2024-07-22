@@ -111,6 +111,11 @@ public enum DBType {
         }
     },
 
+    SQLITE{
+        public boolean isSupportDuplicateModify(){
+            return true;
+        }
+    }
     ;
 
     //processingTranslation for save db

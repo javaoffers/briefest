@@ -12,6 +12,18 @@
 
         <dependency>
             <groupId>com.javaoffers</groupId>
+            <artifactId>brief-sqlite</artifactId>
+            <version>3.6.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.42.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.javaoffers</groupId>
             <artifactId>brief-pgsql</artifactId>
             <version>3.6.6-SNAPSHOT</version>
         </dependency>

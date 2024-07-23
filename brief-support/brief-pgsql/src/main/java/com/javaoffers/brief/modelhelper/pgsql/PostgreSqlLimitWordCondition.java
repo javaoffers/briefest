@@ -3,14 +3,7 @@ package com.javaoffers.brief.modelhelper.pgsql;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 
 /**
- * oracle的分页如下：每页查询5条， 第一页 1-5， 第二页： 6-10
- * SELECT * FROM
- * (
- * SELECT A.*, ROWNUM RN
- * FROM (SELECT * FROM TABLE_NAME) A
- * WHERE ROWNUM <= 5
- * )
- * WHERE RN > 0
+ * cmj
  *
  */
 public class PostgreSqlLimitWordCondition extends LimitWordCondition {

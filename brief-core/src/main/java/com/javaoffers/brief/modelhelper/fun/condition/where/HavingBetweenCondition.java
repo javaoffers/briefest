@@ -31,7 +31,12 @@ public class HavingBetweenCondition<V> extends WhereOnCondition<V> {
         long endIdx = getNextLong();
         getParams().put(startIdx+"",getValue());
         getParams().put(endIdx+"",end);
-        return aggTag.name() +"(" + super.getColName() +") "
+        if (aggTag != null) {
+            return aggTag.name() +"(" + super.getColName() +") "
+                    + getTag().getTag()
+                    +" #{"+startIdx+"} and  #{"+endIdx+"} ";
+        }
+        return  super.getColName() +" "
                 + getTag().getTag()
                 +" #{"+startIdx+"} and  #{"+endIdx+"} ";
     }

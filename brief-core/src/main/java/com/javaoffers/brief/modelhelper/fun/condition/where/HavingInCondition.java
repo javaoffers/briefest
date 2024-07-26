@@ -54,10 +54,16 @@ public  class HavingInCondition<V> extends WhereOnCondition implements Condition
 
     @Override
     public String getSql() {
-        StringBuilder sql = new StringBuilder(aggTag.name());
-        sql.append("(");
-        sql.append(colName);
-        sql.append(")");
+        StringBuilder sql = new StringBuilder();
+        if (this.aggTag != null){
+            sql.append(aggTag.name());
+            sql.append("(");
+            sql.append(colName);
+            sql.append(")");
+        }else{
+            sql.append(colName);
+        }
+
         sql.append(tag.getTag());
         sql.append(" (");
         for(int i=0; value!=null && i<value.size(); i++){

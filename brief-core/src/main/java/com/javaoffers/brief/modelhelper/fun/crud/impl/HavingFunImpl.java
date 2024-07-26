@@ -274,6 +274,156 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
+    public HavingFunImpl<M, C, V> eq(C col, V value) {
+        return eq(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> eq(boolean condition, C col, V value) {
+        return eq(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> ueq(C col, V value) {
+        return ueq(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> ueq(boolean condition, C col, V value) {
+        return ueq(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> gt(C col, V value) {
+        return gt(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> gt(boolean condition, C col, V value) {
+        return gt(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> lt(C col, V value) {
+        return lt(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> lt(boolean condition, C col, V value) {
+        return lt(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> gtEq(C col, V value) {
+        return gtEq(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> gtEq(boolean condition, C col, V value) {
+        return gtEq(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> ltEq(C col, V value) {
+        return ltEq(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> ltEq(boolean condition, C col, V value) {
+        return ltEq(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> between(C col, V start, V end) {
+        return between(null,col,start,end);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> between(boolean condition, C col, V start, V end) {
+        return between(condition,null, col,start,end);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notBetween(C col, V start, V end) {
+        return notBetween(null,col,start,end);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notBetween(boolean condition, C col, V start, V end) {
+        return notBetween(condition,null, col,start,end);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> like(C col, V value) {
+        return like(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> like(boolean condition, C col, V value) {
+        return like(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> likeLeft(C col, V value) {
+        return likeLeft(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> likeLeft(boolean condition, C col, V value) {
+        return likeLeft(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> likeRight(C col, V value) {
+        return likeRight(null,col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> likeRight(boolean condition, C col, V value) {
+        return likeRight(condition,null, col,value);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> in(C col, V... values) {
+        return in(null,col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> in(boolean condition, C col, V... values) {
+        return in(condition,null, col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> in(C col, Collection... values) {
+        return in(null,col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
+        return in(condition,null, col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notIn(C col, V... values) {
+        return notIn(null,col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notIn(boolean condition, C col, V... values) {
+        return notIn(condition,null, col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notIn(C col, Collection... values) {
+        return notIn(null,col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
+        return notIn(condition,null, col,values);
+    }
+
+    @Override
     public M ex() {
         List<M> exs = this.exs();
         if(exs != null && exs.size() > 0){

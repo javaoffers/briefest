@@ -281,6 +281,156 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
         return this;
     }
 
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> eq(C col, V value) {
+        return eq(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> eq(boolean condition, C col, V value) {
+        return eq(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> ueq(C col, V value) {
+        return ueq(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> ueq(boolean condition, C col, V value) {
+        return ueq(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> gt(C col, V value) {
+        return gt(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> gt(boolean condition, C col, V value) {
+        return gt(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> lt(C col, V value) {
+        return lt(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> lt(boolean condition, C col, V value) {
+        return lt(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> gtEq(C col, V value) {
+        return gtEq(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> gtEq(boolean condition, C col, V value) {
+        return gtEq(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> ltEq(C col, V value) {
+        return ltEq(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> ltEq(boolean condition, C col, V value) {
+        return ltEq(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> between(C col, V start, V end) {
+        return between(null, col, start, end);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> between(boolean condition, C col, V start, V end) {
+        return between(condition,null, col, start, end);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notBetween(C col, V start, V end) {
+        return notBetween(null, col, start, end);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notBetween(boolean condition, C col, V start, V end) {
+        return notBetween(condition,null, col, start, end);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> like(C col, V value) {
+        return like(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> like(boolean condition, C col, V value) {
+        return like(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeLeft(C col, V value) {
+        return likeLeft(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeLeft(boolean condition, C col, V value) {
+        return likeLeft(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeRight(C col, V value) {
+        return likeRight(null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> likeRight(boolean condition, C col, V value) {
+        return likeRight(condition,null, col, value);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> in(C col, V... values) {
+        return in(null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> in(boolean condition, C col, V... values) {
+        return in(condition,null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> in(C col, Collection... values) {
+        return in(null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> in(boolean condition, C col, Collection... values) {
+        return in(condition,null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notIn(C col, V... values) {
+        return notIn(null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notIn(boolean condition, C col, V... values) {
+        return notIn(condition,null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notIn(C col, Collection... values) {
+        return notIn(null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> notIn(boolean condition, C col, Collection... values) {
+        return notIn(condition,null, col, values);
+    }
+
 
     /**
      * ---------------------------------------------------------------------------------------------------

@@ -130,4 +130,12 @@ public class BriefSpeedierSample {
         }
     }
 
+    @Test
+    public void havingTest(){
+        List<User> exs = this.userBriefMapper.select().col(User::getSumMoney).where().groupBy(User::getMoney).having().gt(User::getSumMoney, 1).exs();
+        print(exs);
+        List<User> exs1 = this.userBriefMapper.select().colAll().where().gt(User::getMoney, 1).exs();
+        print(exs1);
+    }
+
 }

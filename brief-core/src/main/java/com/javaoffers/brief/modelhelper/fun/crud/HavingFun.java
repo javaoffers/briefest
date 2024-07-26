@@ -315,4 +315,282 @@ public interface HavingFun<M, C, V, R extends HavingFun<M, C, V,?>>
     public R notIn(boolean condition, AggTag aggTag, C col, Collection... values);
 
 
+
+
+
+
+    /**
+     * 添加等值关系 =
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R eq( C col, V value);
+
+    /**
+     * 添加等值关系 =
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R eq(boolean condition,  C col, V value);
+
+    /**
+     * 添加不等值关系 !=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ueq( C col, V value);
+
+    /**
+     * 添加不等值关系 !=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ueq(boolean condition,  C col, V value);
+
+    /**
+     * 大于  >
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gt( C col, V value);
+
+    /**
+     * 大于  >
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gt(boolean condition,  C col, V value);
+
+    /**
+     * 小于 <
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R lt( C col, V value);
+
+    /**
+     * 小于 <
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R lt(boolean condition,  C col, V value);
+
+    /**
+     * 大于等于  >=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gtEq( C col, V value);
+
+    /**
+     * 大于等于  >=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R gtEq(boolean condition,  C col, V value);
+
+    /**
+     * 小于等于 <=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ltEq( C col, V value);
+
+    /**
+     * 小于等于 <=
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R ltEq(boolean condition,  C col, V value);
+
+    /**
+     * sql 范围 : between
+     *
+     * @param col
+     * @param start
+     * @return
+     * @Param end
+     */
+    public R between( C col, V start, V end);
+
+    /**
+     * sql 范围 : between
+     *
+     * @param col
+     * @param start
+     * @return
+     * @Param end
+     */
+    public R between(boolean condition,  C col, V start, V end);
+
+    /**
+     * sql 范围 : between
+     *
+     * @param col
+     * @param start
+     * @return
+     * @Param end
+     */
+    public R notBetween( C col, V start, V end);
+
+    /**
+     * sql 范围 : between
+     *
+     * @param col
+     * @param start
+     * @return
+     * @Param end
+     */
+    public R notBetween(boolean condition,  C col, V start, V end);
+
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx%”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R like( C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx%”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R like(boolean condition,  C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeLeft( C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “%xxx”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeLeft(boolean condition,  C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “xxx%”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeRight( C col, V value);
+
+    /**
+     * sql 模糊： like ? . V ： “xxx%”
+     *
+     * @param col
+     * @param value
+     * @return
+     */
+    public R likeRight(boolean condition,  C col, V value);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in( C col, V... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in(boolean condition,  C col, V... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in( C col, Collection... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R in(boolean condition,  C col, Collection... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn( C col, V... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(boolean condition,  C col, V... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn( C col, Collection... values);
+
+    /**
+     * sql语句  in
+     *
+     * @param col
+     * @param values
+     * @return
+     */
+    public R notIn(boolean condition,  C col, Collection... values);
 }

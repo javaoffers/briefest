@@ -49,7 +49,10 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
     public String getSql() {
         long idx = getNextLong();
         params.put(idx+"", value);
-        return aggTag.name() +"("+ colName +") "+ tag.getTag() + " "+"#{"+idx+"}";
+        if (aggTag != null) {
+            return aggTag.name() +"("+ colName +") "+ tag.getTag() + " "+"#{"+idx+"}";
+        }
+        return  colName +" "+ tag.getTag() + " "+"#{"+idx+"}";
     }
 
     @Override

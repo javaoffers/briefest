@@ -102,6 +102,9 @@ public class User {
 
     private String money;
 
+    @ColName(value = "sum(money)", excludeColAll = true)
+    private String sumMoney;
+
     private Sex sex;
 
     private com.javaoffers.base.modelhelper.sample.constant.Month  month;

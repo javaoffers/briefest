@@ -3,23 +3,23 @@
     <parent>
         <artifactId>brief</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.6</version>
+        <version>3.6.7-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-encipher</artifactId>
-    <version>3.6.6</version>
+    <version>3.6.7-SNAPSHOT</version>
     <dependencies>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.6</version>
+            <version>3.6.7-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-sqlstatement</artifactId>
-            <version>3.6.6</version>
+            <version>3.6.7-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

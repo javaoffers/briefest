@@ -31,7 +31,7 @@ public class SqliteStatementParser implements StatementParser<Condition, BaseSQL
 
     @Override
     public DBType getDBType() {
-        return DBType.POSTGRESQL;
+        return DBType.SQLITE;
     }
 
     @Override

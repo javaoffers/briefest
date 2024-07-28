@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.fun.condition.select;
 
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.Collections;
 import java.util.Map;
@@ -16,6 +18,8 @@ public class SelectTableCondition implements Condition {
 
     private Class mClass;
 
+    private TableInfo tableInfo;
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.SELECT_FROM;
@@ -23,14 +27,16 @@ public class SelectTableCondition implements Condition {
 
     @Override
     public String getSql() {
-        return " "+ConditionTag.SELECT_FROM.getTag()+" "+fromTableName+" ";
+        return " " + ConditionTag.SELECT_FROM.getTag() +
+                this.tableInfo.getBaseModel().fromView() +
+                " " +fromTableName+
+                " " ;
     }
 
     @Override
     public Map<String, Object> getParams() {
         return Collections.EMPTY_MAP;
     }
-
 
     public SelectTableCondition(String fromTableName) {
         this.fromTableName = fromTableName;
@@ -39,10 +45,15 @@ public class SelectTableCondition implements Condition {
     public SelectTableCondition(String fromTableName, Class mClass) {
         this.fromTableName = fromTableName;
         this.mClass = mClass;
+        this.tableInfo = TableHelper.getTableInfo(this.mClass);
     }
 
     public String getFromTableName() {
         return fromTableName;
+    }
+
+    public String getFrontView(){
+        return this.tableInfo.getBaseModel().frontView() + " ";
     }
 
     public Class getmClass() {

@@ -17,4 +17,29 @@ public @interface BaseModel {
      * Note: This property is useful in CrudMapper scenarios
      */
     String value() default "";
+
+    /**
+     * support with as ....
+     * sample:
+     * with t_table as ( select age, name from table_name where xx.. ).
+     *
+     * sample:
+     * select age, name from table_name where xx..
+     * union all
+     * select age, name from table_name2 where xx..
+     *
+     * @return
+     */
+    String frontView() default "";
+
+    /**
+     * support child select...
+     * sample:
+     *
+     * select age, name from (select age, name from table_name where xx..)
+     *
+     * @return
+     */
+    String fromView() default "";
+
 }

@@ -32,11 +32,13 @@ public class SelectConditionParse extends AbstractParseCondition {
         String and = ConditionTag.AND.getTag();
 
         //获取表
-        Condition condition = conditions.pollFirst();
+        SelectTableCondition condition = (SelectTableCondition)conditions.pollFirst();
         String fromTable = condition.getSql();
+        String frontView = condition.getFrontView();// support with as ...
 
         //生成select语句
-        StringBuilder selectCols = new StringBuilder(ConditionTag.SELECT.getTag());
+        StringBuilder selectCols = new StringBuilder(frontView);
+        selectCols.append(ConditionTag.SELECT.getTag());
         if(conditions.peekFirst() == null || !(conditions.peekFirst() instanceof SelectColumnCondition)) {
             //没有要查询的字段
             return null;
@@ -84,7 +86,7 @@ public class SelectConditionParse extends AbstractParseCondition {
         parseWhereCondition(conditions, params, selectCols);
 
         return SQLStatement.builder()
-                .aClass(((SelectTableCondition) condition).getmClass())
+                .aClass(condition.getmClass())
                 .params(Arrays.asList(params))
                 .sql(selectCols.toString())
                 .status(true)

@@ -264,6 +264,7 @@ public class TableHelper implements BriefContextAware {
 
         try {
             TableInfo tableInfo = new TableInfo(tableName).setModelClass(modelClazz);
+            tableInfo.setBaseModel(table);
             briefContext.getTableInfoParser().parseTableInfo(connection, tableInfo);
 
             tableInfoMap.put(modelClazz, tableInfo);

@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 
@@ -27,6 +28,11 @@ public class TableInfo {
      * table name
      */
     private String tableName;
+
+    /**
+     * before select.
+     */
+    private BaseModel baseModel;
 
     /**
      * K: table field (col Name)
@@ -126,6 +132,14 @@ public class TableInfo {
 
     public TableInfo(String tableName) {
         this.tableName = tableName;
+    }
+
+    public BaseModel getBaseModel(){
+        return this.baseModel;
+    }
+
+    public void setBaseModel(BaseModel baseModel) {
+        this.baseModel = baseModel;
     }
 
     public void setDbType(DBType dbType){

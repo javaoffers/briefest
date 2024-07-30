@@ -10,7 +10,7 @@
 
     <name>brief-mybatis</name>
     <properties>
-        <mybatis.version>3.5.11</mybatis.version>
+
     </properties>
     <!--Version numbers are aligned with Mybatis compatible versions-->
     <dependencies>

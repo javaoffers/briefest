@@ -8,12 +8,13 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-common</artifactId>
     <version>3.6.7-SNAPSHOT</version>
+
     <dependencies>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.10</version>
+            <version>${commons.lang3.version}</version>
         </dependency>
 
         <dependency>
@@ -25,13 +26,13 @@
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy</artifactId>
-            <version>1.10.22</version>
+            <version>${byte.buddy.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.bytebuddy</groupId>
             <artifactId>byte-buddy-agent</artifactId>
-            <version>1.9.10</version>
+            <version>${byte.buddy.version}</version>
         </dependency>
 
         <!--reflections 反射-->
@@ -45,6 +46,12 @@
             <groupId>cglib</groupId>
             <artifactId>cglib</artifactId>
             <version>3.2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
 
         <dependency>

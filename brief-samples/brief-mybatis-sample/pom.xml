@@ -14,6 +14,16 @@
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-commom-sample</artifactId>
             <version>3.6.7-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>byte-buddy</artifactId>
+                    <groupId>net.bytebuddy</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>byte-buddy-agent</artifactId>
+                    <groupId>net.bytebuddy</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -26,14 +36,6 @@
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-mybatis</artifactId>
             <version>3.6.7-SNAPSHOT</version>
-        </dependency>
-        
-
-        <!-- junit -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
         </dependency>
 
         <!-- jackson -->
@@ -66,7 +68,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>6.0.6</version>
+            <version>${mysql.connector.version}</version>
         </dependency>
 
         <!-- c3p0 -->

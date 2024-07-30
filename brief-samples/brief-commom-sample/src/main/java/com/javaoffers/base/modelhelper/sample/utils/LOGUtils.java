@@ -8,10 +8,6 @@
  */
 package com.javaoffers.base.modelhelper.sample.utils;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-
 /**
  * @author mingJie
  */

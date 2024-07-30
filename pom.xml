@@ -54,7 +54,7 @@
     <byte.buddy.version>1.10.22</byte.buddy.version>
     <mysql.connector.version>6.0.6</mysql.connector.version>
     <mybatis.version>3.5.11</mybatis.version>
-    <mybatis.spring>2.0.5</mybatis.spring>
+    <mybatis.spring.version>2.0.7</mybatis.spring.version>
     <!--大版本跟着mybatisThe big version follows mybatis-->
   </properties>
 

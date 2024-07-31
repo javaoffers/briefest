@@ -307,14 +307,14 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> exists(String existsSql) {
-        whereFun.exists(existsSql);
+    public WhereModifyFun<M, V> exists(GetterFun<M, V>... cols) {
+        whereFun.exists(cols);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> exists(boolean condition, String existsSql) {
-        whereFun.exists(condition,existsSql);
+    public WhereModifyFun<M, V> exists(boolean condition, GetterFun<M, V>... cols) {
+        whereFun.exists(condition, cols);
         return this;
     }
 

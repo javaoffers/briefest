@@ -4,10 +4,13 @@ import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.fun.condition.where.CondSQLCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.ExistsCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingBetweenCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingGroupCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingInCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingMarkWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -60,6 +64,34 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
         if(condition){
             unite(r);
         }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> condSQL(String sql) {
+        conditions.add(new CondSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> condSQL(boolean condition, String sql) {
+        if(condition){
+            condSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> condSQL(String sql, Map<String, Object> params) {
+        conditions.add(new CondSQLCondition(sql, params));
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
+       if (condition){
+           condSQL(sql, params);
+       }
         return this;
     }
 
@@ -421,6 +453,54 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     @Override
     public HavingFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
         return notIn(condition,null, col,values);
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> isNull(C... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> isNull(boolean condition, C... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> isNotNull(C... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> isNotNull(boolean condition, C... cols) {
+        if(condition){
+            isNotNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> exists(C... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new ExistsCondition(col));
+        }
+        return this;
+    }
+
+    @Override
+    public HavingFunImpl<M, C, V> exists(boolean condition, C... cols) {
+        if(condition){
+            exists(cols);
+        }
+        return this;
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.javaoffers.brief.modelhelper.fun.ExecutFun;
  * @Description: limit sql .
  * @Auther: create by cmj on 2022/6/11 17:26
  */
-public interface LimitFun<M, R extends LimitFun<M,?>> extends ExecutFun<M> {
+public interface LimitFun<M, R > extends ExecutFun<M> {
 
     /**
      * 分页

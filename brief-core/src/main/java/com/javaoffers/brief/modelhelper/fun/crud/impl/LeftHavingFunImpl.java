@@ -5,10 +5,13 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GGetterFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.fun.condition.where.CondSQLCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.ExistsCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingBetweenCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingGroupCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingInCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.HavingMarkWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
@@ -22,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -67,6 +71,34 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> unite(boolean condition, Consumer<LeftHavingFunImpl<M, M2, C, C2, V, V2>> r) {
         if (condition) {
             unite(r);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> condSQL(String sql) {
+        conditions.add(new CondSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> condSQL(boolean condition, String sql) {
+        if (condition) {
+            condSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> condSQL(String sql, Map<String, Object> params) {
+        conditions.add(new CondSQLCondition(sql,params));
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> condSQL(boolean condition, String sql, Map<String, Object> params) {
+        if (condition) {
+            condSQL(sql);
         }
         return this;
     }
@@ -429,6 +461,54 @@ public class LeftHavingFunImpl<M, M2, C extends GetterFun<M, ?>, C2 extends GGet
     @Override
     public LeftHavingFunImpl<M, M2, C, C2, V, V2> notIn(boolean condition, C col, Collection... values) {
         return notIn(condition,null, col, values);
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> isNull(C... cols) {
+        for(C col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> isNull(boolean condition, C... cols) {
+        if(condition){
+            isNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> isNotNull(C... cols) {
+        for(C col: cols){
+            conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> isNotNull(boolean condition, C... cols) {
+        if(condition){
+            isNotNull(cols);
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> exists(C... cols) {
+        for(C col: cols){
+            conditions.add(new ExistsCondition<V>(col));
+        }
+        return this;
+    }
+
+    @Override
+    public LeftHavingFunImpl<M, M2, C, C2, V, V2> exists(boolean condition, C... cols) {
+        if(condition){
+            exists(cols);
+        }
+        return this;
     }
 
 

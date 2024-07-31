@@ -8,7 +8,7 @@ import java.util.function.Consumer;
  * @Description: sql where Statement
  * @Auther: create by cmj on 2022/5/2 00:08
  */
-public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
+public interface WhereFun<M,C, V, R >   {
 
     /**
      * Splicing Or, otherwise it is and by default
@@ -344,13 +344,13 @@ public interface WhereFun<M,C, V, R extends WhereFun<M,C,V,R>>   {
      * @param existsSql
      * @return
      */
-    public R exists(String existsSql);
+    public R exists(C... existsSql);
 
     /**
      * where exists（）Judge sentences
      * @param existsSql
      * @return
      */
-    public R exists(boolean condition, String existsSql);
+    public R exists(boolean condition, C... existsSql);
 
 }

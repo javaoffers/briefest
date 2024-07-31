@@ -393,15 +393,17 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(String existsSql) {
-        conditions.add(new ExistsCondition<V>(existsSql));
+    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(GetterFun<M2, Object>... cols) {
+        for(GetterFun<M2,Object> col: cols){
+            conditions.add(new ExistsCondition<V>(col));
+        }
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(boolean condition, String existsSql) {
+    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(boolean condition, GetterFun<M2, Object>... cols) {
         if (condition) {
-            exists(existsSql);
+            exists(cols);
         }
         return this;
     }

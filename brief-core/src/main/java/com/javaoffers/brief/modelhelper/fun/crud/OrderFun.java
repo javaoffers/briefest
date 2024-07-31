@@ -4,7 +4,7 @@ package com.javaoffers.brief.modelhelper.fun.crud;
  * @Description:
  * @Auther: create by cmj on 2022/6/19 02:44
  */
-public interface OrderFun <M,C, V, R extends OrderFun<M,C,V,R>> {
+public interface OrderFun <M,C, V, R > {
 
     /**
      * 根据某些字段排序 ASC

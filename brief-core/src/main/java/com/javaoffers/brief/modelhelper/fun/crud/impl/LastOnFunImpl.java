@@ -368,15 +368,17 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> exists(String existsSql) {
-        conditions.add(new ExistsCondition<V>(existsSql));
+    public LastOnFun<M1, M2, M3, C2, C3, V> exists(C3... cols) {
+        for(GetterFun<M3,Object> col: cols){
+            conditions.add(new ExistsCondition<V>(col));
+        }
         return this;
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> exists(boolean condition, String existsSql) {
+    public LastOnFun<M1, M2, M3, C2, C3, V> exists(boolean condition, C3... cols) {
         if (condition) {
-            exists(existsSql);
+            exists(cols);
         }
         return this;
     }

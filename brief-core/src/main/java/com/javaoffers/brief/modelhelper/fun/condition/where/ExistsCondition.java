@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.condition.where;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.GetterFun;
 
 /**
  * @Description: exists sql 语句
@@ -8,26 +9,13 @@ import com.javaoffers.brief.modelhelper.fun.ConditionTag;
  */
 public class ExistsCondition<V> extends WhereOnCondition<V> {
 
-    private String existsSql;
-    private ConditionTag tag;
-
-    public ExistsCondition(String existsSql) {
-        this.existsSql = existsSql;
-        this.tag = ConditionTag.EXISTS;
-    }
-
-    public ExistsCondition(String existsSql, ConditionTag tag) {
-        this.existsSql = existsSql;
-        this.tag = tag;
+    public ExistsCondition(GetterFun  existsSql) {
+        super(existsSql, null, ConditionTag.EXISTS);
     }
 
     @Override
     public String getSql() {
-        return " "+getTag().getTag()+" ( "+ this.existsSql+" ) ";
+        return " "+getTag().getTag()+" ( "+ this.getColName()+" ) ";
     }
 
-    @Override
-    public ConditionTag getTag() {
-        return this.getTag();
-    }
 }

@@ -273,13 +273,13 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> exists(String existsSql) {
+    public DeleteWhereFunImpl<M, C, V> exists(C... existsSql) {
         this.whereFun.exists(existsSql);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> exists(boolean condition, String existsSql) {
+    public DeleteWhereFunImpl<M, C, V> exists(boolean condition, C... existsSql) {
         this.whereFun.exists(condition, existsSql);
         return this;
     }

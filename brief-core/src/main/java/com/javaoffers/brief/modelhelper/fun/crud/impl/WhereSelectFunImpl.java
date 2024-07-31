@@ -346,15 +346,18 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     }
 
     @Override
-    public WhereSelectFunImpl<M, V> exists(String existsSql) {
-        conditions.add(new ExistsCondition<V>(existsSql));
+    public WhereSelectFunImpl<M, V> exists(GetterFun<M, V>... cols) {
+        for(GetterFun<M,V> col: cols){
+            conditions.add(new ExistsCondition<V>(col));
+        }
+
         return this;
     }
 
     @Override
-    public WhereSelectFun<M, V> exists(boolean condition, String existsSql) {
+    public WhereSelectFun<M, V> exists(boolean condition, GetterFun<M, V>... cols) {
         if (condition) {
-            exists(existsSql);
+            exists(cols);
         }
         return this;
     }

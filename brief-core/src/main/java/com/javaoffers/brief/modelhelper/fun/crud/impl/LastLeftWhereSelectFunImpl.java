@@ -41,7 +41,7 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
         conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LastLeftHavingPendingFunImpl<>(conditions);
     }
-
+    
     public LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(GGGetterFun<M3, V>... c) {
         conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LastLeftHavingPendingFunImpl<>(conditions);
@@ -379,14 +379,14 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
     }
 
     @Override
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> exists(String existsSql) {
-        super.exists(existsSql);
+    public LastLeftWhereSelectFunImpl<M, M2, M3, V> exists(GetterFun<M, V>... cols) {
+        super.exists(cols);
         return this;
     }
 
     @Override
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> exists(boolean condition, String existsSql) {
-        super.exists(condition, existsSql);
+    public LastLeftWhereSelectFunImpl<M, M2, M3, V> exists(boolean condition, GetterFun<M, V>... cols) {
+        super.exists(condition, cols);
         return this;
     }
 

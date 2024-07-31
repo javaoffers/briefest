@@ -18,8 +18,6 @@ import java.util.Set;
  */
 public  class WhereOnCondition<V> implements WhereCondition {
 
-    private Set<String> colNames = new HashSet<>();
-
     private String colName;
 
     private V value;
@@ -34,14 +32,6 @@ public  class WhereOnCondition<V> implements WhereCondition {
     private String andOrTag = " and ";
 
     public WhereOnCondition() {}
-
-    public Set<String> getColNames() {
-        return colNames;
-    }
-
-    public void setColNames(Set<String> colNames) {
-        this.colNames = colNames;
-    }
 
     public void setColName(String colName) {
         this.colName = colName;
@@ -113,9 +103,9 @@ public  class WhereOnCondition<V> implements WhereCondition {
         this.colName = TableHelper.getColNameNotAs(colName);
         this.value = value;
         this.tag = tag;
-        colNames.add(this.colName);
     }
 
+    //group by colname1, colName2 ...
     public WhereOnCondition(GetterFun[] colNames, V value, ConditionTag tag) {
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
         StringBuilder cls = new StringBuilder();
@@ -126,7 +116,6 @@ public  class WhereOnCondition<V> implements WhereCondition {
             }
             i = i+1;
             String colNameStr = TableHelper.getColNameNotAs(colName);
-            this.colNames.add(colNameStr);
             cls.append(colNameStr);
         }
         this.colName = cls.toString();
@@ -142,7 +131,6 @@ public  class WhereOnCondition<V> implements WhereCondition {
                 cls.append(", ");
             }
             cls.append(colName);
-            this.colNames.add(colName);
         }
         this.colName = cls.toString();
         this.value = value;

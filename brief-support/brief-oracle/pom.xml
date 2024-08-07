@@ -3,7 +3,7 @@
     <parent>
         <artifactId>brief-support</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.7-SNAPSHOT</version>
+        <version>3.6.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,12 +13,12 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.7-SNAPSHOT</version>
+            <version>3.6.7</version>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.7-SNAPSHOT</version>
+            <version>3.6.7</version>
         </dependency>
     </dependencies>
 

@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief-support</artifactId>
-        <version>3.6.7-SNAPSHOT</version>
+        <version>3.6.7</version>
     </parent>
 
     <artifactId>brief-pgsql</artifactId>
@@ -19,12 +19,12 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.7-SNAPSHOT</version>
+            <version>3.6.7</version>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.7-SNAPSHOT</version>
+            <version>3.6.7</version>
         </dependency>
     </dependencies>
 

@@ -9,6 +9,21 @@
 
     <artifactId>brief-router</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-sqlstatement</artifactId>
+            <version>3.6.8-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-common</artifactId>
+            <version>3.6.8-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

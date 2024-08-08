@@ -76,7 +76,7 @@
   - 多表查询不需要配置。自动映射一对一，一对多，多对多。
   - 支持逻辑删除、乐观锁。
   - 集成了常用的API，无需开发即可直接使用。
-  - 支持mysql, h2, oracle, sql server, clickhouse 语法标准
+  - 支持mysql, h2, oracle, sqlserver, clickhouse, sqlite, pgsql 语法标准
   - 表字段自动加解密（支持like模糊查询）.
   - 字段查询模糊脱敏
   - sql拦截器， 可自由定制

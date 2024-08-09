@@ -6,9 +6,7 @@ import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import com.javaoffers.brief.modelhelper.parser.TableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
-
 import javax.sql.DataSource;
-import java.sql.Connection;
 import java.util.List;
 
 /**
@@ -23,12 +21,6 @@ public interface BriefContext {
      * @return
      */
     public BriefProperties getBriefProperties();
-
-    /**
-     * 数据源
-     * @return
-     */
-    public DataSource getDataSource();
 
     /**
      * 获取执行工厂
@@ -65,6 +57,12 @@ public interface BriefContext {
      * @return
      */
     public TableInfoParser getTableInfoParser();
+
+    /**
+     * 获取
+     * @return
+     */
+    public List<DeriveProcess> getDeriveProcess();
 
     /**
      * 执行fresh方法后开始生效。

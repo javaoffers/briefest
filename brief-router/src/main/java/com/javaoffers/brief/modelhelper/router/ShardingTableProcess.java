@@ -8,7 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.function.Consumer;
 
-public class ShardingProcess {
+/**
+ * create by cmj on 2024-08-09
+ */
+public class ShardingTableProcess {
 
     public static Consumer<ColNameProcessorInfo> RouterTableProcessor = colNameProcessorInfo->{
         Column column = colNameProcessorInfo.getColumn();

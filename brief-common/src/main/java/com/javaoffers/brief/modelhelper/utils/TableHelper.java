@@ -323,7 +323,7 @@ public class TableHelper implements BriefContextAware {
                 }
 
                 //derive flag process
-                DeriveProcess.processDerive(tableInfo, colF, colName);
+                DeriveProcessFire.processDerive(tableInfo, colF, colName);
 
                 // original table fields and sql-fun fields
                 tableInfo.putFieldNameColNameOfModel(fieldName, colName);

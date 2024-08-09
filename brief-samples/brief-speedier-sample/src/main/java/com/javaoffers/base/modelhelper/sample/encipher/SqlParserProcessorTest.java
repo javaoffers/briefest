@@ -357,14 +357,14 @@ public class SqlParserProcessorTest {
 
         };
 
-        SqlParserProcessor.builder()
+        String parsedSql = SqlParserProcessor.builder()
                 .addProcessor("user", processor)
                 .addColName("user", "name")
-                .addColName("user","age")
+                .addColName("user", "age")
                 .addProcessor("tablex", processor)
                 .addColName("tablex", "xx")
                 .build().parseSql(sqlStr);
-
+        System.out.println(parsedSql);
         //System.exit(0);
     }
 

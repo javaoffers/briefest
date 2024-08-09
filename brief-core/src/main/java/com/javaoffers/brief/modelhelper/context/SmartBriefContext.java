@@ -45,7 +45,12 @@ public class SmartBriefContext implements BriefContext{
             new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
 
     //jqlChainFilterList
-    private  List<JqlExecutorFilter> jqlExecutorFilters = new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class));
+    private  List<JqlExecutorFilter> jqlExecutorFilters =
+            new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class));
+
+    //jqlChainFilterList
+    private  List<DeriveProcess> deriveProcessList =
+            new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class));
 
     //jqlInterceptor拦截器
     private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
@@ -70,7 +75,6 @@ public class SmartBriefContext implements BriefContext{
         return smartBriefProperties;
     }
 
-    @Override
     public DataSource getDataSource() {
         return this.primaryDataSource;
     }
@@ -110,6 +114,11 @@ public class SmartBriefContext implements BriefContext{
     @Override
     public SmartTableInfoParser getTableInfoParser() {
         return smartTableInfoParser;
+    }
+
+    @Override
+    public List<DeriveProcess> getDeriveProcess() {
+        return this.deriveProcessList;
     }
 
     public Map<DBType, StatementParser> getStatementParserMap(){

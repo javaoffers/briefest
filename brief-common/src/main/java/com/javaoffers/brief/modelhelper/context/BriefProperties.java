@@ -13,15 +13,6 @@ import java.util.List;
 public interface BriefProperties {
 
     /**
-     * 添加配置信息
-     *
-     * @param key
-     * @param value
-     * @return
-     */
-    default BriefProperties put(String key, String value){return this;};
-
-    /**
      * 是否要打印sql
      * @return
      */

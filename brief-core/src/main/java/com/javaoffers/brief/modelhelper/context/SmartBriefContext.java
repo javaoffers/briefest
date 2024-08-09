@@ -33,34 +33,33 @@ public class SmartBriefContext implements BriefContext{
     private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     //briefProperties加载器
-    private List<BriefPropertiesLoader> briefPropertiesLoaderList =
+    private static List<BriefPropertiesLoader> briefPropertiesLoaderList =
             new ArrayList<BriefPropertiesLoader>((Set)ReflectionUtils.getChildInstance(BriefPropertiesLoader.class));
 
     //briefContextPostProcess后置处理器
-    private List<BriefContextPostProcess> briefContextPostProcessList =
+    private static List<BriefContextPostProcess> briefContextPostProcessList =
             new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
 
     //briefContextAware
-    private List<BriefContextAware> briefContextAwareList =
+    private static List<BriefContextAware> briefContextAwareList =
             new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
 
     //jqlChainFilterList
-    private  List<JqlExecutorFilter> jqlExecutorFilters =
+    private static  List<JqlExecutorFilter> jqlExecutorFilters =
             new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class));
 
     //jqlChainFilterList
-    private  List<DeriveProcess> deriveProcessList =
+    private static  List<DeriveProcess> deriveProcessList =
             new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class));
 
     //jqlInterceptor拦截器
-    private final  ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
+    private static final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
     //DBType
-    private final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
+    private static final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
 
     //SmartTableInfoParser
-    private final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
-
+    private static final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
         this.smartBriefProperties = smartBriefProperties;

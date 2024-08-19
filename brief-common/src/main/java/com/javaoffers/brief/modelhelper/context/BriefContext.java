@@ -11,6 +11,7 @@ import java.util.List;
 
 /**
  * brief context . 用于初始化化brief启动前的必要信息. 是brief的上下文，代表brief的应用.
+ * NOTE: 全局只有一个BriefContext.
  *
  * @author mingJie
  */

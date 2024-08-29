@@ -24,15 +24,19 @@ public class SpeedierBriefContext extends SmartBriefContext {
     private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     public SpeedierBriefContext(DataSource dataSource) {
-        super(dataSource);
         this.speedierTransactionManagement = new SpeedierTransactionManagement(dataSource);
     }
 
     public SpeedierBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
-        super(smartBriefProperties, dataSource);
+        super(smartBriefProperties);
     }
 
     public SpeedierTransactionManagement getTransactionManagement(){
          return this.speedierTransactionManagement;
+    }
+
+    @Override
+    public DataSource getDataSource() {
+        return this.speedierTransactionManagement.getDataSource();
     }
 }

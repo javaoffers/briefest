@@ -23,12 +23,11 @@ public class SpringBriefContext extends SmartBriefContext {
 
     private ConfigurableListableBeanFactory beanFactory;
 
-    //缓存BriefMapper
-    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
+    private DataSource dataSource;
 
-    public SpringBriefContext(ConfigurableListableBeanFactory beanFactory) {
-        super(beanFactory.getBean(DataSource.class));
+    public SpringBriefContext(ConfigurableListableBeanFactory beanFactory, DataSource dataSource) {
         this.beanFactory = beanFactory;
+        this.dataSource = dataSource;
     }
 
     public ConfigurableListableBeanFactory getBeanFactory() {
@@ -42,18 +41,13 @@ public class SpringBriefContext extends SmartBriefContext {
     }
 
     @Override
-    public JdbcExecutorFactory getJdbcExecutorFactory() {
-        return SpringJdbcExecutorFactory.instance;
+    public DataSource getDataSource() {
+        return this.dataSource;
     }
 
     @Override
-    public BriefMapper getBriefMapper(Class briefMapperClass) {
-        BriefMapper briefMapper = cache.get(briefMapperClass);
-        if(briefMapper == null){
-            cache.putIfAbsent(briefMapperClass,BriefUtils.newCrudMapper(briefMapperClass));
-            briefMapper = cache.get(briefMapperClass);
-        }
-        return briefMapper;
+    public JdbcExecutorFactory getJdbcExecutorFactory() {
+        return SpringJdbcExecutorFactory.instance;
     }
 
     /**

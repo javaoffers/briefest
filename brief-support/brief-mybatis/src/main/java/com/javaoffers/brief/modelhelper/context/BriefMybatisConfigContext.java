@@ -16,7 +16,7 @@ public class BriefMybatisConfigContext {
 
    public static void init(ConfigurableListableBeanFactory beanFactory){
        try {
-           SmartBriefContext smartBriefContext = new SpringBriefContext(beanFactory);
+           SmartBriefContext smartBriefContext = new SpringMybatisBriefContext(beanFactory);
            smartBriefContext.fresh();
        }catch (Exception e){
            e.printStackTrace();

@@ -21,13 +21,10 @@ import java.util.stream.Collectors;
  *
  * @author mingJie
  */
-public class SmartBriefContext implements BriefContext{
+public abstract class SmartBriefContext implements BriefContext{
 
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
     private SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
-
-    //数据源
-    public DataSource primaryDataSource;
 
     //缓存BriefMapper
     private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
@@ -61,22 +58,18 @@ public class SmartBriefContext implements BriefContext{
     //SmartTableInfoParser
     private static final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
 
-    public SmartBriefContext(SmartBriefProperties smartBriefProperties, DataSource dataSource) {
+    public SmartBriefContext(SmartBriefProperties smartBriefProperties) {
         this.smartBriefProperties = smartBriefProperties;
-        this.primaryDataSource = dataSource;
     }
 
-    public SmartBriefContext( DataSource dataSource) {
-        this.primaryDataSource = dataSource;
+    public SmartBriefContext( ) {
     }
 
     public SmartBriefProperties getBriefProperties() {
         return smartBriefProperties;
     }
 
-    public DataSource getDataSource() {
-        return this.primaryDataSource;
-    }
+    public abstract DataSource getDataSource();
 
     public JdbcExecutorFactory getJdbcExecutorFactory(){
         return BriefJdbcExecutorFactory.instance;

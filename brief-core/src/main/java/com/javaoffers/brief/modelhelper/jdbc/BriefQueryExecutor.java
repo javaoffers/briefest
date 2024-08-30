@@ -117,9 +117,11 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                 case JOIN_SELECT:
                     ModelParseUtils.converterResultSet2ModelForJoinSelectStream(this.modelClass,
                             new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                    break;
                 case NORMAL_SELECT:
                     ModelParseUtils.converterResultSet2ModelForNormalSelectStream(this.modelClass,
                             new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                    break;
                 default:
                     throw new ParseResultSetException("sql type does not exist for streaming process");
             }

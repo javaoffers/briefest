@@ -70,7 +70,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     }
 
     @Override
-    public <E> void converterResultSet2ModelForJoinSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
+    public <E> void converterResultSet2ModelForNormalSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
         List<String> colNames = rs.getColNames();
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
         List<ModelFieldInfoPosition> ones = modelInfo.getOnesCol(colNames);
@@ -83,7 +83,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     }
 
     @Override
-    public <E> void converterResultSet2ModelForNormalSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
+    public <E> void converterResultSet2ModelForJoinSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
         Map<String, Object> tmpCache = new HashMap<>();
         ArrayList<E> result = new ArrayList<>();
         List<String> colNames = rs.getColNames();
@@ -113,6 +113,12 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                     buildData(keyStr, rs, tmpCache, ones, arrays, list, set, o, false);
                 }
             }
+
+            //consumer process
+            result.forEach(e-> {consumer.accept(e);});
+            tmpCache.clear();
+            result.clear();
+
         }catch (Exception e){
             e.printStackTrace();
             throw new ParseModelException(e.getMessage());

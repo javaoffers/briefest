@@ -720,6 +720,23 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         user = crudUserMapper.select().colAll().where().isNotNull(User::getId).limitPage(1, 1).ex();
         print(user);
 
+        print("------test stream start--------");
+        crudUserMapper.select().colAll().where().stream(tmpUser->{
+            print(tmpUser);
+        });
+        print("--------------------------------");
+        crudUserMapper.select()
+                .colAll()
+                .innerJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .stream(tmpUser->{
+                    print(tmpUser);
+                });
+        print("------test stream end--------");
+
     }
 
     public void print(Object user) {

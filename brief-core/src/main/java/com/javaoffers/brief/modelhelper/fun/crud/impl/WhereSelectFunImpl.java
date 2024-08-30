@@ -433,8 +433,13 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //解析SQL select 并执行。
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
         BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
-        JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
         return instance.queryData(sqlStatement.getSql(), sqlStatement.getParams().get(0));
+    }
+
+    @Override
+    public void stream(Consumer<M> consumer) {
+        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
+        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        instance.queryStream(sqlStatement.getSql(), sqlStatement.getParams().get(0), consumer);
     }
 }

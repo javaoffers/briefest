@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -68,6 +69,56 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         return buildModelForNormalSelect(clazz, rs);
     }
 
+    @Override
+    public <E> void converterResultSet2ModelForJoinSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
+        List<String> colNames = rs.getColNames();
+        ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
+        List<ModelFieldInfoPosition> ones = modelInfo.getOnesCol(colNames);
+        //read next row
+        while (rs.nextRow()) {
+            Object o = modelInfo.newC();
+            buildDataForNormalSelect(rs, ones, o);
+            consumer.accept((E)o);
+        }
+    }
+
+    @Override
+    public <E> void converterResultSet2ModelForNormalSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
+        Map<String, Object> tmpCache = new HashMap<>();
+        ArrayList<E> result = new ArrayList<>();
+        List<String> colNames = rs.getColNames();
+        ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
+        List<ModelFieldInfoPosition> ones = modelInfo.getOnesColWithOneModel(colNames);
+        List<ModelFieldInfo> arrays = modelInfo.getArrays(colNames);
+        List<ModelFieldInfo> list = modelInfo.getList(colNames);
+        List<ModelFieldInfo> set = modelInfo.getSet(colNames);
+        List<ModelFieldInfoPosition> unique = modelInfo.getUniqueCol(colNames);
+        try {
+            //read next row
+            while (rs.nextRow()) {
+                String keyStr = getUniqueKey(ROOT_KEY, rs, unique);
+                Object o = tmpCache.get(keyStr);
+                if (o == null) {
+                    //consumer process
+                    result.forEach(e-> {consumer.accept(e);});
+                    tmpCache.clear();
+                    result.clear();
+
+                    o = modelInfo.newC();
+                    tmpCache.put(keyStr, o);
+                    result.add((E) o);
+
+                    buildData(keyStr,rs, tmpCache, ones, arrays, list, set, o, true);
+                } else {
+                    buildData(keyStr, rs, tmpCache, ones, arrays, list, set, o, false);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ParseModelException(e.getMessage());
+        }
+    }
+
     /**
      * 用于原始数据集转换Model数据集
      *
@@ -82,7 +133,6 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);
         List<ModelFieldInfoPosition> ones = modelInfo.getOnesCol(colNames);
         //read next row
-        int size = ones.size();
         while (rs.nextRow()) {
             Object o = modelInfo.newC();
             result.add((E) o);
@@ -128,7 +178,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
      * @throws SecurityException
      */
     private static <E> List<E> buildModelForJoinSelect(Class<E> clazz, ResultSetExecutor rs) throws Exception {
-        Map<String, Object> tmpCache = new HashMap<>();//
+        Map<String, Object> tmpCache = new HashMap<>();
         ArrayList<E> result = new ArrayList<>();
         List<String> colNames = rs.getColNames();
         ModelInfo<E> modelInfo = TableHelper.getModelInfo(clazz);

@@ -53,5 +53,10 @@ public class SpringJdbcExecutor<T> implements JdbcExecutor<T> {
         return new SpringQueryExecutor<T>(dataSource, modelClass).queryList(sql);
     }
 
+    @Override
+    public void queryStream(BaseSQLInfo sql) {
+        new SpringQueryExecutor<T>(dataSource, modelClass).queryStream(sql);
+    }
+
 
 }

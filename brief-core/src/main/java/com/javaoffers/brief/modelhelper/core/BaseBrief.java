@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.utils.SQLType;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @Description: 该项目的顶级接口
@@ -30,6 +31,8 @@ public interface BaseBrief<T>{
 	public List<T> queryData(String sql);
 
 	public List<T> queryData(String sql,Map<String,Object> map);
+
+	public void queryStream(String sql, Map<String,Object> map, Consumer<T> consumer);
 
 	public List<String> nativeData(String sql, SQLType sqlType);
 

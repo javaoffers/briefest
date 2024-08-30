@@ -98,6 +98,40 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     }
 
     @Override
+    public void queryStream(BaseSQLInfo sql) {
+        boolean oldAutoCommitStatus = false;
+        Connection connection = null;
+        try {
+            connection = getConnection();
+            oldAutoCommitStatus = connection.getAutoCommit();
+            PreparedStatement ps = connection.prepareStatement(sql.getSql());
+            List<Object[]> argsParam = sql.getArgsParam();
+            if (argsParam != null && argsParam.size() == 1) {
+                Object[] ov = argsParam.get(0);
+                for (int i = 0; i < ov.length; ) {
+                    Object o = ov[i];
+                    ps.setObject(++i, o);
+                }
+            }
+            switch (sql.getSqlType()) {
+                case JOIN_SELECT:
+                    ModelParseUtils.converterResultSet2ModelForJoinSelectStream(this.modelClass,
+                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                case NORMAL_SELECT:
+                    ModelParseUtils.converterResultSet2ModelForNormalSelectStream(this.modelClass,
+                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                default:
+                    throw new ParseResultSetException("sql type does not exist for streaming process");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        } finally {
+            closeConnection(connection, oldAutoCommitStatus);
+        }
+    }
+
+    @Override
     public Connection getConnection() {
         try {
             return this.dataSource.getConnection();

@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public interface BaseSQLInfo {
     public String getSql();
@@ -14,4 +15,5 @@ public interface BaseSQLInfo {
     public List<Object[]> getArgsParam();
     public SQLType getSqlType();
     public DBType getDbType();
+    public Consumer getStreaming();
 }

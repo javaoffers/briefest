@@ -30,8 +30,6 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
     public Id ex() {
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
         SQLStatement sqlStatement = ((MoreSQLInfo) StatementParserAdepter.statementParse(conditions)).getSqlStatements().get(0);
-        JqlLogger.infoSql("SQL: {}", sqlStatement.getSql());
-        JqlLogger.infoSql("PAM: {}", sqlStatement.getParams());
         List<Id> list = instance.batchInsert(sqlStatement.getSql(), sqlStatement.getParams());
         if(CollectionUtils.isEmpty(list)){
             return Id.EMPTY_ID;

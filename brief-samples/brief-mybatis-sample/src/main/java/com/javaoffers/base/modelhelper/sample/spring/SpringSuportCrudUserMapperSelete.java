@@ -407,8 +407,6 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 .eq(UserOrder::getIsDel, 1)// b Table field values
                 .where()
                 .eq(User::getId, 1)
-                .or()
-                .eq(User::getId, 2)
                 .ex();
         print(ex);
         System.out.println("-------------------------------");

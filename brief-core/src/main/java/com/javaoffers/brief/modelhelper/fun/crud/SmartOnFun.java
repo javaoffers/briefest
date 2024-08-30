@@ -11,15 +11,15 @@ import java.io.Serializable;
  * @Auther: create by cmj on 2022/5/2 00:56
  * sql: selct xx from a left join b on a.col = b.col
  */
-public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2 extends GetterFun<M2, Object> & Serializable, V>
-        extends WhereFun<M2, C2, V, SmartOnFun<M1 , M2 , C,C2, V>>{
+public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2 extends GetterFun<M2, Object> & Serializable, V, R extends SmartOnFun<M1,M2, C , C2, V,R>>
+        extends WhereFun<M2, C2, V, R>{
     /**
      * 添加等值关系 =
      * @param col
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oeq(C col, C2 col2);
+    public R oeq(C col, C2 col2);
 
     /**
      * 添加不等值关系 !=
@@ -27,7 +27,7 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oueq(C col, C2 col2);
+    public R oueq(C col, C2 col2);
 
     /**
      * 大于  >
@@ -35,7 +35,7 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> ogt(C col, C2 col2);
+    public R ogt(C col, C2 col2);
 
     /**
      * 小于 <
@@ -43,7 +43,7 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> olt(C col, C2 col2);
+    public R olt(C col, C2 col2);
 
     /**
      * 大于等于  >=
@@ -51,7 +51,7 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> ogtEq(C col, C2 col2);
+    public R ogtEq(C col, C2 col2);
 
     /**
      * 小于等于 <=
@@ -59,13 +59,13 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oltEq(C col, C2 col2);
+    public R oltEq(C col, C2 col2);
 
     /**
      * on 条件结束。返回 Where
      * @return
      */
-    public LeftWhereSelectFunImpl<M1, M2,V> where();
+    public WhereFun<M2, C2, V, R> where();
 
     /**
      * left join

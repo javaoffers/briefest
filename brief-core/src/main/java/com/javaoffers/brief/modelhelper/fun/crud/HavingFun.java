@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.fun.crud;
 
 import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.fun.ExecutFun;
+import com.javaoffers.brief.modelhelper.fun.StreamingFun;
 
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -14,6 +15,7 @@ import java.util.function.Consumer;
 public interface HavingFun<M, C, V, R >
         extends
         LimitFun<M, R>,
+        StreamingFun<M>,
         WhereFun<M,C,V, R>,
         OrderFun<M,C,V, R>,
         ExecutFun<M> {

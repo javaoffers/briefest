@@ -38,4 +38,9 @@ public class MockBriefJdbcExecutor implements JdbcExecutor {
     public List queryList(BaseSQLInfo sql) {
         return Collections.emptyList();
     }
+
+    @Override
+    public void queryStream(BaseSQLInfo sql) {
+       //NONE
+    }
 }

@@ -513,6 +513,11 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
+    public void stream(Consumer<M> consumer) {
+        whereSelectFun.stream(consumer);
+    }
+
+    @Override
     public HavingFunImpl<M, C, V> limitPage(int pageNum, int size) {
         conditions.add(new LimitWordCondition<>(pageNum, size));
         return this;
@@ -558,4 +563,5 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
         }
         return this;
     }
+
 }

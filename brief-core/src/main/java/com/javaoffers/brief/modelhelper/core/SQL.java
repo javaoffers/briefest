@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * create by cmj
@@ -21,6 +22,7 @@ public class SQL implements  BaseSQLInfo{
 	List<Map<String, Object>> paramMap; //原始值. 在执行sql前还又一次修改参数的机会。通过jql拦截器
 	SQLType sqlType;
 	DBType dbType;
+	Consumer consumer;
 	public SQL(DBType dbType, String sql , List<Object[]> argsParam) {
 		this.argsParam = argsParam;
 		this.sql = sql;
@@ -59,6 +61,15 @@ public class SQL implements  BaseSQLInfo{
 	@Override
 	public DBType getDbType() {
 		return this.dbType;
+	}
+
+	@Override
+	public Consumer getStreaming() {
+		return this.consumer;
+	}
+
+	public void setStreaming(Consumer consumer) {
+		this.consumer = consumer;
 	}
 
 	public void setSqlType(SQLType sqlType) {

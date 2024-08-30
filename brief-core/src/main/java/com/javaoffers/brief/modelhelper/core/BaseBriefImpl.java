@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @Description: core implementation class
@@ -87,6 +88,15 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         return this.jdbcExecutor.queryList(querySql);
+    }
+
+    @Override
+    public void queryStream(String sql, Map<String, Object> paramMap, Consumer<T> consumer) {
+        List<Map<String, Object>> paramMapList = new ArrayList<>();
+        paramMapList.add(paramMap);
+        SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
+        querySql.setStreaming(consumer);
+        this.jdbcExecutor.queryStream(querySql);
     }
 
     @Override

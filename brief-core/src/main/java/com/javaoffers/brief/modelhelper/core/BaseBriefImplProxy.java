@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -86,6 +87,13 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
         return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.queryData(jmi.getSql() , map);});
+    }
+
+    @Override
+    public void queryStream(String sql, Map<String, Object> map, Consumer<T> consumer) {
+        ArrayList<Map<String, Object>> maps = new ArrayList<>();
+        maps.add(map);
+        doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.queryStream(jmi.getSql() , map, consumer); return 0;});
     }
 
     @Override

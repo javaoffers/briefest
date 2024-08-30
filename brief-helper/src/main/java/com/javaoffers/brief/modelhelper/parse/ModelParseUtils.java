@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @Description:
@@ -41,7 +42,15 @@ public class ModelParseUtils {
         return realtimeSmartModelParse.converterResultSet2ModelForJoinSelect(clazz, rs);
     }
 
-    public static <T> List<T> converterResultSet2ModelForNormalSelect(Class<T> modelClass, ResultSetExecutor briefResultSetExecutor) {
+    public static <E> List<E> converterResultSet2ModelForNormalSelect(Class<E> modelClass, ResultSetExecutor briefResultSetExecutor) {
         return realtimeSmartModelParse.converterResultSet2ModelForNormalSelect(modelClass, briefResultSetExecutor);
+    }
+
+    public static <E> void  converterResultSet2ModelForJoinSelectStream(Class<E> clazz, ResultSetExecutor rs, Consumer<E> consumer) {
+         realtimeSmartModelParse.converterResultSet2ModelForJoinSelectStream(clazz, rs, consumer);
+    }
+
+    public static <E> void converterResultSet2ModelForNormalSelectStream(Class<E> modelClass, ResultSetExecutor briefResultSetExecutor, Consumer<E> consumer) {
+         realtimeSmartModelParse.converterResultSet2ModelForNormalSelectStream(modelClass, briefResultSetExecutor,consumer);
     }
 }

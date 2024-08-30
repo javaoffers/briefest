@@ -58,7 +58,6 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
         return whereSelectFun.exs();
     }
 
-
     @Override
     public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> oeq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.EQ));
@@ -424,5 +423,10 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) {
         HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
         return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.RIGHT_JOIN);
+    }
+
+    @Override
+    public void stream(Consumer<M1> consumer) {
+         whereSelectFun.stream(consumer);
     }
 }

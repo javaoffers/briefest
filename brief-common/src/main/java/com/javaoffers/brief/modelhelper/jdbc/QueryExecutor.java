@@ -14,4 +14,5 @@ public interface QueryExecutor<T> extends DataSourceExecutor{
 
     List<T> queryList(BaseSQLInfo sql);
 
+    void queryStream(BaseSQLInfo sql);
 }

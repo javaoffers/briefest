@@ -54,4 +54,5 @@ public interface JdbcExecutor<T> {
      */
     List<T> queryList(BaseSQLInfo sql);
 
+    void queryStream(BaseSQLInfo sql);
 }

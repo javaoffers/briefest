@@ -31,6 +31,8 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
                     entry.setValue(dbType.processingTranslation(jqlMetaInfo,
                             entry.getKey(),entry.getValue()));
         });
+        JqlLogger.infoSql("SQL: {}", jqlMetaInfo.getSql());
+        JqlLogger.infoSql("PAM: {}", jqlMetaInfo.getParams());
         long startTime = System.currentTimeMillis();
         Object o = chain.doChain();
         long endTime = System.currentTimeMillis();

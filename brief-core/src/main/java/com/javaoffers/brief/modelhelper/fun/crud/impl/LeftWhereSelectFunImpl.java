@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  * @param <M2> Subtable: used to support subtable fields group by , order by
  *
  */
-public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<M, M2, V, R>>
+public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<M, M2, V, R> >
         implements LeftWhereSelectFun<M, M2, GetterFun<M,V>, GGetterFun<M2,V>, V, R> {
 
     private LinkedList<Condition> conditions;

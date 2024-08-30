@@ -102,7 +102,7 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     }
 
     @Override
-    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, V> on() {
+    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, V,?> on() {
         return  new OnFunImpl(this.m1Class, this.m2Class, this.conditions);
     }
 

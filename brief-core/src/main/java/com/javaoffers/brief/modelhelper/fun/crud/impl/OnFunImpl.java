@@ -20,7 +20,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.LastJoinFun;
 import com.javaoffers.brief.modelhelper.fun.crud.OnFun;
-import com.javaoffers.brief.modelhelper.fun.crud.SmartOnFun;
+import com.javaoffers.brief.modelhelper.fun.crud.WhereFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.Collection;
@@ -33,7 +33,7 @@ import java.util.function.Consumer;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:13
  */
-public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
+public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>> {
     private LinkedList<Condition> conditions;
 
     private WhereSelectFunImpl<M1,V> whereSelectFun ;
@@ -59,54 +59,54 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> oeq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> oeq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> oueq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> oueq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ogt(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> ogt(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.GT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> olt(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> olt(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.LT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ogtEq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> ogtEq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> oltEq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
+    public OnFunImpl<M1, M2, V> oltEq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {
         conditions.add(new OnColumnFunCondition(col, col2, ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public LeftWhereSelectFunImpl<M1,M2, V> where() {
-        return new LeftWhereSelectFunImpl<>(conditions);
+    public LeftWhereSelectFunImpl<M1, M2, V, ?> where() {
+        return new LeftWhereSelectFunImpl(conditions);
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> or() {
+    public OnFunImpl<M1, M2, V> or() {
         conditions.add(new OrCondition());
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> unite(Consumer<SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
+    public OnFunImpl<M1, M2, V> unite(Consumer<OnFunImpl<M1, M2, V>> r) {
         conditions.add(new LFCondition( ConditionTag.LK));
         r.accept(this);
         conditions.add(new RFWordCondition( ConditionTag.RK));
@@ -114,7 +114,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> unite(boolean condition, Consumer<SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>> r) {
+    public OnFunImpl<M1, M2, V> unite(boolean condition, Consumer<OnFunImpl<M1, M2, V>> r) {
         if(condition){
             unite(r);
         }
@@ -122,13 +122,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(String sql) {
+    public OnFunImpl<M1, M2, V> condSQL(String sql) {
         conditions.add(new CondSQLCondition(sql));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(boolean condition, String sql) {
+    public OnFunImpl<M1, M2, V> condSQL(boolean condition, String sql) {
         if(condition){
             condSQL(sql);
         }
@@ -136,13 +136,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(String sql, Map<String, Object> params) {
+    public OnFunImpl<M1, M2, V> condSQL(String sql, Map<String, Object> params) {
         conditions.add(new CondSQLCondition(sql,params));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
+    public OnFunImpl<M1, M2, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
         if(condition){
             condSQL(sql, params);
         }
@@ -150,13 +150,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> eq(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> eq(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> eq(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> eq(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             eq(col,value);
         }
@@ -164,13 +164,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ueq(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> ueq(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ueq(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> ueq(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             ueq(col,value);
         }
@@ -178,13 +178,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gt(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> gt(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.GT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gt(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> gt(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             gt(col,value);
         }
@@ -192,13 +192,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> lt(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> lt(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.LT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> lt(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> lt(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             lt(col,value);
         }
@@ -206,13 +206,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gtEq(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> gtEq(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> gtEq(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> gtEq(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             gtEq(col,value);
         }
@@ -220,13 +220,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ltEq(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> ltEq(GetterFun<M2, Object> col, V value) {
         conditions.add(new OnValueFunCondition(col, value, ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> ltEq(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> ltEq(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             ltEq(col,value);
         }
@@ -234,13 +234,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> between(GetterFun<M2, Object> col, V start, V end) {
+    public OnFunImpl<M1, M2, V> between(GetterFun<M2, Object> col, V start, V end) {
         conditions.add(new BetweenCondition(col, start, end, ConditionTag.BETWEEN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> between(boolean condition, GetterFun<M2, Object> col, V start, V end) {
+    public OnFunImpl<M1, M2, V> between(boolean condition, GetterFun<M2, Object> col, V start, V end) {
         if (condition) {
             between(col, start, end);
         }
@@ -248,13 +248,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notBetween(GetterFun<M2, Object> col, V start, V end) {
+    public OnFunImpl<M1, M2, V> notBetween(GetterFun<M2, Object> col, V start, V end) {
         conditions.add(new BetweenCondition(col, start, end, ConditionTag.NOT_BETWEEN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notBetween(boolean condition, GetterFun<M2, Object> col, V start, V end) {
+    public OnFunImpl<M1, M2, V> notBetween(boolean condition, GetterFun<M2, Object> col, V start, V end) {
         if(condition){
             notBetween(col,start,end);
         }
@@ -262,13 +262,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> like(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> like(GetterFun<M2, Object> col, V value) {
         conditions.add(new LikeCondition(col, value, ConditionTag.LIKE));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> like(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> like(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             like(col,value);
         }
@@ -276,13 +276,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeLeft(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> likeLeft(GetterFun<M2, Object> col, V value) {
         conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeLeft(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> likeLeft(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             likeLeft(col,value);
         }
@@ -290,13 +290,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeRight(GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> likeRight(GetterFun<M2, Object> col, V value) {
         conditions.add(new LikeCondition(col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> likeRight(boolean condition, GetterFun<M2, Object> col, V value) {
+    public OnFunImpl<M1, M2, V> likeRight(boolean condition, GetterFun<M2, Object> col, V value) {
         if (condition) {
             likeRight(col,value);
         }
@@ -304,13 +304,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(GetterFun<M2, Object> col, V... values) {
+    public OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(boolean condition, GetterFun<M2, Object> col, V... values) {
+    public OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, V... values) {
         if (condition) {
             in(col,values);
         }
@@ -318,13 +318,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(GetterFun<M2, Object> col, Collection... values) {
+    public OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> in(boolean condition, GetterFun<M2, Object> col, Collection... values) {
+    public OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, Collection... values) {
         if (condition) {
             in(col,values);
         }
@@ -332,13 +332,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notIn(GetterFun<M2, Object> col, V... values) {
+    public OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notIn(boolean condition, GetterFun<M2, Object> col, V... values) {
+    public OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, V... values) {
         if(condition){
             notIn(col,values);
         }
@@ -346,13 +346,13 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notIn(GetterFun<M2, Object> col, Collection... values) {
+    public OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> notIn(boolean condition, GetterFun<M2, Object> col, Collection... values) {
+    public OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, Collection... values) {
         if(condition){
             notIn(col,values);
         }
@@ -360,7 +360,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNull(GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> isNull(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -368,7 +368,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNull(boolean condition, GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> isNull(boolean condition, GetterFun<M2, Object>... cols) {
         if(condition){
             isNull(cols);
         }
@@ -376,7 +376,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNotNull(GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> isNotNull(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -384,7 +384,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> isNotNull(boolean condition, GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> isNotNull(boolean condition, GetterFun<M2, Object>... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -392,7 +392,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> exists(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new ExistsCondition<V>(col));
         }
@@ -400,7 +400,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V> {
     }
 
     @Override
-    public SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V> exists(boolean condition, GetterFun<M2, Object>... cols) {
+    public OnFunImpl<M1, M2, V> exists(boolean condition, GetterFun<M2, Object>... cols) {
         if (condition) {
             exists(cols);
         }

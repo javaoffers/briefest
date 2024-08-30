@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @Auther: create by cmj on 2022/6/5 19:42
  */
 public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2> implements
-        LeftHavingPendingFun<M, M2, C, C2, V, LeftHavingFunImpl<M,M2,C,C2,V,V2>>,
+        LeftHavingPendingFun<M, M2, C, C2, V, LeftHavingFunImpl<M,M2,C,C2,V,V2, ?>>,
         OrderFun<M,C,V,LeftHavingPendingFunImpl<M,M2,C,C2,V,V2>> {
 
     private LinkedList<Condition> conditions;
@@ -83,7 +83,7 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
 
     @Override
-    public LeftHavingFunImpl<M,M2,C,C2,V,V2>  having() {
+    public LeftHavingFunImpl<M,M2,C,C2,V,V2,?>  having() {
         LeftHavingFunImpl mcvHavingFun = new LeftHavingFunImpl<>(this.conditions);
         return mcvHavingFun;
     }

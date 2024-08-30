@@ -11,7 +11,11 @@ import java.io.Serializable;
  * @Auther: create by cmj on 2022/5/2 00:56
  * sql: selct xx from a left join b on a.col = b.col
  */
-public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializable, C2 extends GetterFun<M2, Object> & Serializable, V, R extends SmartOnFun<M1,M2, C , C2, V,R>>
+public interface SmartOnFun<M1,M2,
+        C extends GetterFun<M1, Object> & Serializable,
+        C2 extends GetterFun<M2, Object> & Serializable,
+        V,
+        R extends SmartOnFun<M1,M2, C , C2, V,R>>
         extends WhereFun<M2, C2, V, R>{
     /**
      * 添加等值关系 =
@@ -65,7 +69,7 @@ public interface SmartOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * on 条件结束。返回 Where
      * @return
      */
-    public WhereFun<M2, C2, V, R> where();
+    public LeftWhereSelectFunImpl<M1, M2, V, ?> where();
 
     /**
      * left join

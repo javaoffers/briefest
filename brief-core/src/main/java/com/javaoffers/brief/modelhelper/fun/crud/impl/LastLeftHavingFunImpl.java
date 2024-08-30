@@ -16,7 +16,11 @@ import java.util.function.Consumer;
  * @Description: having 后面只允许出现统计函数条件表达式. 若想非统计函数表达式应在where / on 中书写. (设计如此)
  * @Auther: create by cmj on 2022/6/5 19:44
  */
-public class LastLeftHavingFunImpl<M, M2, M3, C extends GetterFun<M, ?>, C2 extends GGetterFun<M2, ?>, C3 extends GGGetterFun<M3, ?>, V, R extends LastLeftHavingFunImpl<M, M2, M3, C , C2 , C3 , V, R>
+public class LastLeftHavingFunImpl<M, M2, M3,
+        C extends GetterFun<M, ?>,
+        C2 extends GGetterFun<M2, ?>,
+        C3 extends GGGetterFun<M3, ?>, V,
+        R extends LastLeftHavingFunImpl<M, M2, M3, C , C2 , C3 , V, R>>
 extends LeftHavingFunImpl<M,M2,C,C2,V,V, R>
 {
 

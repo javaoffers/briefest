@@ -107,7 +107,7 @@ public class LastLeftHavingPendingFunImpl<M, M2, M3, C extends GetterFun<M, ?>, 
 
 
     @Override
-    public LastLeftHavingFunImpl<M, M2, M3, C, C2, C3, V> having() {
+    public LastLeftHavingFunImpl<M, M2, M3, C, C2, C3, V,?> having() {
         return new LastLeftHavingFunImpl(this.conditions);
     }
 

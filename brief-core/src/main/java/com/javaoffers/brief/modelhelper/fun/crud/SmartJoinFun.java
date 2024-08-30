@@ -74,5 +74,5 @@ public interface SmartJoinFun<M1,M2, C2 extends GetterFun<M2,Object>, V>{
      * sql语句： on 条件
      * @return
      */
-    public<C1 extends GetterFun<M1,Object>> SmartOnFun<M1,M2, C1, C2, V> on();
+    public<C1 extends GetterFun<M1,Object>> SmartOnFun<M1,M2, C1, C2, V,?> on();
 }

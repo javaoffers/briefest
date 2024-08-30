@@ -17,7 +17,7 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oeq(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> oeq(C col, C2 col2);
 
     /**
      * 添加不等值关系 !=
@@ -25,7 +25,7 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oueq(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> oueq(C col, C2 col2);
 
     /**
      * 大于  >
@@ -33,7 +33,7 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> ogt(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> ogt(C col, C2 col2);
 
     /**
      * 小于 <
@@ -41,7 +41,7 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> olt(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> olt(C col, C2 col2);
 
     /**
      * 大于等于  >=
@@ -49,7 +49,7 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> ogtEq(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> ogtEq(C col, C2 col2);
 
     /**
      * 小于等于 <=
@@ -57,6 +57,6 @@ public interface FirstOnFun<M1,M2, C extends GetterFun<M1, Object> & Serializabl
      * @param col2
      * @return
      */
-    public SmartOnFun<M1,M2, C, C2, V> oltEq(C col, C2 col2);
+    public SmartOnFun<M1,M2, C, C2, V, ?> oltEq(C col, C2 col2);
 
 }

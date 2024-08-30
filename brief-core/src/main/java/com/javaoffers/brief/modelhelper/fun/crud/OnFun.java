@@ -9,9 +9,8 @@ import com.javaoffers.brief.modelhelper.fun.StreamingFun;
  * @Auther: create by cmj on 2022/5/2 00:56
  * sql: selct xx from a left join b on a.col = b.col
  */
-public interface OnFun<M1, M2, V> extends
-        FirstOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>,
-        SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V>,
+public interface OnFun<M1, M2, V, R extends OnFun<M1, M2, V, R> > extends
+        SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V, R >,
         StreamingFun<M1>,
         ExecutFun<M1> {
 

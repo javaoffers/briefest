@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 八股社区开源项目
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 八股社区开源项目, 打开手机应用商店可搜索八股下载安装
 
 # Brief
 <p>

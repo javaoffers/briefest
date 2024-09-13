@@ -85,6 +85,7 @@ Later will support，support<code>spring-boot</code>. If your spring - the boot 
   - Slow slow SQL monitor. Allow customizable handling of slow SQL.
   - Support json field.
   - Support automatic generation of unique keys
+  - Big data streaming 
 
   
 - Project of actual combat, which has been used internally. The effect is very good.

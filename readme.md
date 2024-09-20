@@ -19,7 +19,6 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 ## Lightweight machine version
 <p>
 <code>brief-speedier</code> Can be used alone. Do not rely on any environment.
-sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
 - maven
@@ -45,7 +44,11 @@ sample ： https://github.com/javaoffers/briefest/blob/develop/brief-samples/bri
 
 ## Enhance mybatis
 <p>
-The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> has brief ability. So <code>brief-mybatis</code> is fully compatible with <code>mybatis</code>. If your project is used in the <code>mybatis</code> so you can directly introduced <code>brief-mybatis</code> dependence. Do change, enhance not only introduce it won't affect the existing engineering, silky smooth. Without any configuration. Just need to let your Mapper class inheritance <code>BriefMapper</code> can be used in the feature.
+The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> has brief ability. 
+So <code>brief-mybatis</code> is fully compatible with <code>mybatis</code>. 
+If your project is used in the <code>mybatis</code> so you can directly introduced <code>brief-mybatis</code> dependence. 
+Do change, enhance not only introduce it won't affect the existing engineering, silky smooth. Without any configuration. 
+Just need to let your Mapper class inheritance <code>BriefMapper</code> can be used in the feature.
 </p>
 
 - maven
@@ -62,7 +65,8 @@ The <code>brief-mybatis</code> is mybatis increased, let <code>mybatis</code> ha
 
 ## Brief-spring-boot-start
 <p>
-Later will support，support<code>spring-boot</code>. If your spring - the boot project cited mybatis framework, Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enhanced..
+Later will support，support<code>spring-boot</code>. If your spring - the boot project cited mybatis framework, 
+Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enhanced..
 </p>
 
 ## Function is introduced
@@ -193,7 +197,7 @@ The JQL will eventually be translated into the select id, name, XXX.. From the u
  
 ##### The query specified conditions 
  <p>
-By col () specifies fields to query. Here's where the where keyword in the () and SQL is the same. Such as to query a user id value is 1, you can write like this: </p>
+By col() specifies fields to query. Here's where the where keyword in the () and SQL is the same. Such as to query a user id value is 1, you can write like this: </p>
  
  ```java
  User user = crudusermapper
@@ -249,10 +253,13 @@ List<User> users = this.crudUserMapper
 ```
 
  <p>
-You will find that there are two special function of exs (), the ex () these two functions on behalf of the trigger. Exs () is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE () the ex (), WHERE () exs () </p>  
- <p>
-  More complex queries：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
- </p>
+You will find that there are two special function of exs(), the ex() these two functions on behalf of the trigger. 
+Exs() is usually used to query more data, and returns the result to the list, while the ex T () is used to return a result; 
+JQL must pass to trigger the where and the ex/exs. Most work situations, WHERE behind will add filter conditions, 
+in addition to the special all table data statistics, this design also is very good remind you remember to fill in the WHERE condition, of course, 
+if you don't need to add any WHERE conditions for all table data in the query, you can use the WHERE() the ex(), WHERE() exs() 
+</p>  
+
 
 #### The insert
 
@@ -278,10 +285,7 @@ A simple insert statement, returns a wrapper class Id, are usually the primary k
 ```
 
 <p>
-
   We can insert the whole model object, said to query all of the fields, for batch layer. Performance is very good.
-  More cases please reference：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
-
 </p>
 
 #### The update operation
@@ -372,12 +376,8 @@ public interface CrudUserMapper extends BriefMapper<User> {
 <p>
 When we interface inheritance <code>BriefMapper</code>  ，
 We can write our JQL logic by default。
-Please see more cases:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/BriefUserMapper.java
 </p>
 
-- sample crud:
-  - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
-    
 #### Multi-table join 
 - This part mainly introduces how to use JQL to express complex query. Does not require any configuration to join multiple tables (zero configuration).
 <p>
@@ -920,7 +920,6 @@ public class FunAnnoParserSample {
 Built a large number of commonly used types of converters.
 Such as database field birthday is a datetime/int, Number/varchar and enumeration class conversion between.
 Enumeration classes usually and @ Enum Value are used together, identifies the enumeration class the only attribute, the attribute and the fields in the table automatically.
-(sample of enum :https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-mybatis-sample/src/main/java/com/javaoffers/base/modelhelper/sample/HelpSample.java)
 </p>
 
 ```
@@ -1043,10 +1042,7 @@ Support field desensitization. Only need a model class with @ Email can Blur ann
 ```
    @EmailBlur
    private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
-```  
-<p>
-sample： https://github.com/javaoffers/brief/tree/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
-</p>
+```
 
 #### Code contributions are welcome
 <p>

@@ -16,7 +16,6 @@
 ## 单独使用brief
 <p>
 <code>brief-speedier</code> 可以单独使用. 不依赖任何环境. 
-使用案例： https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-speedier-sample/src/main/java/com/javaoffers/base/modelhelper/sample/speedier/BriefSpeedierSample.java
 </p>
 
 - maven
@@ -94,7 +93,8 @@
 ### 基础使用    
 #### 查询操作
  <p>
-在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），@ BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
+在看操作之前，我们先看一下数据结构：这里有两个关键的注解。 @BaseModel用于表示该类属于模型类（类名与表名相同，ModelHelp最终会将驼峰式类名转换为下划线表名，属性相同），
+@BaseUnique表示类中唯一的属性（对应A unique attribute in a table，当表中使用联合主键时可以是多个）。我们将在最后详细解释注解的使用。下面是基本使用
  </p>
  
  ```java
@@ -251,11 +251,11 @@ List<User> users = this.crudUserMapper
 ```
 
  <p>
-你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； JQL 必须通过 where 才能触发 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
+你会发现有两个特殊的函数exs()，ex()这两个函数代表触发执行。 exs()通常用于查询更多的数据，返回结果为list，而ex()用于只返回一个结果T； 
+JQL 必须通过 where 才能触发 ex/exs 。大多数工作场景下，WHERE后面都会加上过滤条件，除了专门统计所有表数据，这样设计也是很好的提醒大家记得填写WHERE条件，
+当然如果你不需要加任何WHERE条件为了查询所有表数据，可以使用where().ex(),where().exs()
  </p>  
- <p>
-  更多复杂查询案例：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperSelete.java
- </p>
+ 
 
 #### 插入操作
 
@@ -284,7 +284,7 @@ Id exOne = crudUserMapper
 <p>
 
   我们可以插入整个模型对象，表示要查询所有字段，对层进行批处理。性能非常好。
-  更多案例请参考：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/SpringSuportCrudUserMapperInsert.java
+  更多案例请参考：
 
 </p>
 
@@ -373,12 +373,8 @@ public interface CrudUserMapper extends BriefMapper<User> {
 
 <p>
 当我的接口继承了<code>BriefMapper</code>  接口后，我们就可以默认编写我们的JQL逻辑了。这避免了传统的在 <code>Mapper</code> 接口上编写原生 SQL 语句的方法。.
-更多案例请查看:https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/mapper/BriefUserMapper.java
 </p>
 
-- 演示 crud:
-  - demo ：https://github.com/caomingjie-code/Mybatis-ModelHelper/blob/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring
-    
 #### 多表join 
 - 这部分主要介绍如何使用JQL来表达一些复杂的查询语句. 多表进行join不需要任何配置（零配置）. 
 <p>
@@ -918,9 +914,7 @@ public class FunAnnoParserSample {
 ```
 #### 自动类型转换
 <p>
-内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.(sample of enum : 
-
-https://github.com/javaoffers/briefest/blob/develop/brief-samples/brief-mybatis-sample/src/main/java/com/javaoffers/base/modelhelper/sample/HelpSample.java). 
+内置大量常用类型转换器。比如数据库字段birthday是datetime/int、Number/varchar和枚举类之间的转换. 枚举类通常和@EnumValue一起使用,用于标识枚举类唯一的属性,该属性会和表中的字段进行自动关联.
 </p>
 
 ```
@@ -1041,10 +1035,7 @@ public class LogInterceptor implements JqlInterceptor {
 ```
    @EmailBlur
    private String email; // 12345678@outlook.com加密后的数据为12***678@outlook.com
-```  
-<p>
-更多案例： https://github.com/javaoffers/brief/tree/master/brief-sample/src/main/java/com/javaoffers/base/modelhelper/sample/spring/blur
-</p>
+```
 
 #### Code contributions are welcome
 <p>

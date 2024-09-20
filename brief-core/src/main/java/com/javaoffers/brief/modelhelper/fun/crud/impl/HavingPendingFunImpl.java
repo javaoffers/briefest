@@ -41,7 +41,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(C... c) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(C... c) {
         conditions.add(new LeftGroupByWordCondition(c,ConditionTag.GROUP_BY));
         return this;
     }

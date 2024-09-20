@@ -105,7 +105,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R orderA(GetterFun<M, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderA(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -115,7 +116,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R orderA(boolean condition, GetterFun<M, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderA(boolean condition, GetterFun<M, V>... getterFuns) {
         if(condition){
             orderA(getterFuns);
         }
@@ -123,7 +125,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R orderD(GetterFun<M, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderD(GetterFun<M, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -133,14 +136,16 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R orderD(boolean condition, GetterFun<M, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderD(boolean condition, GetterFun<M, V>... getterFuns) {
         if(condition){
             orderD(getterFuns);
         }
         return (R) this;
     }
 
-    public R orderA(GGetterFun<M2, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderA(GGetterFun<M2, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -149,14 +154,16 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
         return (R) this;
     }
 
-    public R orderA(boolean condition, GGetterFun<M2, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderA(boolean condition, GGetterFun<M2, V>... getterFuns) {
         if(condition){
             orderA(getterFuns);
         }
         return (R) this;
     }
 
-    public R orderD(GGetterFun<M2, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderD(GGetterFun<M2, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -165,7 +172,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
         return (R) this;
     }
 
-    public R orderD(boolean condition, GGetterFun<M2, V>... getterFuns) {
+    @SafeVarargs
+    public final  R orderD(boolean condition, GGetterFun<M2, V>... getterFuns) {
         if(condition){
             orderD(getterFuns);
         }
@@ -327,13 +335,15 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R in(GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final  R in(GetterFun<M, V> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return (R) this;
     }
 
     @Override
-    public R in(boolean condition, GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final  R in(boolean condition, GetterFun<M, V> col, V... values) {
         if (condition) {
             in(col, values);
         }
@@ -347,7 +357,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R in(boolean condition, GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final  R in(boolean condition, GetterFun<M, V> col, Collection... values) {
         if (condition) {
             in(col, values);
         }
@@ -355,13 +366,15 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R notIn(GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final  R notIn(GetterFun<M, V> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
 
     @Override
-    public R notIn(boolean condition, GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, GetterFun<M, V> col, V... values) {
         if (condition) {
             notIn(col, values);
         }
@@ -369,13 +382,15 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R notIn(GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(GetterFun<M, V> col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
 
     @Override
-    public R notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
         if (condition) {
             notIn(col, values);
         }
@@ -383,7 +398,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R isNull(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R isNull(GetterFun<M, V>... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -391,7 +407,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R isNull(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R isNull(boolean condition, GetterFun<M, V>... cols) {
         if(condition){
             isNull(cols);
         }
@@ -399,7 +416,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R isNotNull(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R isNotNull(GetterFun<M, V>... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -407,7 +425,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R isNotNull(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R isNotNull(boolean condition, GetterFun<M, V>... cols) {
         if(condition){
             isNull(cols);
         }
@@ -415,7 +434,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R exists(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R exists(GetterFun<M, V>... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new ExistsCondition<V>(col));
         }
@@ -423,7 +443,8 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public R exists(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final  R exists(boolean condition, GetterFun<M, V>... cols) {
         if (condition) {
             exists(cols);
         }
@@ -431,13 +452,15 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GetterFun<M, V>... c) {
+    @SafeVarargs
+    public final  LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V,?> groupBy(GetterFun<M, V>... c) {
         conditions.add(new GroupByWordCondition(c,ConditionTag.GROUP_BY));
         return new LeftHavingPendingFunImpl<>(conditions);
     }
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V> groupBy(GGetterFun<M2, V>... c) {
+    @SafeVarargs
+    public final  LeftHavingPendingFunImpl<M, M2, GetterFun<M, V>, GGetterFun<M2, V>, V, V,?> groupBy(GGetterFun<M2, V>... c) {
         conditions.add(new GroupByWordCondition(c,ConditionTag.GROUP_BY));
         return new LeftHavingPendingFunImpl<>(conditions);
     }

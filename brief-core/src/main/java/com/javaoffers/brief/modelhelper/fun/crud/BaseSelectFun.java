@@ -4,21 +4,21 @@ import com.javaoffers.brief.modelhelper.anno.internal.NotNull;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 
-public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
+public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V, R>  {
 
     /**
      * Add query field
      * @param col
      * @return
      */
-    public SmartSelectFun<M, C, V> col(@NotNull C col);
+    public R col(@NotNull C col);
 
     /**
      * Add query field
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(@NotNull C... cols);
+    public R col(@NotNull C... cols);
 
     /**
      * Add query field
@@ -26,7 +26,7 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, @NotNull C... cols);
+    public R col(boolean condition, @NotNull C... cols);
 
     /**
      * Add query field
@@ -34,7 +34,7 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols query field
      * @return
      */
-    public SmartSelectFun<M, C, V> col(AggTag aggTag, @NotNull C... cols);
+    public R col(AggTag aggTag, @NotNull C... cols);
 
     /**
      * Add query field
@@ -42,7 +42,7 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param cols
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, @NotNull C... cols);
+    public R col(boolean condition, AggTag aggTag, @NotNull C... cols);
 
     /**
      * Add query field
@@ -51,7 +51,7 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param asName  asName
      * @return
      */
-    public SmartSelectFun<M, C, V> col(AggTag aggTag, @NotNull C col, String asName);
+    public R col(AggTag aggTag, @NotNull C col, String asName);
 
     /**
      * Add query field
@@ -60,14 +60,14 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param asName alias
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, AggTag aggTag, @NotNull C col, String asName);
+    public R col(boolean condition, AggTag aggTag, @NotNull C col, String asName);
 
     /**
      * Add query field or sub query sql
      * @param colSql
      * @return
      */
-    public SmartSelectFun<M, C, V> col(@NotNull String... colSql);
+    public R col(@NotNull String... colSql);
 
     /**
      * Add query field or sub query sql
@@ -75,12 +75,12 @@ public interface BaseSelectFun<M, C extends GetterFun<M, Object>, V>  {
      * @param colSql
      * @return
      */
-    public SmartSelectFun<M, C, V> col(boolean condition, @NotNull String... colSql);
+    public R col(boolean condition, @NotNull String... colSql);
 
     /**
      * Add all query fields
      * @return
      */
-    public SmartSelectFun<M, C, V> colAll();
+    public R colAll();
 
 }

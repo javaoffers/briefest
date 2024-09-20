@@ -36,7 +36,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M,Object>, Object> distinct() {
+    public SmartSelectFunImpl<M, GetterFun<M,Object>, Object> distinct() {
         this.conditions.add(new KeyWordCondition(ConditionTag.DISTINCT.getTag()));
         return smartSelectFun;
     }
@@ -47,7 +47,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(GetterFun col) {
+    public SmartSelectFunImpl<M, GetterFun<M,Object>, Object> col(GetterFun<M,Object> col) {
         this.smartSelectFun.col(col);
         return this.smartSelectFun;
     }
@@ -58,50 +58,56 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(GetterFun... cols) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M,Object>, Object> col(GetterFun<M,Object>... cols) {
         this.smartSelectFun.col(cols);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... cols) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(boolean condition, GetterFun<M, Object>... cols) {
         this.smartSelectFun.col(condition, cols);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object>... cols) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object>... cols) {
 
         this.smartSelectFun.col(aggTag,cols);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object>... cols) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object>... cols) {
         this. smartSelectFun.col(condition, aggTag, cols);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object> col, String asName) {
+    public SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(AggTag aggTag, GetterFun<M, Object> col, String asName) {
         this.smartSelectFun.col(aggTag, col, asName);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object> col, String asName) {
+    public SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(boolean condition, AggTag aggTag, GetterFun<M, Object> col, String asName) {
         this.smartSelectFun.col(condition,aggTag,col,asName);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M,Object>, Object> col(String... colSql) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M,Object>, Object> col(String... colSql) {
         this.smartSelectFun.col(colSql);
         return this.smartSelectFun;
     }
 
     @Override
-    public SmartSelectFun<M, GetterFun<M, Object>, Object> col(boolean condition, String... colSql) {
+    @SafeVarargs
+    public final SmartSelectFunImpl<M, GetterFun<M, Object>, Object> col(boolean condition, String... colSql) {
         this.smartSelectFun.col(condition, colSql);
         return this.smartSelectFun;
     }
@@ -111,7 +117,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      * @return
      */
     @Override
-    public SmartSelectFun<M, GetterFun<M,Object>, Object> colAll() {
+    public SmartSelectFunImpl<M, GetterFun<M,Object>, Object> colAll() {
 
         this.smartSelectFun.colAll();
         return this.smartSelectFun;

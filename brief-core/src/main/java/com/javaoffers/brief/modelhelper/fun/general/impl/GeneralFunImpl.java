@@ -175,7 +175,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int removeByIds(Serializable... ids) {
+    @SafeVarargs
+    public final int removeByIds(Serializable... ids) {
         if (ids == null || ids.length == 0) {
             return 0;
         }
@@ -205,7 +206,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public int logicRemoveByIds(Serializable... ids) {
+    @SafeVarargs
+    public final int logicRemoveByIds(Serializable... ids) {
         if (ArrayUtils.isEmpty(ids)) {
             return 0;
         }
@@ -378,7 +380,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     @Override
-    public List<T> queryByIds(Serializable... ids) {
+    @SafeVarargs
+    public final List<T> queryByIds(Serializable... ids) {
         if (ids == null || ids.length == 0) {
             return Collections.EMPTY_LIST;
         }

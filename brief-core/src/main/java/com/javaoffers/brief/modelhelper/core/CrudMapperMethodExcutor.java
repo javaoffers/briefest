@@ -30,7 +30,7 @@ public class CrudMapperMethodExcutor {
         return new DeleteFunImpl(CrudMapperMethodThreadLocal.getExcutorModel());
     }
 
-    public static GeneralFun general() {
+    public static GeneralFunImpl general() {
         return new GeneralFunImpl(CrudMapperMethodThreadLocal.getExcutorModel(),
                 select(),
                 insert(),

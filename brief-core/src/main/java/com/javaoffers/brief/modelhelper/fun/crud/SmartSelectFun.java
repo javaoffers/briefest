@@ -9,8 +9,8 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
  * C: 字段,
  * V: 字段值
  */
-public interface SmartSelectFun<M, C extends GetterFun<M,Object> , V>
-        extends BaseSelectFun<M,C,V>, ToJoinFun<M,C,V> {
+public interface SmartSelectFun<M, C extends GetterFun<M,Object> , V, R>
+        extends BaseSelectFun<M,C,V,R>, ToJoinFun<M,C,V> {
     /**
      * sql 语句： where
      * @return

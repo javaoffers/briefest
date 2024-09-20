@@ -19,14 +19,14 @@ import java.util.stream.Stream;
  * @Description: join 功能实现,以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:11
  */
-public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,V> {
+public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Object>, V> {
 
     private LinkedList<Condition> conditions;
     private Class<M1> m1Class;
     private Class<M2> m2Class;
     private String table2Name;
 
-    public JoinFunmpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions, ConditionTag tag) {
+    public JoinFunImpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions, ConditionTag tag) {
         this.m1Class = mc;
         this.m2Class = m2c;
         this.conditions = conditions;
@@ -40,19 +40,22 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
      * @return
      */
     @Override
-    public JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... colSql) {
+    @SafeVarargs
+    public final JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... colSql) {
         Stream.of(colSql).forEach(col->{conditions.add(new SelectColumnCondition( col));});
         return this;
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final JoinFun<M1, M2, GetterFun<M2, Object>, V> col(GetterFun<M2, Object>... cols) {
         Stream.of(cols).forEach(col->conditions.add(new SelectColumnCondition( col)));
         return this;
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, GetterFun<M2, Object>... cols) {
         if(condition){
             col(cols);
         }
@@ -60,7 +63,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final JoinFun<M1, M2, GetterFun<M2, Object>, V> col(AggTag aggTag, GetterFun<M2, Object>... cols) {
         Stream.of(cols).forEach(col->{
             Pair<String, String> colAgg = TableHelper.getSelectAggrColStatement(col);
             this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colAgg.getLeft()+") as " + colAgg.getRight()));
@@ -69,7 +73,8 @@ public class JoinFunmpl<M1,M2,V> implements JoinFun<M1,M2, GetterFun<M2,Object>,
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, AggTag aggTag, GetterFun<M2, Object>... col) {
+    @SafeVarargs
+    public final JoinFun<M1, M2, GetterFun<M2, Object>, V> col(boolean condition, AggTag aggTag, GetterFun<M2, Object>... col) {
         if(condition){
             col(aggTag,col);
         }

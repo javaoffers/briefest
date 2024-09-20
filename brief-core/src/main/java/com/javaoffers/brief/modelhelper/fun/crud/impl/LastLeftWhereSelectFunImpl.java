@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl;
 
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.G4GetterFun;
+import com.javaoffers.brief.modelhelper.fun.G5GetterFun;
 import com.javaoffers.brief.modelhelper.fun.GGGetterFun;
 import com.javaoffers.brief.modelhelper.fun.GGetterFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
@@ -26,24 +28,26 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
         this.conditions = conditions;
     }
 
-    @Override
-    public LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(GetterFun<M, V>... c) {
+    @SafeVarargs
+    public final LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(G4GetterFun<M, V>... c) {
         conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LastLeftHavingPendingFunImpl<>(conditions);
     }
 
-    @Override
-    public LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(GGetterFun<M2, V>... c) {
-        conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
-        return new LastLeftHavingPendingFunImpl<>(conditions);
-    }
-    
-    public LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(GGGetterFun<M3, V>... c) {
+    @SafeVarargs
+    public final LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(G5GetterFun<M2, V>... c) {
         conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
         return new LastLeftHavingPendingFunImpl<>(conditions);
     }
 
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> orderA(GGGetterFun<M3, V>... getterFuns) {
+    @SafeVarargs
+    public final LastLeftHavingPendingFunImpl<M, M2, M3, GetterFun<M, V>, GGetterFun<M2, V>, GGGetterFun<M3, V>, V, V> groupBy(GGGetterFun<M3, V>... c) {
+        conditions.add(new GroupByWordCondition(c, ConditionTag.GROUP_BY));
+        return new LastLeftHavingPendingFunImpl<>(conditions);
+    }
+
+    @SafeVarargs
+    public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderA(GGGetterFun<M3, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -52,14 +56,16 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
         return this;
     }
 
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> orderA(boolean condition, GGGetterFun<M3, V>... getterFuns) {
+    @SafeVarargs
+    public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderA(boolean condition, GGGetterFun<M3, V>... getterFuns) {
         if (condition) {
             orderA(getterFuns);
         }
         return this;
     }
 
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> orderD(GGGetterFun<M3, V>... getterFuns) {
+    @SafeVarargs
+    public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderD(GGGetterFun<M3, V>... getterFuns) {
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -68,7 +74,8 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
         return this;
     }
 
-    public LastLeftWhereSelectFunImpl<M, M2, M3, V> orderD(boolean condition, GGGetterFun<M3, V>... getterFuns) {
+    @SafeVarargs
+    public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderD(boolean condition, GGGetterFun<M3, V>... getterFuns) {
         if (condition) {
             orderD(getterFuns);
         }

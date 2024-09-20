@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SpringMybatisBriefContext extends SpringBriefContext {
 
     //缓存BriefMapper
-    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
+    private static Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     public SpringMybatisBriefContext(ConfigurableListableBeanFactory beanFactory) {
         super(beanFactory, null);

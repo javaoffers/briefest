@@ -280,13 +280,31 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> in(C3 col, V... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> in(C3 col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> in(boolean condition, C3 col, V... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> in(boolean condition, C3 col, V... values) {
+        if (condition) {
+            in(col,values);
+        }
+        return this;
+    }
+
+    @Override 
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> in(C3 col, Collection... values) {
+        conditions.add(new InCondition(col, values, ConditionTag.IN));
+        return this;
+    }
+
+    @Override
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> in(boolean condition, C3 col, Collection... values) {
         if (condition) {
             in(col,values);
         }
@@ -294,27 +312,15 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> in(C3 col, Collection... values) {
-        conditions.add(new InCondition(col, values, ConditionTag.IN));
-        return this;
-    }
-
-    @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> in(boolean condition, C3 col, Collection... values) {
-        if (condition) {
-            in(col,values);
-        }
-        return this;
-    }
-
-    @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> notIn(C3 col, V... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> notIn(C3 col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> notIn(boolean condition, C3 col, V... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> notIn(boolean condition, C3 col, V... values) {
         if(condition){
             notIn(col,values);
         }
@@ -322,13 +328,15 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> notIn(C3 col, Collection... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> notIn(C3 col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> notIn(boolean condition, C3 col, Collection... values) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> notIn(boolean condition, C3 col, Collection... values) {
         if(condition){
             notIn(col,values);
         }
@@ -336,7 +344,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> isNull(C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> isNull(C3... cols) {
         for(GetterFun<M3,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -344,7 +353,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> isNull(boolean condition, C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> isNull(boolean condition, C3... cols) {
         if(condition){
             isNull(cols);
         }
@@ -352,7 +362,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> isNotNull(C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> isNotNull(C3... cols) {
         for(GetterFun<M3,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -360,7 +371,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> isNotNull(boolean condition, C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> isNotNull(boolean condition, C3... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -368,7 +380,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> exists(C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> exists(C3... cols) {
         for(GetterFun<M3,Object> col: cols){
             conditions.add(new ExistsCondition<V>(col));
         }
@@ -376,7 +389,8 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     }
 
     @Override
-    public LastOnFun<M1, M2, M3, C2, C3, V> exists(boolean condition, C3... cols) {
+    @SafeVarargs
+    public final LastOnFun<M1, M2, M3, C2, C3, V> exists(boolean condition, C3... cols) {
         if (condition) {
             exists(cols);
         }

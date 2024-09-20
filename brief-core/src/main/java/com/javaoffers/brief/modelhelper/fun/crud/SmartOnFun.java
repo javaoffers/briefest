@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.fun.crud;
 
 import com.javaoffers.brief.modelhelper.fun.ConstructorFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
+import com.javaoffers.brief.modelhelper.fun.crud.impl.LastJoinFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.LeftWhereSelectFunImpl;
 
 import java.io.Serializable;
@@ -78,7 +79,7 @@ public interface SmartOnFun<M1,M2,
      * @param <C3>
      * @return
      */
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> leftJoin(ConstructorFun<M3> m3) ;
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> leftJoin(ConstructorFun<M3> m3) ;
 
     /**
      * inner join
@@ -87,7 +88,7 @@ public interface SmartOnFun<M1,M2,
      * @param <C3>
      * @return
      */
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> innerJoin(ConstructorFun<M3> m3) ;
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> innerJoin(ConstructorFun<M3> m3) ;
 
     /**
      * right join
@@ -96,6 +97,6 @@ public interface SmartOnFun<M1,M2,
      * @param <C3>
      * @return
      */
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) ;
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) ;
 
 }

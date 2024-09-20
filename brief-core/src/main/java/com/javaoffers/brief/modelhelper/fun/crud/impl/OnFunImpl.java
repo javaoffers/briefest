@@ -304,13 +304,15 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, V... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, V... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, V... values) {
         if (condition) {
             in(col,values);
         }
@@ -318,13 +320,15 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, Collection... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> in(GetterFun<M2, Object> col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, Collection... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> in(boolean condition, GetterFun<M2, Object> col, Collection... values) {
         if (condition) {
             in(col,values);
         }
@@ -332,13 +336,15 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, V... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, V... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, V... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, V... values) {
         if(condition){
             notIn(col,values);
         }
@@ -346,13 +352,15 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, Collection... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> notIn(GetterFun<M2, Object> col, Collection... values) {
         conditions.add(new InCondition(col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, Collection... values) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> notIn(boolean condition, GetterFun<M2, Object> col, Collection... values) {
         if(condition){
             notIn(col,values);
         }
@@ -360,7 +368,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> isNull(GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> isNull(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -408,19 +417,19 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> leftJoin(ConstructorFun<M3> m3) {
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> leftJoin(ConstructorFun<M3> m3) {
         HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
         return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.LEFT_JOIN);
     }
 
     @Override
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> innerJoin(ConstructorFun<M3> m3) {
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> innerJoin(ConstructorFun<M3> m3) {
         HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
         return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.INNER_JOIN);
     }
 
     @Override
-    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFun<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) {
+    public <M3, C3 extends GetterFun<M3, Object>> LastJoinFunImpl<M1,M2, M3, C3, V> rightJoin(ConstructorFun<M3> m3) {
         HeadCondition headCondition = (HeadCondition) this.conditions.peekFirst();
         return new LastJoinFunImpl(this.m1Class, this.m2Class, TableHelper.getClassFromConstructorFunForJoin(m3,headCondition.getDataSource()), this.conditions, ConditionTag.RIGHT_JOIN);
     }

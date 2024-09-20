@@ -12,7 +12,7 @@ import com.javaoffers.brief.modelhelper.fun.crud.impl.LeftHavingPendingFunImpl;
  */
 public interface LeftWhereSelectFun<M,M2,C extends GetterFun<M,V>,C2 extends GGetterFun<M2,?>,V, R> extends
         WhereFun<M, GetterFun<M,V>,V, R> ,
-        LeftGroupFun<M,M2, C, C2, V , LeftHavingPendingFunImpl<M,M2, C,C2,?,?>>,
+        LeftGroupFun<M,M2, C, C2, V , LeftHavingPendingFunImpl<M,M2, C,C2,?,?,?>>,
         OrderFun<M, GetterFun<M,V>,V, R>,
         LimitFun<M, R>,
         StreamingFun<M>,

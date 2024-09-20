@@ -172,48 +172,48 @@ extends LeftHavingFunImpl<M,M2,C,C2,V,V, R>
         return (R) this;
     }
 
-
-    public R in(AggTag aggTag, C3 col, V... values) {
+    @SafeVarargs
+    public final R in(AggTag aggTag, C3 col, V... values) {
         leftHavingFun.in(aggTag, col,values);
         return (R) this;
     }
-
-    public LastLeftHavingFunImpl in(boolean condition, AggTag aggTag, C3 col, V... values) {
+    @SafeVarargs
+    public final LastLeftHavingFunImpl in(boolean condition, AggTag aggTag, C3 col, V... values) {
         leftHavingFun.in(condition, aggTag, col, values);
         return (R) this;
     }
 
-
-    public R in(AggTag aggTag, C3 col, Collection... values) {
+    @SafeVarargs
+    public final R in(AggTag aggTag, C3 col, Collection... values) {
         leftHavingFun.in(aggTag,col, values);
         return (R) this;
     }
 
-
-    public R in(boolean condition, AggTag aggTag, C3 col, Collection... values) {
+    @SafeVarargs
+    public final R in(boolean condition, AggTag aggTag, C3 col, Collection... values) {
         leftHavingFun.in(condition, aggTag, col, values);
         return (R) this;
     }
 
-
-    public R notIn(AggTag aggTag, C3 col, V... values) {
+    @SafeVarargs
+    public final R notIn(AggTag aggTag, C3 col, V... values) {
         leftHavingFun.notIn(aggTag, col, values);
         return (R) this;
     }
 
-
-    public R notIn(boolean condition, AggTag aggTag, C3 col, V... values) {
+    @SafeVarargs
+    public final R notIn(boolean condition, AggTag aggTag, C3 col, V... values) {
         leftHavingFun.notIn(condition,aggTag, col, values);
         return (R) this;
     }
 
-
-    public R notIn(AggTag aggTag, C3 col, Collection... values) {
+    @SafeVarargs
+    public final R notIn(AggTag aggTag, C3 col, Collection... values) {
         leftHavingFun.notIn(aggTag, col, values);
         return (R) this;
     }
-
-    public R notIn(boolean condition, AggTag aggTag, C3 col, Collection... values) {
+    @SafeVarargs
+    public final R notIn(boolean condition, AggTag aggTag, C3 col, Collection... values) {
         leftHavingFun.notIn(condition, aggTag, col, values);
         return (R) this;
     }
@@ -222,67 +222,23 @@ extends LeftHavingFunImpl<M,M2,C,C2,V,V, R>
         leftHavingFun.limitPage(pageNum, size);
         return (R) this;
     }
-
-
-    public R orderA(C... cs) {
+    @SafeVarargs
+    public final R orderA(C3... cs) {
         leftHavingFun.orderA(cs);
         return (R) this;
     }
-
-
-    public R orderA(boolean condition, C... cs) {
+    @SafeVarargs
+    public final R orderA(boolean condition, C3... cs) {
         leftHavingFun.orderA(condition, cs);
         return (R) this;
     }
-
-
-    public R orderD(C... cs) {
+    @SafeVarargs
+    public final R orderD(C3... cs) {
         leftHavingFun.orderD(cs);
         return (R) this;
     }
-
-
-    public R orderD(boolean condition, C... cs) {
-        leftHavingFun.orderD(condition, cs);
-        return (R) this;
-    }
-
-    public R orderA(C2... cs) {
-        leftHavingFun.orderA(cs);
-        return (R) this;
-    }
-
-    public R orderA(boolean condition, C2... cs) {
-        leftHavingFun.orderA(condition, cs);
-        return (R) this;
-    }
-
-    public R orderD(C2... cs) {
-        leftHavingFun.orderD(cs);
-        return (R) this;
-    }
-
-    public R orderD(boolean condition, C2... cs) {
-        leftHavingFun.orderD(condition, cs);
-        return (R) this;
-    }
-
-    public R orderA(C3... cs) {
-        leftHavingFun.orderA(cs);
-        return (R) this;
-    }
-
-    public R orderA(boolean condition, C3... cs) {
-        leftHavingFun.orderA(condition, cs);
-        return (R) this;
-    }
-
-    public R orderD(C3... cs) {
-        leftHavingFun.orderD(cs);
-        return (R) this;
-    }
-
-    public R orderD(boolean condition, C3... cs) {
+    @SafeVarargs
+    public final  R orderD(boolean condition, C3... cs) {
         leftHavingFun.orderD(condition, cs);
         return (R) this;
     }

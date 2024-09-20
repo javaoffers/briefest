@@ -50,12 +50,14 @@ public class InsertFunImpl<M> implements InsertFun<M, GetterFun<M,Object>,Object
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
+    @SafeVarargs
+    public final MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
        return moreInsertFun.colAll(models);
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
+    @SafeVarargs
+    public final MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
         return moreInsertFun.colAll(condition, models);
     }
 

@@ -201,85 +201,99 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> in(C col, V... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> in(C col, V... values) {
         this.whereFun.in( col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> in(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> in(boolean condition, C col, V... values) {
         this.whereFun.in( condition,  col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> in(C col, Collection... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> in(C col, Collection... values) {
         this.whereFun.in( col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
         this.whereFun.in( condition,  col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> notIn(C col, V... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> notIn(C col, V... values) {
         this.whereFun.notIn( col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> notIn(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> notIn(boolean condition, C col, V... values) {
         this.whereFun.notIn(condition, col, values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> notIn(C col, Collection... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> notIn(C col, Collection... values) {
         this.whereFun.notIn( col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
         this.whereFun.notIn( condition,  col,  values);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> isNull(C... cols) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> isNull(C... cols) {
         this.whereFun.isNull(cols);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> isNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> isNull(boolean condition, C... cols) {
         this.whereFun.isNull( condition,  cols);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> isNotNull(C... cols) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> isNotNull(C... cols) {
         this.whereFun.isNotNull(cols);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> isNotNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> isNotNull(boolean condition, C... cols) {
         this.whereFun.isNotNull(condition, cols);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> exists(C... existsSql) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> exists(C... existsSql) {
         this.whereFun.exists(existsSql);
         return this;
     }
 
     @Override
-    public DeleteWhereFunImpl<M, C, V> exists(boolean condition, C... existsSql) {
+    @SafeVarargs
+    public final DeleteWhereFunImpl<M, C, V> exists(boolean condition, C... existsSql) {
         this.whereFun.exists(condition, existsSql);
         return this;
     }

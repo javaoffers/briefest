@@ -227,55 +227,64 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> in(GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> in(GetterFun<M, V> col, V... values) {
         whereFun.in(col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> in(boolean condition, GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> in(boolean condition, GetterFun<M, V> col, V... values) {
         whereFun.in(condition,col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> in(GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> in(GetterFun<M, V> col, Collection... values) {
         whereFun.in(col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> in(boolean condition, GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> in(boolean condition, GetterFun<M, V> col, Collection... values) {
         whereFun.in(condition,col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> notIn(GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> notIn(GetterFun<M, V> col, V... values) {
         whereFun.notIn(col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, V... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, V... values) {
         whereFun.notIn(condition, col, values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> notIn(GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> notIn(GetterFun<M, V> col, Collection... values) {
         whereFun.notIn(col,values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> notIn(boolean condition, GetterFun<M, V> col, Collection... values) {
         whereFun.notIn(condition, col, values);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> isNull(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> isNull(GetterFun<M, V>... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -283,7 +292,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> isNull(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> isNull(boolean condition, GetterFun<M, V>... cols) {
         if(condition){
             isNull(cols);
         }
@@ -291,7 +301,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> isNotNull(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> isNotNull(GetterFun<M, V>... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -299,7 +310,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> isNotNull(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> isNotNull(boolean condition, GetterFun<M, V>... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -307,13 +319,15 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     }
 
     @Override
-    public WhereModifyFun<M, V> exists(GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> exists(GetterFun<M, V>... cols) {
         whereFun.exists(cols);
         return this;
     }
 
     @Override
-    public WhereModifyFun<M, V> exists(boolean condition, GetterFun<M, V>... cols) {
+    @SafeVarargs
+    public final WhereModifyFun<M, V> exists(boolean condition, GetterFun<M, V>... cols) {
         whereFun.exists(condition, cols);
         return this;
     }

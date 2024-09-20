@@ -20,9 +20,9 @@ import java.util.stream.Collectors;
  * @Description:
  * @Auther: create by cmj on 2022/6/5 19:42
  */
-public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2> implements
+public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extends GGetterFun<M2,?>, V, V2, THIS extends LeftHavingPendingFunImpl<M, M2,C,C2,V,V2, THIS>> implements
         LeftHavingPendingFun<M, M2, C, C2, V, LeftHavingFunImpl<M,M2,C,C2,V,V2, ?>>,
-        OrderFun<M,C,V,LeftHavingPendingFunImpl<M,M2,C,C2,V,V2>> {
+        OrderFun<M,C,V,LeftHavingPendingFunImpl<M,M2,C,C2,V,V2, THIS>> {
 
     private LinkedList<Condition> conditions;
 
@@ -45,21 +45,22 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     /**
      * 主表分组
      * @param c 主表分组字段
-     * @return this
+     * @return (THIS) this
      */
-    public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(GetterFun<M, V>... c) {
+    @SafeVarargs
+    public final THIS groupBy(GetterFun<M, V>... c) {
         conditions.add(new LeftGroupByWordCondition(c, ConditionTag.GROUP_BY));
-        return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
+        return (THIS) this;
     }
 
     /**
      * 分组，支持元SQL。 比如 groupBy( " left(colName, 10) ")
      * @param sqlCol col
-     * @return this
+     * @return (THIS) this
      */
-    public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(String sqlCol) {
+    public THIS groupBy(String sqlCol) {
         conditions.add(new LeftGroupByWordCondition(new String[]{sqlCol}, ConditionTag.GROUP_BY));
-        return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
+        return (THIS) this;
     }
 
     /**
@@ -67,18 +68,19 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
      * @param c 子表分组字段
      * @return
      */
-    public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> groupBy(GGetterFun<M2, V>... c) {
+    @SafeVarargs
+    public final THIS groupBy(GGetterFun<M2, V>... c) {
         conditions.add(new LeftGroupByWordCondition(c, ConditionTag.GROUP_BY));
-        return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
+        return (THIS) this;
     }
 
     /**
      * 分页
      * @return
      */
-    public LeftHavingPendingFunImpl<M, M2, C,C2,V,V2> limitPage(int pageNum, int size) {
+    public THIS limitPage(int pageNum, int size) {
         this.conditions.add(new LimitWordCondition(pageNum, size));
-        return new LeftHavingPendingFunImpl<M, M2, C,C2,V,V2>(conditions);
+        return (THIS) this;
     }
 
 
@@ -90,71 +92,79 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C... cs) {
+    @SafeVarargs
+    public final THIS orderA(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
-        return this;
+        return (THIS) this;
     }
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(boolean condition, C... cs) {
+    @SafeVarargs
+    public final THIS orderA(boolean condition, C... cs) {
         if(condition){
             orderA(cs);
         }
-        return this;
+        return (THIS) this;
     }
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C... cs) {
+    @SafeVarargs
+    public final  THIS orderD(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
-        return this;
+        return (THIS) this;
     }
 
     @Override
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(boolean condition, C... cs) {
+    @SafeVarargs
+    public final  THIS orderD(boolean condition, C... cs) {
         if(condition){
             orderD(cs);
         }
-        return this;
+        return (THIS) this;
     }
 
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(C2... cs) {
+    @SafeVarargs
+    public final  THIS orderA(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
-        return this;
+        return (THIS) this;
     }
 
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderA(boolean condition, C2... cs) {
+    @SafeVarargs
+    public final  THIS orderA(boolean condition, C2... cs) {
         if(condition){
             orderA(cs);
         }
-        return this;
+        return (THIS) this;
     }
 
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(C2... cs) {
+    @SafeVarargs
+    public final  THIS orderD(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
         }).collect(Collectors.toList());
         conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
-        return this;
+        return (THIS) this;
     }
 
-    public LeftHavingPendingFunImpl<M, M2, C, C2, V, V2> orderD(boolean condition, C2... cs) {
+    @SafeVarargs
+    public final THIS orderD(boolean condition, C2... cs) {
         if(condition){
             orderD(cs);
         }
-        return this;
+        return (THIS) this;
     }
 
     @Override

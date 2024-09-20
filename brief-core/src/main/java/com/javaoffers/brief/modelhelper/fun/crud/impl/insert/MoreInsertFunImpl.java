@@ -63,7 +63,8 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
+    @SafeVarargs
+    public final MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(M... models) {
         for(M m: models){
             colAll(m);
         }
@@ -71,7 +72,8 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     }
 
     @Override
-    public MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
+    @SafeVarargs
+    public final MoreInsertFun<M, GetterFun<M, Object>, Object> colAll(boolean condition, M... models) {
         if(condition){
             colAll(models);
         }

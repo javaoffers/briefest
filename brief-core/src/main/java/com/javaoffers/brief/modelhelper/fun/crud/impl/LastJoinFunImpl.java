@@ -36,13 +36,15 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> col(C3... cols) {
+    @SafeVarargs
+    public final LastJoinFunImpl<M1, M2, M3, C3, V> col(C3... cols) {
         Stream.of(cols).forEach(col->{conditions.add(new SelectColumnCondition( col));});
         return this;
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> col(boolean condition, C3... cols) {
+    @SafeVarargs
+    public final LastJoinFun<M1, M2, M3, C3, V> col(boolean condition, C3... cols) {
         if(condition){
             col(cols);
         }
@@ -50,7 +52,8 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> col(AggTag aggTag, C3... cols) {
+    @SafeVarargs
+    public final LastJoinFun<M1, M2, M3, C3, V> col(AggTag aggTag, C3... cols) {
         Stream.of(cols).forEach(col->{
             Pair<String, String> colAgg = TableHelper.getSelectAggrColStatement(col);
             this.conditions.add(new SelectColumnCondition(aggTag.name()+"("+colAgg.getLeft()+") as " + colAgg.getRight()));
@@ -59,7 +62,8 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> col(boolean condition, AggTag aggTag, C3... cols) {
+    @SafeVarargs
+    public final LastJoinFun<M1, M2, M3, C3, V> col(boolean condition, AggTag aggTag, C3... cols) {
         if(condition){
             col(aggTag,cols);
         }
@@ -92,7 +96,8 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> col(String... colSql) {
+    @SafeVarargs
+    public final LastJoinFun<M1, M2, M3, C3, V> col(String... colSql) {
         Stream.of(colSql).forEach(col->{conditions.add(new SelectColumnCondition( col));});
         return this;
     }

@@ -23,7 +23,7 @@ public class DeleteFunImpl<M> implements DeleteFun<M, GetterFun<M,Object>,Object
     }
 
     @Override
-    public DeleteWhereFun<M, GetterFun<M, Object>, Object> where() {
+    public DeleteWhereFunImpl<M, GetterFun<M, Object>, Object> where() {
         return new DeleteWhereFunImpl(conditions,this.modelClass);
     }
 }

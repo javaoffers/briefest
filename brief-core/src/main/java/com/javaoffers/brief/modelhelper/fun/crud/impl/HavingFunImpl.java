@@ -96,13 +96,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl eq(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>eq(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag, (GetterFun) col,value, ConditionTag.EQ));
         return this;
     }
 
     @Override
-    public HavingFunImpl eq(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>eq(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             eq(aggTag,col,value);
         }
@@ -110,13 +110,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl ueq(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> ueq(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag, (GetterFun) col,value, ConditionTag.UEQ));
         return this;
     }
 
     @Override
-    public HavingFunImpl ueq(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> ueq(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             ueq(aggTag,col,value);
         }
@@ -124,13 +124,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl gt(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> gt(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag,  col,value, ConditionTag.GT));
         return this;
     }
 
     @Override
-    public HavingFunImpl gt(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> gt(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             gt(aggTag,col,value);
         }
@@ -138,13 +138,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl lt(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> lt(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag,  col,value, ConditionTag.LT));
         return this;
     }
 
     @Override
-    public HavingFunImpl lt(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> lt(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             lt(aggTag, col, value);
         }
@@ -152,13 +152,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl gtEq(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> gtEq(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag,  col,value, ConditionTag.GT_EQ));
         return this;
     }
 
     @Override
-    public HavingFunImpl gtEq(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> gtEq(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             gtEq(aggTag,col,value);
         }
@@ -166,13 +166,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl ltEq(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> ltEq(AggTag aggTag, C col, V value) {
         conditions.add(new HavingGroupCondition(aggTag,  col,value, ConditionTag.LT_EQ));
         return this;
     }
 
     @Override
-    public HavingFunImpl ltEq(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M, C, V> ltEq(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             ltEq(aggTag,col,value);
         }
@@ -180,13 +180,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl between(AggTag aggTag, C col, V start, V end) {
+    public HavingFunImpl<M, C, V> between(AggTag aggTag, C col, V start, V end) {
         conditions.add(new HavingBetweenCondition(aggTag,  col,start, end, ConditionTag.BETWEEN));
         return this;
     }
 
     @Override
-    public HavingFunImpl between(boolean condition, AggTag aggTag, C col, V start, V end) {
+    public HavingFunImpl<M,C,V>between(boolean condition, AggTag aggTag, C col, V start, V end) {
         if(condition){
             between(aggTag, col, start,end);
         }
@@ -194,13 +194,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl notBetween(AggTag aggTag, C col, V start, V end) {
+    public HavingFunImpl<M,C,V>notBetween(AggTag aggTag, C col, V start, V end) {
         conditions.add(new HavingBetweenCondition(aggTag,  col,start, end, ConditionTag.NOT_BETWEEN));
         return this;
     }
 
     @Override
-    public HavingFunImpl notBetween(boolean condition, AggTag aggTag, C col, V start, V end) {
+    public HavingFunImpl<M,C,V>notBetween(boolean condition, AggTag aggTag, C col, V start, V end) {
         if(condition){
             notBetween(aggTag, col, start, end);
         }
@@ -208,13 +208,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl like(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>like(AggTag aggTag, C col, V value) {
         conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE));
         return this;
     }
 
     @Override
-    public HavingFunImpl like(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>like(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             like(aggTag, col, value);
         }
@@ -222,13 +222,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl likeLeft(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>likeLeft(AggTag aggTag, C col, V value) {
         conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE_LEFT));
         return this;
     }
 
     @Override
-    public HavingFunImpl likeLeft(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>likeLeft(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             likeLeft(aggTag, col, value);
         }
@@ -236,13 +236,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl likeRight(AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>likeRight(AggTag aggTag, C col, V value) {
         conditions.add(new LikeCondition(aggTag,  col, value, ConditionTag.LIKE_RIGHT));
         return this;
     }
 
     @Override
-    public HavingFunImpl likeRight(boolean condition, AggTag aggTag, C col, V value) {
+    public HavingFunImpl<M,C,V>likeRight(boolean condition, AggTag aggTag, C col, V value) {
         if(condition){
             likeLeft(aggTag, col, value);
         }
@@ -250,13 +250,15 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl in(AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>in(AggTag aggTag, C col, V... values) {
         conditions.add(new HavingInCondition(aggTag,  col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public HavingFunImpl in(boolean condition, AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>in(boolean condition, AggTag aggTag, C col, V... values) {
         if(condition){
             in(aggTag, col, values);
         }
@@ -264,13 +266,15 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl in(AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>in(AggTag aggTag, C col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag,  col, values, ConditionTag.IN));
         return this;
     }
 
     @Override
-    public HavingFunImpl in(boolean condition, AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>in(boolean condition, AggTag aggTag, C col, Collection... values) {
         if(condition){
             in(aggTag,col,values);
         }
@@ -278,13 +282,15 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl notIn(AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>notIn(AggTag aggTag, C col, V... values) {
         conditions.add(new HavingInCondition(aggTag,  col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public HavingFunImpl notIn(boolean condition, AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>notIn(boolean condition, AggTag aggTag, C col, V... values) {
         if(condition){
             notIn(aggTag,col,values);
         }
@@ -292,13 +298,15 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl notIn(AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>notIn(AggTag aggTag, C col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag,  col, values, ConditionTag.NOT_IN));
         return this;
     }
 
     @Override
-    public HavingFunImpl notIn(boolean condition, AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M,C,V>notIn(boolean condition, AggTag aggTag, C col, Collection... values) {
         if(condition){
             notIn(aggTag, col, values);
         }
@@ -416,27 +424,32 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> in(C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> in(C col, V... values) {
         return in(null,col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> in(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> in(boolean condition, C col, V... values) {
         return in(condition,null, col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> in(C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> in(C col, Collection... values) {
         return in(null,col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
         return in(condition,null, col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> notIn(C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> notIn(C col, V... values) {
         return notIn(null,col,values);
     }
 

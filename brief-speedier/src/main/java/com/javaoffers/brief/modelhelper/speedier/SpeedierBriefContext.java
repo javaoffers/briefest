@@ -20,9 +20,6 @@ public class SpeedierBriefContext extends SmartBriefContext {
 
     SpeedierTransactionManagement speedierTransactionManagement;
 
-    //缓存BriefMapper
-    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
-
     public SpeedierBriefContext(DataSource dataSource) {
         this.speedierTransactionManagement = new SpeedierTransactionManagement(dataSource);
     }

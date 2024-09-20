@@ -27,7 +27,7 @@ public abstract class SmartBriefContext implements BriefContext{
     private SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
 
     //缓存BriefMapper
-    private Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
+    private static Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     //briefProperties加载器
     private static List<BriefPropertiesLoader> briefPropertiesLoaderList =

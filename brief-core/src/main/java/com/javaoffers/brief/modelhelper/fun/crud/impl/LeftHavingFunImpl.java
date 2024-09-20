@@ -263,13 +263,15 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R in(AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final R in(AggTag aggTag, C col, V... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.IN));
         return (R) this;
     }
 
     @Override
-    public R in(boolean condition, AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final R in(boolean condition, AggTag aggTag, C col, V... values) {
         if (condition) {
             in(aggTag, col, values);
         }
@@ -277,13 +279,15 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R in(AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final R in(AggTag aggTag, C col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.IN));
         return (R) this;
     }
 
     @Override
-    public R in(boolean condition, AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final R in(boolean condition, AggTag aggTag, C col, Collection... values) {
         if (condition) {
             in(aggTag, col, values);
         }
@@ -291,13 +295,15 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R notIn(AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final R notIn(AggTag aggTag, C col, V... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
 
     @Override
-    public R notIn(boolean condition, AggTag aggTag, C col, V... values) {
+    @SafeVarargs
+    public final R notIn(boolean condition, AggTag aggTag, C col, V... values) {
         if (condition) {
             notIn(aggTag, col, values);
         }
@@ -305,13 +311,15 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R notIn(AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final R notIn(AggTag aggTag, C col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
 
     @Override
-    public R notIn(boolean condition, AggTag aggTag, C col, Collection... values) {
+    @SafeVarargs
+    public final R notIn(boolean condition, AggTag aggTag, C col, Collection... values) {
         if (condition) {
             notIn(aggTag, col, values);
         }
@@ -429,47 +437,56 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R in(C col, V... values) {
+    @SafeVarargs
+    public final  R in(C col, V... values) {
         return in(null, col, values);
     }
 
     @Override
-    public R in(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final  R in(boolean condition, C col, V... values) {
         return in(condition,null, col, values);
     }
 
     @Override
-    public R in(C col, Collection... values) {
+    @SafeVarargs
+    public final  R in(C col, Collection... values) {
         return in(null, col, values);
     }
 
     @Override
-    public R in(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final  R in(boolean condition, C col, Collection... values) {
         return in(condition,null, col, values);
     }
 
     @Override
-    public R notIn(C col, V... values) {
+    @SafeVarargs
+    public final  R notIn(C col, V... values) {
         return notIn(null, col, values);
     }
 
     @Override
-    public R notIn(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, C col, V... values) {
         return notIn(condition,null, col, values);
     }
 
     @Override
-    public R notIn(C col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(C col, Collection... values) {
         return notIn(null, col, values);
     }
 
     @Override
-    public R notIn(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, C col, Collection... values) {
         return notIn(condition,null, col, values);
     }
 
     @Override
-    public R isNull(C... cols) {
+    @SafeVarargs
+    public final  R isNull(C... cols) {
         for(C col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -477,7 +494,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R isNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final  R isNull(boolean condition, C... cols) {
         if(condition){
             isNull(cols);
         }
@@ -485,7 +503,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R isNotNull(C... cols) {
+    @SafeVarargs
+    public final  R isNotNull(C... cols) {
         for(C col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -493,7 +512,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R isNotNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final  R isNotNull(boolean condition, C... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -501,7 +521,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R exists(C... cols) {
+    @SafeVarargs
+    public final  R exists(C... cols) {
         for(C col: cols){
             conditions.add(new ExistsCondition<V>(col));
         }
@@ -509,7 +530,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R exists(boolean condition, C... cols) {
+    @SafeVarargs
+    public final  R exists(boolean condition, C... cols) {
         if(condition){
             exists(cols);
         }
@@ -672,54 +694,54 @@ public class LeftHavingFunImpl<M, M2,
         return (R) this;
     }
 
-
-    public R in(AggTag aggTag, C2 col, V2... values) {
+    @SafeVarargs
+    public final  R in(AggTag aggTag, C2 col, V2... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.IN));
         return (R) this;
     }
-
-    public LeftHavingFunImpl in(boolean condition, AggTag aggTag, C2 col, V2... values) {
+    @SafeVarargs
+    public final  LeftHavingFunImpl in(boolean condition, AggTag aggTag, C2 col, V2... values) {
         if (condition) {
             in(aggTag, col, values);
         }
         return (R) this;
     }
 
-
-    public R in(AggTag aggTag, C2 col, Collection... values) {
+    @SafeVarargs
+    public final  R in(AggTag aggTag, C2 col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.IN));
         return (R) this;
     }
 
-
-    public R in(boolean condition, AggTag aggTag, C2 col, Collection... values) {
+    @SafeVarargs
+    public final  R in(boolean condition, AggTag aggTag, C2 col, Collection... values) {
         if (condition) {
             in(aggTag, col, values);
         }
         return (R) this;
     }
 
-
-    public R notIn(AggTag aggTag, C2 col, V2... values) {
+    @SafeVarargs
+    public final  R notIn(AggTag aggTag, C2 col, V2... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
 
-
-    public R notIn(boolean condition, AggTag aggTag, C2 col, V2... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, AggTag aggTag, C2 col, V2... values) {
         if (condition) {
             notIn(aggTag, col, values);
         }
         return (R) this;
     }
 
-
-    public R notIn(AggTag aggTag, C2 col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(AggTag aggTag, C2 col, Collection... values) {
         conditions.add(new HavingInCondition(aggTag, col, values, ConditionTag.NOT_IN));
         return (R) this;
     }
-
-    public R notIn(boolean condition, AggTag aggTag, C2 col, Collection... values) {
+    @SafeVarargs
+    public final  R notIn(boolean condition, AggTag aggTag, C2 col, Collection... values) {
         if (condition) {
             notIn(aggTag, col, values);
         }
@@ -742,7 +764,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R orderA(C... cs) {
+    @SafeVarargs
+    public final  R orderA(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -752,7 +775,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R orderA(boolean condition, C... cs) {
+    @SafeVarargs
+    public final  R orderA(boolean condition, C... cs) {
         if (condition) {
             orderA(cs);
         }
@@ -760,7 +784,8 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R orderD(C... cs) {
+    @SafeVarargs
+    public final  R orderD(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -770,14 +795,15 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public R orderD(boolean condition, C... cs) {
+    @SafeVarargs
+    public final  R orderD(boolean condition, C... cs) {
         if (condition) {
             orderD(cs);
         }
         return (R) this;
     }
-
-    public R orderA(C2... cs) {
+    @SafeVarargs
+    public final  R orderA(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -785,15 +811,16 @@ public class LeftHavingFunImpl<M, M2,
         conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, true));
         return (R) this;
     }
-
-    public R orderA(boolean condition, C2... cs) {
+    @SafeVarargs
+    public final  R orderA(boolean condition, C2... cs) {
         if (condition) {
             orderA(cs);
         }
         return (R) this;
     }
 
-    public R orderD(C2... cs) {
+    @SafeVarargs
+    public final  R orderD(C2... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -802,7 +829,8 @@ public class LeftHavingFunImpl<M, M2,
         return (R) this;
     }
 
-    public R orderD(boolean condition, C2... cs) {
+    @SafeVarargs
+    public final  R orderD(boolean condition, C2... cs) {
         if (condition) {
             orderD(cs);
         }

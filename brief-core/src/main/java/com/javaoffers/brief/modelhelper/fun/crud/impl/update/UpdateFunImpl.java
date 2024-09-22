@@ -18,12 +18,12 @@ public class UpdateFunImpl <M, C extends GetterFun<M, Object>, V> implements Upd
     }
 
     @Override
-    public SmartUpdateFun<M, C, V> updateNull() {
+    public SmartUpdateFunImpl<M, C, V> updateNull() {
         return new SmartUpdateFunImpl<>(modelClass, true,dataSource);
     }
 
     @Override
-    public SmartUpdateFun<M, C, V> npdateNull() {
+    public SmartUpdateFunImpl<M, C, V> npdateNull() {
         return new SmartUpdateFunImpl<>(modelClass, false,dataSource);
     }
 }

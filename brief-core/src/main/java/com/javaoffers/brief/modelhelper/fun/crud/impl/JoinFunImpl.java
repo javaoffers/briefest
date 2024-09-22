@@ -41,14 +41,14 @@ public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Objec
      */
     @Override
     @SafeVarargs
-    public final JoinFun<M1, M2,  GetterFun<M2,Object>, V> col(String... colSql) {
+    public final JoinFunImpl<M1, M2, V> col(String... colSql) {
         Stream.of(colSql).forEach(col->{conditions.add(new SelectColumnCondition( col));});
         return this;
     }
 
     @Override
     @SafeVarargs
-    public final JoinFun<M1, M2, GetterFun<M2, Object>, V> col(GetterFun<M2, Object>... cols) {
+    public final JoinFunImpl<M1, M2, V> col(GetterFun<M2, Object>... cols) {
         Stream.of(cols).forEach(col->conditions.add(new SelectColumnCondition( col)));
         return this;
     }
@@ -100,7 +100,7 @@ public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Objec
     }
 
     @Override
-    public JoinFun<M1, M2,  GetterFun<M2,Object>, V> colAll() {
+    public JoinFunImpl<M1, M2, V> colAll() {
         List<SelectColumnCondition> colAll = TableHelper.getColAllForSelect(m2Class, SelectColumnCondition::new);
         conditions.addAll(colAll);
         return this;

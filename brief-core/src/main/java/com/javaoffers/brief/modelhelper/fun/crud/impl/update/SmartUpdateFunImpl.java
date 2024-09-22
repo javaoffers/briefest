@@ -57,25 +57,25 @@ public class SmartUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements
     }
 
     @Override
-    public OneUpdateFun<M, C, V> col(C col, V value) {
+    public OneUpdateFunImpl<M, C, V> col(C col, V value) {
         this.oneUpdateFun.col(col,value);
         return this.oneUpdateFun;
     }
 
     @Override
-    public OneUpdateFun<M, C, V> col(boolean condition, C col, V value) {
+    public OneUpdateFunImpl<M, C, V> col(boolean condition, C col, V value) {
         this.oneUpdateFun.col(condition,col,value);
         return this.oneUpdateFun;
     }
 
     @Override
-    public PrepareWhereModifyFun<M, C, V> colAll(M model) {
+    public PrepareWhereModifyFunImpl<M, C, V> colAll(M model) {
         this.conditions.add(new UpdateAllColValueCondition(isUpdateNull, mClass, model));
         return  this.prepareWhereModifyFun;
     }
 
     @Override
-    public PrepareWhereModifyFun<M, C, V> colAll(boolean condition, M model) {
+    public PrepareWhereModifyFunImpl<M, C, V> colAll(boolean condition, M model) {
         if(condition){
             colAll(model);
         }

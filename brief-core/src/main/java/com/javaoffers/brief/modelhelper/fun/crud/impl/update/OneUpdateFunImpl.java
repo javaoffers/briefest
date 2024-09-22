@@ -19,12 +19,12 @@ public class OneUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements O
     private LinkedConditions<Condition> conditions ;
 
     @Override
-    public WhereModifyFun<M, V> where() {
+    public WhereModifyFunImpl<M, V> where() {
         return new WhereModifyFunImpl<M, V>(conditions, mClass);
     }
 
     @Override
-    public OneUpdateFun<M, C, V> col(C col, V value) {
+    public OneUpdateFunImpl<M, C, V> col(C col, V value) {
         if(isUpdateNull(value)){
             this.conditions.add(new UpdateColValueCondition(col,value));
         }
@@ -32,7 +32,7 @@ public class OneUpdateFunImpl<M, C extends GetterFun<M, Object>, V> implements O
     }
 
     @Override
-    public OneUpdateFun<M, C, V> col(boolean condition, C col, V value) {
+    public OneUpdateFunImpl<M, C, V> col(boolean condition, C col, V value) {
         if(condition){
             col(col,value);
         }

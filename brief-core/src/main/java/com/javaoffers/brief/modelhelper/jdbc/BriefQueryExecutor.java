@@ -44,11 +44,13 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     public List<T> queryList(BaseSQLInfo sql) {
         boolean oldAutoCommitStatus = false;
         Connection connection = null;
+        PreparedStatement ps=null;
+        ResultSet rs = null;
         try {
 
             connection = getConnection();
             oldAutoCommitStatus = connection.getAutoCommit();
-            PreparedStatement ps = connection.prepareStatement(sql.getSql());
+            ps = connection.prepareStatement(sql.getSql());
             List<Object[]> argsParam = sql.getArgsParam();
             if (argsParam != null && argsParam.size() == 1) {
                 Object[] ov = argsParam.get(0);
@@ -59,18 +61,20 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
             }
             switch (sql.getSqlType()) {
                 case JOIN_SELECT:
+                    rs = ps.executeQuery();
                     return ModelParseUtils.converterResultSet2ModelForJoinSelect(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()));
+                            new BriefResultSetExecutor(rs));
                 case NORMAL_SELECT:
+                    rs = ps.executeQuery();
                     return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()));
+                            new BriefResultSetExecutor(rs));
                 case DML:
                 case DDL:
                     boolean execute = ps.execute();
                     List dmlResult = Lists.newArrayList();
                     if (execute) {
                         //NOTE: RESULT TYPE OF STRING
-                        ResultSet rs = ps.getResultSet();
+                        rs = ps.getResultSet();
                         while (rs.next()) {
                             List dmlCol = Lists.newArrayList();
                             int columnCount = rs.getMetaData().getColumnCount();
@@ -93,7 +97,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());
         } finally {
-            closeConnection(connection, oldAutoCommitStatus);
+            close(connection, oldAutoCommitStatus, ps, rs);
         }
     }
 

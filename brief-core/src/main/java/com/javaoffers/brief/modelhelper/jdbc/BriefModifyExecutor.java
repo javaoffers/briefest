@@ -34,6 +34,7 @@ public class BriefModifyExecutor implements ModifyExecutor {
     @Override
     public int batchModify(BaseSQLInfo sql) {
         Connection connection = null;
+        PreparedStatement ps = null;
         Boolean oldAutoCommit = null;
         try {
             connection = this.getConnection();
@@ -41,7 +42,7 @@ public class BriefModifyExecutor implements ModifyExecutor {
             List<Object[]> argsParam = sql.getArgsParam();
             oldAutoCommit = connection.getAutoCommit();
             connection.setAutoCommit(false);
-            PreparedStatement ps = connection.prepareStatement(nativeSql);
+            ps = connection.prepareStatement(nativeSql);
             int size = argsParam.size();
             int y = size % 2;
             if (size > 1) {
@@ -103,7 +104,7 @@ public class BriefModifyExecutor implements ModifyExecutor {
                     throw new SqlParseException(e.getMessage());
                 }
             }
-            closeConnection(connection, oldAutoCommit);
+            close(connection, oldAutoCommit, ps);
         }
     }
 

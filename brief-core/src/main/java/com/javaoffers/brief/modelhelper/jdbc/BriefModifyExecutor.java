@@ -20,7 +20,7 @@ import java.util.List;
  */
 public class BriefModifyExecutor implements ModifyExecutor {
 
-    DataSource dataSource;
+    private DataSource dataSource;
 
     public BriefModifyExecutor(DataSource dataSource) {
         this.dataSource = dataSource;

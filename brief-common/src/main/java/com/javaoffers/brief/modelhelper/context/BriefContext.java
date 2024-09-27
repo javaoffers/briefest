@@ -66,7 +66,8 @@ public interface BriefContext {
     public List<DeriveProcess> getDeriveProcess();
 
     /**
-     * 执行fresh方法后开始生效。
+     * 发布 BriefContext.
+     * 执行fresh方法后开始生效。实现类要保证每一次fresh都是安全可靠的.
      */
     public void fresh();
 }

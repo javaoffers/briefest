@@ -7,6 +7,10 @@ package com.javaoffers.brief.modelhelper.context;
  */
 public interface BriefContextAware {
 
+    /**
+     * 发布BriefContext可用
+     * @param briefContext
+     */
     void setBriefContext(BriefContext briefContext);
 
 }

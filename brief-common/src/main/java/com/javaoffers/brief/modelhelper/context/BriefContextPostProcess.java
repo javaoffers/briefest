@@ -6,6 +6,10 @@ package com.javaoffers.brief.modelhelper.context;
  */
 public interface BriefContextPostProcess {
 
+    /**
+     * 子类要保证每次执行结果都是一致的.
+     * @param briefContext
+     */
     void postProcess(BriefContext briefContext);
 
 }

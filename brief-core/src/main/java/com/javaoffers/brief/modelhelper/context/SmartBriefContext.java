@@ -31,23 +31,23 @@ public abstract class SmartBriefContext implements BriefContext{
 
     //briefProperties加载器
     private static List<BriefPropertiesLoader> briefPropertiesLoaderList =
-            new ArrayList<BriefPropertiesLoader>((Set)ReflectionUtils.getChildInstance(BriefPropertiesLoader.class));
+            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefPropertiesLoader.class)));
 
     //briefContextPostProcess后置处理器
     private static List<BriefContextPostProcess> briefContextPostProcessList =
-            new ArrayList<BriefContextPostProcess>((Set)ReflectionUtils.getChildInstance(BriefContextPostProcess.class));
+            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcess.class)));
 
-    //briefContextAware
+    //BriefContextAware
     private static List<BriefContextAware> briefContextAwareList =
-            new ArrayList<BriefContextAware>((Set)ReflectionUtils.getChildInstance(BriefContextAware.class));
+            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(BriefContextAware.class)));
 
-    //jqlChainFilterList
+    //JqlExecutorFilter
     private static  List<JqlExecutorFilter> jqlExecutorFilters =
-            new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class));
+            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class)));
 
-    //jqlChainFilterList
+    //DeriveProcess
     private static  List<DeriveProcess> deriveProcessList =
-            new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class));
+            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class)));
 
     //jqlInterceptor拦截器
     private static final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
@@ -119,12 +119,20 @@ public abstract class SmartBriefContext implements BriefContext{
 
     @Override
     public void fresh() {
+        //清空数据。避免脏数据
+        clean();
         //初始化配置信息
         initProperties();
         //执行content后置处理器
         initContextPostProcess();
         //已经可以对外提供功能了. 释放content可用.
         finish();
+    }
+    //清空数据。避免脏数据
+    public void clean() {
+        coreInterceptorsList.clear();
+        statementParserMap.clear();
+        deriveProcessList.clear();
     }
 
     //初始化配置信息.
@@ -135,7 +143,6 @@ public abstract class SmartBriefContext implements BriefContext{
         }
         //发布可用
         this.smartBriefProperties.fresh();
-
     }
 
     /**

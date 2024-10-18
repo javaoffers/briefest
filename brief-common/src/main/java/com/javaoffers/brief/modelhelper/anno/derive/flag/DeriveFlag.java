@@ -4,7 +4,7 @@ package com.javaoffers.brief.modelhelper.anno.derive.flag;
  * @description: Derivative label
  * @author: create by cmj on 2023/6/11 17:51
  */
-public enum DeriveFlag {
+public enum DeriveFlag implements DeriveMark {
     //Version of the function
     VERSION,
     /**

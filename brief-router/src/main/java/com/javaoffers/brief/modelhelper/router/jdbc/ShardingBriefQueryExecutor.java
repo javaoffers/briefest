@@ -40,63 +40,12 @@ public class ShardingBriefQueryExecutor<T> implements QueryExecutor<T> {
 
     @Override
     public List<T> queryList(BaseSQLInfo sql) {
-        boolean oldAutoCommitStatus = false;
-        Connection connection = null;
-        PreparedStatement ps=null;
-        ResultSet rs = null;
-        try {
-
-            connection = getConnection();
-            oldAutoCommitStatus = connection.getAutoCommit();
-            ps = connection.prepareStatement(sql.getSql());
-            List<Object[]> argsParam = sql.getArgsParam();
-            if (argsParam != null && argsParam.size() == 1) {
-                Object[] ov = argsParam.get(0);
-                for (int i = 0; i < ov.length; ) {
-                    Object o = ov[i];
-                    ps.setObject(++i, o);
-                }
-            }
-            switch (sql.getSqlType()) {
-                case JOIN_SELECT:
-                    rs = ps.executeQuery();
-                    return ModelParseUtils.converterResultSet2ModelForJoinSelect(this.modelClass,
-                            new ShardingBriefResultSetExecutor(rs));
-                case NORMAL_SELECT:
-                    rs = ps.executeQuery();
-                    return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass,
-                            new ShardingBriefResultSetExecutor(rs));
-                case DML:
-                case DDL:
-                    boolean execute = ps.execute();
-                    List dmlResult = Lists.newArrayList();
-                    if (execute) {
-                        //NOTE: RESULT TYPE OF STRING
-                        rs = ps.getResultSet();
-                        while (rs.next()) {
-                            List dmlCol = Lists.newArrayList();
-                            int columnCount = rs.getMetaData().getColumnCount();
-                            for (int i = 1; i <= columnCount; i++) {
-                                dmlCol.add(rs.getString(i));
-                            }
-                            if (dmlCol.size() > 0) {
-                                dmlResult.add(dmlCol);
-                            }
-                        }
-                    } else {
-                        //true Indicates successful execution
-                        dmlResult.add(true);
-                    }
-                    return dmlResult;
-                default:
-                    throw new ParseResultSetException("sql type does not exist");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new SqlParseException(e.getMessage());
-        } finally {
-            close(connection, oldAutoCommitStatus, ps, rs);
-        }
+        List<T> ts = Lists.newArrayList();
+        sql.setStreaming(data->{
+            ts.add((T)data);
+        });
+        queryStream(sql);
+        return ts;
     }
 
     @Override

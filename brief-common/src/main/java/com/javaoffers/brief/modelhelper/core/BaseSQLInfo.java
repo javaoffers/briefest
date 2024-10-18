@@ -16,4 +16,5 @@ public interface BaseSQLInfo {
     public SQLType getSqlType();
     public DBType getDbType();
     public Consumer getStreaming();
+    public void setStreaming(Consumer consumer);
 }

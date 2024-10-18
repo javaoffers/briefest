@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.utils;
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveMark;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -105,7 +106,7 @@ public class TableInfo {
      * derive info.
      * string: colName info
      */
-    private Map<DeriveFlag, DeriveInfo> deriveColName = new HashMap<>();
+    private Map<DeriveMark, DeriveInfo> deriveColName = new HashMap<>();
 
 
 
@@ -276,7 +277,7 @@ public class TableInfo {
         colNameAnnoInfo.setExcludeColAll(isFunGroup);
     }
 
-    void putDeriveColName(DeriveFlag deriveFlag, DeriveInfo colName){
+    void putDeriveColName(DeriveMark deriveFlag, DeriveInfo colName){
         this.deriveColName.put(deriveFlag, colName);
     }
 

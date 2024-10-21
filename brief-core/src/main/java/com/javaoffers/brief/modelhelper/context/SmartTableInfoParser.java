@@ -60,21 +60,8 @@ public class SmartTableInfoParser implements TableInfoParser {
             tableInfo.putColNames(columnName, columnInfo);
         });
 
-        //处理非主键
-        filedList.stream().filter(field -> {
-            Annotation[] declaredAnnotations = field.getDeclaredAnnotations();
-            if (declaredAnnotations == null || declaredAnnotations.length == 0) {
-                return true;
-            }
-
-            for (Annotation annotation : declaredAnnotations) {
-                boolean contains = annotation.getClass().getName().contains("com.javaoffers.brief.modelhelper.anno");
-                if (contains) {
-                    return true;
-                }
-            }
-            return false;
-        }).forEach(field -> {
+        //处理非主键,非@NoneCol 统一按照ColName处理(包含sql fun).
+        filedList.forEach(field -> {
             String columnName = Utils.conLine(field.getName());
             ColumnInfo columnInfo = new ColumnInfo(columnName);
             tableInfo.getColumnInfos().add(columnInfo);

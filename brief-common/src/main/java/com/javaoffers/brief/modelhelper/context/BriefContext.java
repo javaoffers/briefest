@@ -24,6 +24,12 @@ public interface BriefContext {
     public BriefProperties getBriefProperties();
 
     /**
+     * 设置执行工厂
+     * @param jdbcExecutorFactory
+     */
+    void setJdbcExecutorFactory(JdbcExecutorFactory jdbcExecutorFactory);
+
+    /**
      * 获取执行工厂
      * @return
      */

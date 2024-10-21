@@ -19,13 +19,16 @@
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
             <version>3.6.9-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-helper</artifactId>
             <version>3.6.9-SNAPSHOT</version>
-            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-core</artifactId>
+            <version>3.6.9-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

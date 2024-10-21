@@ -39,7 +39,6 @@ public class ClickHouseStatementParser implements StatementParser<Condition, Bas
         //判断类型
         ConditionTag conditionTag = conditions.get(0).getConditionTag();
         return crudConditionParse.get(conditionTag).parse(conditions);
-
     }
 
     @Override

@@ -277,11 +277,11 @@ public class TableInfo {
         colNameAnnoInfo.setExcludeColAll(isFunGroup);
     }
 
-    void putDeriveColName(DeriveMark deriveFlag, DeriveInfo colName){
+    public void putDeriveColName(DeriveMark deriveFlag, DeriveInfo colName){
         this.deriveColName.put(deriveFlag, colName);
     }
 
-    public DeriveInfo getDeriveColName(DeriveFlag deriveFlag){
+    public DeriveInfo getDeriveColName(DeriveMark deriveFlag){
         return this.deriveColName.get(deriveFlag);
     }
 

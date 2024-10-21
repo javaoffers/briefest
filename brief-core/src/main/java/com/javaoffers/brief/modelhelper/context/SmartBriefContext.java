@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
  */
 public abstract class SmartBriefContext implements BriefContext{
 
+    private static JdbcExecutorFactory jdbcExecutorFactory = BriefJdbcExecutorFactory.instance;
+
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
     private SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
 
@@ -31,11 +33,11 @@ public abstract class SmartBriefContext implements BriefContext{
 
     //briefProperties加载器
     private static List<BriefPropertiesLoader> briefPropertiesLoaderList =
-            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefPropertiesLoader.class)));
+            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefPropertiesLoader.class))));
 
     //briefContextPostProcess后置处理器
     private static List<BriefContextPostProcess> briefContextPostProcessList =
-            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcess.class)));
+            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcess.class))));
 
     //BriefContextAware
     private static List<BriefContextAware> briefContextAwareList =
@@ -71,8 +73,13 @@ public abstract class SmartBriefContext implements BriefContext{
 
     public abstract DataSource getDataSource();
 
+    @Override
+    public void setJdbcExecutorFactory(JdbcExecutorFactory jdbcExecutorFactory) {
+        SmartBriefContext.jdbcExecutorFactory = jdbcExecutorFactory;
+    }
+
     public JdbcExecutorFactory getJdbcExecutorFactory(){
-        return BriefJdbcExecutorFactory.instance;
+        return this.jdbcExecutorFactory;
     }
 
     @Override
@@ -132,7 +139,6 @@ public abstract class SmartBriefContext implements BriefContext{
     public void clean() {
         coreInterceptorsList.clear();
         statementParserMap.clear();
-        deriveProcessList.clear();
     }
 
     //初始化配置信息.

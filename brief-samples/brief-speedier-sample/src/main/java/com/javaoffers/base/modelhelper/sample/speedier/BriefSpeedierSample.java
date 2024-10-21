@@ -29,7 +29,7 @@ public class BriefSpeedierSample {
     static String username = "root";
     static String password = "zqbxcmj";
     static BriefSpeedierDataSource dataSource = BriefSpeedierDataSource.getInstance(driver6, jdbcUrl, username, password);
-    BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
+    static BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
     //Using custom mapper
     BriefUserMapper crudUserMapper = speedier.newCustomBriefMapper(BriefUserMapper.class);
     //Use the default mapper
@@ -38,6 +38,10 @@ public class BriefSpeedierSample {
     BriefMapper<UserOrder> userOrderBriefMapper = speedier.newDefaultBriefMapper(UserOrder.class);
 
     BriefEncryptDataMapper briefEncryptDataMapper = speedier.newCustomBriefMapper(BriefEncryptDataMapper.class);
+
+    public static BriefSpeedier getBriefSpeedier(){
+        return speedier;
+    }
 
     @Test
     public void testAll(){

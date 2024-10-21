@@ -9,6 +9,11 @@
     <artifactId>brief-speedier-sample</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-router</artifactId>
+            <version>3.6.9-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>

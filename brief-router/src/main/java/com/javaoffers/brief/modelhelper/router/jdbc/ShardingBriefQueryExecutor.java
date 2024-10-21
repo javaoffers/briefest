@@ -1,11 +1,18 @@
 package com.javaoffers.brief.modelhelper.router.jdbc;
 
+import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
+import com.javaoffers.brief.modelhelper.jdbc.BriefResultSetExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.QueryExecutor;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
+import com.javaoffers.brief.modelhelper.router.ShardingDeriveFlag;
+import com.javaoffers.brief.modelhelper.router.strategy.ShardingTableColumInfo;
 import com.javaoffers.brief.modelhelper.utils.Lists;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
+import com.javaoffers.thrid.jsqlparser.JSQLParserException;
 import org.apache.commons.collections4.CollectionUtils;
 
 import javax.sql.DataSource;
@@ -13,6 +20,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -50,6 +58,19 @@ public class ShardingBriefQueryExecutor<T> implements QueryExecutor<T> {
 
     @Override
     public void queryStream(BaseSQLInfo sql) {
+        TableInfo tableInfo = TableHelper.getTableInfo(this.modelClass);
+        ShardingTableColumInfo stc = (ShardingTableColumInfo)tableInfo.getDeriveColName(ShardingDeriveFlag.SHARDING_TABLE);
+        if(stc != null){
+            List<BaseSQLInfo> baseSQLInfos = stc.shardingParse(sql);
+
+
+        }else{
+            normal(sql);
+        }
+
+    }
+
+    private void normal(BaseSQLInfo sql) {
         boolean oldAutoCommitStatus = false;
         Connection connection = null;
         try {
@@ -67,11 +88,11 @@ public class ShardingBriefQueryExecutor<T> implements QueryExecutor<T> {
             switch (sql.getSqlType()) {
                 case JOIN_SELECT:
                     ModelParseUtils.converterResultSet2ModelForJoinSelectStream(this.modelClass,
-                            new ShardingBriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
                     break;
                 case NORMAL_SELECT:
                     ModelParseUtils.converterResultSet2ModelForNormalSelectStream(this.modelClass,
-                            new ShardingBriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
                     break;
                 default:
                     throw new ParseResultSetException("sql type does not exist for streaming process");

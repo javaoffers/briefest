@@ -105,6 +105,6 @@ public class ShardingBriefQueryExecutor<T> implements QueryExecutor<T> {
 
     @Override
     public Connection getConnection() {
-        return null;
+        throw new UnsupportedOperationException("does not support getConnection()");
     }
 }

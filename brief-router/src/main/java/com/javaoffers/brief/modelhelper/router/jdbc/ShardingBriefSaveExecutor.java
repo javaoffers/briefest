@@ -29,16 +29,16 @@ public class ShardingBriefSaveExecutor implements SaveExecutor {
 
     @Override
     public Id save(BaseSQLInfo sql) {
-
+        return this.jdbcExecutor.save(sql);
     }
 
     @Override
     public List<Id> batchSave(BaseSQLInfo sql)  {
-
+        return this.jdbcExecutor.batchSave(sql);
     }
 
     @Override
     public Connection getConnection() {
-        return null;
+        throw new UnsupportedOperationException("does not support getConnection()");
     }
 }

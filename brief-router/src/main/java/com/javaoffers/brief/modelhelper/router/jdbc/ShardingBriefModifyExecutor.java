@@ -34,6 +34,6 @@ public class ShardingBriefModifyExecutor implements ModifyExecutor {
 
     @Override
     public Connection getConnection() {
-        return null;
+        throw new UnsupportedOperationException("does not support getConnection()");
     }
 }

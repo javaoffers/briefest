@@ -7,12 +7,19 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /**
- * @description:
+ * @description: Data source executor
  * @author: create by cmj on 2023/7/30 10:22
  */
 public interface DataSourceExecutor {
+
+    /**
+     * Get the database link
+     */
     Connection getConnection();
 
+    /**
+     * close connection
+     */
     default void closeConnection(Connection connection, boolean isClose){
         if(isClose){
             try {
@@ -24,6 +31,10 @@ public interface DataSourceExecutor {
         }
     }
 
+    /**
+     * close statement.
+     * @param statement will be close
+     */
     default void closeStatement(Statement statement){
         try {
             if(statement != null && !statement.isClosed()){
@@ -35,6 +46,10 @@ public interface DataSourceExecutor {
         }
     }
 
+    /**
+     * close result set
+     * @param resultSet will be close
+     */
     default void closeResultSet(ResultSet resultSet){
         try {
             if(resultSet!=null && !resultSet.isClosed()){
@@ -46,12 +61,18 @@ public interface DataSourceExecutor {
         }
     }
 
+    /**
+     * close connection, statement, resultSet
+     */
     default void close(Connection connection, boolean isClose, Statement statement, ResultSet resultSet){
         closeResultSet(resultSet);
         closeStatement(statement);
         closeConnection(connection, isClose);
     }
 
+    /**
+     * close connection and statement
+     */
     default void close(Connection connection, boolean isClose, Statement statement){
         closeStatement(statement);
         closeConnection(connection, isClose);

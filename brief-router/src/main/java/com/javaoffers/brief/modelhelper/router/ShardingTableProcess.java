@@ -86,12 +86,14 @@ public class ShardingTableProcess implements Consumer<ColNameProcessorInfo> {
         List<Object[]> argsParam = sourceSqlInfo.getArgsParam();
         List<BaseSQLInfo> sqlInfos = new ArrayList<>();
         for (Object[] arg : argsParam) {
+            //where 条件处理分片
             if (ConditionName.isWhereOnName(conditionName)) {
                 ArrayList<Object> value = new ArrayList<>();
                 for(int i=0; i < argsSize; i++) {
                     value.add(arg[columnIndex+i]);
                 }
                 String orgTableName = colNameProcessorInfo.getTableName();
+                //执行分布式策略
                 List<String> list = shardingTableStrategy.shardingTable(orgTableName, columnName, conditionTag, value);
                 String removeLimitSql = sourceSqlInfo.getSql();
                 if(limit != null){

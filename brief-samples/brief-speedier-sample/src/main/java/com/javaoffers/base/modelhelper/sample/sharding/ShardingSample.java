@@ -1,5 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.sharding;
 
+import com.javaoffers.base.modelhelper.sample.MockBriefSpeedier;
 import com.javaoffers.base.modelhelper.sample.speedier.BriefSpeedierSample;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
@@ -11,8 +12,19 @@ import java.util.Date;
 import java.util.List;
 
 public class ShardingSample {
-    BriefSpeedier briefSpeedier = BriefSpeedierSample.getBriefSpeedier();
-    BriefMapper<ShardingUser> userBriefMapper = briefSpeedier.newDefaultBriefMapper(ShardingUser.class);
+
+    static String jdbc = "jdbc:oracle:thin:@localhost:1521:orcl";
+    static BriefSpeedier speedier;
+
+    static {
+        try {
+            speedier = MockBriefSpeedier.mockShardingBriefSpeedier(jdbc, ShardingUser.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    BriefMapper<ShardingUser> userBriefMapper = speedier.newDefaultBriefMapper(ShardingUser.class);
 
     @Test
     public void testShardingSampleEq(){

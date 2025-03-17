@@ -29,14 +29,15 @@ public class ShardingSample {
     @Test
     public void testShardingSampleEq(){
         userBriefMapper.select().colAll().where()
-                .eq(ShardingUser::getBirthday, new Date())
                 .eq(ShardingUser::getId,1)
+                .eq(ShardingUser::getBirthday, new Date())
                 .exs();
     }
 
     @Test
     public void testShardingSampleIn(){
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
+                //这两个一样，只会触发一个sql
                 .in(ShardingUser::getBirthday, new Date(), new Date())
 //                .eq(ShardingUser::getId, 1)
                 .exs();
@@ -46,6 +47,7 @@ public class ShardingSample {
     @Test
     public void testShardingSampleIn2(){
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
+                //会触发2个分片，因为有两个月
                 .in(ShardingUser::getBirthday, new Date(), DateUtils.addDays(new Date(), -31))
                 .exs();
         System.out.println(exs.size());

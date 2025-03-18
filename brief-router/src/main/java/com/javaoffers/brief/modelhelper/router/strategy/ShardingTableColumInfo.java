@@ -7,12 +7,13 @@ import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.thrid.jsqlparser.JSQLParserException;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShardingTableColumInfo extends DeriveInfo {
 
     private SqlParserProcessor sqlParserProcessor;
-    private ThreadLocal task = new ThreadLocal();
+    private ThreadLocal<ShardingSQLContext> task = new ThreadLocal();
 
     public ShardingTableColumInfo(String colName, Field field, SqlParserProcessor sqlParserProcessor) {
         super(colName, field);
@@ -23,16 +24,10 @@ public class ShardingTableColumInfo extends DeriveInfo {
     public List<BaseSQLInfo> shardingParse(BaseSQLInfo sqlInfo){
         String sql = sqlInfo.getSql();
         try {
-            task.set(sqlInfo);
+            ShardingSQLContext shardingSQLContext = new ShardingSQLContext(sqlInfo);
+            task.set(shardingSQLContext);
             sqlParserProcessor.parseSql(sql);
-            Object o = task.get();
-            if(o instanceof BaseSQLInfo ){
-                return Lists.newArrayList(sqlInfo);
-            }
-            List<BaseSQLInfo> sharding = (List) o;
-            if(sharding == null || sharding.size() == 0){
-                return Lists.newArrayList(sqlInfo);
-            }
+            List<BaseSQLInfo> sharding = task.get().getShardingSQLInfos();;
             return sharding;
         } catch (JSQLParserException e) {
             throw new RuntimeException(e);
@@ -41,11 +36,8 @@ public class ShardingTableColumInfo extends DeriveInfo {
         }
     }
 
-    public BaseSQLInfo getSourceSqlInfo(){
-        return (BaseSQLInfo)task.get();
+    public ShardingSQLContext getShardingSQLContext(){
+        return  task.get();
     }
 
-    public void setShardingSqlInfo(List<BaseSQLInfo> sqlInfos){
-        task.set(sqlInfos);
-    }
 }

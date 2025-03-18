@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.core.Limit;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.parser.ColNameProcessorInfo;
 import com.javaoffers.brief.modelhelper.parser.ConditionName;
+import com.javaoffers.brief.modelhelper.router.strategy.ShardingSQLContext;
 import com.javaoffers.brief.modelhelper.router.strategy.ShardingTableColumInfo;
 import com.javaoffers.brief.modelhelper.router.strategy.ShardingTableStrategy;
 import com.javaoffers.thrid.jsqlparser.parser.CCJSqlParserConstants;
@@ -41,7 +42,8 @@ public class ShardingTableProcess implements Consumer<ColNameProcessorInfo> {
             }
         }
 
-        BaseSQLInfo sourceSqlInfo = shardingTableColumInfo.getSourceSqlInfo();
+        ShardingSQLContext shardingSQLContext = shardingTableColumInfo.getShardingSQLContext();
+        BaseSQLInfo sourceSqlInfo = shardingSQLContext.getOriginSQLInfo();
         Limit limit = sourceSqlInfo.limit();
         Column column = colNameProcessorInfo.getColumn();
         ConditionTag conditionTag = null;
@@ -84,7 +86,8 @@ public class ShardingTableProcess implements Consumer<ColNameProcessorInfo> {
         ConditionName conditionName = colNameProcessorInfo.getConditionName();
         String columnName = column.getColumnName();
         List<Object[]> argsParam = sourceSqlInfo.getArgsParam();
-        List<BaseSQLInfo> sqlInfos = new ArrayList<>();
+        List<BaseSQLInfo> newShardingSqlInfo = new ArrayList<>();
+        //开始处理每一批参数
         for (Object[] arg : argsParam) {
             //where 条件处理分片
             if (ConditionName.isWhereOnName(conditionName)) {
@@ -99,27 +102,30 @@ public class ShardingTableProcess implements Consumer<ColNameProcessorInfo> {
                 if(limit != null){
                     removeLimitSql = limit.cleanLimit(removeLimitSql);
                 }
-
-                for(String shardingTableName : list) {
-                    BaseSQLInfo clone = sourceSqlInfo.clone();
-                    String shardingTableSql = removeLimitSql.replaceAll(orgTableName+"\\.", shardingTableName+"\\.");
-                    String fromTable = ConditionTag.SELECT_FROM.getTag() +" "+ orgTableName+" ";
-                    shardingTableSql = shardingTableSql.replaceAll(fromTable,
-                            ConditionTag.SELECT_FROM.getTag() +" "+ shardingTableName+" ");
-                    clone.resetSql(shardingTableSql);
-                    sqlInfos.add(clone);
+                List<BaseSQLInfo> shardingSQLInfos = shardingSQLContext.getShardingSQLInfos();
+                for(BaseSQLInfo baseSQLInfo: shardingSQLInfos){
+                    for(String shardingTableName : list) {
+                        BaseSQLInfo clone = baseSQLInfo.clone();
+                        String shardingTableSql = removeLimitSql.replaceAll(orgTableName+"\\.", shardingTableName+"\\.");
+                        String fromTable = ConditionTag.SELECT_FROM.getTag() +" "+ orgTableName+" ";
+                        shardingTableSql = shardingTableSql.replaceAll(fromTable,
+                                ConditionTag.SELECT_FROM.getTag() +" "+ shardingTableName+" ");
+                        clone.resetSql(shardingTableSql);
+                        newShardingSqlInfo.add(clone);
+                    }
                 }
-                shardingTableColumInfo.setShardingSqlInfo(sqlInfos);
             } else if (ConditionName.VALUES == conditionName) {
 
-                column.setColumnName("加密(" + columnName + ")");
+//                column.setColumnName("加密(" + columnName + ")");
             } else if (ConditionName.UPDATE_SET == conditionName) {
 
-                column.setColumnName("加密(" + columnName + ")");
+//                column.setColumnName("加密(" + columnName + ")");
             }
         }
 
-
+        List<BaseSQLInfo> shardingSQLInfos = shardingSQLContext.getShardingSQLInfos();
+        shardingSQLInfos.clear();
+        shardingSQLInfos.addAll(newShardingSqlInfo);
     }
 
     public void setShardingTableColumInfo(ShardingTableColumInfo shardingTableColumInfo) {

@@ -41,7 +41,7 @@ public class SpringBriefContext extends SmartBriefContext {
     }
 
     @Override
-    public DataSource getDataSource() {
+    public DataSource getDataSource(Class modelClass) {
         return this.dataSource;
     }
 

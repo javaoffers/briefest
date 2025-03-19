@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 /**
  * brief context . 用于初始化化brief启动前的必要信息. 是brief的上下文，代表brief的应用.
- *
+ * 一个jvm只有一个上下文
  * @author mingJie
  */
 public abstract class SmartBriefContext implements BriefContext{
@@ -26,39 +26,39 @@ public abstract class SmartBriefContext implements BriefContext{
     private static JdbcExecutorFactory jdbcExecutorFactory = BriefJdbcExecutorFactory.instance;
 
     //brief的配置信息,存在默认配置+用户配置(用户可自定义brief提供的配置功能).
-    private SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
+    private static SmartBriefProperties smartBriefProperties = new SmartBriefProperties();
 
     //缓存BriefMapper
-    private final Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
+    private static final Map<Class, BriefMapper> cache = new ConcurrentHashMap<>();
 
     //briefProperties加载器
-    private final List<BriefPropertiesLoader> briefPropertiesLoaderList =
+    private static final List<BriefPropertiesLoader> briefPropertiesLoaderList =
             Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefPropertiesLoader.class))));
 
     //briefContextPostProcess后置处理器
-    private final List<BriefContextPostProcess> briefContextPostProcessList =
+    private static final List<BriefContextPostProcess> briefContextPostProcessList =
             Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcess.class))));
 
     //BriefContextAware
-    private final List<BriefContextAware> briefContextAwareList =
+    private static final List<BriefContextAware> briefContextAwareList =
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(BriefContextAware.class)));
 
     //JqlExecutorFilter
-    private final List<JqlExecutorFilter> jqlExecutorFilters =
+    private static final List<JqlExecutorFilter> jqlExecutorFilters =
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class)));
 
     //DeriveProcess
-    private final List<DeriveProcess> deriveProcessList =
+    private static final List<DeriveProcess> deriveProcessList =
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class)));
 
     //jqlInterceptor拦截器
-    private final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
+    private static final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
     //DBType
-    private final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
+    private static final Map<DBType, StatementParser> statementParserMap = new HashMap<>();
 
     //SmartTableInfoParser
-    private final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
+    private static final SmartTableInfoParser smartTableInfoParser = new SmartTableInfoParser();
 
     public SmartBriefContext(SmartBriefProperties smartBriefProperties) {
         this.smartBriefProperties = smartBriefProperties;
@@ -71,7 +71,8 @@ public abstract class SmartBriefContext implements BriefContext{
         return smartBriefProperties;
     }
 
-    public abstract DataSource getDataSource();
+    //一个jvm只有一个上下文，
+    public abstract DataSource getDataSource(Class modelClass);
 
     @Override
     public void setJdbcExecutorFactory(JdbcExecutorFactory jdbcExecutorFactory) {
@@ -89,7 +90,7 @@ public abstract class SmartBriefContext implements BriefContext{
         if(mapper == null){
             Type modelClass = Utils.getModelClass(briefMapper);
             BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(briefMapper);
-            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, getDataSource(), (Class) modelClass);
+            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, getDataSource((Class)modelClass), (Class) modelClass);
             cache.putIfAbsent(briefMapper, (BriefMapper)JdkProxyUtils.createProxy(briefMapper, smartMapperProxy));
             mapper = cache.get(briefMapper);
         }

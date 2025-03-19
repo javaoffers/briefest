@@ -2,25 +2,19 @@ package com.javaoffers.brief.modelhelper.router.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.Limit;
-import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
-import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.exception.StopExecException;
-import com.javaoffers.brief.modelhelper.jdbc.BriefResultSetExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutor;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorMetadata;
 import com.javaoffers.brief.modelhelper.jdbc.QueryExecutor;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
 import com.javaoffers.brief.modelhelper.router.ShardingDeriveFlag;
-import com.javaoffers.brief.modelhelper.router.strategy.ShardingTableColumInfo;
+import com.javaoffers.brief.modelhelper.router.strategy.ShardingTableColumInfoProcessor;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,14 +27,14 @@ public class ShardingBriefQueryExecutor<T> implements QueryExecutor<T> {
     JdbcExecutor jdbcExecutor;
     JdbcExecutorMetadata metadata;
     TableInfo tableInfo;
-    ShardingTableColumInfo stc ;
+    ShardingTableColumInfoProcessor stc ;
     boolean sharding = false;
 
     public ShardingBriefQueryExecutor(JdbcExecutor jdbcExecutor) {
         this.jdbcExecutor = jdbcExecutor;
         this.metadata = this.jdbcExecutor.getMetadata();
         this.tableInfo = TableHelper.getTableInfo(metadata.getModelClass());
-        this.stc = (ShardingTableColumInfo)tableInfo.getDeriveColName(ShardingDeriveFlag.SHARDING_TABLE);
+        this.stc = (ShardingTableColumInfoProcessor)tableInfo.getDeriveColName(ShardingDeriveFlag.SHARDING_TABLE);
         this.sharding = this.stc != null;
     }
 

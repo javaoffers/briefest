@@ -42,7 +42,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
 
     private static Map<Method,String> isMapperMethod = BriefUtils.getMapperMethod();
 
-    private static SmartBriefContext briefContext;
+    private static volatile SmartBriefContext briefContext;
 
     private Class clazz;
 
@@ -171,6 +171,5 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
     @Override
     public void setBriefContext(BriefContext briefContext) {
         CrudMapperProxy.briefContext = (SmartBriefContext) briefContext;
-
     }
 }

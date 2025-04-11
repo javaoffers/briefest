@@ -25,7 +25,7 @@ public class SQLParse implements BriefContextAware {
     private String param;
     public final static String p = "(\\#\\{[0-9a-zA-Z-_]+\\})";
     public final static Pattern compile = Pattern.compile(p);
-    private static List<JqlInterceptor> jqlInterceptorList;
+    private static volatile BriefContext briefContext;
 
     SQLParse() { }
 
@@ -48,7 +48,7 @@ public class SQLParse implements BriefContextAware {
         SQL.setParamMap(paramMap);
 
         //EXECUTE JQL INTERCEPTOR
-        for(JqlInterceptor jqlInterceptor : jqlInterceptorList){
+        for(JqlInterceptor jqlInterceptor : briefContext.getJqlInterceptors()){
             jqlInterceptor.handler(SQL);
         }
 
@@ -87,6 +87,6 @@ public class SQLParse implements BriefContextAware {
 
     @Override
     public void setBriefContext(BriefContext briefContext) {
-        jqlInterceptorList = briefContext.getJqlInterceptors();
+        SQLParse.briefContext = briefContext;
     }
 }

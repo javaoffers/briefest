@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class JqlLogger implements BriefContextAware {
     public static Logger log = LoggerFactory.getLogger(JqlLogger.class);
-    public static long time = -1;
+
     public static SmartBriefProperties briefProperties;
 
     public static void info(String info, Object param){
@@ -30,6 +30,9 @@ public class JqlLogger implements BriefContextAware {
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext)briefContext;
         briefProperties = smartBriefContext.getBriefProperties();
-        time = briefProperties.getSlowSqlTimeThreshold();
+    }
+
+    public static long getSlowSqlTimeThreshold(){
+        return briefProperties.getSlowSqlTimeThreshold();
     }
 }

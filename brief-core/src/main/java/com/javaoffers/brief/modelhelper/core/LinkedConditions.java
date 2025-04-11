@@ -17,10 +17,9 @@ import java.util.function.BiConsumer;
 /**
  * create by cmj on 2022-06-20 2:50:07
  */
-public class LinkedConditions<T extends Condition> extends LinkedList<T> implements BriefContextAware {
+public class LinkedConditions<T extends Condition> extends LinkedList<T> {
 
     private List<BiConsumer<T, T>> beforeAddProcess = new LinkedList<>();
-    private static BriefContext briefContext ;
 
     {
         this.beforeAdd((before, current) -> {
@@ -66,9 +65,4 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
         beforeAddProcess.add(biConsumer);
     }
 
-
-    @Override
-    public void setBriefContext(BriefContext briefContext) {
-        LinkedConditions.briefContext = briefContext;
-    }
 }

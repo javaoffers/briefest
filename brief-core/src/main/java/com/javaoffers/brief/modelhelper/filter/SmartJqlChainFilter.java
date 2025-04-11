@@ -36,7 +36,7 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
         long startTime = System.currentTimeMillis();
         Object o = chain.doChain();
         long endTime = System.currentTimeMillis();
-        if ((cost = endTime - startTime) > JqlLogger.time) {
+        if ((cost = endTime - startTime) > JqlLogger.getSlowSqlTimeThreshold()) {
             if(o instanceof List){
                 JqlLogger.infoSqlCost("COST TIME : {}, SIZE: {}", cost, ((List) o).size());
             }else{

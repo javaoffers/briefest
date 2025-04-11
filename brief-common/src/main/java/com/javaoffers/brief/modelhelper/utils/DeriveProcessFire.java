@@ -18,7 +18,9 @@ import java.util.List;
  * @author: create by cmj on 2023/6/11 17:54
  */
 public class DeriveProcessFire implements BriefContextAware {
-    public static List<DeriveProcess> deriveProcess = null;
+
+    public static volatile BriefContext briefContext;
+
     public static void processDerive(TableInfo tableInfo, Field colF, String colName) {
         Assert.isTrue(tableInfo != null, "tableInfo is null");
         Assert.isTrue(colF != null, "colF is null");
@@ -48,13 +50,13 @@ public class DeriveProcessFire implements BriefContextAware {
             tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
         }
 
-        deriveProcess.forEach(dp -> {
+        briefContext.getDeriveProcess().forEach(dp -> {
             dp.processDerive(tableInfo, colF, colName);
         });
     }
 
     @Override
     public void setBriefContext(BriefContext briefContext) {
-        deriveProcess = briefContext.getDeriveProcess();
+        DeriveProcessFire.briefContext = briefContext;
     }
 }

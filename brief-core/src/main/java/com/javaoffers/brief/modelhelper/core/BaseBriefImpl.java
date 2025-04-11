@@ -24,7 +24,7 @@ import java.util.function.Consumer;
  */
 public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
-    private static JdbcExecutorFactory jdbcExecutorFactory;
+    private static volatile SmartBriefContext smartBriefContext;
 
     private JdbcExecutor<T> jdbcExecutor;
 
@@ -42,7 +42,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     private BaseBriefImpl(DataSource dataSource, Class modelClass) {
-        this.jdbcExecutor = jdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass);
+        this.jdbcExecutor = smartBriefContext.getJdbcExecutorFactory().createJdbcExecutor(dataSource, modelClass);
         this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
     }
 
@@ -130,7 +130,6 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     @Override
     public void setBriefContext(BriefContext briefContext) {
-        SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
-        jdbcExecutorFactory = smartBriefContext.getJdbcExecutorFactory();
+        smartBriefContext = (SmartBriefContext) briefContext;
     }
 }

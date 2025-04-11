@@ -22,7 +22,7 @@ import java.util.function.Supplier;
  */
 public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAware {
 
-    private static List<JqlExecutorFilter> jqlExecutorChains = new ArrayList<>();
+    private static volatile SmartBriefContext smartBriefContext;
 
     private BaseBrief baseBrief;
 
@@ -37,7 +37,8 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     }
 
     private <R> R doProxy(JqlMetaInfo jqlMetaInfo, Function<JqlMetaInfo, R> supplier){
-        JqlExecutorChain<R> jqlExecutorChain = new JqlExecutorChain(supplier, jqlExecutorChains, jqlMetaInfo);
+        List<JqlExecutorFilter> jqlExecutorFilters = smartBriefContext.getJqlExecutorFilters();
+        JqlExecutorChain<R> jqlExecutorChain = new JqlExecutorChain(supplier, jqlExecutorFilters, jqlMetaInfo);
         return jqlExecutorChain.doChain();
     }
 
@@ -123,7 +124,6 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     @Override
     public void setBriefContext(BriefContext briefContext) {
         SmartBriefContext smartBriefContext = (SmartBriefContext) briefContext;
-        jqlExecutorChains =  smartBriefContext.getJqlExecutorFilters();
     }
 
     public BaseBrief getOrgBaseBrief(){

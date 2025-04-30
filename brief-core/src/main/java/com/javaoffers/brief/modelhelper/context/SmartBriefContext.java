@@ -6,15 +6,12 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
-import com.javaoffers.brief.modelhelper.parser.TableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.*;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
-import java.sql.Connection;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 /**
  * brief context . 用于初始化化brief启动前的必要信息. 是brief的上下文，代表brief的应用.
@@ -48,8 +45,8 @@ public abstract class SmartBriefContext implements BriefContext{
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class)));
 
     //DeriveProcess
-    private static final List<DeriveProcess> deriveProcessList =
-            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(DeriveProcess.class)));
+    private static final List<DeriveInfoLoader> deriveProcessList =
+            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(DeriveInfoLoader.class)));
 
     //jqlInterceptor拦截器
     private static final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
@@ -117,7 +114,7 @@ public abstract class SmartBriefContext implements BriefContext{
     }
 
     @Override
-    public List<DeriveProcess> getDeriveProcess() {
+    public List<DeriveInfoLoader> getDeriveInfoLoader() {
         return this.deriveProcessList;
     }
 

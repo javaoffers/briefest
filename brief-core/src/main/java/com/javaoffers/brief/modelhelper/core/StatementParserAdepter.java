@@ -23,7 +23,7 @@ import java.util.LinkedList;
  */
 public class StatementParserAdepter implements BriefContextPostProcess {
 
-    private static BriefContext briefContext;
+    private static volatile BriefContext briefContext;
 
     public static BaseSQLStatement statementParse(LinkedList<Condition> conditions) {
         HeadCondition headCondition = (HeadCondition)conditions.pollFirst();

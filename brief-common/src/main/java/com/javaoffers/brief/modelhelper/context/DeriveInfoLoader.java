@@ -4,6 +4,6 @@ import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.lang.reflect.Field;
 
-public interface DeriveProcess {
-    void processDerive(TableInfo tableInfo, Field colF, String colName);
+public interface DeriveInfoLoader {
+    void loadDeriveInfo(TableInfo tableInfo, Field colF, String colName);
 }

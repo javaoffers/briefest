@@ -2,12 +2,14 @@ package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
+import com.javaoffers.brief.modelhelper.context.ConditionInterceptor;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -17,8 +19,8 @@ import java.util.function.BiConsumer;
 /**
  * create by cmj on 2022-06-20 2:50:07
  */
-public class LinkedConditions<T extends Condition> extends LinkedList<T> {
-
+public class LinkedConditions<T extends Condition> extends LinkedList<T> implements BriefContextAware{
+    private static volatile BriefContext briefContext;
     private List<BiConsumer<T, T>> beforeAddProcess = new LinkedList<>();
 
     {
@@ -51,6 +53,13 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> {
             this.addFirst(condition);
             return true;
         }
+        //处理condition拦截器
+        List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
+        if (CollectionUtils.isNotEmpty(conditionInterceptor)) {
+            conditionInterceptor.forEach(biConsumer -> {
+                biConsumer.process(condition);
+            });
+        }
         return super.add(condition);
     }
 
@@ -65,4 +74,8 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> {
         beforeAddProcess.add(biConsumer);
     }
 
+    @Override
+    public void setBriefContext(BriefContext briefContext) {
+        LinkedConditions.briefContext = briefContext;
+    }
 }

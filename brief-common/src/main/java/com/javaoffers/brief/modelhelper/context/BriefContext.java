@@ -6,7 +6,7 @@ import com.javaoffers.brief.modelhelper.mapper.BaseMapper;
 import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import com.javaoffers.brief.modelhelper.parser.TableInfoParser;
 import com.javaoffers.brief.modelhelper.utils.DBType;
-import javax.sql.DataSource;
+
 import java.util.List;
 
 /**
@@ -66,10 +66,16 @@ public interface BriefContext {
     public TableInfoParser getTableInfoParser();
 
     /**
-     * 获取
+     * 用于加载衍生处理器
      * @return
      */
-    public List<DeriveProcess> getDeriveProcess();
+    public List<DeriveInfoLoader> getDeriveInfoLoader();
+
+    /**
+     * 获取condition拦截器
+     * @return
+     */
+    public List<ConditionInterceptor> getConditionInterceptor();
 
     /**
      * 发布 BriefContext.

@@ -681,7 +681,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         try {
             T newModel = (T) mClass.newInstance();
             TableInfo tableInfo = TableHelper.getTableInfo(mClass);
-            DeriveInfo deriveColName = tableInfo.getDeriveColName(DeriveFlag.IS_DEL);
+            NormalDeriveInfo deriveColName = (NormalDeriveInfo)tableInfo.getDeriveColName(DeriveFlag.IS_DEL);
             Field logicRemoveField = null;
             Assert.isTrue(deriveColName != null && (logicRemoveField = deriveColName.getField()) != null,
                     "no  logic del col, please use IsDel to declaration");

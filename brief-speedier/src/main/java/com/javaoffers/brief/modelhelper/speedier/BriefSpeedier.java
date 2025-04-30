@@ -43,7 +43,7 @@ public class BriefSpeedier {
         if(briefMapper == null){
             Assert.isTrue(!Modifier.isAbstract(modelClass.getModifiers()), modelClass.getName() + " is Abstract ");
             BriefMapper briefMapperImpl = BriefUtils.newCrudMapper(BriefMapper.class);
-            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, briefContext.getDataSource(), (Class) modelClass);
+            SmartMapperProxy smartMapperProxy = new SmartMapperProxy(briefMapperImpl, briefContext.getDataSource(modelClass), (Class) modelClass);
             cache.putIfAbsent(modelClass, JdkProxyUtils.createProxy(BriefMapper.class, smartMapperProxy));
             briefMapper = cache.get(modelClass);
         }

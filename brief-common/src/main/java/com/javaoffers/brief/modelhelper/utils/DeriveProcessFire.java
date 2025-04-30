@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.anno.derive.flag.NormalDeriveInfo;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveFlag;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.IsDel;
@@ -7,11 +8,9 @@ import com.javaoffers.brief.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
-import com.javaoffers.brief.modelhelper.context.DeriveProcess;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
-import java.util.List;
 
 /**
  * @description: Derivative processing.
@@ -25,7 +24,7 @@ public class DeriveProcessFire implements BriefContextAware {
         Assert.isTrue(tableInfo != null, "tableInfo is null");
         Assert.isTrue(colF != null, "colF is null");
         Assert.isTrue(StringUtils.isNotBlank(colName), "colName is null");
-        DeriveInfo deriveInfo = new DeriveInfo(colName, colF);
+        DeriveInfo deriveInfo = new NormalDeriveInfo(colName, colF);
 
         //version
         Class type = colF.getType();

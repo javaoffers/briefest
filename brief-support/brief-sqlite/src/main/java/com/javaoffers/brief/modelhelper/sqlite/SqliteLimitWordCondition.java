@@ -23,6 +23,6 @@ public class SqliteLimitWordCondition extends LimitWordCondition {
     @Override
     public String cleanLimit(String limitSql) {
         String token = getTag().getTag() +" ? offset ?";
-        return limitSql = limitSql.substring(0, limitSql.length() - token.length());
+        return limitSql.substring(0, limitSql.length() - token.length());
     }
 }

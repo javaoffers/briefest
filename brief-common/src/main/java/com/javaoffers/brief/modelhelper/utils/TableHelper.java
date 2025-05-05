@@ -251,7 +251,7 @@ public class TableHelper implements BriefContextAware {
 
     private static void parseModelInfo(Class<?> modelClazz) {
         modelInfoMap.put(modelClazz, new ModelInfo(modelClazz));
-
+        modelIsParse.put(modelClazz, true);
     }
 
     //解析table info. 和数据库表做关联关系.
@@ -347,7 +347,7 @@ public class TableHelper implements BriefContextAware {
             e.printStackTrace();
             throw new ParseTableException(e.getMessage(), e);
         }
-        modelIsParse.put(modelClazz, true);
+
     }
 
     /**

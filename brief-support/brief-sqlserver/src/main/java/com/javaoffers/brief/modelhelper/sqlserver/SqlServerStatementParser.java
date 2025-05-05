@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.sqlserver;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
 import com.javaoffers.brief.modelhelper.core.parse.DeleteConditionParse;
@@ -18,7 +18,7 @@ import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-public class SqlServerStatementParser implements StatementParser<Condition, BaseSQLStatement> , BriefContextPostProcess {
+public class SqlServerStatementParser implements StatementParser<Condition, BaseSQLStatement> , BriefContextPostProcessor {
 
     static final EnumMap<ConditionTag, ParseCondition> crudConditionParse = new EnumMap<ConditionTag, ParseCondition>(ConditionTag.class);
 

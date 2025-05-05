@@ -49,6 +49,7 @@ public class DeriveProcessFire implements BriefContextAware {
             tableInfo.putDeriveColName(DeriveFlag.IS_DEL, deriveInfo);
         }
 
+        //加载扩展的衍生
         briefContext.getDeriveInfoLoader().forEach(dp -> {
             dp.loadDeriveInfo(tableInfo, colF, colName);
         });

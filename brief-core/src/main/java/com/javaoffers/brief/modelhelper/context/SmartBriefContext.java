@@ -33,8 +33,8 @@ public abstract class SmartBriefContext implements BriefContext{
             Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefPropertiesLoader.class))));
 
     //briefContextPostProcess后置处理器
-    private static final List<BriefContextPostProcess> briefContextPostProcessList =
-            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcess.class))));
+    private static final List<BriefContextPostProcessor> BRIEF_CONTEXT_POST_PROCESSOR_LIST =
+            Collections.unmodifiableList(new ArrayList<>((ReflectionUtils.getChildInstance(BriefContextPostProcessor.class))));
 
     //BriefContextAware
     private static final List<BriefContextAware> briefContextAwareList =
@@ -48,7 +48,10 @@ public abstract class SmartBriefContext implements BriefContext{
     private static final List<DeriveInfoLoader> deriveProcessList =
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(DeriveInfoLoader.class)));
 
-    //jqlInterceptor拦截器
+    //conditionInterceptor {@link ConditionBriefContextPostProcessor}
+    private static final List<ConditionInterceptor> conditionInterceptorList = Lists.newArrayList();
+
+    //jqlInterceptor拦截器 {@link JqlInterceptorLoader}
     private static final ArrayList<JqlInterceptor> coreInterceptorsList = Lists.newArrayList();
 
     //DBType
@@ -115,11 +118,16 @@ public abstract class SmartBriefContext implements BriefContext{
 
     @Override
     public List<DeriveInfoLoader> getDeriveInfoLoader() {
-        return this.deriveProcessList;
+        return deriveProcessList;
     }
 
     public Map<DBType, StatementParser> getStatementParserMap(){
         return this.statementParserMap;
+    }
+
+    @Override
+    public List<ConditionInterceptor> getConditionInterceptor() {
+        return conditionInterceptorList;
     }
 
     @Override
@@ -165,8 +173,8 @@ public abstract class SmartBriefContext implements BriefContext{
     protected void initContextPostProcess() {
 
         //上下文后置处理器
-        for(BriefContextPostProcess briefContextPostProcess : briefContextPostProcessList){
-            briefContextPostProcess.postProcess(this);
+        for(BriefContextPostProcessor briefContextPostProcessor : BRIEF_CONTEXT_POST_PROCESSOR_LIST){
+            briefContextPostProcessor.postProcess(this);
         }
 
     }

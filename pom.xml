@@ -17,6 +17,7 @@
     <module>brief-support</module>
     <module>brief-samples</module>
     <module>brief-support/brief-sqlite</module>
+      <module>brief-sharding</module>
   </modules>
 
   <name>brief</name>

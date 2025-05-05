@@ -1,12 +1,15 @@
 package com.javaoffers.brief.modelhelper.fun;
 
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.utils.DBType;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -23,6 +26,8 @@ public class HeadCondition implements Condition {
     private Class modelClass;
 
     private LimitWordCondition limitWordCondition;
+
+    private List<OrderWordCondition> orderWordConditionList;
 
     public HeadCondition(DataSource dataSource, Class modelClass) {
         this.dataSource = dataSource;
@@ -70,5 +75,11 @@ public class HeadCondition implements Condition {
 
     public void setLimitWordCondition(LimitWordCondition limitWordCondition) {
         this.limitWordCondition = limitWordCondition;
+    }
+    public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
+        if(this.orderWordConditionList != null){
+           this.orderWordConditionList = new ArrayList<OrderWordCondition>();
+        }
+        this.orderWordConditionList.add(orderWordCondition);
     }
 }

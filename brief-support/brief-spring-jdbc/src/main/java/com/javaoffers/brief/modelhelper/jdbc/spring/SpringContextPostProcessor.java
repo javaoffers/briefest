@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc.spring;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcess;
+import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.context.JqlInterceptor;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -10,11 +10,11 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
  * 该类支持了spring的能力.
  * @author mingJie
  */
-public class SpringContextPostProcess implements BriefContextPostProcess {
+public class SpringContextPostProcessor implements BriefContextPostProcessor {
 
     ConfigurableListableBeanFactory beanFactory;
 
-    SpringContextPostProcess() { }
+    SpringContextPostProcessor() { }
 
     @Override
     public void postProcess(BriefContext briefContext) {
@@ -22,10 +22,10 @@ public class SpringContextPostProcess implements BriefContextPostProcess {
         beanFactory = springBriefContext.getBeanFactory();
 
         //加载spring容器中的 BriefContextPostProcess
-        String[] beanNamesForBriefContextPostProcess = beanFactory.getBeanNamesForType(BriefContextPostProcess.class);
+        String[] beanNamesForBriefContextPostProcess = beanFactory.getBeanNamesForType(BriefContextPostProcessor.class);
         if(beanNamesForBriefContextPostProcess==null || beanNamesForBriefContextPostProcess.length == 0){
             for(String beanName : beanNamesForBriefContextPostProcess){
-                beanFactory.getBean(beanName,BriefContextPostProcess.class).postProcess(springBriefContext);
+                beanFactory.getBean(beanName, BriefContextPostProcessor.class).postProcess(springBriefContext);
             }
         }
 

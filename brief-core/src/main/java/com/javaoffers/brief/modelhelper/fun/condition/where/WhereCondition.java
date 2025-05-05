@@ -21,4 +21,6 @@ public interface WhereCondition extends Condition {
 
     public void cleanAndOrTag();
 
+    public String getColName();
+
 }

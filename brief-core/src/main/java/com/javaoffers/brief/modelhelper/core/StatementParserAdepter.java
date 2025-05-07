@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
+import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
@@ -13,7 +14,7 @@ import java.util.LinkedList;
  * @Description: 用于解析Condition
  * @Auther: create by cmj on 2022/5/22 13:47
  */
-public class StatementParserAdepter implements BriefContextPostProcessor {
+public class StatementParserAdepter implements BriefContextAware {
 
     private static volatile BriefContext briefContext;
 
@@ -28,9 +29,8 @@ public class StatementParserAdepter implements BriefContextPostProcessor {
         return sqlStatement;
     }
 
-
     @Override
-    public void postProcess(BriefContext briefContext) {
+    public void setBriefContext(BriefContext briefContext) {
         StatementParserAdepter.briefContext = briefContext;
     }
 }

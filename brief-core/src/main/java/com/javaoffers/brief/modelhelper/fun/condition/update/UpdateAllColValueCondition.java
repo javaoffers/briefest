@@ -54,26 +54,6 @@ public class UpdateAllColValueCondition implements UpdateCondition {
         if (!isUpdateNull && !isExistsNoneNullValue) {
             return "";
         }
-        return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
-    }
-
-    @Override
-    public Map<String, Object> getParams() {
-        return isUpdateNull ? params : npdateNullParams;
-    }
-
-    public UpdateAllColValueCondition(boolean isUpdateNull, Class modelClass, Object model) {
-        Assert.isTrue(model != null, "model is not allowed to be null");
-        this.isUpdateNull = isUpdateNull;
-        this.modelClass = modelClass;
-        this.model = model;
-
-    }
-
-    @Override
-    public void setHeadCondition(HeadCondition headCondition) {
-        this.headCondition = headCondition;
-        this.tableName = TableHelper.getTableName(modelClass);
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, ColumnInfo> colNames = tableInfo.getColNames();
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(modelClass);
@@ -129,6 +109,26 @@ public class UpdateAllColValueCondition implements UpdateCondition {
                 e.printStackTrace();
             }
         });
+
+        return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
+    }
+
+    @Override
+    public Map<String, Object> getParams() {
+        return isUpdateNull ? params : npdateNullParams;
+    }
+
+    public UpdateAllColValueCondition(boolean isUpdateNull, Class modelClass, Object model) {
+        Assert.isTrue(model != null, "model is not allowed to be null");
+        this.isUpdateNull = isUpdateNull;
+        this.modelClass = modelClass;
+        this.model = model;
+        this.tableName = TableHelper.getTableName(modelClass);
+    }
+
+    @Override
+    public void setHeadCondition(HeadCondition headCondition) {
+        this.headCondition = headCondition;
     }
 
     public String getNextTag() {

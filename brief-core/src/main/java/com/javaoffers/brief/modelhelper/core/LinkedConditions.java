@@ -96,4 +96,11 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
     public List<? extends Condition> getConditions() {
         return this;
     }
+
+    @Override
+    public void directFillingConditions(List<? extends Condition> conditions) {
+        for (Condition condition : conditions) {
+            super.add((T) condition);
+        }
+    }
 }

@@ -21,4 +21,10 @@ public interface ConditionContext {
      */
     List<? extends Condition> getConditions();
 
+    /**
+     * 直接填充数据.
+     * @param conditions
+     */
+    void directFillingConditions(List<? extends Condition> conditions);
+
 }

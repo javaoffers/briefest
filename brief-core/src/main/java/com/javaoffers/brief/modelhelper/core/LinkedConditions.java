@@ -41,14 +41,24 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
     }
 
     /**
-     * 获取派生的condition.
+     * 获取派生的condition. 派生后的condition不具有派生的能力
      */
-    private List<LinkedConditions> peerContexts = new ArrayList<>();
+    private List<LinkedConditions> peerContexts = Collections.EMPTY_LIST;
+
+    /**
+     * 是否是源context.
+     */
+    private boolean isOrgContext = true;
 
     public boolean add(T condition) {
+        return add(condition, isOrgContext);
+    }
+
+    private boolean add(T condition, boolean isOrgContext){
         beforeAddProcess.forEach(biConsumer -> {
             biConsumer.accept(this.peekLast(), condition);
         });
+
         if (condition instanceof WhereOnCondition) {
             ((WhereOnCondition<?>) condition).setHeadCondition((HeadCondition) this.peekFirst());
         } else if (condition instanceof UpdateCondition) {
@@ -60,16 +70,18 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             return true;
         }
         //处理condition拦截器
-        List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
-        if (CollectionUtils.isNotEmpty(conditionInterceptor)) {
-            conditionInterceptor.forEach(biConsumer -> {
-                biConsumer.process(this, condition);
-            });
+        if(isOrgContext){
+            List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
+            if (CollectionUtils.isNotEmpty(conditionInterceptor)) {
+                conditionInterceptor.forEach(biConsumer -> {
+                    biConsumer.process(this, condition);
+                });
+            }
         }
 
-        //处理派生的condition
+        //处理派生的condition, 派生的不支持拦截器，派生的应该在对应的org拦截器中处理
         for (LinkedConditions conditionContext: peerContexts){
-            conditionContext.add(condition);
+            conditionContext.add(condition, false);
         }
 
         return super.add(condition);
@@ -89,6 +101,9 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
 
     @Override
     public List<? extends ConditionContext> getPeerConditionContexts() {
+        if(peerContexts == Collections.EMPTY_LIST){
+            peerContexts = new ArrayList<>();
+        }
         return this.peerContexts;
     }
 
@@ -98,9 +113,18 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
     }
 
     @Override
-    public void directFillingConditions(List<? extends Condition> conditions) {
-        for (Condition condition : conditions) {
-            super.add((T) condition);
-        }
+    public void directFillingCondition(Condition condition) {
+        super.add((T) condition);
+    }
+
+    @Override
+    public boolean isOrgContext() {
+        return this.isOrgContext;
+    }
+
+    public LinkedConditions() {}
+
+    public LinkedConditions(boolean isOrgContext) {
+        this.isOrgContext = isOrgContext;
     }
 }

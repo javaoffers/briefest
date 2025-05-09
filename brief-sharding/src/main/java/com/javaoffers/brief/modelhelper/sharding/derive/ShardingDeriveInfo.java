@@ -11,14 +11,14 @@ import java.lang.reflect.Field;
  */
 public class ShardingDeriveInfo extends DeriveInfo {
     private ShardingStrategy shardingStrategy;
-    private ShardingProcessor shardingProcessor;
+    private ShardingTableStrategy shardingTableStrategy;
     public ShardingDeriveInfo(String colName, Field field,
                               ShardingStrategy shardingStrategy) {
         super(colName, field);
         this.shardingStrategy = shardingStrategy;
-        Class<? extends ShardingProcessor> shardingStrategyProcessor = shardingStrategy.value();
+        Class<? extends ShardingTableStrategy> shardingTableStrategyClass = shardingStrategy.value();
         try {
-             this.shardingProcessor = shardingStrategyProcessor.newInstance();
+             this.shardingTableStrategy = shardingTableStrategyClass.newInstance();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -29,7 +29,7 @@ public class ShardingDeriveInfo extends DeriveInfo {
         return shardingStrategy;
     }
 
-    public ShardingProcessor getShardingProcessor() {
-        return shardingProcessor;
+    public ShardingTableStrategy getShardingTableStrategy() {
+        return shardingTableStrategy;
     }
 }

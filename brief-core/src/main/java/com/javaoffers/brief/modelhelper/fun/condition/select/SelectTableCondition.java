@@ -2,6 +2,8 @@ package com.javaoffers.brief.modelhelper.fun.condition.select;
 
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.ShardingCondition;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
@@ -12,13 +14,15 @@ import java.util.Map;
  * @Description: select from  语句 table 名称
  * @Auther: create by cmj on 2022/5/4 19:23
  */
-public class SelectTableCondition implements Condition {
+public class SelectTableCondition implements ShardingCondition {
 
     private String fromTableName; //表名称
 
     private Class mClass;
 
     private TableInfo tableInfo;
+
+    private boolean shardingState;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -38,18 +42,10 @@ public class SelectTableCondition implements Condition {
         return Collections.EMPTY_MAP;
     }
 
-    public SelectTableCondition(String fromTableName) {
-        this.fromTableName = fromTableName;
-    }
-
-    public SelectTableCondition(String fromTableName, Class mClass) {
-        this.fromTableName = fromTableName;
-        this.mClass = mClass;
+    public SelectTableCondition( Class mClass) {
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
-    }
-
-    public String getFromTableName() {
-        return fromTableName;
+        this.fromTableName = tableInfo.getTableName();
+        this.mClass = mClass;
     }
 
     public String getFrontView(){
@@ -69,5 +65,29 @@ public class SelectTableCondition implements Condition {
         return "SelectTableCondition{" +
                 "fromTableName='" + fromTableName + '\'' +
                 '}';
+    }
+
+    @Override
+    public void shardingTableName(String tableName) {
+        Assert.isTrue(!shardingState, "Duplicate sharding of the same table is not allowed");
+        this.fromTableName = tableName;
+        this.shardingState = true;
+    }
+
+    @Override
+    public String getTableName() {
+        return this.fromTableName;
+    }
+
+    @Override
+    public boolean isDone() {
+        return this.shardingState;
+    }
+
+    @Override
+    public ShardingCondition clone(String tableName) {
+        SelectTableCondition clone = new SelectTableCondition(mClass);
+        clone.fromTableName = tableName;
+        return clone;
     }
 }

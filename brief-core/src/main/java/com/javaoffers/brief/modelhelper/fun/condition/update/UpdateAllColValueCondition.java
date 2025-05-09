@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.fun.condition.update;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.fun.ShardingCondition;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.ColumnInfo;
 import com.javaoffers.brief.modelhelper.utils.DBType;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author create by cmj
  */
-public class UpdateAllColValueCondition implements UpdateCondition {
+public class UpdateAllColValueCondition implements UpdateCondition , ShardingCondition {
 
     boolean isUpdateNull;
 
@@ -37,6 +38,8 @@ public class UpdateAllColValueCondition implements UpdateCondition {
     private HeadCondition headCondition;
 
     private String tableName;
+
+    private boolean shardingState;
 
     //all Col
     private StringBuilder updateSqlNull = new StringBuilder(ConditionTag.UPDATE.getTag());
@@ -133,5 +136,29 @@ public class UpdateAllColValueCondition implements UpdateCondition {
 
     public String getNextTag() {
         return this.headCondition.getNextTag();
+    }
+
+    @Override
+    public void shardingTableName(String tableName) {
+        Assert.isTrue(!shardingState,"Duplicate sharding of the same table is not allowed");
+        this.tableName = tableName;
+        this.shardingState = true;
+    }
+
+    @Override
+    public String getTableName() {
+        return this.tableName;
+    }
+
+    @Override
+    public boolean isDone() {
+        return this.shardingState;
+    }
+
+    @Override
+    public ShardingCondition clone(String tableName) {
+        UpdateAllColValueCondition clone = new UpdateAllColValueCondition(isUpdateNull, modelClass, model);
+        clone.tableName = tableName;
+        return clone;
     }
 }

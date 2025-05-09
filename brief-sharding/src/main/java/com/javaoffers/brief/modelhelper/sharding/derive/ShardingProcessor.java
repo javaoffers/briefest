@@ -2,6 +2,7 @@ package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
+import com.javaoffers.brief.modelhelper.sharding.context.ShardingStrategyContext;
 
 /**
  * desc.
@@ -10,9 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.ConditionContext;
  */
 public interface ShardingProcessor {
     /**
-     * 处理eq condition
-     * @param conditionContext
-     * @param condition
+     * shardingStrategyContext
      */
-    public void processEq(ConditionContext conditionContext, Condition condition);
+    public void process(ShardingStrategyContext shardingStrategyContext);
 }

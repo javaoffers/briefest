@@ -19,5 +19,5 @@ public @interface ShardingStrategy {
      * 指定sharding strategic
      * @return
      */
-    Class<? extends ShardingProcessor> value() default ShardingTableProcessor.class;
+    Class<? extends ShardingTableStrategy> value() default ShardingTableStrategy.class;
 }

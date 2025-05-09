@@ -15,6 +15,7 @@ public @interface BaseModel {
     /**
      * Specify the table name. If not, it defaults to the class name with camel case and underscore
      * Note: This property is useful in CrudMapper scenarios
+     * tip: supported sharding table
      */
     String value() default "";
 
@@ -27,7 +28,7 @@ public @interface BaseModel {
      * select age, name from table_name where xx..
      * union all
      * select age, name from table_name2 where xx..
-     *
+     * tip: Not supported sharding table
      * @return
      */
     String frontView() default "";
@@ -38,6 +39,7 @@ public @interface BaseModel {
      *
      * select age, name from (select age, name from table_name where xx..)
      *
+     * tip: Not supported sharding table
      * @return
      */
     String fromView() default "";

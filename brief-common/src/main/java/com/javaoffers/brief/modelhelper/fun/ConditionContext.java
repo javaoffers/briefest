@@ -23,8 +23,14 @@ public interface ConditionContext {
 
     /**
      * 直接填充数据.
-     * @param conditions
+     * @param condition
      */
-    void directFillingConditions(List<? extends Condition> conditions);
+    void directFillingCondition(Condition condition);
+
+    /**
+     * 是否是源condition上下文.用于区别派生上下文
+     * @return
+     */
+    boolean isOrgContext();
 
 }

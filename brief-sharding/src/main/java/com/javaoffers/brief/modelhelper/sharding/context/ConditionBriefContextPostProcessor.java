@@ -13,6 +13,7 @@ import com.javaoffers.brief.modelhelper.sharding.derive.ShardingDeriveInfo;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingProcessor;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategy;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategyMark;
+import com.javaoffers.brief.modelhelper.sharding.derive.ShardingTableProcessor;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
@@ -27,17 +28,22 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
     @Override
     public void postProcess(BriefContext briefContext) {
         List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
-        conditionInterceptor.add(new ConditionInterceptorImpl());
+        conditionInterceptor.add(new ShardingConditionInterceptorImpl());
     }
 
-    static class ConditionInterceptorImpl implements ConditionInterceptor {
+    static class ShardingConditionInterceptorImpl implements ConditionInterceptor {
+        //分表处理器
+        ShardingTableProcessor shardingTableProcessor = new ShardingTableProcessor();
 
         @Override
         public void process(ConditionContext conditionContext, Condition condition) {
-
-            List<? extends Condition> conditions = conditionContext.getConditions();
+            //派生的context不支持sharding
+            if(!conditionContext.isOrgContext()){
+                return;
+            }
             //处理查询派生condition
             if (condition instanceof WhereCondition ) {
+                List<? extends Condition> conditions = conditionContext.getConditions();
                 WhereCondition whereCondition = (WhereCondition) condition;
                 HeadCondition headCondition = (HeadCondition)conditions.get(0);
                 Class modelClass = headCondition.getModelClass();
@@ -51,17 +57,11 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 if(!colName.equalsIgnoreCase(whereCondition.getColName())){
                     return;
                 }
-                ConditionTag conditionTag = condition.getConditionTag();
-                switch (conditionTag) {
-                    case EQ:
-                        ShardingProcessor shardingProcessor = shardingDeriveInfo.getShardingProcessor();
-                        shardingProcessor.processEq(conditionContext, condition);
-                        break;
-                    default:
-                        break;
-                }
-
-
+                ShardingStrategyContext context = new ShardingStrategyContext();
+                context.setConditionContext(conditionContext);
+                context.setCondition(whereCondition);
+                context.setShardingTableStrategy(shardingDeriveInfo.getShardingTableStrategy());
+                shardingTableProcessor.process(context);
             }
         }
     }

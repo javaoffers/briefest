@@ -1,17 +1,21 @@
 package com.javaoffers.brief.modelhelper.fun.condition.insert;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.ShardingCondition;
+import com.javaoffers.brief.modelhelper.utils.Assert;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;
 
-public class InsertIntoCondition implements InsertCondition {
+public class InsertIntoCondition implements InsertCondition, ShardingCondition {
 
-    String tableName;
+    private String tableName;
 
-    Class modelClass;
+    private Class modelClass;
+
+    private boolean shardingState;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -46,4 +50,24 @@ public class InsertIntoCondition implements InsertCondition {
     public String getTableName() {
         return tableName;
     }
+
+    @Override
+    public boolean isDone() {
+        return this.shardingState;
+    }
+
+    @Override
+    public ShardingCondition clone(String tableName) {
+        InsertIntoCondition clone = new InsertIntoCondition(modelClass);
+        clone.tableName = tableName;
+        return clone;
+    }
+
+    @Override
+    public void shardingTableName(String tableName) {
+        Assert.isTrue(!shardingState,"Duplicate sharding of the same table is not allowed");
+        this.tableName = tableName;
+        this.shardingState = true;
+    }
+
 }

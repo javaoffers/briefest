@@ -4,13 +4,10 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.condition.DeleteFromCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
-import com.javaoffers.brief.modelhelper.fun.condition.select.SelectColumnCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.select.SelectTableCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCondition;
-import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateSetCondition;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -19,7 +16,7 @@ import java.util.ListIterator;
  *
  * @author cao ming jie create by 2025/5/2
  */
-public final class MonthShardingTableProcessor implements ShardingProcessor{
+public final class ShardingTableProcessor implements ShardingProcessor{
 
     @Override
     public void processEq(ConditionContext conditionContext, Condition condition) {
@@ -35,7 +32,9 @@ public final class MonthShardingTableProcessor implements ShardingProcessor{
                 
             } else if (previous instanceof UpdateAllColValueCondition) {
 
-            } else if (previous instanceof DeleteFromCondition) {}
+            } else if (previous instanceof DeleteFromCondition) {
+
+            }
         }
     }
 }

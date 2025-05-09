@@ -16,8 +16,8 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface ShardingStrategy {
     /**
-     * 指定sharding策略
+     * 指定sharding strategic
      * @return
      */
-    Class<? extends ShardingProcessor> value() default MonthShardingTableProcessor.class;
+    Class<? extends ShardingProcessor> value() default ShardingTableProcessor.class;
 }

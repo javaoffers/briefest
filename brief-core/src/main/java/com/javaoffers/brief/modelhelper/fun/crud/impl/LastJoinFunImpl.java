@@ -32,7 +32,7 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
         this.m2Class = m2Class;
         this.m3Class = m3Class;
         this.table3Name = TableHelper.getTableName(m3Class);
-        this.conditions.add(new JoinTableCondition(this.table3Name,tag));
+        this.conditions.add(new JoinTableCondition(this.m3Class, this.table3Name,tag));
     }
 
     @Override

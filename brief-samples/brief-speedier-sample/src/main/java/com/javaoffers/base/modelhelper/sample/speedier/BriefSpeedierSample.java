@@ -142,4 +142,13 @@ public class BriefSpeedierSample {
         print(exs1);
     }
 
+    @Test
+    public void havingTestJoin(){
+        this.userBriefMapper.select().colAll()
+                .innerJoin(UserOrder::new)
+                .colAll()
+                .on().oeq(User::getId, UserOrder::getUserId)
+                .exs();
+    }
+
 }

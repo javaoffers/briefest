@@ -14,6 +14,8 @@ public class JoinTableCondition implements Condition {
 
     private String joinTableName; //表名称
 
+    private Class joinClass;
+
     private ConditionTag tag;
 
     @Override
@@ -35,6 +37,10 @@ public class JoinTableCondition implements Condition {
         return joinTableName;
     }
 
+    public Class getJoinClass() {
+        return this.joinClass;
+    }
+
     @Override
     public String toString() {
         return "LeftJoinTableCondition{" +
@@ -42,7 +48,8 @@ public class JoinTableCondition implements Condition {
                 '}';
     }
 
-    public JoinTableCondition(String joinTableName, ConditionTag tag) {
+    public JoinTableCondition( Class joinClass, String joinTableName, ConditionTag tag) {
+        this.joinClass = joinClass;
         this.joinTableName = joinTableName;
         this.tag = tag;
     }

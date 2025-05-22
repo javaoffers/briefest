@@ -31,7 +31,7 @@ public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Objec
         this.m2Class = m2c;
         this.conditions = conditions;
         this.table2Name = TableHelper.getTableName(m2c);
-        this.conditions.add(new JoinTableCondition(this.table2Name,tag));
+        this.conditions.add(new JoinTableCondition(this.m2Class, this.table2Name,tag));
     }
 
     /**

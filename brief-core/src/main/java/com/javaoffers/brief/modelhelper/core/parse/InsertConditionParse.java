@@ -8,7 +8,6 @@ import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
-import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.*;

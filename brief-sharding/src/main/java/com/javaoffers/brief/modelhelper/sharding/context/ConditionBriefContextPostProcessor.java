@@ -41,7 +41,7 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
             if(!conditionContext.isOrgContext()){
                 return;
             }
-            //处理查询派生condition
+            //处理查询派生condition, 处理 select/delete/update
             if (condition instanceof WhereCondition ) {
                 List<? extends Condition> conditions = conditionContext.getConditions();
                 WhereCondition whereCondition = (WhereCondition) condition;

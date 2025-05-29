@@ -28,6 +28,7 @@ import plus.mapper.PlusAccountMapper;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class PlusInitializer {
@@ -112,6 +113,14 @@ public class PlusInitializer {
             return mapper.selectList(queryWrapper);
         }
     }
+
+    public static List<Map<String,Object>> selectMapTop10000() {
+        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+            PlusAccountMapper mapper = sqlSession.getMapper(PlusAccountMapper.class);
+            return mapper.queryTop10000("admin" + ThreadLocalRandom.current().nextInt(10000));
+        }
+    }
+
     public static List<PlusAccount> selectTop10000WithLambda() {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
             PlusAccountMapper mapper = sqlSession.getMapper(PlusAccountMapper.class);

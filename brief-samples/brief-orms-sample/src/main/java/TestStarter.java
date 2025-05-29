@@ -13,7 +13,7 @@ import static flex.entity.table.Tables.FLEX_ACCOUNT;
 
 public class TestStarter {
 
-    private static final int queryCount = 1000;
+    public static final int queryCount = 1000;
 
     public static void main(String[] args) {
 
@@ -157,81 +157,87 @@ public class TestStarter {
     }
 
 
-    private static void testFlexSelectOne() {
+    public static void testFlexSelectOne() {
         for (int i = 0; i < queryCount; i++) {
             FlexInitializer.selectOne();
         }
     }
-    private static void testBriefSelectOne() {
+    public static void testBriefSelectOne() {
         for (int i = 0; i < queryCount; i++) {
             BriefAccount briefAccount = BriefInitializer.selectOne();
             System.out.println(briefAccount);
         }
     }
 
-    private static void testPlusSelectOneWithLambda() {
+    public static void testPlusSelectOneWithLambda() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectOneWithLambda();
         }
     }
 
-    private static void testPlusSelectOne() {
+    public static void testPlusSelectOne() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectOne();
         }
     }
 
 
-    private static void testFlexSelectTop10() {
+    public static void testFlexSelectTop10() {
         for (int i = 0; i < queryCount; i++) {
             FlexInitializer.selectTop10();
         }
     }
 
-    private static void testPlusSelectTop10WithLambda() {
+    public static void testPlusSelectTop10WithLambda() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectTop10WithLambda();
         }
     }
 
-    private static void testPlusSelectTop10() {
+    public static void testPlusSelectTop10() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectTop10();
         }
     }
 
-    private static void testBriefSelectTop10() {
+    public static void testBriefSelectTop10() {
         for (int i = 0; i < queryCount; i++) {
             BriefInitializer.selectTop10();
         }
     }
 
-    private static void testFlexSelectTop10000() {
+    public static void testFlexSelectTop10000() {
         for (int i = 0; i < queryCount; i++) {
             FlexInitializer.selectTop10000();
         }
     }
 
-    private static void testPlusSelectTop10000WithLambda() {
+    public static void testPlusSelectTop10000WithLambda() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectTop10000WithLambda();
         }
     }
 
-    private static void testPlusSelectTop10000() {
+    public static void testPlusSelectTop10000() {
         for (int i = 0; i < queryCount; i++) {
             PlusInitializer.selectTop10000();
         }
     }
 
-    private static void testBriefSelectTop10000() {
+    public static void testPlusSelectMapTop10000() {
+        for (int i = 0; i < queryCount; i++) {
+            PlusInitializer.selectMapTop10000();
+        }
+    }
+
+    public static void testBriefSelectTop10000() {
         for (int i = 0; i < queryCount; i++) {
             BriefInitializer.selectTop10000();
         }
     }
 
 
-    private static void testFlexPaginate() {
+    public static void testFlexPaginate() {
         for (int i = 1; i <= queryCount; i++) {
             QueryWrapper queryWrapper = new QueryWrapper()
                     .where(FLEX_ACCOUNT.ID.ge(100));
@@ -239,14 +245,14 @@ public class TestStarter {
         }
     }
 
-    private static void testBriefPaginate() {
+    public static void testBriefPaginate() {
         for (int i = 1; i <= queryCount; i++) {
             BriefInitializer.paginate(1, 10);
         }
     }
 
 
-    private static void testPlusPaginate() {
+    public static void testPlusPaginate() {
         for (int i = 1; i <= queryCount; i++) {
             LambdaQueryWrapper<PlusAccount> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.ge(PlusAccount::getId, 100);
@@ -255,7 +261,7 @@ public class TestStarter {
     }
 
 
-    private static void testFlexUpdate() {
+    public static void testFlexUpdate() {
         for (long i = 0; i < queryCount; i++) {
             FlexAccount flexAccount = new FlexAccount();
             flexAccount.setUserName("testInsert" + i);
@@ -271,7 +277,7 @@ public class TestStarter {
         }
     }
 
-    private static void testBriefUpdate() {
+    public static void testBriefUpdate() {
         SmartUpdateFun update = null;
         for (long i = 0; i < queryCount; i++) {
             FlexAccount flexAccount = new FlexAccount();
@@ -283,7 +289,7 @@ public class TestStarter {
     }
 
 
-    private static void testPlusUpdate() {
+    public static void testPlusUpdate() {
         for (int i = 0; i < queryCount; i++) {
             PlusAccount plusAccount = new PlusAccount();
             plusAccount.setUserName("testInsert" + i);

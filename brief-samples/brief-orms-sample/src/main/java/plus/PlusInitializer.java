@@ -141,6 +141,7 @@ public class PlusInitializer {
             queryWrapper.or();
             queryWrapper.eq("user_name", "admin" + ThreadLocalRandom.current().nextInt(10000));
             queryWrapper.last("limit 10000");
+            //即使使用selectMaps 性能也是很拉垮的
             return mapper.selectList(queryWrapper);
         }
     }

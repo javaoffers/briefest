@@ -8,12 +8,15 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingDeriveInfo;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingProcessor;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategy;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategyMark;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingTableProcessor;
+import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
@@ -61,7 +64,28 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 context.setConditionContext(conditionContext);
                 context.setCondition(whereCondition);
                 context.setShardingTableStrategy(shardingDeriveInfo.getShardingTableStrategy());
-                shardingTableProcessor.process(context);
+                shardingTableProcessor.processWhere(context);
+            }else if(condition instanceof ColValueCondition){
+                ColValueCondition colValueCondition = (ColValueCondition) condition;
+                SqlColInfo sqlColInfo = colValueCondition.getSqlColInfo();
+                TableInfo tableInfo = sqlColInfo.getTableInfo();
+                DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);
+                if(deriveColName == null){
+                    return;
+                }
+                ShardingDeriveInfo shardingDeriveInfo = (ShardingDeriveInfo) deriveColName;
+                String colName = shardingDeriveInfo.getColName();
+                if(!colName.equalsIgnoreCase(colValueCondition.getColName())){
+                    return;
+                }
+                ShardingStrategyContext context = new ShardingStrategyContext();
+                context.setConditionContext(conditionContext);
+                context.setCondition(colValueCondition);
+                context.setShardingTableStrategy(shardingDeriveInfo.getShardingTableStrategy());
+                shardingTableProcessor.processInsert(context);
+
+            } else if(condition instanceof InsertAllColValueCondition){
+
             }
         }
     }

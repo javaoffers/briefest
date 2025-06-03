@@ -17,8 +17,8 @@ public interface ShardingTableStrategy {
      * @param orgTableName org table name
      * @return  table name, not null
      */
-    default String shardingExactly(WhereCondition condition, String orgTableName){
-        return orgTableName;
+    default String shardingExactly(ShardingParams shardingParams){
+        return shardingParams.getTableName();
     };
 
     /**
@@ -28,7 +28,7 @@ public interface ShardingTableStrategy {
      * @param orgTableName org table name
      * @return list table names . not empty
      */
-    default List<String> shardingRange(WhereCondition condition, String orgTableName){
+    default List<String> shardingRange(ShardingParams shardingParams){
         return Collections.emptyList();
     };
 
@@ -37,7 +37,7 @@ public interface ShardingTableStrategy {
      * @param condition where condition
      * @param orgTableName org table name
      */
-    default void shardingBefore(WhereCondition condition, String orgTableName){
+    default void shardingBefore(ShardingParams shardingParams){
         //
     }
 }

@@ -14,7 +14,7 @@ public class ShardingStrategyContext {
 
     ConditionContext conditionContext;
 
-    WhereCondition condition;
+    Condition condition;
 
     ShardingTableStrategy shardingTableStrategy;
 
@@ -26,11 +26,11 @@ public class ShardingStrategyContext {
         this.conditionContext = conditionContext;
     }
 
-    public WhereCondition getCondition() {
+    public Condition getCondition() {
         return condition;
     }
 
-    public void setCondition(WhereCondition condition) {
+    public void setCondition(Condition condition) {
         this.condition = condition;
     }
 

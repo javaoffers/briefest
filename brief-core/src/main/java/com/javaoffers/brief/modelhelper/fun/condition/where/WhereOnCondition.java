@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.utils.Assert;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public  class WhereOnCondition<V> implements WhereCondition {
 
     private ConditionTag tag;
 
-    private Map<String,Object> params = new HashMap<>();
+    private Map<String,Object> params = new LinkedHashMap<>();
 
     private HeadCondition headCondition;
 
@@ -37,6 +38,10 @@ public  class WhereOnCondition<V> implements WhereCondition {
         this.colName = colName;
     }
 
+    /**
+     * 获取 字段值
+     * @return
+     */
     public V getValue() {
         return value;
     }
@@ -67,15 +72,6 @@ public  class WhereOnCondition<V> implements WhereCondition {
      */
     public String getColName() {
         return this.colName;
-    }
-
-    /**
-     * 获取 字段值
-     * @return
-     */
-
-    public V getColValue() {
-        return value;
     }
 
     /**

@@ -13,5 +13,7 @@ public interface ShardingProcessor {
     /**
      * shardingStrategyContext
      */
-    public void process(ShardingStrategyContext shardingStrategyContext);
+    public void processWhere(ShardingStrategyContext shardingStrategyContext);
+
+    public void processInsert(ShardingStrategyContext shardingStrategyContext);
 }

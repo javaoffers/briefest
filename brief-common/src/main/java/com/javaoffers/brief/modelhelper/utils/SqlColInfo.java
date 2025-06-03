@@ -8,6 +8,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class SqlColInfo {
 
+    private TableInfo tableInfo;
+
     private String tableName;
 
     private String colName;
@@ -58,8 +60,17 @@ public class SqlColInfo {
         this.sqlFun = sqlFun;
     }
 
-    public SqlColInfo(String tableName, String colName, String aliasName, boolean sqlFun) {
-        this.tableName = tableName;
+    public TableInfo getTableInfo() {
+        return tableInfo;
+    }
+
+    public void setTableInfo(TableInfo tableInfo) {
+        this.tableInfo = tableInfo;
+    }
+
+    public SqlColInfo(TableInfo tableInfo, String colName, String aliasName, boolean sqlFun) {
+        this.tableName = tableInfo.getTableName();
+        this.tableInfo = tableInfo;
         this.colName = colName;
         this.aliasName = aliasName;
         this.sqlFun = sqlFun;

@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.ShardingCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.DeleteFromCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.select.SelectTableCondition;
@@ -33,9 +34,9 @@ import java.util.Set;
 public final class ShardingTableProcessor implements ShardingProcessor {
 
     @Override
-    public void process(ShardingStrategyContext strategyContext) {
+    public void processWhere(ShardingStrategyContext strategyContext) {
         ConditionContext orgConditionContext = strategyContext.getConditionContext();
-        WhereCondition condition = strategyContext.getCondition();
+        WhereCondition condition = (WhereCondition) strategyContext.getCondition();
         ShardingTableStrategy shardingTableStrategy = strategyContext.getShardingTableStrategy();
         ConditionTag conditionTag = condition.getConditionTag();
         List<? extends Condition> conditions = orgConditionContext.getConditions();
@@ -63,15 +64,17 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         }
         Assert.isTrue(!shardingCondition.isDone(), "Duplicate sharding of the same table is not allowed");
         String orgTableName = shardingCondition.getTableName();
+        ShardingParams<Object> objectShardingParams =
+                new ShardingParams<Object>(condition, orgTableName, condition.getColName());
         switch (conditionTag) {
             case EQ:
-            case INSERT_INTO:
-                String shardingTable = shardingTableStrategy.shardingExactly(condition, orgTableName);
+//            case INSERT_INTO:
+                String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
                 Assert.isTrue(shardingTable != null, "sharding table name is null");
                 shardingCondition.shardingTableName(shardingTable);
                 break;
             default:
-                List<String> shardingTableList = shardingTableStrategy.shardingRange(condition, orgTableName);
+                List<String> shardingTableList = shardingTableStrategy.shardingRange(objectShardingParams);
                 Assert.isTrue(CollectionUtils.isNotEmpty(shardingTableList), "sharding table list is empty");
                 //org sharding
                 Collection<ConditionContext> newPeerShardingList = shardingCondition(shardingTableList,
@@ -90,6 +93,24 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                 peerConditionContexts.addAll(allNewPeerConditionContexts);
                 break;
         }
+    }
+
+    @Override
+    public void processInsert(ShardingStrategyContext shardingStrategyContext) {
+        ShardingTableStrategy shardingTableStrategy = shardingStrategyContext.getShardingTableStrategy();
+        Condition condition = shardingStrategyContext.getCondition();
+        String orgTableName = null;
+        String colName = null;
+        if(condition instanceof ColValueCondition){
+            ColValueCondition colValueCondition = (ColValueCondition) condition;
+            orgTableName = colValueCondition.getSqlColInfo().getTableName();
+            colName = colValueCondition.getColName();
+        }
+        ShardingParams<Object> objectShardingParams =
+                new ShardingParams<Object>(condition, orgTableName, colName);
+        String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
+        Assert.isTrue(shardingTable != null, "sharding table name is null");
+        shardingCondition.shardingTableName(shardingTable);
     }
 
     private Collection<ConditionContext> shardingCondition(List<String> shardingTableList,

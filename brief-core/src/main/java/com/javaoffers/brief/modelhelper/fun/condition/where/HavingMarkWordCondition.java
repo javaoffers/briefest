@@ -8,7 +8,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-public  class HavingMarkWordCondition<V> extends WhereOnCondition implements Condition, IgnoreAndOrWordCondition {
+public  class HavingMarkWordCondition<V> extends WhereOnCondition implements IgnoreAndOrWordCondition {
 
     public HavingMarkWordCondition() {
         super();

@@ -106,7 +106,7 @@ public class TableHelper implements BriefContextAware {
         List<SqlColInfo> colAll = new LinkedList<>();
         TableInfo tableInfo = tableInfoMap.get(modelClss);
         tableInfo.getFieldNameColNameOfModel().forEach((colName, fieldName) -> {
-            colAll.add(new SqlColInfo(tableInfo.getTableName(), colName, fieldName, tableInfo.isSqlFun(colName)));
+            colAll.add(new SqlColInfo(tableInfo, colName, fieldName, tableInfo.isSqlFun(colName)));
         });
         return colAll;
     }
@@ -186,7 +186,7 @@ public class TableHelper implements BriefContextAware {
 
             String fieldName = colNameOfGetter.get(methodName);
             String colName = tableInfo.getFieldNameColNameOfModel().get(fieldName);
-            return new SqlColInfo(tableInfo.getTableName(), colName, fieldName, tableInfo.isSqlFun(colName));
+            return new SqlColInfo(tableInfo, colName, fieldName, tableInfo.isSqlFun(colName));
         } catch (Exception e) {
             e.printStackTrace();
         }

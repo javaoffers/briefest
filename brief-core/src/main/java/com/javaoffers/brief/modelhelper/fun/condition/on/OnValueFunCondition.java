@@ -13,7 +13,7 @@ import java.util.Map;
  *               select xx from t1 left join t2 on t2.is_del = 1;
  * @Auther: create by cmj on 2022/5/8 21:20
  */
-public class OnValueFunCondition extends WhereOnCondition implements OnCondition {
+public class OnValueFunCondition extends WhereOnCondition {
 
     private String colName2; //table2 字段
     private Object value;

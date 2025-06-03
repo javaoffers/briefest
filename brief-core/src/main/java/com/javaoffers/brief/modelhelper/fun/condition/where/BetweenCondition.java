@@ -30,4 +30,8 @@ public class BetweenCondition<V> extends WhereOnCondition<V> {
                 + getTag().getTag()
                 +" #{"+startIdx+"} and  #{"+endIdx+"} ";
     }
+
+    public V getEnd() {
+        return end;
+    }
 }

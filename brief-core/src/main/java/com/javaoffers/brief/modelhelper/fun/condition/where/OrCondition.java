@@ -10,7 +10,7 @@ import java.util.Map;
  * @Description: or 关键字
  * @Auther: create by cmj on 2022/5/4 20:01
  */
-public class OrCondition extends WhereOnCondition implements Condition {
+public class OrCondition extends WhereOnCondition {
     private String or = " or ";
 
     public OrCondition() {

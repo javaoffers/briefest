@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
 import com.javaoffers.brief.modelhelper.utils.DBType;
+import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.HashMap;
@@ -14,13 +15,15 @@ import java.util.Map;
 /**
  * create by cmj.
  */
-public class ColValueCondition implements UpdateCondition {
+public class ColValueCondition implements Condition {
 
     private String colName;
 
     private Object value;
 
     private DBType dbType;
+
+    private SqlColInfo sqlColInfo;
 
     @Override
     public ConditionTag getConditionTag() {
@@ -40,9 +43,11 @@ public class ColValueCondition implements UpdateCondition {
     }
 
     public ColValueCondition(GetterFun colNameGetterFun, Object value) {
-        String colName = TableHelper.getColNameOnly(colNameGetterFun);
-        this.colName = colName;
+        this.sqlColInfo = TableHelper.getSqlColInfo(colNameGetterFun);
+        this.colName = sqlColInfo.getColNameNotBlank();
         this.value = value;
+        this.dbType = sqlColInfo.getTableInfo().getDbType();
+
     }
 
     public String getColName() {
@@ -53,9 +58,13 @@ public class ColValueCondition implements UpdateCondition {
         return this.dbType.getQuote() + colName + this.dbType.getQuote();
     }
 
-    @Override
-    public void setHeadCondition(HeadCondition headCondition) {
-        Class modelClass = headCondition.getModelClass();
-        this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
+    public SqlColInfo getSqlColInfo() {
+        return sqlColInfo;
     }
+
+    public Object getValue() {
+        return value;
+    }
+
+
 }

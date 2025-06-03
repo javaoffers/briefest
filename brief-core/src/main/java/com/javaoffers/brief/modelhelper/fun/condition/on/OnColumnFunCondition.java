@@ -13,7 +13,7 @@ import java.util.Map;
  *               select xx from table1 left join table2 on table1.f = table2.f ...
  * @Auther: create by cmj on 2022/5/4 18:23
  */
-public class OnColumnFunCondition extends WhereOnCondition implements OnCondition {
+public class OnColumnFunCondition extends WhereOnCondition  {
 
     private String colName1; //table1 字段
 

@@ -17,7 +17,7 @@ import java.util.Map;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-public  class InCondition<V> extends WhereOnCondition implements Condition {
+public  class InCondition<V> extends WhereOnCondition {
 
     private String colName;
     private List<V> value;
@@ -31,15 +31,6 @@ public  class InCondition<V> extends WhereOnCondition implements Condition {
      */
     public String getColName() {
         return this.colName;
-    }
-
-    /**
-     * 获取 字段值
-     * @return
-     */
-
-    public List<V> getColValue() {
-        return value;
     }
 
     /**

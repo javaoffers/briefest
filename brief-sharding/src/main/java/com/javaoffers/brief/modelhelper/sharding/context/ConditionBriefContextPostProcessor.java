@@ -85,6 +85,10 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 shardingTableProcessor.processInsert(context);
 
             } else if(condition instanceof InsertAllColValueCondition){
+                InsertAllColValueCondition insertAllColValueCondition = (InsertAllColValueCondition) condition;
+                Object model = insertAllColValueCondition.getModel();
+                TableInfo tableInfo = insertAllColValueCondition.getTableInfo();
+
 
             }
         }

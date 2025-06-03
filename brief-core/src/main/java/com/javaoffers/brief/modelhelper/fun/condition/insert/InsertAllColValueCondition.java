@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +35,8 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     private ModelInfo modelInfo;
 
+    private TableInfo tableInfo;
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.VALUES;
@@ -57,6 +60,8 @@ public class InsertAllColValueCondition implements InsertCondition {
     public InsertAllColValueCondition(Class modelClass, Object model) {
         this.model = model;
         this.modelClass = modelClass;
+        this.modelInfo = TableHelper.getModelInfo(this.modelClass);
+        this.tableInfo = TableHelper.getTableInfo(modelClass);
     }
 
     //Initialize information to ensure that sql is generated during parsing
@@ -75,7 +80,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     public void parseInsertSql() {
         Set<String> colNamesSet = this.getParams().keySet();
-        String quote = TableHelper.getTableInfo(modelClass).getDbType().getQuote();
+        String quote = this.tableInfo.getDbType().getQuote();
         //给字段增加``
         this.expressionColNames = this.getParams()
                 .keySet()
@@ -141,7 +146,6 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     // 生成唯一值
     public void gkeyProcess() {
-        this.modelInfo = TableHelper.getModelInfo(this.modelClass);
         List<ModelFieldInfo> gkeyUniqueModels = this.modelInfo.getGkeyUniqueModels();
         if (CollectionUtils.isNotEmpty(gkeyUniqueModels)) {
             gkeyUniqueModels.forEach(gkeyUniqueModel -> {
@@ -212,4 +216,11 @@ public class InsertAllColValueCondition implements InsertCondition {
         return expressionColNames;
     }
 
+    public TableInfo getTableInfo() {
+        return tableInfo;
+    }
+
+    public ModelInfo getModelInfo() {
+        return modelInfo;
+    }
 }

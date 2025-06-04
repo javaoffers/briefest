@@ -10,6 +10,8 @@ public class SqlColInfo {
 
     private TableInfo tableInfo;
 
+    private  ModelInfo modelInfo;
+
     private String tableName;
 
     private String colName;
@@ -48,29 +50,22 @@ public class SqlColInfo {
         return aliasName;
     }
 
-    public void setAliasName(String aliasName) {
-        this.aliasName = aliasName;
-    }
-
     public boolean isSqlFun() {
         return sqlFun;
-    }
-
-    public void setSqlFun(boolean sqlFun) {
-        this.sqlFun = sqlFun;
     }
 
     public TableInfo getTableInfo() {
         return tableInfo;
     }
 
-    public void setTableInfo(TableInfo tableInfo) {
-        this.tableInfo = tableInfo;
+    public ModelInfo getModelInfo() {
+        return modelInfo;
     }
 
-    public SqlColInfo(TableInfo tableInfo, String colName, String aliasName, boolean sqlFun) {
-        this.tableName = tableInfo.getTableName();
+    public SqlColInfo(ModelInfo modelInfo, TableInfo tableInfo, String colName, String aliasName, boolean sqlFun) {
         this.tableInfo = tableInfo;
+        this.modelInfo = modelInfo;
+        this.tableName = tableInfo.getTableName();
         this.colName = colName;
         this.aliasName = aliasName;
         this.sqlFun = sqlFun;

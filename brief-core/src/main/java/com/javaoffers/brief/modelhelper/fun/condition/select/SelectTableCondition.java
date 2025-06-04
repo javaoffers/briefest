@@ -43,9 +43,9 @@ public class SelectTableCondition implements ShardingCondition {
     }
 
     public SelectTableCondition( Class mClass) {
+        this.mClass = mClass;
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
         this.fromTableName = tableInfo.getTableName();
-        this.mClass = mClass;
     }
 
     public String getFrontView(){

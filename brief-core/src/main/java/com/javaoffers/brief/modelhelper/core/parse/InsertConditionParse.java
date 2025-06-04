@@ -9,6 +9,10 @@ import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCo
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
+import com.javaoffers.brief.modelhelper.utils.ModelFieldInfoPosition;
+import com.javaoffers.brief.modelhelper.utils.ModelInfo;
+import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.*;
 
@@ -35,41 +39,46 @@ public class InsertConditionParse extends AbstractParseCondition {
         StringBuilder insertValueAppender = new StringBuilder();
         ArrayList<Map<String, Object>> paramsList = new ArrayList<>();
         HashMap<String, Object> valuesParam = new HashMap<>();
-        boolean isColValueCondition = false;
         boolean isDupUpdateSql = conditions.peekLast() instanceof OnDuplicateKeyUpdateMark;
 
         List<String> dupUpdateSql = new ArrayList<>();
         StringBuilder duplicateSqlForColValCondition = new StringBuilder();
 
         Condition condition = null;
+        InsertAllColValueCondition insertAllColValueCondition = null;
         while( (condition = conditions.pollFirst()) != null){
-            if(condition instanceof ColValueCondition){
+            //将colVal 转换为 ColAll
+            if(condition instanceof ColValueCondition) {
                 Map<String, Object> params = condition.getParams();//只有一个值
                 Assert.isTrue(params.size() == 1,"必须存在一个值");
-                if(insertColNamesAppender.length() == 0){
-                    isColValueCondition = true;
-                    insertColNamesAppender.append("(");
-                    insertValueAppender.append(ConditionTag.VALUES.getTag());
-                    insertValueAppender.append("(");
-                    duplicateSqlForColValCondition.append(ConditionTag.ON_DUPLICATE_KEY_UPDATE.getTag());
-
-                }else{
-                    insertColNamesAppender.append(",");
-                    insertValueAppender.append(",");
-                    duplicateSqlForColValCondition.append(",");
+                ColValueCondition colValueCondition = (ColValueCondition) condition;
+                SqlColInfo sqlColInfo = colValueCondition.getSqlColInfo();
+                TableInfo tableInfo = sqlColInfo.getTableInfo();
+                ModelInfo modelInfo = sqlColInfo.getModelInfo();
+                Object modelObject = modelInfo.getConstructor().newc();
+                ArrayList<Object> valueList = new ArrayList<>();
+                valueList.add(colValueCondition.getValue());
+                ArrayList<String> colNames = new ArrayList<>();
+                colNames.add(colValueCondition.getColName());
+                //获取全部colValue
+                while ((condition = conditions.pollFirst()) != null){
+                    if(condition instanceof ColValueCondition){
+                        colValueCondition = (ColValueCondition) condition;
+                        valueList.add(colValueCondition.getValue());
+                        colNames.add(colValueCondition.getColName());
+                    }
                 }
-                insertColNamesAppender.append(condition.getSql());
-                Set<String> strings = params.keySet();
-                String key = strings.iterator().next();
-                insertValueAppender.append("#{");
-                insertValueAppender.append(key);
-                insertValueAppender.append("}");
-                valuesParam.put(key,params.get(key));
-                duplicateSqlForColValCondition.append(condition.getSql());
-                duplicateSqlForColValCondition.append(" = ");
-                duplicateSqlForColValCondition.append("values(");
-                duplicateSqlForColValCondition.append(condition.getSql());
-                duplicateSqlForColValCondition.append(") ");
+                List<ModelFieldInfoPosition> onesCol = modelInfo.getOnesCol(colNames);
+                Assert.isTrue(onesCol.size() == colNames.size(),"insert col error");
+
+                for (int i = 0; i < onesCol.size(); i++) {
+                    ModelFieldInfoPosition oneCol = onesCol.get(i);
+                    Object value = valueList.get(i);
+                    oneCol.getModelFieldInfo().getSetter().setter(modelObject, value);
+                }
+                insertAllColValueCondition = new InsertAllColValueCondition(tableInfo.getModelClass(), modelObject);
+                conditions.addFirst(insertAllColValueCondition);
+
             } else if(condition instanceof InsertAllColValueCondition){
                 insertValueAppender = new StringBuilder();
                 insertColNamesAppender = new StringBuilder();
@@ -91,17 +100,6 @@ public class InsertConditionParse extends AbstractParseCondition {
                 if(isDupUpdateSql){
                     dupUpdateSql.add(allColValueCondition.getOnDuplicateString());
                 }
-            }
-        }
-
-        if(isColValueCondition){
-            insertColNamesAppender.append(")");
-            insertValueAppender.append(")");
-            paramsList.add(valuesParam);
-            // (colName ,,, ) values (colName ,,,)
-            moreSql.add(insertColNamesAppender.append(insertValueAppender.toString()).toString());
-            if(isDupUpdateSql){
-                dupUpdateSql.add(duplicateSqlForColValCondition.toString());
             }
         }
 

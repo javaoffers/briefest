@@ -31,7 +31,11 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
         this.startIndex = (pageNum - 1) * pageSize;
         this.len = pageSize;
         cleanAndOrTag();
-        HeadCondition headCondition = getHeadCondition();
+    }
+
+    @Override
+    public void setHeadCondition(HeadCondition headCondition) {
+        super.setHeadCondition(headCondition);
         headCondition.setLimitWordCondition(this);
     }
 

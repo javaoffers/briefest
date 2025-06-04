@@ -32,6 +32,8 @@ public  class WhereOnCondition<V> implements WhereCondition {
     //Logical relationship with the previous condition: and , or , ' '
     private String andOrTag = " and ";
 
+    private String sql;
+
     public WhereOnCondition() {}
 
     public void setColName(String colName) {
@@ -84,9 +86,12 @@ public  class WhereOnCondition<V> implements WhereCondition {
 
     @Override
     public String getSql() {
-        String colNameTag = getNextTag();
-        params.put(colNameTag+"", value);
-        return colName +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+        if(sql == null){
+            String colNameTag = getNextTag();
+            params.put(colNameTag+"", value);
+            sql = colName +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+        }
+        return sql;
     }
 
     @Override

@@ -22,6 +22,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;
@@ -452,14 +453,19 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
-        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        return instance.queryData(sqlStatement.getSql(), sqlStatement.getParams().get(0));
+        MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        //TODO 待做
+        List<SQLStatement> sqlStatements = sqlStatement.getSqlStatements();
+        for (SQLStatement statement : sqlStatements) {
+            List list = instance.queryData(statement.getSql(), statement.getParams().get(0));
+        }
+        return Lists.newArrayList();
     }
 
     @Override
     public void stream(Consumer<M> consumer) {
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
-        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
         instance.queryStream(sqlStatement.getSql(), sqlStatement.getParams().get(0), consumer);
     }
 }

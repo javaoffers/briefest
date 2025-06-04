@@ -8,17 +8,22 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
  */
 public class PostgreSqlLimitWordCondition extends LimitWordCondition {
 
+    private String sql;
+
     public PostgreSqlLimitWordCondition(int pageNum, int pageSize) {
         super(pageNum, pageSize);
     }
 
     @Override
     public String getSql() {
-        String startIndexTag = getNextTag();
-        String lenTag = getNextTag();
-        this.getParams().put(startIndexTag, super.startIndex);
-        this.getParams().put(lenTag, super.len);
-        return getTag().getTag() +" #{"+lenTag+"} offset #{"+startIndexTag+"}";
+        if(sql == null){
+            String startIndexTag = getNextTag();
+            String lenTag = getNextTag();
+            this.getParams().put(startIndexTag, super.startIndex);
+            this.getParams().put(lenTag, super.len);
+            this.sql = getTag().getTag() +" #{"+lenTag+"} offset #{"+startIndexTag+"}";
+        }
+        return sql;
     }
 
     @Override

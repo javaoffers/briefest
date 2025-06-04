@@ -27,6 +27,8 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
 
     private Map<String,Object> params = new HashMap<>();
 
+    private String sql;
+
     public HavingGroupCondition() {}
 
     /**
@@ -47,12 +49,16 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
 
     @Override
     public String getSql() {
-        long idx = getNextLong();
-        params.put(idx+"", value);
-        if (aggTag != null) {
-            return aggTag.name() +"("+ colName +") "+ tag.getTag() + " "+"#{"+idx+"}";
+        if(sql == null){
+            long idx = getNextLong();
+            params.put(idx+"", value);
+            if (aggTag != null) {
+                sql = aggTag.name() +"("+ colName +") "+ tag.getTag() + " "+"#{"+idx+"}";
+            }else{
+                sql =  colName +" "+ tag.getTag() + " "+"#{"+idx+"}";
+            }
         }
-        return  colName +" "+ tag.getTag() + " "+"#{"+idx+"}";
+        return sql;
     }
 
     @Override

@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.utils;
 
-import com.javaoffers.brief.modelhelper.anno.fun.params.math.Mod;
+import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
-import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -154,6 +153,16 @@ public class ModelInfo<T> {
             }
         }
         return ones;
+    }
+
+    public ModelFieldInfoPosition getOneCol(String colName) {
+        ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+        if (modelFieldInfo != null && !modelFieldInfo.isModelClass()) {
+            return new ModelFieldInfoPosition(1, modelFieldInfo);
+        }else{
+            throw new FindColException("col name : "+colName);
+        }
+
     }
 
     public List<ModelFieldInfo> getArrays(List<String> colNames) {

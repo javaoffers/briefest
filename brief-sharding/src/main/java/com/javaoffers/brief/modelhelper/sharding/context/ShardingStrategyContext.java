@@ -18,6 +18,10 @@ public class ShardingStrategyContext {
 
     ShardingTableStrategy shardingTableStrategy;
 
+    private String orgTableName;
+
+    private String colName;
+
     public ConditionContext getConditionContext() {
         return conditionContext;
     }
@@ -40,5 +44,21 @@ public class ShardingStrategyContext {
 
     public void setShardingTableStrategy(ShardingTableStrategy shardingTableStrategy) {
         this.shardingTableStrategy = shardingTableStrategy;
+    }
+
+    public String getOrgTableName() {
+        return orgTableName;
+    }
+
+    public void setOrgTableName(String orgTableName) {
+        this.orgTableName = orgTableName;
+    }
+
+    public String getColName() {
+        return colName;
+    }
+
+    public void setColName(String colName) {
+        this.colName = colName;
     }
 }

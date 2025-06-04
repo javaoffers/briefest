@@ -14,6 +14,8 @@ public class HavingBetweenCondition<V> extends WhereOnCondition<V> {
 
     private AggTag aggTag;
 
+    private String sql;
+
     private HavingBetweenCondition(AggTag aggTag, GetterFun colName, V start, ConditionTag tag) {
         super(colName, start, tag);
         this.aggTag = aggTag;
@@ -27,17 +29,20 @@ public class HavingBetweenCondition<V> extends WhereOnCondition<V> {
 
     @Override
     public String getSql() {
-        long startIdx = getNextLong();
-        long endIdx = getNextLong();
-        getParams().put(startIdx+"",getValue());
-        getParams().put(endIdx+"",end);
-        if (aggTag != null) {
-            return aggTag.name() +"(" + super.getColName() +") "
+        if(sql == null) {
+            long startIdx = getNextLong();
+            long endIdx = getNextLong();
+            getParams().put(startIdx+"",getValue());
+            getParams().put(endIdx+"",end);
+            if (aggTag != null) {
+                return aggTag.name() +"(" + super.getColName() +") "
+                        + getTag().getTag()
+                        +" #{"+startIdx+"} and  #{"+endIdx+"} ";
+            }
+            sql =  super.getColName() +" "
                     + getTag().getTag()
                     +" #{"+startIdx+"} and  #{"+endIdx+"} ";
         }
-        return  super.getColName() +" "
-                + getTag().getTag()
-                +" #{"+startIdx+"} and  #{"+endIdx+"} ";
+        return sql;
     }
 }

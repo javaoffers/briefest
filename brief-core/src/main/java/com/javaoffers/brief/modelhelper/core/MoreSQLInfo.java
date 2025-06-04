@@ -17,7 +17,13 @@ public class MoreSQLInfo extends SQLStatement {
 
     public void addSqlInfo(SQLStatement sqlStatement){
         if(sqlStatement !=null && sqlStatement.isStatus()){
-            sqlStatements.add(sqlStatement);
+            if(sqlStatement instanceof MoreSQLInfo){
+                MoreSQLInfo moreSQLInfo = (MoreSQLInfo) sqlStatement;
+                addAllSqlInfo(moreSQLInfo.getSqlStatements());
+            }else{
+                sqlStatements.add(sqlStatement);
+            }
+
         }
     }
 

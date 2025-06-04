@@ -33,7 +33,7 @@ public class MysqlStatementParser implements StatementParser<Condition,BaseSQLSt
     public BaseSQLStatement parse(LinkedList<Condition> conditions) {
         //判断类型
         ConditionTag conditionTag = conditions.get(0).getConditionTag();
-        return crudConditionParse.get(conditionTag).parse(conditions);
+        return crudConditionParse.get(conditionTag).parse((LinkedConditions<Condition>) conditions);
 
     }
 

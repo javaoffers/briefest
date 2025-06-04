@@ -16,4 +16,5 @@ public interface ShardingProcessor {
     public void processWhere(ShardingStrategyContext shardingStrategyContext);
 
     public void processInsert(ShardingStrategyContext shardingStrategyContext);
+
 }

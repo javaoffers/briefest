@@ -19,6 +19,7 @@ public class OnValueFunCondition extends WhereOnCondition {
     private Object value;
     private Map<String, Object> param = new HashMap<String,Object>();
     private ConditionTag tag;
+    private String sql;
     @Override
     public ConditionTag getConditionTag() {
         return tag;
@@ -26,9 +27,12 @@ public class OnValueFunCondition extends WhereOnCondition {
 
     @Override
     public String getSql() {
-        long idx = getNextLong();
-        param.put(idx+"",value);
-        return " " + colName2 +" "+tag.getTag()+" "+ "#{"+idx+"} ";
+        if(sql == null){
+            long idx = getNextLong();
+            param.put(idx+"",value);
+            this.sql = " " + colName2 +" "+tag.getTag()+" "+ "#{"+idx+"} ";
+        }
+        return sql;
     }
 
     /**

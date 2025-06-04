@@ -9,27 +9,32 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
  */
 public class LikeCondition extends WhereOnCondition {
     private AggTag aggTag;
+    private String sql;
     @Override
     public String getSql() {
-        String colNameTag = getNextTag();
-        Object value = String.valueOf(getValue());
-        ConditionTag tag = getTag();
-        switch (tag){
-            case LIKE_LEFT:
-                value = "%"+value;
-                break;
-            case LIKE_RIGHT:
-                value = value + "%";
-                break;
-            case LIKE:
-                value = "%" + value + "%";
-                break;
+        if(sql == null){
+            String colNameTag = getNextTag();
+            Object value = String.valueOf(getValue());
+            ConditionTag tag = getTag();
+            switch (tag){
+                case LIKE_LEFT:
+                    value = "%"+value;
+                    break;
+                case LIKE_RIGHT:
+                    value = value + "%";
+                    break;
+                case LIKE:
+                    value = "%" + value + "%";
+                    break;
+            }
+            getParams().put(colNameTag+"", value);
+            if(aggTag == null){
+                sql = getColName() +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+            }else{
+                sql = aggTag.name() + "("+getColName() +") "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+            }
         }
-        getParams().put(colNameTag+"", value);
-        if(aggTag == null){
-            return getColName() +" "+ tag.getTag() + " "+"#{"+colNameTag+"}";
-        }
-        return aggTag.name() + "("+getColName() +") "+ tag.getTag() + " "+"#{"+colNameTag+"}";
+        return sql;
     }
 
     public LikeCondition(AggTag aggTag, GetterFun colName, Object value, ConditionTag tag) {

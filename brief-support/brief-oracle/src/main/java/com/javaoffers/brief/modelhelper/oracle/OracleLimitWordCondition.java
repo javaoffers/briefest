@@ -18,6 +18,8 @@ import static com.javaoffers.brief.modelhelper.oracle.OracleSelectConditionParse
  */
 public class OracleLimitWordCondition extends LimitWordCondition {
 
+    private String sql;
+
     public OracleLimitWordCondition(int pageNum, int pageSize) {
         super(pageNum, pageSize);
     }
@@ -31,13 +33,16 @@ public class OracleLimitWordCondition extends LimitWordCondition {
      */
     @Override
     public String getSql() {
-        String startIndexTag = getNextTag();
-        String endPositionTag = getNextTag();
-        int endPosition = super.len + super.startIndex;
-        this.getParams().put(endPositionTag, endPosition);
-        this.getParams().put(startIndexTag, super.startIndex);
-        // A 是表的别名
-        return ") A where ROWNUM <= #{" + endPositionTag + "} ) WHERE RN >= #{" + startIndexTag + "}";
+        if(this.sql == null){
+            String startIndexTag = getNextTag();
+            String endPositionTag = getNextTag();
+            int endPosition = super.len + super.startIndex;
+            this.getParams().put(endPositionTag, endPosition);
+            this.getParams().put(startIndexTag, super.startIndex);
+            // A 是表的别名
+            this.sql = ") A where ROWNUM <= #{" + endPositionTag + "} ) WHERE RN >= #{" + startIndexTag + "}";
+        }
+       return this.sql;
     }
 
     @Override

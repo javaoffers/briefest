@@ -161,7 +161,12 @@
             <artifactId>lombok</artifactId>
             <version>1.18.6</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.javaoffers</groupId>
+            <artifactId>brief-sharding</artifactId>
+            <version>3.6.9-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
 
 
     </dependencies>

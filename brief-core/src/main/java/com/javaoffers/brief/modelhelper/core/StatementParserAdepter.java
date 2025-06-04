@@ -18,11 +18,11 @@ public class StatementParserAdepter implements BriefContextAware {
 
     private static volatile BriefContext briefContext;
 
-    public static BaseSQLStatement statementParse(LinkedList<Condition> conditions) {
+    public static MoreSQLInfo statementParse(LinkedList<Condition> conditions) {
         HeadCondition headCondition = (HeadCondition)conditions.pollFirst();
         Condition conditionTag = conditions.peekFirst();
         DBType dbType = TableHelper.getTableInfo(headCondition.getModelClass()).getDbType();
-        BaseSQLStatement sqlStatement = briefContext.getStatementParser(dbType).parse(conditions);
+        MoreSQLInfo sqlStatement = (MoreSQLInfo) briefContext.getStatementParser(dbType).parse(conditions);
         //for reuse select(), delete()...
         conditions.add(headCondition.clone());
         conditions.add(conditionTag);

@@ -12,6 +12,7 @@ public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndO
 
     GetterFun[] getterFuns;
     private ConditionTag tag;
+    private String sql;
 
     public GroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
@@ -42,6 +43,9 @@ public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndO
 
     @Override
     public String getSql() {
-       return tag.getTag()+super.getColName()+" ";
+        if(sql == null){
+            sql = tag.getTag() + super.getColName()+" ";
+        }
+       return sql;
     }
 }

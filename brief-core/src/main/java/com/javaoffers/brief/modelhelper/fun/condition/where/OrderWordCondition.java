@@ -18,6 +18,8 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
 
     private boolean ascOrDesc = true;// true asc, false desc
 
+    private String sql;
+
     public OrderWordCondition(ConditionTag tag, List<String> cs, boolean ascOrDesc) {
         this.tag = tag;
         this.cs = cs;
@@ -29,11 +31,14 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
 
     @Override
     public String getSql() {
-        String order = " asc ";
-        if(!ascOrDesc){
-            order = " desc ";
+        if(sql == null){
+            String order = " asc ";
+            if(!ascOrDesc){
+                order = " desc ";
+            }
+            this.sql = tag.getTag() + String.join(order + "," , cs) + order;
         }
-        return tag.getTag() + String.join(order + "," , cs) + order;
+        return sql;
     }
 
     @Override

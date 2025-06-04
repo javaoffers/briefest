@@ -19,6 +19,8 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
 
     public int len;
 
+    public String sql;
+
     public LimitWordCondition(int pageNum, int pageSize) {
         if (pageNum < 1) {
             pageNum = 1;
@@ -41,11 +43,14 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
 
     @Override
     public String getSql() {
-        String startIndexTag = getNextTag();
-        String lenTag = getNextTag();
-        this.getParams().put(startIndexTag, this.startIndex);
-        this.getParams().put(lenTag, this.len);
-        return getTag().getTag() + " #{" + startIndexTag + "} , #{" + lenTag + "}";
+        if(sql==null){
+            String startIndexTag = getNextTag();
+            String lenTag = getNextTag();
+            this.getParams().put(startIndexTag, this.startIndex);
+            this.getParams().put(lenTag, this.len);
+            this.sql = getTag().getTag() + " #{" + startIndexTag + "} , #{" + lenTag + "}";
+        }
+        return sql;
     }
 
     @Override

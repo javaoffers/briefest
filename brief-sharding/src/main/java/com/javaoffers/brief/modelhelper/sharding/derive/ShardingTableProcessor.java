@@ -19,6 +19,7 @@ import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -40,31 +41,34 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         WhereCondition condition = (WhereCondition) strategyContext.getCondition();
         ShardingTableStrategy shardingTableStrategy = strategyContext.getShardingTableStrategy();
         ConditionTag conditionTag = condition.getConditionTag();
-        Result result = getResult(orgConditionContext);
-        Assert.isTrue(!result.shardingCondition.isDone(), "Duplicate sharding of the same table is not allowed");
-        String orgTableName = result.shardingCondition.getTableName();
-        ShardingParams<Object> objectShardingParams =
+        String orgTableName =strategyContext.getOrgTableName();
+        Result result = getResult(orgConditionContext, orgTableName);
+        ShardingParams<Object> shardingParams =
                 new ShardingParams<Object>(condition, orgTableName, condition.getColName());
+        shardingTableStrategy.shardingBefore(shardingParams);
         switch (conditionTag) {
             case EQ:
-//            case INSERT_INTO:
-                String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
-                Assert.isTrue(shardingTable != null, "sharding table name is null");
-                result.shardingCondition.shardingTableName(shardingTable);
+                String shardingTable = shardingTableStrategy.shardingExactly(shardingParams);
+                if(StringUtils.isBlank(shardingTable) || shardingTable.equals(orgTableName)){
+                    break;
+                }
+                result.shardingCondition.shardingTableName(shardingTable + " " + orgTableName);
                 break;
             default:
-                List<String> shardingTableList = shardingTableStrategy.shardingRange(objectShardingParams);
-                Assert.isTrue(CollectionUtils.isNotEmpty(shardingTableList), "sharding table list is empty");
+                ArrayList<String> shardingTableList = new ArrayList<String>(shardingTableStrategy.shardingRange(shardingParams));
+                if(CollectionUtils.isEmpty(shardingTableList)){
+                    break;
+                }
                 //org sharding
                 Collection<ConditionContext> newPeerShardingList = shardingCondition(shardingTableList,
-                        result.shardingConditionIdx, orgConditionContext);
+                        result.shardingConditionIdx, orgConditionContext, shardingParams.getTableName());
 
                 //peer sharding
                 List<ConditionContext> peerConditionContexts = (List<ConditionContext>) orgConditionContext.getPeerConditionContexts();
                 List<ConditionContext> allNewPeerConditionContexts = Lists.newArrayList();
-                for (ConditionContext peerConditionContext : peerConditionContexts){
+                for (ConditionContext peerConditionContext : peerConditionContexts) {
                     Collection<ConditionContext> newPeerShardingList2 = shardingCondition(shardingTableList,
-                            result.shardingConditionIdx, peerConditionContext);
+                            result.shardingConditionIdx, peerConditionContext, shardingParams.getTableName());
                     allNewPeerConditionContexts.addAll(newPeerShardingList2);
                 }
 
@@ -74,9 +78,27 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         }
     }
 
-    private static Result getResult(ConditionContext orgConditionContext) {
+
+    @Override
+    public void processInsert(ShardingStrategyContext shardingStrategyContext) {
+        ConditionContext orgConditionContext = shardingStrategyContext.getConditionContext();
+        ShardingTableStrategy shardingTableStrategy = shardingStrategyContext.getShardingTableStrategy();
+        Condition condition = shardingStrategyContext.getCondition();
+
+        String orgTableName = shardingStrategyContext.getOrgTableName();
+        String colName = shardingStrategyContext.getColName();
+        ShardingParams<Object> objectShardingParams =
+                new ShardingParams<Object>(condition, orgTableName, colName);
+        shardingTableStrategy.shardingBefore(objectShardingParams);
+        String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
+        Assert.isTrue(shardingTable != null, "sharding table name is null");
+        Result result = getResult(orgConditionContext, orgTableName);
+        result.shardingCondition.shardingTableName(shardingTable);
+    }
+
+    private static Result getResult(ConditionContext orgConditionContext, String orgTableName) {
         List<? extends Condition> conditions = orgConditionContext.getConditions();
-        ListIterator<? extends Condition> iterator = conditions.listIterator();
+        ListIterator<? extends Condition> iterator = conditions.listIterator(conditions.size());
         ShardingCondition shardingCondition = null;
         int shardingConditionIdx = conditions.size();
         for (; iterator.hasPrevious(); ) {
@@ -93,56 +115,38 @@ public final class ShardingTableProcessor implements ShardingProcessor {
 //            } else if (previous instanceof DeleteFromCondition) {
 //                break;
 //            }
-            if (previous instanceof ShardingCondition) {
-                shardingCondition = (ShardingCondition) previous;
-                break;
+            if (previous instanceof ShardingCondition && !((ShardingCondition) previous).isDone()) {
+                ShardingCondition shardingConditionTmp = (ShardingCondition) previous;
+                if(shardingConditionTmp.getTableName().equalsIgnoreCase(orgTableName)){
+                    shardingCondition = shardingConditionTmp;
+                    break;
+                }
             }
         }
+        Assert.isTrue(shardingCondition != null, "sharding table is null");
         Result result = new Result(shardingCondition, shardingConditionIdx);
         return result;
     }
 
-    @Override
-    public void processInsert(ShardingStrategyContext shardingStrategyContext) {
-        ConditionContext orgConditionContext = shardingStrategyContext.getConditionContext();
-        ShardingTableStrategy shardingTableStrategy = shardingStrategyContext.getShardingTableStrategy();
-        Condition condition = shardingStrategyContext.getCondition();
-
-        String orgTableName = null;
-        String colName = null;
-        if(condition instanceof ColValueCondition){
-            ColValueCondition colValueCondition = (ColValueCondition) condition;
-            orgTableName = colValueCondition.getSqlColInfo().getTableName();
-            colName = colValueCondition.getColName();
-        }else if(condition instanceof InsertAllColValueCondition){
-
-        }
-
-        ShardingParams<Object> objectShardingParams =
-                new ShardingParams<Object>(condition, orgTableName, colName);
-        String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
-        Assert.isTrue(shardingTable != null, "sharding table name is null");
-        Result result = getResult(orgConditionContext);
-        result.shardingCondition.shardingTableName(shardingTable);
-    }
-
     private Collection<ConditionContext> shardingCondition(List<String> shardingTableList,
                                                            int shardingConditionIdx,
-                                                           ConditionContext orgConditionContext) {
+                                                           ConditionContext orgConditionContext,
+                                                           String orgTableName) {
         //first Sharding for org
         String shardingTableOne = shardingTableList.get(0);
         List<? extends Condition> conditionList = orgConditionContext.getConditions();
-        ShardingCondition shardingCondition = (ShardingCondition)conditionList.get(shardingConditionIdx);
-        shardingCondition.shardingTableName(shardingTableOne);
+        ShardingCondition shardingCondition = (ShardingCondition) conditionList.get(shardingConditionIdx);
+        shardingCondition.shardingTableName(shardingTableOne + " " + orgTableName);
 
-        if(shardingTableList.size()==1){
+        //表示自身，而不用进行派生condition
+        if (shardingTableList.size() == 1) {
             return Collections.emptyList();
         }
 
         // new peer Sharding
         HashMap<String, ConditionContext> newPeerShardingMap = new HashMap<>();
         for (int idx = 1; idx < shardingTableList.size(); idx++) {
-            String shardingTableOther = shardingTableList.get(idx);
+            String shardingTableOther = shardingTableList.get(idx) + " " + orgTableName;
             ConditionContext conditionContextPeer = new LinkedConditions(false);
             newPeerShardingMap.put(shardingTableOther, conditionContextPeer);
         }

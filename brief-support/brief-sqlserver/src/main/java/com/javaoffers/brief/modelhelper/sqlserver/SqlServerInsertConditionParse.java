@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.sqlserver;
 
+import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQLStatement;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;

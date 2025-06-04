@@ -40,39 +40,39 @@ public class MockBriefSpeedier {
         return speedier;
     }
 
-//    public static BriefSpeedier mockShardingBriefSpeedier(String jdbc, Class modelClass) throws Exception {
-//        DataSource dataSource = Mockito.mock(DataSource.class);
-//        Connection connection = Mockito.mock(Connection.class);
-//        DatabaseMetaData databaseMetaData = Mockito.mock(DatabaseMetaData.class);
-//
-//
-//        Mockito.when(dataSource.getConnection()).thenReturn(connection);
-//        Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
-//        Mockito.when(databaseMetaData.getURL()).thenReturn(jdbc);
-//
-//
-//        BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
-//        Field briefContextField = speedier.getClass()
-//                .getDeclaredField("briefContext");
-//        briefContextField.setAccessible(true);
-//        SpeedierBriefContext speedierBriefContext = (SpeedierBriefContext)briefContextField.get(speedier);
-//
-//
-//        MockBriefJdbcExecutor mockBriefJdbcExecutor = Mockito.mock(MockBriefJdbcExecutor.class);
-//        Mockito.when(mockBriefJdbcExecutor.getMetadata()).thenReturn(new JdbcExecutorMetadata(dataSource, modelClass));
-//
-//        MockBriefJdbcExecutorFactory mockBriefJdbcExecutorFactory = Mockito.spy(new MockBriefJdbcExecutorFactory());
-//        Mockito.when(mockBriefJdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass))
-//                .thenReturn(mockBriefJdbcExecutor);
-//
-//
-//        SpeedierBriefContext spy = Mockito.spy(speedierBriefContext);
-//        Mockito.when(spy.getJdbcExecutorFactory()).thenReturn(new ShardingBriefJdbcExecutorFactory(mockBriefJdbcExecutorFactory));
-//        briefContextField.set(speedier,spy);
-//
-//        JdbcExecutorFactory jdbcExecutorFactory = spy.getJdbcExecutorFactory();
-//        LOGUtils.printLog(jdbcExecutorFactory);
-////        spy.fresh();
-//        return speedier;
-//    }
+    public static BriefSpeedier mockShardingBriefSpeedier(String jdbc, Class modelClass) throws Exception {
+        DataSource dataSource = Mockito.mock(DataSource.class);
+        Connection connection = Mockito.mock(Connection.class);
+        DatabaseMetaData databaseMetaData = Mockito.mock(DatabaseMetaData.class);
+
+
+        Mockito.when(dataSource.getConnection()).thenReturn(connection);
+        Mockito.when(connection.getMetaData()).thenReturn(databaseMetaData);
+        Mockito.when(databaseMetaData.getURL()).thenReturn(jdbc);
+
+
+        BriefSpeedier speedier = BriefSpeedier.getInstance(dataSource);
+        Field briefContextField = speedier.getClass()
+                .getDeclaredField("briefContext");
+        briefContextField.setAccessible(true);
+        SpeedierBriefContext speedierBriefContext = (SpeedierBriefContext)briefContextField.get(speedier);
+
+
+        MockBriefJdbcExecutor mockBriefJdbcExecutor = Mockito.mock(MockBriefJdbcExecutor.class);
+        Mockito.when(mockBriefJdbcExecutor.getMetadata()).thenReturn(new JdbcExecutorMetadata(dataSource, modelClass));
+
+        MockBriefJdbcExecutorFactory mockBriefJdbcExecutorFactory = Mockito.spy(new MockBriefJdbcExecutorFactory());
+        Mockito.when(mockBriefJdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass))
+                .thenReturn(mockBriefJdbcExecutor);
+
+
+        SpeedierBriefContext spy = Mockito.spy(speedierBriefContext);
+        Mockito.when(spy.getJdbcExecutorFactory()).thenReturn(new MockBriefJdbcExecutorFactory());
+        briefContextField.set(speedier,spy);
+
+        JdbcExecutorFactory jdbcExecutorFactory = spy.getJdbcExecutorFactory();
+        LOGUtils.printLog(jdbcExecutorFactory);
+        spy.fresh();
+        return speedier;
+    }
 }

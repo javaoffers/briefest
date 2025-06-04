@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 import com.javaoffers.brief.modelhelper.anno.fun.params.Left;
 
+import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategy;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,5 +18,6 @@ public class ShardingUser {
 
     private String name;
 
+    @ShardingStrategy(ShardingTableMonthStrategy.class)
     private Date birthday;
 }

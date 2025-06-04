@@ -18,17 +18,20 @@ import java.util.Map;
  * @Description: 以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:25
  */
-public  class HavingInCondition<V> extends WhereOnCondition {
+public class HavingInCondition<V> extends WhereOnCondition {
 
     private String colName;
     private List<V> value;
 
     private ConditionTag tag;
-    private Map<String,Object> param = new HashMap<>();
+    private Map<String, Object> param = new HashMap<>();
     private AggTag aggTag;
+
+    private String sql;
 
     /**
      * 获取 字段名称
+     *
      * @return
      */
     public String getColName() {
@@ -38,38 +41,42 @@ public  class HavingInCondition<V> extends WhereOnCondition {
 
     /**
      * 返回条件
+     *
      * @return
      */
-    public  ConditionTag getConditionTag(){
+    public ConditionTag getConditionTag() {
         return tag;
     }
 
     @Override
     public String getSql() {
-        StringBuilder sql = new StringBuilder();
-        if (this.aggTag != null){
-            sql.append(aggTag.name());
-            sql.append("(");
-            sql.append(colName);
-            sql.append(")");
-        }else{
-            sql.append(colName);
-        }
-
-        sql.append(tag.getTag());
-        sql.append(" (");
-        for(int i=0; value!=null && i<value.size(); i++){
-            long idx = getNextLong();
-            getParams().put(idx+"", value.get(i));
-            sql.append("#{");
-            sql.append(idx);
-            sql.append("}");
-            if(i+1 != value.size()){
-                sql.append(",");
+        if (sql == null) {
+            StringBuilder sqlAppender = new StringBuilder();
+            if (this.aggTag != null) {
+                sqlAppender.append(aggTag.name());
+                sqlAppender.append("(");
+                sqlAppender.append(colName);
+                sqlAppender.append(")");
+            } else {
+                sqlAppender.append(colName);
             }
+
+            sqlAppender.append(tag.getTag());
+            sqlAppender.append(" (");
+            for (int i = 0; value != null && i < value.size(); i++) {
+                long idx = getNextLong();
+                getParams().put(idx + "", value.get(i));
+                sqlAppender.append("#{");
+                sqlAppender.append(idx);
+                sqlAppender.append("}");
+                if (i + 1 != value.size()) {
+                    sqlAppender.append(",");
+                }
+            }
+            sqlAppender.append(") ");
+            this.sql = sqlAppender.toString();
         }
-        sql.append(") ");
-        return sql.toString();
+        return sql;
     }
 
     @Override
@@ -77,19 +84,19 @@ public  class HavingInCondition<V> extends WhereOnCondition {
         return param;
     }
 
-    public HavingInCondition(AggTag aggTag,  GetterFun colName, Object[] value, ConditionTag tag) {
-        super(colName,value,tag);
+    public HavingInCondition(AggTag aggTag, GetterFun colName, Object[] value, ConditionTag tag) {
+        super(colName, value, tag);
         Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
         this.colName = TableHelper.getColNameNotAs(colName);
         this.value = new ArrayList<>();
-        for(Object v : value){
-            if(v instanceof Collection){
+        for (Object v : value) {
+            if (v instanceof Collection) {
                 this.value.addAll(((Collection) v));
-            }else if(v.getClass().isArray()){
-                for(Object vv : (Object[])v){
+            } else if (v.getClass().isArray()) {
+                for (Object vv : (Object[]) v) {
                     this.value.add((V) vv);
                 }
-            }else{
+            } else {
                 this.value.add((V) v);
             }
         }

@@ -9,13 +9,18 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
  */
 public class ExistsCondition<V> extends WhereOnCondition<V> {
 
+    private String sql;
+
     public ExistsCondition(GetterFun  existsSql) {
         super(existsSql, null, ConditionTag.EXISTS);
     }
 
     @Override
     public String getSql() {
-        return " "+getTag().getTag()+" ( "+ this.getColName()+" ) ";
+        if(sql == null){
+            sql = " "+getTag().getTag()+" ( "+ this.getColName()+" ) ";
+        }
+        return sql;
     }
 
 }

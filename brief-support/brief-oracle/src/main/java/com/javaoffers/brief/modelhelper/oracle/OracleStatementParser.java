@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
+import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.parse.*;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -34,7 +35,7 @@ public class OracleStatementParser implements StatementParser<Condition, BaseSQL
     public BaseSQLStatement parse(LinkedList<Condition> conditions) {
         //判断类型
         ConditionTag conditionTag = conditions.get(0).getConditionTag();
-        return crudConditionParse.get(conditionTag).parse(conditions);
+        return crudConditionParse.get(conditionTag).parse((LinkedConditions<Condition>) conditions);
 
     }
 

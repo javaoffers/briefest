@@ -4,20 +4,21 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * desc.
  *
  * @author cao ming jie create by 2025/5/8
  */
-public interface ShardingTableStrategy {
+public interface ShardingTableStrategy<T> {
     /**
      * 分表策略：通常用于精确匹配：{@link com.javaoffers.brief.modelhelper.fun.ConditionTag#EQ}
      * @param condition where condition
      * @param orgTableName org table name
      * @return  table name, not null
      */
-    default String shardingExactly(ShardingParams shardingParams){
+    default String shardingExactly(ShardingParams<T> shardingParams){
         return shardingParams.getTableName();
     };
 
@@ -28,8 +29,8 @@ public interface ShardingTableStrategy {
      * @param orgTableName org table name
      * @return list table names . not empty
      */
-    default List<String> shardingRange(ShardingParams shardingParams){
-        return Collections.emptyList();
+    default Set<String> shardingRange(ShardingParams<T> shardingParams){
+        return Collections.emptySet();
     };
 
     /**
@@ -37,7 +38,7 @@ public interface ShardingTableStrategy {
      * @param condition where condition
      * @param orgTableName org table name
      */
-    default void shardingBefore(ShardingParams shardingParams){
-        //
+    default void shardingBefore(ShardingParams<T> shardingParams){
+        //检查表是否存在,如果不存在可以进行新建
     }
 }

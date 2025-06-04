@@ -24,6 +24,7 @@ public  class InCondition<V> extends WhereOnCondition {
 
     private ConditionTag tag;
     private Map<String,Object> param = new HashMap<>();
+    private String sql;
 
     /**
      * 获取 字段名称
@@ -43,29 +44,32 @@ public  class InCondition<V> extends WhereOnCondition {
 
     @Override
     public String getSql() {
-        StringBuilder sql = new StringBuilder(colName);
-        sql.append(tag.getTag());
-        sql.append(" (");
-        int i=0;
-        if(value!=null && i<value.size()){
-            for(; i<value.size(); i++){
-                long idx = getNextLong();
-                getParams().put(idx+"", value.get(i));
-                sql.append("#{");
-                sql.append(idx);
-                sql.append("}");
-                if(i+1 != value.size()){
-                    sql.append(",");
+        if(sql == null){
+            StringBuilder sqlAppender = new StringBuilder(colName);
+            sqlAppender.append(tag.getTag());
+            sqlAppender.append(" (");
+            int i=0;
+            if(value!=null && i<value.size()){
+                for(; i<value.size(); i++){
+                    long idx = getNextLong();
+                    getParams().put(idx+"", value.get(i));
+                    sqlAppender.append("#{");
+                    sqlAppender.append(idx);
+                    sqlAppender.append("}");
+                    if(i+1 != value.size()){
+                        sqlAppender.append(",");
+                    }
                 }
+            }else{
+                // in (null) 永远是false(正确的语法应该是is (not) null).
+                // 当集合为空时用in (null) 来表示where条件为false. 避免 in () 这种语法错误.
+                sqlAppender.append(" null ");
             }
-        }else{
-            // in (null) 永远是false(正确的语法应该是is (not) null).
-            // 当集合为空时用in (null) 来表示where条件为false. 避免 in () 这种语法错误.
-            sql.append(" null ");
-        }
 
-        sql.append(") ");
-        return sql.toString();
+            sqlAppender.append(") ");
+            sql = sqlAppender.toString();
+        }
+        return sql;
     }
 
     @Override

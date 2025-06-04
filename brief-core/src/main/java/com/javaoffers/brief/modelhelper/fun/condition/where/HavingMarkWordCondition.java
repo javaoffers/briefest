@@ -10,6 +10,8 @@ import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
  */
 public  class HavingMarkWordCondition<V> extends WhereOnCondition implements IgnoreAndOrWordCondition {
 
+    private String sql;
+
     public HavingMarkWordCondition() {
         super();
         cleanAndOrTag();
@@ -17,7 +19,10 @@ public  class HavingMarkWordCondition<V> extends WhereOnCondition implements Ign
 
     @Override
     public String getSql() {
-        return ConditionTag.HAVING.getTag() + " 1=1 ";
+        if(sql == null){
+            sql = ConditionTag.HAVING.getTag() + " 1=1 ";
+        }
+        return sql;
     }
 
 

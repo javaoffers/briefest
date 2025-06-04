@@ -27,7 +27,7 @@ public class OnColumnFunCondition extends WhereOnCondition  {
 
     @Override
     public String getSql() {
-        return " "+ colName1 +" "+ tag.getTag() + " "+colName2+" ";
+        return " " + colName1 +" "+ tag.getTag() + " "+colName2+" ";
     }
 
     @Override

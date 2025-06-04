@@ -52,7 +52,7 @@ public class DeleteFromCondition implements ShardingCondition {
         Assert.isTrue(!shardingState,
                 "Duplicate sharding of the same table is not allowed");
         this.tableName = tableName;
-        shardingState = true;
+        this.shardingState = true;
     }
 
     @Override

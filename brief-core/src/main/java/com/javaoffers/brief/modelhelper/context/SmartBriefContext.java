@@ -145,6 +145,7 @@ public abstract class SmartBriefContext implements BriefContext{
     public void clean() {
         coreInterceptorsList.clear();
         statementParserMap.clear();
+        conditionInterceptorList.clear();
     }
 
     //初始化配置信息.

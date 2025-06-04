@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
+import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.parse.DeleteConditionParse;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;
 import com.javaoffers.brief.modelhelper.core.parse.ParseCondition;
@@ -38,7 +39,7 @@ public class SqlServerStatementParser implements StatementParser<Condition, Base
     public BaseSQLStatement parse(LinkedList<Condition> conditions) {
         //判断类型
         ConditionTag conditionTag = conditions.get(0).getConditionTag();
-        return crudConditionParse.get(conditionTag).parse(conditions);
+        return crudConditionParse.get(conditionTag).parse((LinkedConditions<Condition>) conditions);
 
     }
 

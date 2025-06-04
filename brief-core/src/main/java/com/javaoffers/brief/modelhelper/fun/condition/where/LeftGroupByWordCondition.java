@@ -13,6 +13,7 @@ public class LeftGroupByWordCondition extends GroupByWordCondition {
 
     GetterFun[] getterFuns;
     private ConditionTag tag;
+    private String sql;
 
     public LeftGroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
@@ -32,6 +33,9 @@ public class LeftGroupByWordCondition extends GroupByWordCondition {
 
     @Override
     public String getSql() {
-       return ","+super.getColName()+" ";
+        if(sql == null){
+            sql = ","+super.getColName()+" ";
+        }
+       return sql;
     }
 }

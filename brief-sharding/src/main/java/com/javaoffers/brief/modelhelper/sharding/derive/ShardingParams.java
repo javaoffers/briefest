@@ -31,20 +31,21 @@ public class ShardingParams<T> {
         this.columnName = columnName;
         if(this.condition instanceof WhereOnCondition){
             Object value = ((WhereOnCondition) this.condition).getValue();
-            if(value.getClass().isArray()){
-                int length = Array.getLength(value);
-                for (int i = 0; i < length; i++) {
-                    this.valueList.add((T) Array.get(value, i));
+            if(value != null){
+                if(value.getClass().isArray()){
+                    int length = Array.getLength(value);
+                    for (int i = 0; i < length; i++) {
+                        this.valueList.add((T) Array.get(value, i));
+                    }
+                }else if(value instanceof Collection){
+                    this.valueList.addAll((Collection<? extends T>) value);
+                }else{
+                    this.valueList.add((T) value);
                 }
-            }else if(value instanceof Collection){
-                this.valueList.addAll((Collection<? extends T>) value);
-            }else{
-                this.valueList.add((T) value);
-            }
-
-            if(this.condition instanceof BetweenCondition){
-                BetweenCondition<T> betweenCondition = (BetweenCondition) condition;
-                this.valueList.add(betweenCondition.getEnd());
+                if(this.condition instanceof BetweenCondition){
+                    BetweenCondition<T> betweenCondition = (BetweenCondition) condition;
+                    this.valueList.add(betweenCondition.getEnd());
+                }
             }
         }else if (this.condition instanceof ColValueCondition){
             ColValueCondition colValueCondition = (ColValueCondition) condition;

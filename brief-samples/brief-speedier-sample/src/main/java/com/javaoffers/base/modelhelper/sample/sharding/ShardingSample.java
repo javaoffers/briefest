@@ -65,6 +65,11 @@ public class ShardingSample {
     }
 
     @Test
+    public void testShardingSampleIsNotNull(){
+        userBriefMapper.select().colAll().where().isNotNull(ShardingUser::getBirthday).ex();
+    }
+
+    @Test
     public void testShardingSampleBetween(){
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
                 .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())

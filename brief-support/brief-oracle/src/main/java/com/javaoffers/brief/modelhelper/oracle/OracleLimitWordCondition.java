@@ -33,7 +33,7 @@ public class OracleLimitWordCondition extends LimitWordCondition {
      */
     @Override
     public String getSql() {
-        if(this.sql == null){
+        if(this.sql == null) {
             String startIndexTag = getNextTag();
             String endPositionTag = getNextTag();
             int endPosition = super.len + super.startIndex;

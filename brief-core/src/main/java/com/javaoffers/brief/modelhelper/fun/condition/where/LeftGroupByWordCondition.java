@@ -11,24 +11,16 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
  */
 public class LeftGroupByWordCondition extends GroupByWordCondition {
 
-    GetterFun[] getterFuns;
-    private ConditionTag tag;
     private String sql;
 
     public LeftGroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
         super(colName, null, tag);
-        this.getterFuns = colName;
-        this.tag = tag;
+
     }
 
     public LeftGroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
-        this.tag = tag;
-    }
 
-    @Override
-    public ConditionTag getTag() {
-        return this.tag;
     }
 
     @Override

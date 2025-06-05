@@ -38,11 +38,8 @@ public enum ConditionTag {
 
     IS_NOT_NULL(1000," is not null ", CategoryTag.WHERE_ON),
 
-    WHERE(1100," where ",CategoryTag.WHERE_ON),
-
-    AND(1100," and ",CategoryTag.WHERE_ON),
-
-    OR(1100," or ",CategoryTag.WHERE_ON),
+    //虚拟的where条件，通常是where和关键字的一种转换
+    VIRTUAL(1200,"", CategoryTag.WHERE_ON),
 
     /**delete select **/
     SELECT(2000," select ",CategoryTag.SELECT_COL),
@@ -90,22 +87,24 @@ public enum ConditionTag {
 
     /**group by**/
 
-    GROUP_BY(3000, " group by ", CategoryTag.WHERE_ON),
+    GROUP_BY(3000, " group by ", CategoryTag.KEY_WORD),
 
-    HAVING(3000," having ", CategoryTag.WHERE_ON),
+    HAVING(3000," having ", CategoryTag.KEY_WORD),
 
     /***limit**/
-    LIMIT(4000," limit ", CategoryTag.WHERE_ON),
-    ORDER(4001," order by ", CategoryTag.WHERE_ON),
-
+    LIMIT(4000," limit ", CategoryTag.KEY_WORD),
+    ORDER(4001," order by ", CategoryTag.KEY_WORD),
+    AND(1100," and ",CategoryTag.KEY_WORD),
+    OR(1100," or ",CategoryTag.KEY_WORD),
+    WHERE(1100," where ",CategoryTag.KEY_WORD),
     /**特殊符号**/
-    LK(5000," ( ", CategoryTag.WHERE_ON),
-    RK(5000," ) ", CategoryTag.WHERE_ON),
-    BLANK(5000,"", CategoryTag.WHERE_ON),
-    COMMA(5000,", ", CategoryTag.WHERE_ON),
-    QUOTE(5000, "`", CategoryTag.WHERE_ON),
-    QUOTATION(5000, "'", CategoryTag.WHERE_ON),
-    PERIOD(5000, ".", CategoryTag.WHERE_ON),
+    LK(5000," ( ", CategoryTag.KEY_WORD),
+    RK(5000," ) ", CategoryTag.KEY_WORD),
+    BLANK(5000,"", CategoryTag.KEY_WORD),
+    COMMA(5000,", ", CategoryTag.KEY_WORD),
+    QUOTE(5000, "`", CategoryTag.KEY_WORD),
+    QUOTATION(5000, "'", CategoryTag.KEY_WORD),
+    PERIOD(5000, ".", CategoryTag.KEY_WORD),
 
     /**key word**/
     DISTINCT(6000," distinct ",CategoryTag.SELECT_COL),

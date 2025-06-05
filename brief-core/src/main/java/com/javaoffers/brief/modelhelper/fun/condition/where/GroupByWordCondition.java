@@ -8,44 +8,24 @@ import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
  * @Description: 支持分组
  * @Auther: create by cmj on 2022/6/5 20:02
  */
-public class GroupByWordCondition extends WhereOnCondition implements IgnoreAndOrWordCondition {
-
-    GetterFun[] getterFuns;
-    private ConditionTag tag;
-    private String sql;
+public class GroupByWordCondition extends KeyWordCondition {
 
     public GroupByWordCondition(GetterFun[] colName, ConditionTag tag) {
-        super(colName, null, tag);
-        this.getterFuns = colName;
-        this.tag = tag;
-        cleanAndOrTag();
+        super(colName, null,tag);
+
     }
 
     public GroupByWordCondition(String[] colName, ConditionTag tag) {
         super(colName,null,tag);
-        this.tag = tag;
-        cleanAndOrTag();
+
     }
 
     public GroupByWordCondition(String[] colName, Object o, ConditionTag tag) {
         super(colName,o,tag);
-        cleanAndOrTag();
+
     }
     public GroupByWordCondition(GetterFun[] colName, Object o, ConditionTag tag) {
-        super(colName,o,tag);
-        cleanAndOrTag();
+        super(colName,o, tag);
     }
 
-    @Override
-    public ConditionTag getTag() {
-        return this.tag;
-    }
-
-    @Override
-    public String getSql() {
-        if(sql == null){
-            sql = tag.getTag() + super.getColName()+" ";
-        }
-       return sql;
-    }
 }

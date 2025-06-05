@@ -25,8 +25,6 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         this.cs = cs;
         this.ascOrDesc = ascOrDesc;
         this.cleanAndOrTag();
-        HeadCondition headCondition = getHeadCondition();
-        headCondition.addOrderWordCondition(this);
     }
 
     @Override
@@ -48,5 +46,10 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
 
     public void asChild(){
         this.tag = ConditionTag.COMMA;
+    }
+
+    @Override
+    public void setHeadCondition(HeadCondition headCondition) {
+        headCondition.addOrderWordCondition(this);
     }
 }

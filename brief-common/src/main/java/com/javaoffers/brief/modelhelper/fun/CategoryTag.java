@@ -13,6 +13,5 @@ public enum CategoryTag {
     DELETE_FROM,
     INSERT_INTO,
     UPDATE_SET,
-
-
+    KEY_WORD,
 }

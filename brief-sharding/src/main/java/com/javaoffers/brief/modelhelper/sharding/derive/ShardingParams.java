@@ -24,7 +24,6 @@ public class ShardingParams<T> {
     private String columnName;
     private List<T> valueList = Lists.newArrayList();
 
-
     public ShardingParams(Condition condition, String tableName,
                           String columnName) {
         this.condition = condition;

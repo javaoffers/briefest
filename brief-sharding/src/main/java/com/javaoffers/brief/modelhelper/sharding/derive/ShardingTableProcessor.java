@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
+import com.javaoffers.brief.modelhelper.fun.CategoryTag;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -41,6 +42,9 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         WhereCondition condition = (WhereCondition) strategyContext.getCondition();
         ShardingTableStrategy shardingTableStrategy = strategyContext.getShardingTableStrategy();
         ConditionTag conditionTag = condition.getConditionTag();
+        if(conditionTag.getCategoryTag() != CategoryTag.WHERE_ON){
+            return;
+        }
         String orgTableName =strategyContext.getOrgTableName();
         Result result = getResult(orgConditionContext, orgTableName);
         ShardingParams<Object> shardingParams =
@@ -123,7 +127,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                 }
             }
         }
-        Assert.isTrue(shardingCondition != null, "sharding table is null");
+        Assert.isTrue(shardingCondition != null, "sharding table name "+orgTableName+" is error, please check if there are duplicate shards");
         Result result = new Result(shardingCondition, shardingConditionIdx);
         return result;
     }

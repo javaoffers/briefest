@@ -22,7 +22,7 @@ public class ShardingTableMonthStrategy implements ShardingTableStrategy<Date> {
     @Override
     public String shardingExactly(ShardingParams<Date> shardingParams) {
         Date valueOne = shardingParams.getValueOne();
-        return shardingParams.getTableName()+"_"+DateFormatUtils.format(valueOne, "yyyy-MM");
+        return shardingParams.getTableName()+"_"+DateFormatUtils.format(valueOne, "yyyy_MM");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ShardingTableMonthStrategy implements ShardingTableStrategy<Date> {
         Set<String> sets = new LinkedHashSet<String>();
         List<Date> valueList = shardingParams.getValueList();
         for (int i = 0; i < valueList.size(); i++) {
-            String st = shardingParams.getTableName()+"_"+DateFormatUtils.format(valueList.get(i), "yyyy-MM");
+            String st = shardingParams.getTableName()+"_"+DateFormatUtils.format(valueList.get(i), "yyyy_MM");
             sets.add(st);
         }
         return sets;

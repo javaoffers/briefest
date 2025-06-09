@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 
 
 # Brief
 <p>

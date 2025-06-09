@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 如果喜欢请点击star, 推荐一个应用：打开手机应用商店可搜索八股下载安装，一个程序员的社区app. 
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 
 
 # Brief
 <p>

@@ -116,6 +116,11 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         return (List) this.jdbcExecutor.queryList(querySql);
     }
 
+    @Override
+    public List<T> queryData(MoreSQLInfo  moreSQLInfo) {
+        return Collections.emptyList();
+    }
+
     /*********************************batch processing*********************************/
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {
         SQL batchSQL = SQLParse.parseSqlParams(this.dbType, sql, paramMap);

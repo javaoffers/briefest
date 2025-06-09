@@ -9,6 +9,9 @@ import java.util.List;
 
 public class MoreSQLInfo extends SQLStatement {
 
+    //设置是否需要进行分片
+    private boolean sharding;
+
     private List<SQLStatement> sqlStatements = new LinkedList<>();
 
     public MoreSQLInfo() {
@@ -39,4 +42,11 @@ public class MoreSQLInfo extends SQLStatement {
         return sqlStatements;
     }
 
+    public boolean isSharding() {
+        return sharding;
+    }
+
+    public void setSharding(boolean sharding) {
+        this.sharding = sharding;
+    }
 }

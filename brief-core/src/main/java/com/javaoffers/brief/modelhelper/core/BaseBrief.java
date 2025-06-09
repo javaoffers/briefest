@@ -40,6 +40,8 @@ public interface BaseBrief<T>{
 
 	public List<String> nativeData(String sql,Map<String,Object> map, SQLType sqlType);
 
+	public List<T> queryData(MoreSQLInfo  moreSQLInfo);
+
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);
 

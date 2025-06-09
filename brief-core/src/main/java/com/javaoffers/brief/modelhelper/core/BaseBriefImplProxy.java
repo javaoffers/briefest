@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -107,6 +108,24 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
         return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql() , map, sqlType);});
+    }
+
+    @Override
+    public List<T> queryData(MoreSQLInfo  moreSQLInfo) {
+        AtomicInteger idx = new AtomicInteger(0);
+        List<SQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
+        int size = sqlStatements.size();
+        List<T> result = new ArrayList<>();
+        for (; idx.get()<size; ) {
+            SQLStatement sqlStatement = sqlStatements.get(idx.get());
+            doProxy(new JqlMetaInfo(sqlStatement.sql, sqlStatement.getParams(), modelClass), jmi->{
+                 baseBrief.queryStream(jmi.getSql(), jmi.getParams().get(0), t->{
+                    //TODO
+                 });
+                 return 0;
+            });
+        }
+       return result;
     }
 
     @Override

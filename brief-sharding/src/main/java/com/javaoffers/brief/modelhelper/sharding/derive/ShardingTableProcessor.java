@@ -1,11 +1,7 @@
 package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.fun.CategoryTag;
-import com.javaoffers.brief.modelhelper.fun.Condition;
-import com.javaoffers.brief.modelhelper.fun.ConditionContext;
-import com.javaoffers.brief.modelhelper.fun.ConditionTag;
-import com.javaoffers.brief.modelhelper.fun.ShardingCondition;
+import com.javaoffers.brief.modelhelper.fun.*;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.DeleteFromCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
@@ -125,6 +121,8 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                     shardingCondition = shardingConditionTmp;
                     break;
                 }
+            }else if(previous instanceof HeadCondition){
+                ((HeadCondition) previous).setSharding(true);
             }
         }
         Assert.isTrue(shardingCondition != null, "sharding table name "+orgTableName+" is error, please check if there are duplicate shards");

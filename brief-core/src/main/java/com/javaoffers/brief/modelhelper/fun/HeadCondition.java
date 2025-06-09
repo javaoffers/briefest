@@ -29,6 +29,8 @@ public class HeadCondition implements Condition {
 
     private List<OrderWordCondition> orderWordConditionList;
 
+    private boolean shardingTable = false;
+
     public HeadCondition(DataSource dataSource, Class modelClass) {
         this.dataSource = dataSource;
         this.modelClass = modelClass;
@@ -81,5 +83,13 @@ public class HeadCondition implements Condition {
            this.orderWordConditionList = new ArrayList<OrderWordCondition>();
         }
         this.orderWordConditionList.add(orderWordCondition);
+    }
+
+    public boolean isSharding() {
+        return shardingTable;
+    }
+
+    public void setSharding(boolean openSharding) {
+        this.shardingTable = openSharding;
     }
 }

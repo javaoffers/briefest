@@ -22,7 +22,6 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import com.javaoffers.brief.modelhelper.utils.Lists;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;

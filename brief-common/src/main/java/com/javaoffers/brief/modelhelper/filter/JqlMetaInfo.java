@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.filter;
 
+import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
@@ -20,6 +21,8 @@ public class JqlMetaInfo {
     private Class modelClass;
 
     private TableInfo tableInfo;
+
+    private BaseSQLStatement sqlStatement;
 
     public String getSql() {
         return sql;
@@ -60,5 +63,14 @@ public class JqlMetaInfo {
         this.sql = sql;
         this.modelClass = modelClass;
     }
+
+    public JqlMetaInfo(BaseSQLStatement sqlStatement, Class modelClass) {
+        this.sql = sqlStatement.getSql();
+        this.modelClass = modelClass;
+        this.sqlStatement = sqlStatement;
+        this.tableInfo = TableHelper.getTableInfo(modelClass);
+        this.params = sqlStatement.getParams();
+    }
+
 
 }

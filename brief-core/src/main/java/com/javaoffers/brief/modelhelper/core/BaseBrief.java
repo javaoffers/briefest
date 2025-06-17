@@ -26,7 +26,7 @@ public interface BaseBrief<T>{
 	public int updateData(String sql);
 
 	public int updateData(String sql,Map<String,Object> map);
-	
+
 	/*****************************************************************************/
 	default public int querySize(){return 0;}
 
@@ -40,6 +40,9 @@ public interface BaseBrief<T>{
 
 	public List<String> nativeData(String sql,Map<String,Object> map, SQLType sqlType);
 
+	/**
+	 * 用于sharding
+	 */
 	public List<T> queryData(MoreSQLInfo  moreSQLInfo);
 
 	/*****************************************************************************/ 

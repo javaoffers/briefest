@@ -102,7 +102,9 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         ShardingCondition shardingCondition = null;
         int shardingConditionIdx = conditions.size();
         for (; iterator.hasPrevious(); ) {
-            shardingConditionIdx--;
+            if(shardingCondition == null){
+                shardingConditionIdx--;
+            }
             Condition previous = iterator.previous();
 //            if(previous instanceof SelectTableCondition){
 //                break;
@@ -115,11 +117,10 @@ public final class ShardingTableProcessor implements ShardingProcessor {
 //            } else if (previous instanceof DeleteFromCondition) {
 //                break;
 //            }
-            if (previous instanceof ShardingCondition && !((ShardingCondition) previous).isDone()) {
+            if (shardingCondition == null && previous instanceof ShardingCondition && !((ShardingCondition) previous).isDone()) {
                 ShardingCondition shardingConditionTmp = (ShardingCondition) previous;
                 if(shardingConditionTmp.getTableName().equalsIgnoreCase(orgTableName)){
                     shardingCondition = shardingConditionTmp;
-                    break;
                 }
             }else if(previous instanceof HeadCondition){
                 ((HeadCondition) previous).setSharding(true);

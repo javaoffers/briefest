@@ -26,6 +26,7 @@ public class StatementParserAdepter implements BriefContextAware {
         //for reuse select(), delete()...
         conditions.add(headCondition.clone());
         conditions.add(conditionTag);
+        sqlStatement.setHeadCondition(headCondition);
         return sqlStatement;
     }
 

@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.ArrayList;
@@ -112,19 +113,16 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
 
     @Override
     public List<T> queryData(MoreSQLInfo  moreSQLInfo) {
-        AtomicInteger idx = new AtomicInteger(0);
+        HeadCondition headCondition = moreSQLInfo.getHeadCondition();
         List<SQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
-        int size = sqlStatements.size();
         List<T> result = new ArrayList<>();
-        for (; idx.get()<size; ) {
-            SQLStatement sqlStatement = sqlStatements.get(idx.get());
-            doProxy(new JqlMetaInfo(sqlStatement.sql, sqlStatement.getParams(), modelClass), jmi->{
-                 baseBrief.queryStream(jmi.getSql(), jmi.getParams().get(0), t->{
-                    //TODO
-                 });
-                 return 0;
-            });
-        }
+        doProxy(new JqlMetaInfo(moreSQLInfo, modelClass), jmi->{
+            if(headCondition.isSharding()){
+                return baseBrief.queryData(moreSQLInfo);
+            }else{
+                return baseBrief.queryData(jmi.getSql(), jmi.getParams().get(0));
+            }
+        });
        return result;
     }
 

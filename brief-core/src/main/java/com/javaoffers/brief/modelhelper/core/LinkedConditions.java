@@ -7,6 +7,7 @@ import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
@@ -59,6 +60,8 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             biConsumer.accept(this.peekLast(), condition);
         });
 
+
+
         if (condition instanceof WhereOnCondition) {
             ((WhereOnCondition<?>) condition).setHeadCondition((HeadCondition) this.peekFirst());
         } else if (condition instanceof UpdateCondition) {
@@ -69,6 +72,22 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             this.addFirst(condition);
             return true;
         }
+
+        //sharding不需要order和limit
+        if(isOrgContext && condition instanceof OrderWordCondition){
+            HeadCondition headCondition = (HeadCondition)this.peekFirst();
+            if(headCondition.isSharding()){
+                headCondition.addOrderWordCondition((OrderWordCondition)condition);
+            }
+        } else if(condition instanceof LimitWordCondition){
+            HeadCondition headCondition = (HeadCondition)this.peekFirst();
+            if(headCondition.isSharding()){
+                headCondition.setLimitWordCondition((LimitWordCondition)condition);
+                //分片的情况下要逻辑分页
+                return true;
+            }
+        }
+
         //处理condition拦截器
         if(isOrgContext){
             List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();

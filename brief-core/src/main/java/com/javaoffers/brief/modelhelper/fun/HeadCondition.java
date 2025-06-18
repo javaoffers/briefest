@@ -79,7 +79,7 @@ public class HeadCondition implements Condition {
         this.limitWordCondition = limitWordCondition;
     }
     public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
-        if(this.orderWordConditionList != null){
+        if(this.orderWordConditionList == null){
            this.orderWordConditionList = new ArrayList<OrderWordCondition>();
         }
         this.orderWordConditionList.add(orderWordCondition);

@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingDeriveInfo;
@@ -22,6 +23,7 @@ import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
+import javafx.util.Pair;
 
 import java.util.List;
 
@@ -44,7 +46,7 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
         @Override
         public void process(ConditionContext conditionContext, Condition condition) {
             //派生的context不支持sharding
-            if(!conditionContext.isOrgContext()){
+            if(!conditionContext.isOrgContext() || condition instanceof IgnoreAndOrWordCondition){
                 return;
             }
             //处理查询派生condition, 处理 select/delete/update

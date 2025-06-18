@@ -48,8 +48,4 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         this.tag = ConditionTag.COMMA;
     }
 
-    @Override
-    public void setHeadCondition(HeadCondition headCondition) {
-        headCondition.addOrderWordCondition(this);
-    }
 }

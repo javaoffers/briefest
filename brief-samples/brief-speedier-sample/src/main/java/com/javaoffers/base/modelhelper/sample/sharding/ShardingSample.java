@@ -76,4 +76,14 @@ public class ShardingSample {
                 .exs();
         System.out.println(exs.size());
     }
+
+    @Test
+    public void testLimitPage(){
+        List<ShardingUser> exs = userBriefMapper.select().colAll().where()
+                .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())
+                .orderA(ShardingUser::getBirthday)
+                .limitPage(1,10)
+                .exs();
+        System.out.println(exs.size());
+    }
 }

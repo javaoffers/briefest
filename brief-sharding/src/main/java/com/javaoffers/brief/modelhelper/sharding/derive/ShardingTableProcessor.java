@@ -74,6 +74,9 @@ public final class ShardingTableProcessor implements ShardingProcessor {
 
                 peerConditionContexts.addAll(newPeerShardingList);
                 peerConditionContexts.addAll(allNewPeerConditionContexts);
+                if(CollectionUtils.isNotEmpty(orgConditionContext.getPeerConditionContexts())){
+                    result.headCondition.setSharding(true);
+                }
                 break;
         }
     }
@@ -100,6 +103,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         List<? extends Condition> conditions = orgConditionContext.getConditions();
         ListIterator<? extends Condition> iterator = conditions.listIterator(conditions.size());
         ShardingCondition shardingCondition = null;
+        HeadCondition headCondition = (HeadCondition)conditions.get(0);
         int shardingConditionIdx = conditions.size();
         for (; iterator.hasPrevious(); ) {
             if(shardingCondition == null){
@@ -117,17 +121,16 @@ public final class ShardingTableProcessor implements ShardingProcessor {
 //            } else if (previous instanceof DeleteFromCondition) {
 //                break;
 //            }
-            if (shardingCondition == null && previous instanceof ShardingCondition && !((ShardingCondition) previous).isDone()) {
+            if (previous instanceof ShardingCondition && !((ShardingCondition) previous).isDone()) {
                 ShardingCondition shardingConditionTmp = (ShardingCondition) previous;
                 if(shardingConditionTmp.getTableName().equalsIgnoreCase(orgTableName)){
                     shardingCondition = shardingConditionTmp;
+                    break;
                 }
-            }else if(previous instanceof HeadCondition){
-                ((HeadCondition) previous).setSharding(true);
             }
         }
         Assert.isTrue(shardingCondition != null, "sharding table name "+orgTableName+" is error, please check if there are duplicate shards");
-        Result result = new Result(shardingCondition, shardingConditionIdx);
+        Result result = new Result(shardingCondition, shardingConditionIdx, headCondition);
         return result;
     }
 
@@ -171,10 +174,11 @@ public final class ShardingTableProcessor implements ShardingProcessor {
     private static class Result {
         public final ShardingCondition shardingCondition;
         public final int shardingConditionIdx;
-
-        public Result(ShardingCondition shardingCondition, int shardingConditionIdx) {
+        public final HeadCondition headCondition;
+        public Result(ShardingCondition shardingCondition, int shardingConditionIdx,HeadCondition headCondition) {
             this.shardingCondition = shardingCondition;
             this.shardingConditionIdx = shardingConditionIdx;
+            this.headCondition = headCondition;
         }
     }
 }

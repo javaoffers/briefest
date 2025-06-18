@@ -114,15 +114,13 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     @Override
     public List<T> queryData(MoreSQLInfo  moreSQLInfo) {
         HeadCondition headCondition = moreSQLInfo.getHeadCondition();
-        List<T> result = new ArrayList<>();
-        doProxy(new JqlMetaInfo(moreSQLInfo, modelClass), jmi->{
+        return doProxy(new JqlMetaInfo(moreSQLInfo, modelClass), jmi->{
             if(headCondition.isSharding()){
                 return baseBrief.queryData(moreSQLInfo);
             }else{
                 return baseBrief.queryData(jmi.getSql(), jmi.getParams().get(0));
             }
         });
-       return result;
     }
 
     @Override

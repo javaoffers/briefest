@@ -1,5 +1,6 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
+import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
 import com.javaoffers.brief.modelhelper.core.SQLStatement;
@@ -10,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCo
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
+import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfoPosition;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
@@ -39,12 +41,9 @@ public class InsertConditionParse extends AbstractParseCondition {
         StringBuilder insertColNamesAppender = new StringBuilder();
         StringBuilder insertValueAppender = new StringBuilder();
         ArrayList<Map<String, Object>> paramsList = new ArrayList<>();
-        HashMap<String, Object> valuesParam = new HashMap<>();
         boolean isDupUpdateSql = conditions.peekLast() instanceof OnDuplicateKeyUpdateMark;
 
         List<String> dupUpdateSql = new ArrayList<>();
-        StringBuilder duplicateSqlForColValCondition = new StringBuilder();
-
         Condition condition = null;
         InsertAllColValueCondition insertAllColValueCondition = null;
         while( (condition = conditions.pollFirst()) != null){
@@ -75,7 +74,10 @@ public class InsertConditionParse extends AbstractParseCondition {
                 for (int i = 0; i < onesCol.size(); i++) {
                     ModelFieldInfoPosition oneCol = onesCol.get(i);
                     Object value = valueList.get(i);
-                    oneCol.getModelFieldInfo().getSetter().setter(modelObject, value);
+                    ModelFieldInfo modelFieldInfo = oneCol.getModelFieldInfo();
+                    Class fieldGenericClass = modelFieldInfo.getFieldGenericClass();
+                    Object acValue = ConvertRegisterSelectorDelegate.convert.converterObject(fieldGenericClass, value);
+                    modelFieldInfo.getSetter().setter(modelObject, acValue);
                 }
                 insertAllColValueCondition = new InsertAllColValueCondition(tableInfo.getModelClass(), modelObject);
                 conditions.addFirst(insertAllColValueCondition);

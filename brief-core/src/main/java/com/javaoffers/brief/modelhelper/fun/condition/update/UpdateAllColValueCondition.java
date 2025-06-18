@@ -54,9 +54,6 @@ public class UpdateAllColValueCondition implements UpdateCondition , ShardingCon
 
     @Override
     public String getSql() {
-        if (!isUpdateNull && !isExistsNoneNullValue) {
-            return "";
-        }
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, ColumnInfo> colNames = tableInfo.getColNames();
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(modelClass);
@@ -112,7 +109,9 @@ public class UpdateAllColValueCondition implements UpdateCondition , ShardingCon
                 e.printStackTrace();
             }
         });
-
+        if (!isUpdateNull && !isExistsNoneNullValue) {
+            return "";
+        }
         return isUpdateNull ? updateSqlNull.toString() : updateSql.toString();
     }
 

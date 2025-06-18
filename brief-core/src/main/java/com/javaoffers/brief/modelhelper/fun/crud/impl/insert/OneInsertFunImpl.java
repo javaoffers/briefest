@@ -29,7 +29,7 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
     @Override
     public Id ex() {
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
-        SQLStatement sqlStatement = ((MoreSQLInfo) StatementParserAdepter.statementParse(conditions)).getSqlStatements().get(0);
+        SQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions).getSqlStatements().get(0);
         List<Id> list = instance.batchInsert(sqlStatement.getSql(), sqlStatement.getParams());
         if(CollectionUtils.isEmpty(list)){
             return Id.EMPTY_ID;

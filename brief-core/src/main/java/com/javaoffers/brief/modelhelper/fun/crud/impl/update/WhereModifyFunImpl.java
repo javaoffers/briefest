@@ -335,7 +335,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     @Override
     public Integer ex() {
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
-        MoreSQLInfo moreSqlInfo = (MoreSQLInfo) StatementParserAdepter.statementParse(conditions);
+        MoreSQLInfo moreSqlInfo = StatementParserAdepter.statementParse(conditions);
         List<SQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
         for(SQLStatement sqlStatement : sqlStatements){

@@ -78,4 +78,9 @@ public class MoreSQLInfo extends SQLStatement {
         }
         return params;
     }
+
+    @Override
+    public boolean isStatus() {
+        return !sqlStatements.isEmpty();
+    }
 }

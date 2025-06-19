@@ -164,8 +164,7 @@ public class TestStarter {
     }
     public static void testBriefSelectOne() {
         for (int i = 0; i < queryCount; i++) {
-            BriefAccount briefAccount = BriefInitializer.selectOne();
-            System.out.println(briefAccount);
+            BriefInitializer.selectOne();
         }
     }
 

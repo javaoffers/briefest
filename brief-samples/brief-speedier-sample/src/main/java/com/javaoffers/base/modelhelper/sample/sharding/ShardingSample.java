@@ -85,5 +85,12 @@ public class ShardingSample {
                 .limitPage(1,10)
                 .exs();
         System.out.println(exs.size());
+
+        exs = userBriefMapper.select().colAll().where()
+                .in(ShardingUser::getBirthday,new Date())
+                .orderA(ShardingUser::getBirthday)
+                .limitPage(1,10)
+                .exs();
+        System.out.println(exs.size());
     }
 }

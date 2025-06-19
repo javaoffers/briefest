@@ -60,13 +60,15 @@ public class MoreSQLInfo extends SQLStatement {
 
     @Override
     public String getSql() {
-        StringBuilder sqlAppender = new StringBuilder();
+        StringBuilder sqlAppender = new StringBuilder(headCondition.isSharding()?" ":"");
+
         for (SQLStatement sqlStatement : sqlStatements) {
             if(sqlAppender.length()>0){
                 sqlAppender.append("\n");
             }
             sqlAppender.append(sqlStatement.getSql());
         }
+
         return sqlAppender.toString();
     }
 

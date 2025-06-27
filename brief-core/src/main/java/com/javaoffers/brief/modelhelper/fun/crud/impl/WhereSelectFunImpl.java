@@ -454,7 +454,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         HeadCondition headCondition = (HeadCondition)this.conditions.peekFirst();
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
         MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        return instance.queryData(sqlStatement);
+        return instance.queryMultipleData(sqlStatement);
     }
 
     @Override

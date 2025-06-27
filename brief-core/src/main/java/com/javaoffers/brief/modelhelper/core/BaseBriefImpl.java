@@ -117,7 +117,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
-    public List<T> queryData(MoreSQLInfo  moreSQLInfo) {
+    public List<T> queryMultipleData(MoreSQLInfo  moreSQLInfo) {
         //开始支持sharding查询
         return Collections.emptyList();
     }

@@ -43,7 +43,7 @@ public interface BaseBrief<T>{
 	/**
 	 * 用于sharding
 	 */
-	public List<T> queryData(MoreSQLInfo  moreSQLInfo);
+	public List<T> queryMultipleData(MoreSQLInfo  moreSQLInfo);
 
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);

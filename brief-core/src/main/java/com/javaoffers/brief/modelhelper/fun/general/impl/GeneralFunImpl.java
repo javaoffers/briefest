@@ -29,6 +29,7 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -495,6 +496,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     @Override
     public String ddlSQL(String sql, Map<String, Object> param) {
         return this.nativeFun.setSqlText(sql, SQLType.DDL).setParamMap(param).ex();
+    }
+
+    @Override
+    public void dmlSQL(String sql, Consumer<Object> consumer) {
+         this.nativeFun.setSqlText(sql, SQLType.DML, consumer).exDml();
+    }
+
+    @Override
+    public void dmlSQL(String sql, Map<String, Object> param, Consumer<Object> consumer) {
+        this.nativeFun.setSqlText(sql, SQLType.DML, consumer).setParamMap(param).exDml();
     }
 
     private Pair<Boolean, WhereSelectFun<T, Object>> parseQueryWhere(T model) {

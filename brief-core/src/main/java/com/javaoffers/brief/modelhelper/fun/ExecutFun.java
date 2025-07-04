@@ -6,7 +6,4 @@ package com.javaoffers.brief.modelhelper.fun;
  */
 public interface ExecutFun<M> extends ExecutOneFun<M>,ExecutMoreFun<M>{
 
-
-
-
 }

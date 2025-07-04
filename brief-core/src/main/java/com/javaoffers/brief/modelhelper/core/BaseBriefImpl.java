@@ -100,17 +100,27 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
-    public List<String> nativeData(String sql, SQLType sqlType) {
+    public List<Object> nativeData(String sql, SQLType sqlType) {
         return nativeData(sql, new HashMap<>(), sqlType);
     }
 
     @Override
-    public List<String> nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType) {
+    public List<Object> nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         querySql.setSqlType(sqlType);
         return (List) this.jdbcExecutor.queryList(querySql);
+    }
+
+    @Override
+    public void nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType, Consumer<T> consumer) {
+        List<Map<String, Object>> paramMapList = new ArrayList<>();
+        paramMapList.add(paramMap);
+        SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
+        querySql.setSqlType(sqlType);
+        querySql.setStreaming(consumer);
+        this.jdbcExecutor.queryList(querySql);
     }
 
     /*********************************batch processing*********************************/

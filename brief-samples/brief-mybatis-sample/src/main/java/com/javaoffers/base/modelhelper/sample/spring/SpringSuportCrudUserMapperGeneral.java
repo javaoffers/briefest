@@ -51,6 +51,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         testCountDistinct();
         testSaveModify();
         testSaveUpdate();
+        testDML();
         if(status){
             System.exit(0);
         }
@@ -58,6 +59,13 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
 
     }
+
+    private void testDML() {
+        this.crudUserMapper.general().dmlSQL("select * from user limit 1", res->{
+            LOGUtils.printLog(res);
+        });
+    }
+
     public void testVsModify() throws JsonProcessingException {
         User user = this.crudUserMapper.general().query(1, 1).get(0);
         user.setWork(Work.JAVA);

@@ -69,9 +69,32 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                     return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass,
                             new BriefResultSetExecutor(rs));
                 case DML:
+                    if (ps.execute()) {
+                        //NOTE: RESULT TYPE OF STRING
+                        rs = ps.getResultSet();
+                        while (rs.next()) {
+                            List<Object> dmlCol = Lists.newArrayList();
+                            int columnCount = rs.getMetaData().getColumnCount();
+                            for (int i = 1; i <= columnCount; i++) {
+                                dmlCol.add(rs.getObject(i));
+                            }
+                            if (!dmlCol.isEmpty()) {
+                                sql.getStreaming().accept(dmlCol);
+                            }
+                        }
+                    } else {
+                        int updateCount = ps.getUpdateCount();
+                        if(updateCount!=-1){
+                            sql.getStreaming().accept(updateCount);
+                        }else{
+                            //true Indicates successful execution
+                            sql.getStreaming().accept(true);
+                        }
+                    }
+                    return new ArrayList<>();
                 case DDL:
                     boolean execute = ps.execute();
-                    List dmlResult = Lists.newArrayList();
+                    List ddlResult = Lists.newArrayList();
                     if (execute) {
                         //NOTE: RESULT TYPE OF STRING
                         rs = ps.getResultSet();
@@ -82,14 +105,19 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                                 dmlCol.add(rs.getString(i));
                             }
                             if (dmlCol.size() > 0) {
-                                dmlResult.add(dmlCol);
+                                ddlResult.add(dmlCol);
                             }
                         }
                     } else {
-                        //true Indicates successful execution
-                        dmlResult.add(true);
+                        int updateCount = ps.getUpdateCount();
+                        if(updateCount!=-1){
+                            ddlResult.add(updateCount);
+                        }else{
+                            //true Indicates successful execution
+                            ddlResult.add(true);
+                        }
                     }
-                    return dmlResult;
+                    return ddlResult;
                 default:
                     throw new ParseResultSetException("sql type does not exist");
             }

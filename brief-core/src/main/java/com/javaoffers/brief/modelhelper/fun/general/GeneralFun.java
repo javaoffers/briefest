@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * create by cmj
@@ -333,7 +334,7 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
     public Number countDistinct(C c,T model);
 
     /**
-     * Execute local sql.  Data Definition Language.
+     * Execute native sql.  Data Definition Language.
      * CREATE, ALTER, DROP, TRUNCATE,  GRANT , REVOKE...
      * NOTE: It is not recommended to execute DQL
      * @param sql
@@ -349,4 +350,19 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      * @return message
      */
     public String ddlSQL(String sql, Map<String,Object> param);
+
+    /**
+     * Execute native sql。
+     * @param sql native sql
+     * @return result
+     */
+    public void dmlSQL(String sql, Consumer<Object> consumer);
+
+
+    /**
+     * Execute native sql。
+     * @param sql native sql
+     * @return result
+     */
+    public void dmlSQL(String sql, Map<String,Object> param, Consumer<Object> consumer);
 }

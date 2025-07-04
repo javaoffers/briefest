@@ -54,5 +54,9 @@ public interface JdbcExecutor<T> {
      */
     List<T> queryList(BaseSQLInfo sql);
 
+    /**
+     * 流式查询
+     * @param sql
+     */
     void queryStream(BaseSQLInfo sql);
 }

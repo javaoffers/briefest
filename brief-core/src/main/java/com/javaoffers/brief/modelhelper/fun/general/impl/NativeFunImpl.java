@@ -16,6 +16,7 @@ import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class NativeFunImpl implements ExecutFun<String> {
@@ -30,9 +31,18 @@ public class NativeFunImpl implements ExecutFun<String> {
 
     private Class modelClass;
 
+    private Consumer<Object> consumer;
+
     public NativeFunImpl() {
         this.modelClass = CrudMapperMethodThreadLocal.getExcutorModel();
         this.dataSource = CrudMapperMethodThreadLocal.getExcutorDataSource();
+    }
+
+    public NativeFunImpl setSqlText(String sqlText, SQLType sqlType,Consumer<Object> consumer) {
+        this.sqlText = sqlText;
+        this.sqlType = sqlType;
+        this.consumer = consumer;
+        return this;
     }
 
     public NativeFunImpl setSqlText(String sqlText, SQLType sqlType) {
@@ -62,13 +72,22 @@ public class NativeFunImpl implements ExecutFun<String> {
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        List list =  instance.nativeData(sqlText,paramMap, this.sqlType);
-        return (List<String>) list.stream().map(el->{
+        List<Object> list =  instance.nativeData(sqlText,paramMap, this.sqlType);
+        return list.stream().map(el->{
             if(el instanceof List){
                 List ls = (List)el;
-                return ls.stream().map(Object::toString).collect(Collectors.joining("\t"));
+                return ls.stream().map(Object::toString).collect(Collectors.joining("\t")).toString();
             }
             return GsonUtils.gson.toJson(el);
         }).collect(Collectors.toList());
+    }
+
+    public void exDml() {
+        if(StringUtils.isBlank(this.sqlText)){
+            return ;
+        }
+        HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
+        BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
+        instance.nativeData(sqlText, paramMap, SQLType.DML, consumer);
     }
 }

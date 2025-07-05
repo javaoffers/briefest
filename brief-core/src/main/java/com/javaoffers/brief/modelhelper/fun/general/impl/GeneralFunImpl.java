@@ -54,7 +54,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private DeleteFunImpl<T> deleteFun;
 
-    private NativeFunImpl nativeFun;
+    private NativeFunImpl<T> nativeFun;
 
     private String tableName;
 
@@ -506,6 +506,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     @Override
     public void dmlSQL(String sql, Map<String, Object> param, Consumer<Object> consumer) {
         this.nativeFun.setSqlText(sql, SQLType.DML, consumer).setParamMap(param).exDml();
+    }
+
+    @Override
+    public List<T> viewSQL(String sql) {
+        return this.nativeFun.setSqlText(sql, SQLType.NORMAL_SELECT).exView();
+    }
+
+    @Override
+    public List<T> viewSQL(String sql, Map<String, Object> param) {
+        return this.nativeFun.setSqlText(sql, SQLType.NORMAL_SELECT).setParamMap(param).exView();
     }
 
     private Pair<Boolean, WhereSelectFun<T, Object>> parseQueryWhere(T model) {

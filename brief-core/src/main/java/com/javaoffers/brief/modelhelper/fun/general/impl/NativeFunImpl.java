@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class NativeFunImpl implements ExecutFun<String> {
+public class NativeFunImpl<T> implements ExecutFun<String> {
 
     private String sqlText;
 
@@ -89,5 +89,14 @@ public class NativeFunImpl implements ExecutFun<String> {
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
         BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
         instance.nativeData(sqlText, paramMap, SQLType.DML, consumer);
+    }
+
+    public List<T> exView(){
+        if(StringUtils.isBlank(this.sqlText)){
+            return Lists.newArrayList();
+        }
+        HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
+        BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
+        return instance.queryData(sqlText,paramMap);
     }
 }

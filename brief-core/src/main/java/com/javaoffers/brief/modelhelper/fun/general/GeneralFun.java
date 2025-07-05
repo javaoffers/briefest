@@ -358,11 +358,24 @@ public interface GeneralFun<T, C extends GetterFun<T, Object>, V> extends BaseMa
      */
     public void dmlSQL(String sql, Consumer<Object> consumer);
 
-
     /**
      * Execute native sql。
      * @param sql native sql
      * @return result
      */
     public void dmlSQL(String sql, Map<String,Object> param, Consumer<Object> consumer);
+
+    /**
+     * 按照视图查询
+     * @param sql sql
+     * @return 结果
+     */
+    public List<T> viewSQL(String sql);
+
+    /**
+     * 按照视图查询
+     * @param sql sql
+     * @return 结果
+     */
+    public List<T> viewSQL(String sql, Map<String,Object> param);
 }

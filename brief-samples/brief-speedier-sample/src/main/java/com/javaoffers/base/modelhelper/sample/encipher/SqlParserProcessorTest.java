@@ -51,8 +51,8 @@ public class SqlParserProcessorTest {
                 "user.id as id, " +
                 "user.name as name, " + //会更改name
                 "user.birthday as birthday," +
-                "(select name from arder where arder.xx = user.xx  limit 1) as name2,  " + //不会更改name
-                "(select name from arder o where o.qq = user.xx  limit 1) as name3   " + //不会更改name.
+                "(select name from order where order.xx = user.xx  limit 1) as name2,  " + //不会更改name
+                "(select name from order o where o.qq = user.xx  limit 1) as name3   " + //不会更改name.
                 "from  user  " +
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
@@ -80,11 +80,11 @@ public class SqlParserProcessorTest {
                 "name," +
                 "if(name = 0, 'z', 'v'), "+
                 //子查询中没有join, 则子查询的colName 识别为子查询的from tableName
-                "(select u.name from user u where u.xx = arder.xx) as name, " + //会更改name, 内部会加别名
+                "(select u.name from user u where u.xx = order.xx) as name, " + //会更改name, 内部会加别名
                 "(select name from user  where name = o.xx) as name ," +//会更改name, 内部会加别名
                 "(case when name = 1000 then 'y' else 'n' end) " +
-                "from arder o " +
-                "where left(arder.name, 10) = xx " + //不会更改name
+                "from order o " +
+                "where left(order.name, 10) = xx " + //不会更改name
                 "and left(name, 10) = xx "; //不会更改name
 
         //parseSql(sqlStr);
@@ -93,9 +93,9 @@ public class SqlParserProcessorTest {
                 " name," + //解密
                 " age ," + //解密
                 " a.name " +
-                " from arder a inner join user b where a.name = b.name " + //b.name 会解密
+                " from order a inner join user b where a.name = b.name " + //b.name 会解密
                 " ";
-        parseSql(sqlStr);
+//        parseSql(sqlStr);
 
         sqlStr = "" +
                 "select " +
@@ -104,7 +104,7 @@ public class SqlParserProcessorTest {
                 "a.name as name, " + //会更改name
                 "user.birthday as birthday," +
                 "age  " +
-                "from  user a  inner join arder b on b.userId = a.id and arder.name = ? " +//不会更改name
+                "from  user a  inner join order b on b.userId = a.id and order.name = ? " +//不会更改name
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
                 "and left(a.name, 10) " + //会更改name
@@ -119,8 +119,8 @@ public class SqlParserProcessorTest {
                 "user.name as name, " + //会更改name
                 "user.birthday as birthday," +
                 "age  , " +
-                "name "+ //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) . 会加别名
-                "from  user   inner join arder  on userId = id and name = ? " + //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "name "+ //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) . 会加别名
+                "from  user   inner join order  on userId = id and name = ? " + //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
                 "and left(user.name, 10) "; //会更改name
@@ -134,8 +134,8 @@ public class SqlParserProcessorTest {
                 "user.name as name, " + //会更改name
                 "user.birthday as birthday," +
                 "age  , " +
-                "name "+ //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) . 会加别名
-                "from  user a   inner join arder b  on b.userId = a.id and a.name = ? " + //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "name "+ //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) . 会加别名
+                "from  user a   inner join order b  on b.userId = a.id and a.name = ? " + //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
                 "and left(user.name, 10) "; //会更改name
@@ -146,14 +146,14 @@ public class SqlParserProcessorTest {
         sqlStr = "" +
                 "select " +
                 "user.id as id, " +
-                "(select name from arder where userId = id) as name, " + //不会更改name
+                "(select name from order where userId = id) as name, " + //不会更改name
                 "user.birthday as birthday," +
                 "age  , " +
-                "name " + //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) 会加别名
-                "from  user inner join arder on userId = id and name = ? and xxb = xxa  " + //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "name " + //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的) 会加别名
+                "from  user inner join order on userId = id and name = ? and xxb = xxa  " + //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
-                "and left(name, 10) " +  //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "and left(name, 10) " +  //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "and left(user.name, 10) "; //会更改name
 
         //parseSql(sqlStr);
@@ -162,20 +162,21 @@ public class SqlParserProcessorTest {
         sqlStr = "" +
                 "select " +
                 "user.id as id, " +
-                "(select name from `arder` where userId = id) as name, " + //不会更改name
+                "(select name from `order` where userId = id) as orderNameX, " + //不会更改name
+                "(select name from `user` where userId = id) as userName,"+
                 "user.birthday as birthday," +
                 "age ," +
                 "a.name , " + //不会更改name
-                "a.name as arderName, " + //不会更改name
-                "name "+ //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
-                "from  user  inner join (select name from `arder` where userId = id  and name = arderXX ) a  " + //会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "a.name as orderName, " + //不会更改name
+                "name "+ //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "from  user  inner join (select name from `order` where userId = id  and name = orderXX ) a  " + //会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "where  1=1  " +
                 "and user.birthday  between  ? and  ? " +
                 "and left(a.name, 10)"+ //不会更改name
-                "and left(name, 10)"+//会更改name (如果user & arder 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
+                "and left(name, 10)"+//会更改name (如果user & order 都有name则这条sql是有问题的，前置条件：当我们指定了user.name时， user表中是肯定存在name的)
                 "and left(user.name, 10) "; //会更改name
-
-        //parseSql(sqlStr);
+        System.out.println(sqlStr);
+        parseSql(sqlStr);
 
         // 子查询中的name解析
         sqlStr = "select " +
@@ -201,7 +202,7 @@ public class SqlParserProcessorTest {
                 "where " +
                 "a.name = xx "; // a.name 解密.  b.xx 不加密 (因为在子查询中已经解密).
 
-        parseSql(sqlStr);
+//        parseSql(sqlStr);
 
 
     }
@@ -360,9 +361,10 @@ public class SqlParserProcessorTest {
         String parsedSql = SqlParserProcessor.builder()
                 .addProcessor("user", processor)
                 .addColName("user", "name")
-                .addColName("user", "age")
-                .addProcessor("tablex", processor)
-                .addColName("tablex", "xx")
+//                .addColName("user", "age")
+//                .addColName("`user`", "phone")
+//                .addProcessor("tablex", processor)
+//                .addColName("tablex", "xx")
                 .build().parseSql(sqlStr);
         System.out.println(parsedSql);
         //System.exit(0);

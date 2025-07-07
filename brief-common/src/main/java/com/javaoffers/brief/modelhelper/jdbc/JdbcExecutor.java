@@ -66,7 +66,7 @@ public interface JdbcExecutor<T> {
      */
     JdbcExecutorMetadata getMetadata();
 
-    List<>
+
 
 
 }

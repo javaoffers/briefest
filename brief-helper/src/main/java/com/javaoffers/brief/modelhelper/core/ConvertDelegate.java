@@ -43,7 +43,8 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
         T desObject = null;
         try {
             ConvertRegisterSelectorDelegate.processingConvertClass.set(orgDes);
-            desObject = (T) convert.convert(srcUpgrade.cast(srcValue));
+            desObject = (T) convert.convert(srcValue);
+
         }catch (Exception e){
             //重新选择转换
             ConvertDelegate<?> convertDelegate = choseConverter.choseConverter(orgDes, srcValue);

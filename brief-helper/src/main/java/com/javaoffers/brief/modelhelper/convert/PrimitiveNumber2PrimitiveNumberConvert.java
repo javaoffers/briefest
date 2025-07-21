@@ -42,7 +42,11 @@ public class PrimitiveNumber2PrimitiveNumberConvert extends AbstractConver<Numbe
 
     @Override
     public void register(Register register) {
-        Class[] basePrimitiveClass = ModelConsistants.basePrimitiveClass;
+        process(register, ModelConsistants.basePrimitiveClass);
+        processBox(register, ModelConsistants.baseNumberClass);
+    }
+
+    private static void process(Register register, Class[] basePrimitiveClass) {
         for (Class src : basePrimitiveClass) {
             for (Class des : basePrimitiveClass) {
                 try {
@@ -50,6 +54,25 @@ public class PrimitiveNumber2PrimitiveNumberConvert extends AbstractConver<Numbe
                     final PrimitiveNumber2PrimitiveNumberConvert n2n = new PrimitiveNumber2PrimitiveNumberConvert();
                     n2n.setDescriptor(descriptor);
                     Method method = Number.class.getDeclaredMethod(des.getSimpleName() + "Value");
+                    n2n.setConvertMethod(method);
+                    method.setAccessible(true);
+                    register.registerConvert(descriptor, n2n);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
+
+    private static void processBox(Register register, Class[] baseBoxClass) {
+        for (Class src : baseBoxClass) {
+            for (Class des : baseBoxClass) {
+                try {
+                    ConverDescriptor descriptor = new ConverDescriptor(src, des);
+                    final PrimitiveNumber2PrimitiveNumberConvert n2n = new PrimitiveNumber2PrimitiveNumberConvert();
+                    n2n.setDescriptor(descriptor);
+                    Method method = Number.class.getDeclaredMethod(ModelConsistants.numberPrimitivesMapping.get(des) + "Value");
                     n2n.setConvertMethod(method);
                     method.setAccessible(true);
                     register.registerConvert(descriptor, n2n);

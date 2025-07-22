@@ -164,10 +164,11 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
     }
 
     private static Object convert(ModelFieldInfo one, Object o) {
-        ConvertProxy convertProxy = one.getConvertProxy();
+        Class<?> fieldClass = o.getClass();
+        ConvertProxy convertProxy = one.getConvertProxy(fieldClass);
         if (convertProxy == null) {
             convertProxy = convert.choseConverter(one.getFieldGenericClass(), o, one.getField());
-            one.setConvertProxy(convertProxy);
+            one.setConvertProxy(fieldClass, convertProxy);
         }
 
         Object o1 = convertProxy.convert(o);
@@ -267,7 +268,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
                         e.printStackTrace();
                         throw new ParseModelException(
                                 "modelClass:"+one.getModelClass().getName() +", fieldName:"+one.getField().getName()+
-                                ", fieldGenericClass:"+one.getFieldGenericClass()+" , desClass : "+o.getClass()+", convert:"+one.getConvertProxy().toString());
+                                ", fieldGenericClass:"+one.getFieldGenericClass()+" , desClass : "+o.getClass()+", convert:"+one.getConvertProxy(o.getClass()).toString());
                     }
 
                 }

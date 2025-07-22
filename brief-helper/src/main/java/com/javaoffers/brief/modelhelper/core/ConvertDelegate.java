@@ -50,8 +50,9 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
             ConvertDelegate<?> convertDelegate = choseConverter.choseConverter(orgDes, srcValue);
             //选择是否替换convert. 如果失败次数小于５则进行替换
             if(this.convert != convertDelegate.convert){
-               this.convert = convertDelegate.convert;
-                this.srcUpgrade = convertDelegate.srcUpgrade;
+                //这里不能直接替换，并发情况会有ABA问题。
+//               this.convert = convertDelegate.convert;
+//                this.srcUpgrade = convertDelegate.srcUpgrade;
                 desObject = (T) convertDelegate.convert(srcValue);
             }else {
                 throw e;

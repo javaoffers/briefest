@@ -260,8 +260,16 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
             } else if (processNoneModelField) {
                 Object o = null;
                 if ((o = rs.getColValueByColPosition(mif.getPosition())) != null) {
-                    o = convert(one, o);
-                    one.getSetter().setter(model, o);
+                    try {
+                        o = convert(one, o);
+                        one.getSetter().setter(model, o);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                        throw new ParseModelException(
+                                "modelClass:"+one.getModelClass().getName() +", fieldName:"+one.getField().getName()+
+                                ", fieldGenericClass:"+one.getFieldGenericClass()+" , desClass : "+o.getClass()+", convert:"+one.getConvertProxy().toString());
+                    }
+
                 }
             }
         }

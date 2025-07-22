@@ -74,4 +74,14 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
     public void setAfterProcess(Function<T, T> afterProcess) {
         this.afterProcess = afterProcess;
     }
+
+    @Override
+    public String toString() {
+        return "ConvertDelegate{" +
+                "srcUpgrade=" + srcUpgrade +
+                ", orgDes=" + orgDes +
+                ", convert=" + convert +
+                ", afterProcess=" + afterProcess +
+                '}';
+    }
 }

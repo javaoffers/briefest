@@ -6,7 +6,9 @@ import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.select.SelectColumnCondition;
+import com.javaoffers.brief.modelhelper.fun.crud.JoinFunTableExtend;
 import com.javaoffers.brief.modelhelper.fun.crud.LastJoinFun;
+import com.javaoffers.brief.modelhelper.fun.crud.LastJoinFunTableExtend;
 import com.javaoffers.brief.modelhelper.fun.crud.LastOnFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -18,21 +20,21 @@ import java.util.stream.Stream;
 /**
  * @author mingJie
  */
-public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> implements LastJoinFun<M1,M2,M3,C3,V> {
+public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> implements LastJoinFunTableExtend<M1,M2,M3,C3,V>, LastJoinFun<M1,M2,M3,C3,V> {
 
     private LinkedList<Condition> conditions;
     private Class<M1> m1Class;
     private Class<M2> m2Class;
     private Class<M3> m3Class;
-    private String table3Name;
+    private JoinTableCondition joinTableCondition;
 
     public LastJoinFunImpl(Class<M1> m1Class, Class<M2> m2Class, Class<M3> m3Class, LinkedList<Condition> conditions,  ConditionTag tag) {
         this.conditions = conditions;
         this.m1Class = m1Class;
         this.m2Class = m2Class;
         this.m3Class = m3Class;
-        this.table3Name = TableHelper.getTableName(m3Class);
-        this.conditions.add(new JoinTableCondition(this.table3Name,tag));
+        this.joinTableCondition  = new JoinTableCondition(this.m3Class, tag);
+        this.conditions.add(joinTableCondition);
     }
 
     @Override
@@ -105,5 +107,17 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     @Override
     public <C2 extends GetterFun<M2, Object>> LastOnFun<M1, M2, M3, C2, C3, V> on() {
         return new LastOnFunImpl(this.conditions);
+    }
+
+    @Override
+    public LastJoinFun<M1, M2, M3, C3, V> tablePrefix(String tablePrefix) {
+        this.joinTableCondition.setTablePrefix(tablePrefix);
+        return this;
+    }
+
+    @Override
+    public LastJoinFun<M1, M2, M3, C3, V> tableSuffix(String tableSuffix) {
+        this.joinTableCondition.setTableSuffix(tableSuffix);
+        return this;
     }
 }

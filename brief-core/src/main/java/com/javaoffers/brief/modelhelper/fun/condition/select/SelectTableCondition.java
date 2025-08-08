@@ -20,6 +20,10 @@ public class SelectTableCondition implements Condition {
 
     private TableInfo tableInfo;
 
+    private String tableSuffix ="";
+
+    private String tablePrefix ="";
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.SELECT_FROM;
@@ -28,8 +32,9 @@ public class SelectTableCondition implements Condition {
     @Override
     public String getSql() {
         return " " + ConditionTag.SELECT_FROM.getTag() +
-                this.tableInfo.getBaseModel().fromView() +
-                " " +fromTableName+
+                this.tablePrefix +
+                " " +fromTableName + " " +
+                this.tableSuffix +
                 " " ;
     }
 
@@ -46,6 +51,7 @@ public class SelectTableCondition implements Condition {
         this.fromTableName = fromTableName;
         this.mClass = mClass;
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
+        this.tablePrefix = this.tableInfo.getBaseModel().fromView();
     }
 
     public String getFromTableName() {
@@ -62,6 +68,14 @@ public class SelectTableCondition implements Condition {
 
     public void setmClass(Class mClass) {
         this.mClass = mClass;
+    }
+
+    public void setTablePrefix(String tablePrefix) {
+        this.tablePrefix = tablePrefix;
+    }
+
+    public void setTableSuffix(String tableSuffix) {
+        this.tableSuffix = tableSuffix;
     }
 
     @Override

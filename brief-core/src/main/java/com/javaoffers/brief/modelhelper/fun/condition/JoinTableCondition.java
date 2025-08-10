@@ -58,6 +58,7 @@ public class JoinTableCondition implements Condition {
         this.tableSuffix = tableSuffix;
     }
 
+    //join table not support front view
     public JoinTableCondition(Class joinTableClass, ConditionTag tag) {
         TableInfo tableInfo = TableHelper.getTableInfo(joinTableClass);
         BaseModel baseModel = tableInfo.getBaseModel();

@@ -51,7 +51,7 @@ public class SelectTableCondition implements Condition {
         this.fromTableName = fromTableName;
         this.mClass = mClass;
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
-        this.tablePrefix = this.tableInfo.getBaseModel().fromView();
+        this.tableSuffix = this.tableInfo.getBaseModel().fromView();
     }
 
     public String getFromTableName() {

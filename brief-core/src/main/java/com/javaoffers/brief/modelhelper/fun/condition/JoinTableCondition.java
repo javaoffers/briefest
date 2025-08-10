@@ -17,11 +17,9 @@ public class JoinTableCondition implements Condition {
 
     private String joinTableName; //表名称
 
-    private Class joinTableClass;
+    private String tableSuffix = "";
 
-    private String tableSuffix;
-
-    private String tablePrefix;
+    private String tablePrefix = "";
 
     private ConditionTag tag;
 
@@ -63,7 +61,6 @@ public class JoinTableCondition implements Condition {
     public JoinTableCondition(Class joinTableClass, ConditionTag tag) {
         TableInfo tableInfo = TableHelper.getTableInfo(joinTableClass);
         BaseModel baseModel = tableInfo.getBaseModel();
-        this.tablePrefix = baseModel.frontView();
         this.tableSuffix = baseModel.fromView();
         this.joinTableName = tableInfo.getTableName();
         this.tag = tag;

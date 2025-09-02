@@ -5,14 +5,13 @@
   <groupId>com.javaoffers</groupId>
   <artifactId>brief</artifactId>
   <packaging>pom</packaging>
-  <version>3.6.10-SNAPSHOT</version>
+  <version>3.6.9-SNAPSHOT</version>
   <modules>
     <module>brief-helper</module>
     <module>brief-core</module>
     <module>brief-common</module>
     <module>brief-encipher</module>
     <module>brief-speedier</module>
-    <module>brief-router</module>
     <module>brief-sqlstatement</module>
     <module>brief-support</module>
     <module>brief-samples</module>
@@ -48,7 +47,7 @@
 
     <brief.version>3.6.9-SNAPSHOT</brief.version>
     <slf4j.version>1.7.18</slf4j.version>
-    <junit.version>4.12</junit.version>
+    <junit.version>4.13.1</junit.version>
     <commons.lang3.version>3.12.0</commons.lang3.version>
     <byte.buddy.version>1.10.22</byte.buddy.version>
     <mysql.connector.version>6.0.6</mysql.connector.version>

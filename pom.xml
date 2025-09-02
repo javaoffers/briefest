@@ -145,7 +145,7 @@
             </configuration>
           </plugin>
           <!--gpg打包插件， 第一次打包会让输入密码（你创建gpg私钥时的密码）-->
-                    <plugin>
+          <plugin>
                       <groupId>org.apache.maven.plugins</groupId>
                       <artifactId>maven-gpg-plugin</artifactId>
                       <version>1.6</version>
@@ -157,7 +157,18 @@
                           </goals>
                         </execution>
                       </executions>
-                    </plugin>
+          </plugin>
+          <!-- 新方式的配置，将组件部署到OSSRH并将其发布到Central Repository-->
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.4.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central</publishingServerId>
+              <tokenAuth>true</tokenAuth>
+            </configuration>
+          </plugin>
         </plugins>
       </build>
 
@@ -165,12 +176,8 @@
       <distributionManagement>
         <snapshotRepository>
           <id>ossrh</id>
-          <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+          <url>https://central.sonatype.com/</url>
         </snapshotRepository>
-        <repository>
-          <id>ossrh</id>
-          <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-        </repository>
       </distributionManagement>
     </profile>
   </profiles>

@@ -3,7 +3,7 @@
     <parent>
         <artifactId>brief-samples</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.9-SNAPSHOT</version>
+        <version>3.6.9</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-speedier</artifactId>
-            <version>3.6.9-SNAPSHOT</version>
+            <version>3.6.9</version>
         </dependency>
 
         <dependency>
@@ -95,6 +95,6 @@
 
 
     <scm>
-        <tag>vy</tag>
+        <tag>v3.6.9</tag>
     </scm>
 </project>

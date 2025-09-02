@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief-support</artifactId>
-        <version>3.6.9</version>
+        <version>3.6.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>brief-sqlite</artifactId>
     <name>brief-sqlite</name>
-    <version>3.6.9</version>
+    <version>3.6.10-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -21,12 +21,12 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.9</version>
+            <version>3.6.10-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.9</version>
+            <version>3.6.10-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

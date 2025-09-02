@@ -3,13 +3,13 @@
     <parent>
         <artifactId>brief</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.9</version>
+        <version>3.6.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>brief-sqlstatement</artifactId>
     <name>brief-sqlstatement</name>
-  <version>3.6.9</version>
+  <version>3.6.10-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.9</version>
+            <version>3.6.10-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

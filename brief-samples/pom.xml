@@ -3,12 +3,12 @@
     <parent>
         <artifactId>brief</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.10-SNAPSHOT</version>
+        <version>3.6.9-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-samples</artifactId>
     <name>brief-samples</name>
-  <version>3.6.10-SNAPSHOT</version>
+  <version>3.6.9-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

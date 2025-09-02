@@ -52,6 +52,7 @@
     <commons.lang3.version>3.12.0</commons.lang3.version>
     <byte.buddy.version>1.10.22</byte.buddy.version>
     <mysql.connector.version>6.0.6</mysql.connector.version>
+    <mysql.connector.version8>8.0.28</mysql.connector.version8>
     <mybatis.version>3.5.11</mybatis.version>
     <mybatis.spring.version>2.0.7</mybatis.spring.version>
     <!--大版本跟着mybatisThe big version follows mybatis-->

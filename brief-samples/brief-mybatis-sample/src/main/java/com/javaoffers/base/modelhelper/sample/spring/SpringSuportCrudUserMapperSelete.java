@@ -85,7 +85,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     }
 
     private void selectCount() {
-        User user = this.crudUserMapper.select().col(AggTag.COUNT, User::getCountId).where().ueq(User::getBirthday, "xxx").ex();
+        User user = this.crudUserMapper.select().col(AggTag.COUNT, User::getCountId).where().ueq(User::getBirthday, new Date()).ex();
         user.getCountId();
     }
 
@@ -736,6 +736,13 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                     print(tmpUser);
                 });
         print("------test stream end--------");
+
+        //fix case #51
+        List<User> exs2 = crudUserMapper.select()
+                .colAll()
+                .where()
+                .orderD(User::getId, User::getBirthday)
+                .exs();
 
     }
 

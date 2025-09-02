@@ -99,7 +99,7 @@
 
   <profiles>
     <profile>
-      <id>default</id>
+      <id>ossrh</id>
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
@@ -165,7 +165,7 @@
             <version>0.4.0</version>
             <extensions>true</extensions>
             <configuration>
-              <publishingServerId>central</publishingServerId>
+              <publishingServerId>ossrh</publishingServerId>
               <tokenAuth>true</tokenAuth>
             </configuration>
           </plugin>

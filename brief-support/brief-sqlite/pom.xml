@@ -4,11 +4,12 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief</artifactId>
-        <version>3.6.10</version>
+        <version>3.6.11-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <artifactId>brief-sqlite</artifactId>
+  <version>3.6.10</version>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>

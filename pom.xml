@@ -103,6 +103,10 @@
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
+      <properties>
+        <!-- 创建密钥对时配置的密码 -->
+        <gpg.passphrase>zqbxcmj</gpg.passphrase>
+      </properties>
       <build>
         <plugins>
           <!--source 打包-->

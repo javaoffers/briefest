@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief-support</artifactId>
-        <version>3.6.10-SNAPSHOT</version>
+        <version>3.6.9-SNAPSHOT</version>
     </parent>
 
     <artifactId>brief-pgsql</artifactId>
-
+    <name>brief-pgsql</name>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -19,12 +19,12 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.10-SNAPSHOT</version>
+            <version>3.6.9-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.10-SNAPSHOT</version>
+            <version>3.6.9-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

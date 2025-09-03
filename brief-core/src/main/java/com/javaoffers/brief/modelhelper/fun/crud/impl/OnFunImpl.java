@@ -48,15 +48,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
         this.m1Class = m1Class;
     }
 
-    @Override
-    public M1 ex() {
-        return whereSelectFun.ex();
-    }
 
-    @Override
-    public List<M1> exs() {
-        return whereSelectFun.exs();
-    }
 
     @Override
     public OnFunImpl<M1, M2, V> oeq(GetterFun<M1, Object> col, GetterFun<M2, Object> col2) {

@@ -11,8 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.StreamingFun;
  */
 public interface OnFun<M1, M2, V, R extends OnFun<M1, M2, V, R> > extends
         SmartOnFun<M1, M2, GetterFun<M1, Object>, GetterFun<M2, Object>, V, R >,
-        StreamingFun<M1>,
-        ExecutFun<M1> {
+        StreamingFun<M1> {
 
 
 }

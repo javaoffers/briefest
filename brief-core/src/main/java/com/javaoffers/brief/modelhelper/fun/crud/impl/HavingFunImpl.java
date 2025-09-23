@@ -437,13 +437,13 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
 
     @Override
     @SafeVarargs
-    public final HavingFunImpl<M, C, V> in(C col, Collection<V>... values) {
+    public final HavingFunImpl<M, C, V> in(C col, Collection... values) {
         return in(null,col,values);
     }
 
     @Override
     @SafeVarargs
-    public final HavingFunImpl<M, C, V> in(boolean condition, C col, Collection<V>... values) {
+    public final HavingFunImpl<M, C, V> in(boolean condition, C col, Collection... values) {
         return in(condition,null, col,values);
     }
 

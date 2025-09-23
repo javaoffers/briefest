@@ -369,7 +369,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> isNull(boolean condition, GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> isNull(boolean condition, GetterFun<M2, Object>... cols) {
         if(condition){
             isNull(cols);
         }
@@ -377,7 +378,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> isNotNull(GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> isNotNull(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -385,7 +387,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> isNotNull(boolean condition, GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> isNotNull(boolean condition, GetterFun<M2, Object>... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -393,7 +396,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> exists(GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> exists(GetterFun<M2, Object>... cols) {
         for(GetterFun<M2,Object> col: cols){
             conditions.add(new ExistsCondition<V>(col));
         }
@@ -401,7 +405,8 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public OnFunImpl<M1, M2, V> exists(boolean condition, GetterFun<M2, Object>... cols) {
+    @SafeVarargs
+    public final OnFunImpl<M1, M2, V> exists(boolean condition, GetterFun<M2, Object>... cols) {
         if (condition) {
             exists(cols);
         }

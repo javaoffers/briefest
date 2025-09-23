@@ -268,7 +268,7 @@ public interface WhereFun<M,C, V, R >   {
      * @param values
      * @return
      */
-    public R in(C col, Collection<V>... values);
+    public R in(C col, Collection... values);
 
     /**
      * sql语句  in
@@ -276,7 +276,7 @@ public interface WhereFun<M,C, V, R >   {
      * @param values
      * @return
      */
-    public R in(boolean condition, C col, Collection<V>... values);
+    public R in(boolean condition, C col, Collection... values);
 
     /**
      * sql语句  in

@@ -109,18 +109,18 @@ public class JoinFunImpl<M1,M2,V> implements JoinFunTableExtend<M1,M2,GetterFun<
     }
 
     @Override
-    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, V,?> on() {
+    public <C1 extends GetterFun<M1, Object>> OnFunImpl<M1,M2,V> on() {
         return  new OnFunImpl(this.m1Class, this.m2Class, this.conditions);
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> tablePrefix(String tablePrefix) {
+    public JoinFunImpl<M1,M2,V> tablePrefix(String tablePrefix) {
         this.joinTableCondition.setTablePrefix(tablePrefix);
         return this;
     }
 
     @Override
-    public JoinFun<M1, M2, GetterFun<M2, Object>, V> tableSuffix(String tableSuffix) {
+    public JoinFunImpl<M1,M2,V> tableSuffix(String tableSuffix) {
         this.joinTableCondition.setTableSuffix(tableSuffix);
         return this;
     }

@@ -110,13 +110,13 @@ public class LastJoinFunImpl<M1,M2, M3, C3 extends GetterFun<M3,Object>, V> impl
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> tablePrefix(String tablePrefix) {
+    public LastJoinFunImpl<M1, M2, M3, C3, V> tablePrefix(String tablePrefix) {
         this.joinTableCondition.setTablePrefix(tablePrefix);
         return this;
     }
 
     @Override
-    public LastJoinFun<M1, M2, M3, C3, V> tableSuffix(String tableSuffix) {
+    public LastJoinFunImpl<M1, M2, M3, C3, V> tableSuffix(String tableSuffix) {
         this.joinTableCondition.setTableSuffix(tableSuffix);
         return this;
     }

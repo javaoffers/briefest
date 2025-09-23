@@ -44,13 +44,13 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> tableSuffix(String suffix) {
+    public SelectFunImpl<M> tableSuffix(String suffix) {
         this.selectTableCondition.setTableSuffix(suffix);
         return this;
     }
 
     @Override
-    public SelectFun<M, GetterFun<M, Object>, Object> tablePrefix(String prefix) {
+    public SelectFunImpl<M> tablePrefix(String prefix) {
         this.selectTableCondition.setTablePrefix(prefix);
         return this;
     }

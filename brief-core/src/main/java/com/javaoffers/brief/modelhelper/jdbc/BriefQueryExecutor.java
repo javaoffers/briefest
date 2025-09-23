@@ -1,7 +1,6 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
@@ -12,9 +11,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @description:
@@ -130,9 +130,10 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     }
 
     @Override
-    public void queryStream(BaseSQLInfo sql) {
+    public int queryStream(BaseSQLInfo sql) {
         boolean oldAutoCommitStatus = false;
         Connection connection = null;
+        AtomicInteger c = new AtomicInteger(0);
         try {
             connection = getConnection();
             oldAutoCommitStatus = connection.getAutoCommit();
@@ -145,14 +146,18 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                     ps.setObject(++i, o);
                 }
             }
+            Consumer<T> consumer = t -> {
+                c.getAndIncrement();
+                sql.getStreaming().accept(t);
+            };
             switch (sql.getSqlType()) {
                 case JOIN_SELECT:
                     ModelParseUtils.converterResultSet2ModelForJoinSelectStream(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), consumer);
                     break;
                 case NORMAL_SELECT:
                     ModelParseUtils.converterResultSet2ModelForNormalSelectStream(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), consumer);
                     break;
                 default:
                     throw new ParseResultSetException("sql type does not exist for streaming process");
@@ -163,6 +168,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
         } finally {
             closeConnection(connection, oldAutoCommitStatus);
         }
+        return c.get();
     }
 
     @Override

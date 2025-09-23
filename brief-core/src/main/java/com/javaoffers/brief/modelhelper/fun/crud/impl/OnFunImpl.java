@@ -427,7 +427,7 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     }
 
     @Override
-    public void stream(Consumer<M1> consumer) {
-         whereSelectFun.stream(consumer);
+    public int stream(Consumer<M1> consumer) {
+         return whereSelectFun.stream(consumer);
     }
 }

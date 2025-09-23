@@ -91,12 +91,12 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
-    public void queryStream(String sql, Map<String, Object> paramMap, Consumer<T> consumer) {
+    public int queryStream(String sql, Map<String, Object> paramMap, Consumer<T> consumer) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         querySql.setStreaming(consumer);
-        this.jdbcExecutor.queryStream(querySql);
+        return this.jdbcExecutor.queryStream(querySql);
     }
 
     @Override

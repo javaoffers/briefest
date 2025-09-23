@@ -32,7 +32,7 @@ public interface BaseBrief<T>{
 
 	public List<T> queryData(String sql,Map<String,Object> map);
 
-	public void queryStream(String sql, Map<String,Object> map, Consumer<T> consumer);
+	public int queryStream(String sql, Map<String,Object> map, Consumer<T> consumer);
 
 	public List<Object> nativeData(String sql, SQLType sqlType);
 

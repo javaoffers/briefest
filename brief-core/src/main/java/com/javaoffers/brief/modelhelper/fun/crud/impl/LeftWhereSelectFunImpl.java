@@ -477,7 +477,7 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     }
 
     @Override
-    public void stream(Consumer<M> consumer) {
-        whereSelectFun.stream(consumer);
+    public int stream(Consumer<M> consumer) {
+        return whereSelectFun.stream(consumer);
     }
 }

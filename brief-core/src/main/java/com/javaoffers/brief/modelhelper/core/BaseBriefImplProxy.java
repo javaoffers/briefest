@@ -90,10 +90,10 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     }
 
     @Override
-    public void queryStream(String sql, Map<String, Object> map, Consumer<T> consumer) {
+    public int queryStream(String sql, Map<String, Object> map, Consumer<T> consumer) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.queryStream(jmi.getSql() , map, consumer); return 0;});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.queryStream(jmi.getSql() , map, consumer); return 0;});
     }
 
     @Override

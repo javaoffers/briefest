@@ -43,4 +43,12 @@ public class MysqlSample {
          */
 
     }
+
+    @Test
+    public void testStreamReturn(){
+        int c = briefMapper.select().colAll().where().stream(dto->{
+            System.out.printf("dto");
+        });
+        System.out.println(c);
+    }
 }

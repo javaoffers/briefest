@@ -526,8 +526,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public void stream(Consumer<M> consumer) {
-        whereSelectFun.stream(consumer);
+    public int stream(Consumer<M> consumer) {
+        return whereSelectFun.stream(consumer);
     }
 
     @Override

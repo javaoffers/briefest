@@ -10,5 +10,10 @@ import java.util.function.Consumer;
  */
 public interface StreamingFun <M>{
 
-    void stream(Consumer<M> consumer);
+    /**
+     * if empty then return 0.
+     * @param consumer consumer
+     * @return num
+     */
+    int stream(Consumer<M> consumer);
 }

@@ -73,7 +73,7 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             return true;
         }
 
-        //sharding不需要order和limit
+        //sharding order和limit
         if(isOrgContext && condition instanceof OrderWordCondition){
             HeadCondition headCondition = (HeadCondition)this.peekFirst();
             if(headCondition.isSharding()){

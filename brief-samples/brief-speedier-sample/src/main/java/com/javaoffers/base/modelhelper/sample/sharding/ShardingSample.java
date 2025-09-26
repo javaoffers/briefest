@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ShardingSample {
 
-    static String jdbc = "jdbc:oracle:thin:@localhost:1521:orcl";
+    static String jdbc = "jdbc:mysql:thin:@localhost:1521:orcl";
     static BriefSpeedier speedier;
 
     static {

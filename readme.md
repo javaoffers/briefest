@@ -1,16 +1,16 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCn.md">中文</a> 八股社区开源项目, 打开手机应用商店可搜索八股下载安装，一个程序员的社区app. 请点击star
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 
 
 # Brief
 <p>
 <code>brief</code> Is a high-performance, lightweight, easy to use, zero configuration orm framework. Let complex SQL disappear, development efficiency maximization  and less amount of code and sustainable higher readability and maintainability.
-This is the reason for the existence of the <code>brief</code>. <code>brief</code>Take you to experience unprecedented silky.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
+This is the reason for the existence of the <code>brief</code>. <code>Brief</code>Take you to experience unprecedented silky.<img src="https://5b0988e595225.cdn.sohucs.com/images/20171206/5b69749fcaf34927872b15e21b86f44c.gif" width="20px">
 </p>
 
 ### Introduction
 <p>
  Simplify the development. To write SQL like writing Java code. Here we call JQL. And form a set of JQL API process to reduce the SQL error rate. JQL aimed at the complex SQL is decomposed into simple SQL, this is the core of the development brief.
-  <code>brief</code> Support for multiple table joins and does not require any mapping configuration. brief Support the new writing style.在<code>Mapper</code> The default method can directly manipulate JQL API（The premise is extends <code>BriefMapper</code>）。 
+  <code>brief</code> Support for multiple table joins and does not require any mapping configuration. Brief Support the new writing style. <code>Mapper</code> The default method can directly manipulate JQL API（The premise is extends <code>BriefMapper</code>).
   Integrates the function of brief, can directly use the API. Let me written in Java streams JQL, improve the development efficiency. Less code and more smooth writing. The performance is twice that of mybatis.
 
 </p>
@@ -25,7 +25,7 @@ This is the reason for the existence of the <code>brief</code>. <code>brief</cod
 
   ```java
     <properties>
-         <brief.version>3.6.7</brief.version>
+         <brief.version>3.6.9</brief.version>
     </properties>
    <!--brief Lightweight and can be used alone-->
      <dependency>

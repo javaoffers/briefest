@@ -1,7 +1,10 @@
 package com.javaoffers.brief.modelhelper.fun.condition;
 
+import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.Collections;
 import java.util.Map;
@@ -14,6 +17,10 @@ public class JoinTableCondition implements Condition {
 
     private String joinTableName; //表名称
 
+    private String tableSuffix = "";
+
+    private String tablePrefix = "";
+
     private Class joinClass;
 
     private ConditionTag tag;
@@ -25,7 +32,8 @@ public class JoinTableCondition implements Condition {
 
     @Override
     public String getSql() {
-        return getConditionTag().getTag() + joinTableName +" ";
+        return getConditionTag().getTag() + tablePrefix + " " +
+                joinTableName + " " + tableSuffix + " ";
     }
 
     @Override
@@ -48,9 +56,20 @@ public class JoinTableCondition implements Condition {
                 '}';
     }
 
-    public JoinTableCondition( Class joinClass, String joinTableName, ConditionTag tag) {
-        this.joinClass = joinClass;
-        this.joinTableName = joinTableName;
+    public void setTablePrefix(String tablePrefix) {
+        this.tablePrefix = tablePrefix;
+    }
+
+    public void setTableSuffix(String tableSuffix) {
+        this.tableSuffix = tableSuffix;
+    }
+
+    //join table not support front view
+    public JoinTableCondition(Class joinTableClass, ConditionTag tag) {
+        TableInfo tableInfo = TableHelper.getTableInfo(joinTableClass);
+        BaseModel baseModel = tableInfo.getBaseModel();
+        this.tableSuffix = baseModel.fromView();
+        this.joinTableName = tableInfo.getTableName();
         this.tag = tag;
     }
 }

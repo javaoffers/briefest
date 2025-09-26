@@ -843,7 +843,7 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
-    public void stream(Consumer<M> consumer) {
-        whereSelectFun.stream(consumer);
+    public int stream(Consumer<M> consumer) {
+        return whereSelectFun.stream(consumer);
     }
 }

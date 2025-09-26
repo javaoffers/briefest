@@ -4,11 +4,11 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief-support</artifactId>
-        <version>3.6.9-SNAPSHOT</version>
+        <version>3.6.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>brief-sqlserver</artifactId>
-
+    <name>brief-sqlserver</name>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -18,7 +18,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.9-SNAPSHOT</version>
+            <version>3.6.10-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

@@ -6,14 +6,12 @@ import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
-import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -93,19 +91,19 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
     }
 
     @Override
-    public void queryStream(String sql, Map<String, Object> map, Consumer<T> consumer) {
+    public int queryStream(String sql, Map<String, Object> map, Consumer<T> consumer) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
-        doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.queryStream(jmi.getSql() , map, consumer); return 0;});
+        return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.queryStream(jmi.getSql() , map, consumer); return 0;});
     }
 
     @Override
-    public List<String> nativeData(String sql, SQLType sqlType) {
+    public List<Object> nativeData(String sql, SQLType sqlType) {
         return doProxy(new JqlMetaInfo(sql,modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql(), sqlType);});
     }
 
     @Override
-    public List<String> nativeData(String sql, Map<String, Object> map, SQLType sqlType) {
+    public List<Object> nativeData(String sql, Map<String, Object> map, SQLType sqlType) {
         ArrayList<Map<String, Object>> maps = new ArrayList<>();
         maps.add(map);
         return doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{return baseBrief.nativeData(jmi.getSql() , map, sqlType);});
@@ -121,6 +119,13 @@ public class BaseBriefImplProxy<T, ID> implements BaseBrief<T> , BriefContextAwa
                 return baseBrief.queryData(jmi.getSql(), jmi.getParams().get(0));
             }
         });
+    }
+
+    @Override
+    public void nativeData(String sql, Map<String, Object> map, SQLType sqlType, Consumer<T> consumer) {
+        ArrayList<Map<String, Object>> maps = new ArrayList<>();
+        maps.add(map);
+        doProxy(new JqlMetaInfo(sql,maps, modelClass), (jmi)->{ baseBrief.nativeData(jmi.getSql() , map, sqlType, consumer); return 0;});
     }
 
     @Override

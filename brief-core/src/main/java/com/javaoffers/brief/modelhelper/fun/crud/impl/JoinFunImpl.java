@@ -7,6 +7,7 @@ import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.condition.JoinTableCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.JoinFun;
 import com.javaoffers.brief.modelhelper.fun.condition.select.SelectColumnCondition;
+import com.javaoffers.brief.modelhelper.fun.crud.JoinFunTableExtend;
 import com.javaoffers.brief.modelhelper.fun.crud.OnFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,19 +20,20 @@ import java.util.stream.Stream;
  * @Description: join 功能实现,以字符串方式输入为字段名称
  * @Auther: create by cmj on 2022/5/2 02:11
  */
-public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Object>, V> {
+public class JoinFunImpl<M1,M2,V> implements JoinFunTableExtend<M1,M2,GetterFun<M2, Object>, V>, JoinFun<M1, M2, GetterFun<M2, Object>, V> {
 
     private LinkedList<Condition> conditions;
     private Class<M1> m1Class;
     private Class<M2> m2Class;
     private String table2Name;
+    private JoinTableCondition joinTableCondition;
 
     public JoinFunImpl(Class<M1> mc, Class<M2> m2c, LinkedList<Condition> conditions, ConditionTag tag) {
         this.m1Class = mc;
         this.m2Class = m2c;
         this.conditions = conditions;
-        this.table2Name = TableHelper.getTableName(m2c);
-        this.conditions.add(new JoinTableCondition(this.m2Class, this.table2Name,tag));
+        this.joinTableCondition = new JoinTableCondition(this.m2Class, tag);
+        this.conditions.add(this.joinTableCondition);
     }
 
     /**
@@ -107,8 +109,19 @@ public class JoinFunImpl<M1,M2,V> implements JoinFun<M1, M2, GetterFun<M2, Objec
     }
 
     @Override
-    public <C1 extends GetterFun<M1, Object>> OnFun<M1, M2, V,?> on() {
+    public <C1 extends GetterFun<M1, Object>> OnFunImpl<M1,M2,V> on() {
         return  new OnFunImpl(this.m1Class, this.m2Class, this.conditions);
     }
 
+    @Override
+    public JoinFunImpl<M1,M2,V> tablePrefix(String tablePrefix) {
+        this.joinTableCondition.setTablePrefix(tablePrefix);
+        return this;
+    }
+
+    @Override
+    public JoinFunImpl<M1,M2,V> tableSuffix(String tableSuffix) {
+        this.joinTableCondition.setTableSuffix(tableSuffix);
+        return this;
+    }
 }

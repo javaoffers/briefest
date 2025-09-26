@@ -454,22 +454,26 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> notIn(boolean condition, C col, V... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> notIn(boolean condition, C col, V... values) {
         return notIn(condition,null, col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> notIn(C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> notIn(C col, Collection... values) {
         return notIn(null,col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> notIn(boolean condition, C col, Collection... values) {
         return notIn(condition,null, col,values);
     }
 
     @Override
-    public HavingFunImpl<M, C, V> isNull(C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> isNull(C... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NULL));
         }
@@ -477,7 +481,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> isNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> isNull(boolean condition, C... cols) {
         if(condition){
             isNull(cols);
         }
@@ -485,7 +490,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> isNotNull(C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> isNotNull(C... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new IsNullOrCondition(col, ConditionTag.IS_NOT_NULL));
         }
@@ -493,7 +499,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> isNotNull(boolean condition, C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> isNotNull(boolean condition, C... cols) {
         if(condition){
             isNotNull(cols);
         }
@@ -501,7 +508,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> exists(C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> exists(C... cols) {
         for(GetterFun<M,V> col: cols){
             conditions.add(new ExistsCondition(col));
         }
@@ -509,7 +517,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> exists(boolean condition, C... cols) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> exists(boolean condition, C... cols) {
         if(condition){
             exists(cols);
         }
@@ -526,8 +535,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public void stream(Consumer<M> consumer) {
-        whereSelectFun.stream(consumer);
+    public int stream(Consumer<M> consumer) {
+        return whereSelectFun.stream(consumer);
     }
 
     @Override
@@ -542,7 +551,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> orderA(C... cs) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> orderA(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -560,7 +570,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> orderD(C... cs) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> orderD(C... cs) {
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
             return cloName;
@@ -570,7 +581,8 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
-    public HavingFunImpl<M, C, V> orderD(boolean condition, C... cs) {
+    @SafeVarargs
+    public final HavingFunImpl<M, C, V> orderD(boolean condition, C... cs) {
         if(condition){
             orderD(cs);
         }

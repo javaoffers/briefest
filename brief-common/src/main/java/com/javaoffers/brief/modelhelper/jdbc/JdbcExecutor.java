@@ -55,18 +55,14 @@ public interface JdbcExecutor<T> {
     List<T> queryList(BaseSQLInfo sql);
 
     /**
-     * 流查询
+     * 流式查询
      * @param sql
      */
-    void queryStream(BaseSQLInfo sql);
+    int queryStream(BaseSQLInfo sql);
 
     /**
      * 获取元数据.
      * @return
      */
     JdbcExecutorMetadata getMetadata();
-
-
-
-
 }

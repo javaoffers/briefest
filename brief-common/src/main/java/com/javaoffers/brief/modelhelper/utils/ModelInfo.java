@@ -82,6 +82,9 @@ public class ModelInfo<T> {
     public void put(Map<String, ModelFieldInfo> map, ModelFieldInfo... modelFieldInfos) {
         for (ModelFieldInfo modelFieldInfo : modelFieldInfos) {
             map.put(modelFieldInfo.getAliasName(), modelFieldInfo);
+            //col_name表达式，为了支持exView查询，不用书写驼峰别名
+            map.put(Utils.conLine(modelFieldInfo.getAliasName()).toLowerCase(), modelFieldInfo);
+            map.put(Utils.conLine(modelFieldInfo.getAliasName()).toUpperCase(), modelFieldInfo);
         }
     }
 

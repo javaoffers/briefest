@@ -108,6 +108,7 @@ public class BriefSpeedierSample {
 
         Number count = userBriefMapper.general().count();
         print(count);
+
     }
 
 

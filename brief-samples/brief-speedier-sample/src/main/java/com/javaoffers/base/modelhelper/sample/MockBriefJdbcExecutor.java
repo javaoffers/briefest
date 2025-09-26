@@ -41,8 +41,9 @@ public class MockBriefJdbcExecutor implements JdbcExecutor {
     }
 
     @Override
-    public void queryStream(BaseSQLInfo sql) {
+    public int queryStream(BaseSQLInfo sql) {
        //NONE
+        return 0;
     }
 
     @Override

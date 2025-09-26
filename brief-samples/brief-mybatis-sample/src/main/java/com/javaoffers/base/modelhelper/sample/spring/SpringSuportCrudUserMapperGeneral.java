@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
         testCountDistinct();
         testSaveModify();
         testSaveUpdate();
+        testDML();
         if(status){
             System.exit(0);
         }
@@ -58,6 +60,36 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
 
     }
+
+    private void testDML() {
+        this.crudUserMapper.general().dmlSQL("select * from user limit 1", res->{
+            LOGUtils.printLog(res);
+        });
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("id", 2);
+        this.crudUserMapper.general()
+                .dmlSQL("select * from user where id = #{id}  limit 1", params, res->{
+                    LOGUtils.printLog(res);
+                });
+        params.put("name","dml_"+DateFormatUtils.format(new Date(), "yyyy-MM-dd HH:mm:ss"));
+        this.crudUserMapper.general().dmlSQL("update user set name=#{name} where id = #{id}", params, res->{
+            LOGUtils.printLog(res);
+        });
+
+        this.crudUserMapper.general().dmlSQL("update user set name=#{name} where id = #{id} and name = 'xxx'", params, res->{
+            LOGUtils.printLog(res);
+        });
+
+        List<User> users = this.crudUserMapper.general().viewSQL("select * from user");
+        LOGUtils.printLog(users);
+
+        params = new HashMap<>();
+        params.put("id", 2);
+        users = this.crudUserMapper.general().viewSQL("select * from user where id = #{id}", params);
+        LOGUtils.printLog(users);
+
+    }
+
     public void testVsModify() throws JsonProcessingException {
         User user = this.crudUserMapper.general().query(1, 1).get(0);
         user.setWork(Work.JAVA);

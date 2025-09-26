@@ -19,8 +19,6 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
 
     static ConvertRegisterSelectorDelegate choseConverter = ConvertRegisterSelectorDelegate.convert;
 
-    private AtomicInteger defaultConvertSuccessCount = new AtomicInteger();
-
     /**
      * 如果是基础类会被升级
      */
@@ -45,19 +43,20 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
         T desObject = null;
         try {
             ConvertRegisterSelectorDelegate.processingConvertClass.set(orgDes);
-            desObject = (T) convert.convert(srcUpgrade.cast(srcValue));
-            defaultConvertSuccessCount.incrementAndGet();
+            desObject = (T) convert.convert(srcValue);
+
         }catch (Exception e){
-            defaultConvertSuccessCount.decrementAndGet();
             //重新选择转换
             ConvertDelegate<?> convertDelegate = choseConverter.choseConverter(orgDes, srcValue);
             //选择是否替换convert. 如果失败次数小于５则进行替换
-            if(defaultConvertSuccessCount.get() < -5){
-                this.convert = convertDelegate.convert;
-                this.srcUpgrade = convertDelegate.srcUpgrade;
-                defaultConvertSuccessCount.set(0);
+            if(this.convert != convertDelegate.convert){
+                //这里不能直接替换，并发情况会有ABA问题。
+//               this.convert = convertDelegate.convert;
+//                this.srcUpgrade = convertDelegate.srcUpgrade;
+                desObject = (T) convertDelegate.convert(srcValue);
+            }else {
+                throw e;
             }
-            desObject = (T) convertDelegate.convert(srcValue);
         }finally {
             ConvertRegisterSelectorDelegate.processingConvertClass.remove();
         }
@@ -75,5 +74,15 @@ public class ConvertDelegate<T> implements ConvertProxy<T>{
 
     public void setAfterProcess(Function<T, T> afterProcess) {
         this.afterProcess = afterProcess;
+    }
+
+    @Override
+    public String toString() {
+        return "ConvertDelegate{" +
+                "srcUpgrade=" + srcUpgrade +
+                ", orgDes=" + orgDes +
+                ", convert=" + convert +
+                ", afterProcess=" + afterProcess +
+                '}';
     }
 }

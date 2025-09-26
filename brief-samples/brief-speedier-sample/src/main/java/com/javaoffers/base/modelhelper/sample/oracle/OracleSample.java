@@ -1,9 +1,11 @@
 package com.javaoffers.base.modelhelper.sample.oracle;
 
 import com.javaoffers.base.modelhelper.sample.MockBriefSpeedier;
+import com.javaoffers.base.modelhelper.sample.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.ViewModel;
 import com.javaoffers.base.modelhelper.sample.model.WithAsModel;
+import com.javaoffers.brief.modelhelper.fun.crud.OnFun;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import org.junit.Test;
@@ -50,6 +52,26 @@ public class OracleSample {
 
         BriefMapper<ViewModel> mapper = speedier.newDefaultBriefMapper(ViewModel.class);
         mapper.select().colAll().where().exs();
+
+        mapper.select().colAll().leftJoin(ViewModel::new).on().oeq(ViewModel::getId, ViewModel::getId).where().limitPage(1,10).exs();
+
+    }
+
+    @Test
+    public void testTableSuffixAndPrefix(){
+        BriefMapper<Teacher> mapper = speedier.newDefaultBriefMapper(Teacher.class);
+        mapper.select().tableSuffix("FORCE INDEX (idx_xx)").colAll().where().exs();
+        mapper.select().tablePrefix(" (select 1 from teacher) as ").colAll().where().exs();
+
+       mapper.select().tableSuffix("FORCE INDEX (idx_xx)")
+                .colAll()
+                .innerJoin(Teacher::new).tableSuffix("FORCE INDEX (idx_xx)")
+                .colAll()
+                .on()
+                .oeq(Teacher::getId, Teacher::getId)
+                .where()
+                .exs();
+
 
     }
 

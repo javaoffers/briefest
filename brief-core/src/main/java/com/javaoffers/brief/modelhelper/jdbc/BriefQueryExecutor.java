@@ -1,7 +1,6 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQL;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
@@ -12,9 +11,10 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
 
 /**
  * @description:
@@ -69,9 +69,32 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                     return ModelParseUtils.converterResultSet2ModelForNormalSelect(this.modelClass,
                             new BriefResultSetExecutor(rs));
                 case DML:
+                    if (ps.execute()) {
+                        //NOTE: RESULT TYPE OF STRING
+                        rs = ps.getResultSet();
+                        while (rs.next()) {
+                            List<Object> dmlCol = Lists.newArrayList();
+                            int columnCount = rs.getMetaData().getColumnCount();
+                            for (int i = 1; i <= columnCount; i++) {
+                                dmlCol.add(rs.getObject(i));
+                            }
+                            if (!dmlCol.isEmpty()) {
+                                sql.getStreaming().accept(dmlCol);
+                            }
+                        }
+                    } else {
+                        int updateCount = ps.getUpdateCount();
+                        if(updateCount!=-1){
+                            sql.getStreaming().accept(updateCount);
+                        }else{
+                            //true Indicates successful execution
+                            sql.getStreaming().accept(true);
+                        }
+                    }
+                    return new ArrayList<>();
                 case DDL:
                     boolean execute = ps.execute();
-                    List dmlResult = Lists.newArrayList();
+                    List ddlResult = Lists.newArrayList();
                     if (execute) {
                         //NOTE: RESULT TYPE OF STRING
                         rs = ps.getResultSet();
@@ -82,14 +105,19 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                                 dmlCol.add(rs.getString(i));
                             }
                             if (dmlCol.size() > 0) {
-                                dmlResult.add(dmlCol);
+                                ddlResult.add(dmlCol);
                             }
                         }
                     } else {
-                        //true Indicates successful execution
-                        dmlResult.add(true);
+                        int updateCount = ps.getUpdateCount();
+                        if(updateCount!=-1){
+                            ddlResult.add(updateCount);
+                        }else{
+                            //true Indicates successful execution
+                            ddlResult.add(true);
+                        }
                     }
-                    return dmlResult;
+                    return ddlResult;
                 default:
                     throw new ParseResultSetException("sql type does not exist");
             }
@@ -102,9 +130,10 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
     }
 
     @Override
-    public void queryStream(BaseSQLInfo sql) {
+    public int queryStream(BaseSQLInfo sql) {
         boolean oldAutoCommitStatus = false;
         Connection connection = null;
+        AtomicInteger c = new AtomicInteger(0);
         try {
             connection = getConnection();
             oldAutoCommitStatus = connection.getAutoCommit();
@@ -117,14 +146,18 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                     ps.setObject(++i, o);
                 }
             }
+            Consumer<T> consumer = t -> {
+                c.getAndIncrement();
+                sql.getStreaming().accept(t);
+            };
             switch (sql.getSqlType()) {
                 case JOIN_SELECT:
                     ModelParseUtils.converterResultSet2ModelForJoinSelectStream(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), consumer);
                     break;
                 case NORMAL_SELECT:
                     ModelParseUtils.converterResultSet2ModelForNormalSelectStream(this.modelClass,
-                            new BriefResultSetExecutor(ps.executeQuery()), sql.getStreaming());
+                            new BriefResultSetExecutor(ps.executeQuery()), consumer);
                     break;
                 default:
                     throw new ParseResultSetException("sql type does not exist for streaming process");
@@ -135,6 +168,7 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
         } finally {
             closeConnection(connection, oldAutoCommitStatus);
         }
+        return c.get();
     }
 
     @Override

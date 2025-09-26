@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeEn.md">ENGLISH</a>  来自八股的朋友们记得点击一下star
+<a href="https://github.com/javaoffers/briefest/blob/develop/readme.md">ENGLISH</a>  来自八股的朋友们记得点击一下star
 # brief
 <p>
 <code>brief</code> 是一款高性能、轻量级、简单易用, 零配置的orm框架. 让复杂的屎山sql消失、开发效率最大化、代码量更少且阅读性更高、维护性可持续。 
@@ -22,7 +22,7 @@
 
   ```java
     <properties>
-         <brief.version>3.6.7</brief.version>
+         <brief.version>3.6.9</brief.version>
     </properties>
    <!--brief轻量级不依赖任何框架-->
      <dependency>

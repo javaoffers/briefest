@@ -92,22 +92,22 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
-    public void queryStream(String sql, Map<String, Object> paramMap, Consumer<T> consumer) {
+    public int queryStream(String sql, Map<String, Object> paramMap, Consumer<T> consumer) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         querySql.setStreaming(consumer);
         querySql.limit(this.limit);
-        this.jdbcExecutor.queryStream(querySql);
+        return this.jdbcExecutor.queryStream(querySql);
     }
 
     @Override
-    public List<String> nativeData(String sql, SQLType sqlType) {
+    public List<Object> nativeData(String sql, SQLType sqlType) {
         return nativeData(sql, new HashMap<>(), sqlType);
     }
 
     @Override
-    public List<String> nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType) {
+    public List<Object> nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
@@ -117,10 +117,21 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     }
 
     @Override
+    public void nativeData(String sql, Map<String, Object> paramMap, SQLType sqlType, Consumer<T> consumer) {
+        List<Map<String, Object>> paramMapList = new ArrayList<>();
+        paramMapList.add(paramMap);
+        SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
+        querySql.setSqlType(sqlType);
+        querySql.setStreaming(consumer);
+        this.jdbcExecutor.queryList(querySql);
+    }
+
+    @Override
     public List<T> queryMultipleData(MoreSQLInfo  moreSQLInfo) {
         //开始支持sharding查询
         return Collections.emptyList();
     }
+
 
     /*********************************batch processing*********************************/
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {

@@ -737,6 +737,13 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
                 });
         print("------test stream end--------");
 
+        //fix case #51
+        List<User> exs2 = crudUserMapper.select()
+                .colAll()
+                .where()
+                .orderD(User::getId, User::getBirthday)
+                .exs();
+
     }
 
     public void print(Object user) {

@@ -25,12 +25,14 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
      */
     private LinkedConditions<Condition> conditions = new LinkedConditions<>();
 
-
     private SmartSelectFunImpl<M,GetterFun<M,Object>,Object> smartSelectFun ;
 
+    private SelectTableCondition selectTableCondition;
+
     public SelectFunImpl(Class<M> mClass) {
+        this.selectTableCondition = new SelectTableCondition(TableHelper.getTableName(mClass), mClass);
         this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorDataSource(), mClass));
-        this.conditions.add(new SelectTableCondition(mClass));
+        this.conditions.add(this.selectTableCondition);
         this.mClass = mClass;
         this.smartSelectFun = new SmartSelectFunImpl(mClass, conditions);
     }
@@ -39,6 +41,18 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     public SmartSelectFunImpl<M, GetterFun<M,Object>, Object> distinct() {
         this.conditions.add(new KeyWordCondition(ConditionTag.DISTINCT.getTag()));
         return smartSelectFun;
+    }
+
+    @Override
+    public SelectFunImpl<M> tableSuffix(String suffix) {
+        this.selectTableCondition.setTableSuffix(suffix);
+        return this;
+    }
+
+    @Override
+    public SelectFunImpl<M> tablePrefix(String prefix) {
+        this.selectTableCondition.setTablePrefix(prefix);
+        return this;
     }
 
     /**

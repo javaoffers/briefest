@@ -24,6 +24,10 @@ public class SelectTableCondition implements ShardingCondition {
 
     private boolean shardingState;
 
+    private String tableSuffix ="";
+
+    private String tablePrefix ="";
+
     @Override
     public ConditionTag getConditionTag() {
         return ConditionTag.SELECT_FROM;
@@ -32,8 +36,9 @@ public class SelectTableCondition implements ShardingCondition {
     @Override
     public String getSql() {
         return " " + ConditionTag.SELECT_FROM.getTag() +
-                this.tableInfo.getBaseModel().fromView() +
-                " " +fromTableName+
+                this.tablePrefix +
+                " " +fromTableName + " " +
+                this.tableSuffix +
                 " " ;
     }
 
@@ -42,10 +47,19 @@ public class SelectTableCondition implements ShardingCondition {
         return Collections.EMPTY_MAP;
     }
 
-    public SelectTableCondition( Class mClass) {
+    public SelectTableCondition(String fromTableName) {
+        this.fromTableName = fromTableName;
+    }
+
+    public SelectTableCondition(String fromTableName, Class mClass) {
+        this.fromTableName = fromTableName;
         this.mClass = mClass;
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
-        this.fromTableName = tableInfo.getTableName();
+        this.tableSuffix = this.tableInfo.getBaseModel().fromView();
+    }
+
+    public String getFromTableName() {
+        return fromTableName;
     }
 
     public String getFrontView(){
@@ -58,6 +72,14 @@ public class SelectTableCondition implements ShardingCondition {
 
     public void setmClass(Class mClass) {
         this.mClass = mClass;
+    }
+
+    public void setTablePrefix(String tablePrefix) {
+        this.tablePrefix = tablePrefix;
+    }
+
+    public void setTableSuffix(String tableSuffix) {
+        this.tableSuffix = tableSuffix;
     }
 
     @Override

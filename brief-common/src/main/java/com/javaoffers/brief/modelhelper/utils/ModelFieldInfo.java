@@ -8,11 +8,8 @@ import com.javaoffers.brief.modelhelper.core.gkey.VoidKey;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * 避免反射.
@@ -90,7 +87,7 @@ public class ModelFieldInfo {
     /**
      * 后置设置.当数据在第一次渲染的时候会被设置.
      */
-    private ConvertProxy convertProxy;
+    private Map<Class,ConvertProxy> convertProxy = new ConcurrentHashMap<>();
 
     /**
      * 生成唯一key策略
@@ -237,13 +234,13 @@ public class ModelFieldInfo {
         return newc.newc();
     }
 
-    public ConvertProxy getConvertProxy() {
-        return convertProxy;
+    public ConvertProxy getConvertProxy(Class clazz) {
+        return convertProxy.get(clazz);
     }
 
-    public void setConvertProxy(ConvertProxy convertProxy) {
+    public void setConvertProxy(Class clazz, ConvertProxy convertProxy) {
         if(convertProxy != null){
-            this.convertProxy = convertProxy;
+            this.convertProxy.putIfAbsent(clazz,convertProxy);
         }
     }
 

@@ -452,8 +452,8 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
         BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
-        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        return instance.queryMultipleData(sqlStatement.getSql(), sqlStatement.getParams().get(0));
+        MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        return instance.queryMultipleData(sqlStatement);
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
 
 import java.util.ArrayList;

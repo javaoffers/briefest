@@ -30,7 +30,7 @@ public class SelectFunImpl<M> implements SelectFun<M,GetterFun<M,Object>,Object>
     private SelectTableCondition selectTableCondition;
 
     public SelectFunImpl(Class<M> mClass) {
-        this.selectTableCondition = new SelectTableCondition(TableHelper.getTableName(mClass), mClass);
+        this.selectTableCondition = new SelectTableCondition( mClass);
         this.conditions.add(new HeadCondition(CrudMapperMethodThreadLocal.getExcutorDataSource(), mClass));
         this.conditions.add(this.selectTableCondition);
         this.mClass = mClass;

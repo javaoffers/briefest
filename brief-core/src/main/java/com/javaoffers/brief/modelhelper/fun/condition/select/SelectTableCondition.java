@@ -47,14 +47,10 @@ public class SelectTableCondition implements ShardingCondition {
         return Collections.EMPTY_MAP;
     }
 
-    public SelectTableCondition(String fromTableName) {
-        this.fromTableName = fromTableName;
-    }
-
-    public SelectTableCondition(String fromTableName, Class mClass) {
-        this.fromTableName = fromTableName;
+    public SelectTableCondition( Class mClass) {
         this.mClass = mClass;
         this.tableInfo = TableHelper.getTableInfo(this.mClass);
+        this.fromTableName = tableInfo.getTableName();
         this.tableSuffix = this.tableInfo.getBaseModel().fromView();
     }
 

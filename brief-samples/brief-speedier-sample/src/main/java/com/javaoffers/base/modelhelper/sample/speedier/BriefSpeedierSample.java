@@ -148,7 +148,9 @@ public class BriefSpeedierSample {
         this.userBriefMapper.select().colAll()
                 .innerJoin(UserOrder::new)
                 .colAll()
-                .on().oeq(User::getId, UserOrder::getUserId)
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
                 .exs();
     }
 

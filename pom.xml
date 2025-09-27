@@ -46,7 +46,7 @@
     <HikariCP.version>4.0.3</HikariCP.version>
     <easy-query.version>1.0.14</easy-query.version>
 
-    <brief.version>3.6.9-SNAPSHOT</brief.version>
+    <brief.version>3.6.10-SNAPSHOT</brief.version>
     <slf4j.version>1.7.18</slf4j.version>
     <junit.version>4.13.1</junit.version>
     <commons.lang3.version>3.12.0</commons.lang3.version>

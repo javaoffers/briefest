@@ -164,7 +164,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-sharding</artifactId>
-            <version>3.6.9-SNAPSHOT</version>
+            <version>3.6.10-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

@@ -3,7 +3,6 @@ package com.javaoffers.brief.modelhelper.utils;
 import com.javaoffers.brief.modelhelper.anno.derive.JsonColumn;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.Version;
 import com.javaoffers.brief.modelhelper.core.Id;
-import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import org.apache.commons.lang3.time.DateFormatUtils;
 

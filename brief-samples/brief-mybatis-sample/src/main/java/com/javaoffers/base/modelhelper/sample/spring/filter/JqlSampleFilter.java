@@ -2,7 +2,6 @@ package com.javaoffers.base.modelhelper.sample.spring.filter;
 
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
-import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 
 /**
  * @description: 测试filter

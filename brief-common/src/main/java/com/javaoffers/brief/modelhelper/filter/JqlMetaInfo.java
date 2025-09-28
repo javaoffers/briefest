@@ -12,6 +12,7 @@ import java.util.Map;
  * @description:
  * @author: create by cmj on 2023/6/1 17:27
  */
+@Deprecated
 public class JqlMetaInfo {
 
     private String sql;

@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
+import com.javaoffers.brief.modelhelper.sharding.ShardingLimitWordCondition;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
@@ -83,19 +84,15 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             HeadCondition headCondition = (HeadCondition)this.peekFirst();
             if(headCondition.isSharding()){
                 headCondition.setLimitWordCondition((LimitWordCondition)condition);
-                //分片的情况下要逻辑分页
-                return true;
             }
         }
 
         //处理condition拦截器
         if(isOrgContext){
             List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
-            if (CollectionUtils.isNotEmpty(conditionInterceptor)) {
-                conditionInterceptor.forEach(biConsumer -> {
-                    biConsumer.process(this, condition);
-                });
-            }
+            conditionInterceptor.forEach(biConsumer -> {
+                biConsumer.process(this, condition);
+            });
         }
 
         //处理派生的condition, 派生的不支持拦截器，派生的应该在对应的org拦截器中处理

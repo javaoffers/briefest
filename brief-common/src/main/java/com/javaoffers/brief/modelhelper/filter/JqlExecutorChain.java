@@ -15,24 +15,24 @@ import java.util.function.Supplier;
  */
 public class JqlExecutorChain<R> {
 
-   private Function<BaseSQLStatement, R> supplier;
+   private Function<JqlMetaInfo, R> supplier;
 
    private List<JqlExecutorFilter> filterList;
 
    private volatile int idx = 0;
 
-   private BaseSQLStatement sqlStatement;
+   private JqlMetaInfo jqlMetaInfo;
 
    private Class modelClass;
 
    private TableInfo tableInfo;
 
-   public JqlExecutorChain(Function<BaseSQLStatement, R> supplier,
+   public JqlExecutorChain(Function<JqlMetaInfo, R> supplier,
                            List<JqlExecutorFilter> filterList,
-                           BaseSQLStatement sqlStatement, Class modelClass) {
+                           JqlMetaInfo jqlMetaInfo, Class modelClass) {
       this.supplier = supplier;
       this.filterList = filterList;
-      this.sqlStatement = sqlStatement;
+      this.jqlMetaInfo = jqlMetaInfo;
       this.modelClass = modelClass;
       this.tableInfo = TableHelper.getTableInfo(modelClass);
    }
@@ -46,12 +46,12 @@ public class JqlExecutorChain<R> {
       return (R)filter.filter(this);
    }
 
-   public BaseSQLStatement getSqlStatement(){
-      return this.sqlStatement;
+   public JqlMetaInfo getSqlStatement(){
+      return this.jqlMetaInfo;
    }
 
    private R doFinal(){
-      return supplier.apply(sqlStatement);
+      return supplier.apply(jqlMetaInfo);
    }
 
    public TableInfo getTableInfo() {

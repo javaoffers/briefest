@@ -59,6 +59,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                 if(CollectionUtils.isEmpty(shardingTableList)){
                     break;
                 }
+
                 //org sharding
                 Collection<ConditionContext> newPeerShardingList = shardingCondition(shardingTableList,
                         result.shardingConditionIdx, orgConditionContext, shardingParams.getTableName());

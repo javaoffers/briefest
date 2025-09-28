@@ -22,11 +22,11 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
     @Override
     public Object filter(JqlExecutorChain chain) {
         long cost = 0;
-        BaseSQLStatement jqlMetaInfo = chain.getSqlStatement();
+        JqlMetaInfo jqlMetaInfo = chain.getSqlStatement();
         TableInfo tableInfo = chain.getTableInfo();
         DBType dbType = tableInfo.getDbType();
-        jqlMetaInfo.getParams()
-                .parallelStream()
+        List<Map<String, Object>> params = jqlMetaInfo.getParams();
+        params.parallelStream()
                 .flatMap(stringObjectMap -> stringObjectMap.entrySet().stream())
                 .forEach(entry ->{
                     entry.setValue(dbType.processingTranslation(entry.getKey(),entry.getValue()));

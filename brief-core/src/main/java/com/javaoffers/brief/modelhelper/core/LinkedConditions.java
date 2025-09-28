@@ -59,8 +59,6 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             biConsumer.accept(this.peekLast(), condition);
         });
 
-
-
         if (condition instanceof WhereOnCondition) {
             ((WhereOnCondition<?>) condition).setHeadCondition((HeadCondition) this.peekFirst());
         } else if (condition instanceof UpdateCondition) {
@@ -86,7 +84,7 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
         }
 
         //处理condition拦截器
-        if(isOrgContext){
+        if(isOrgContext) {
             List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
             conditionInterceptor.forEach(biConsumer -> {
                 biConsumer.process(this, condition);

@@ -10,6 +10,7 @@ import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingDeriveInfo;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategyMark;
@@ -40,15 +41,27 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
 
         @Override
         public void process(ConditionContext conditionContext, Condition condition) {
+
+            List<? extends Condition> conditions = conditionContext.getConditions();
+            if(conditions.isEmpty()){
+                return;
+            }
+
+            //处理limit条件
+            HeadCondition headCondition = (HeadCondition)conditions.get(0);
+            if(headCondition.isSharding() && condition instanceof LimitWordCondition) {
+                LimitWordCondition limitWordCondition = (LimitWordCondition)condition;
+                limitWordCondition.limit(1, limitWordCondition.pageNum * limitWordCondition.pageSize);
+            }
+
             //派生的context不支持sharding
             if(!conditionContext.isOrgContext() || condition instanceof IgnoreAndOrWordCondition){
                 return;
             }
+
             //处理查询派生condition, 处理 select/delete/update
             if (condition instanceof WhereCondition ) {
-                List<? extends Condition> conditions = conditionContext.getConditions();
                 WhereCondition whereCondition = (WhereCondition) condition;
-                HeadCondition headCondition = (HeadCondition)conditions.get(0);
                 Class modelClass = headCondition.getModelClass();
                 TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
                 DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);

@@ -76,7 +76,8 @@ public class HeadCondition implements Condition {
     }
 
     public void setLimitWordCondition(LimitWordCondition limitWordCondition) {
-        this.limitWordCondition = limitWordCondition;
+        //copy
+        this.limitWordCondition = new LimitWordCondition(limitWordCondition.pageNum, limitWordCondition.pageSize);
     }
     public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
         if(this.orderWordConditionList == null){

@@ -22,17 +22,7 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
     public String sql;
 
     public LimitWordCondition(int pageNum, int pageSize) {
-        if (pageNum < 1) {
-            pageNum = 1;
-        }
-        if (pageSize < 1) {
-            pageSize = 1;
-        }
-        this.pageNum = pageNum;
-        this.pageSize = pageSize;
-        this.startIndex = (pageNum - 1) * pageSize;
-        this.len = pageSize;
-        cleanAndOrTag();
+        limit(pageNum, pageSize);
     }
 
     @Override
@@ -83,5 +73,18 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
         return limitSql.replaceAll( getTag().getTag() + " ? , ?","");
     }
 
+    public void limit(int pageNum, int pageSize){
+        if (pageNum < 1) {
+            pageNum = 1;
+        }
+        if (pageSize < 1) {
+            pageSize = 1;
+        }
+        this.pageNum = pageNum;
+        this.pageSize = pageSize;
+        this.startIndex = (pageNum - 1) * pageSize;
+        this.len = pageSize;
+        cleanAndOrTag();
+    }
 
 }

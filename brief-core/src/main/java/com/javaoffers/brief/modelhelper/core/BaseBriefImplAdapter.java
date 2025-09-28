@@ -5,12 +5,11 @@ import com.javaoffers.brief.modelhelper.context.BriefContextAware;
 import com.javaoffers.brief.modelhelper.context.SmartBriefContext;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
+import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.utils.SQLType;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -42,71 +41,63 @@ public class BaseBriefImplAdapter<T, ID> implements BriefContextAware {
     public BaseBriefImplAdapter(BaseBrief baseBrief) {
         this.baseBrief = baseBrief;
     }
-
-    public BaseBriefImplAdapter() {}
-
-    private <R> R doProxy(BaseSQLStatement sqlStatement, Function<BaseSQLStatement, R> supplier) {
+    
+    private <R> R doProxy(JqlMetaInfo jqlMetaInfo, Function<JqlMetaInfo, R> supplier) {
         List<JqlExecutorFilter> jqlExecutorFilters = smartBriefContext.getJqlExecutorFilters();
         JqlExecutorChain<R> jqlExecutorChain = new JqlExecutorChain(supplier,
-                jqlExecutorFilters, sqlStatement, this.modelClass);
+                jqlExecutorFilters, jqlMetaInfo, this.modelClass);
         return jqlExecutorChain.doChain();
     }
 
     public List<Id> batchInsert(BaseSQLStatement sqlStatement) {
-        return doProxy(sqlStatement, (jmi) -> {
+        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
             List<Map<String, Object>> params = jmi.getParams();
             return baseBrief.batchInsert(jmi.getSql(), params);
         });
     }
 
     public Integer batchUpdate(BaseSQLStatement sqlStatement) {
-        return doProxy(sqlStatement, (jmi) -> baseBrief.batchUpdate(jmi.getSql(), jmi.getParams()));
+        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> baseBrief.batchUpdate(jmi.getSql(), jmi.getParams()));
     }
 
 
     public int deleteData(BaseSQLStatement sqlStatement) {
-        return doProxy(sqlStatement, (jmi) -> {
-            return baseBrief.deleteData(jmi.getSql(), getParam(jmi));
+        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
+            return baseBrief.deleteData(jmi.getSql(), jmi.getParam());
         });
     }
 
     public int updateData(BaseSQLStatement sqlStatement) {
-        return doProxy(sqlStatement, (jmi) -> {
-            return baseBrief.updateData(jmi.getSql(), getParam(jmi));
+        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
+            return baseBrief.updateData(jmi.getSql(), jmi.getParam());
         });
     }
 
 
     public List<T> queryData(BaseSQLStatement sqlStatement) {
-        return doProxy(sqlStatement, (jmi) -> {
-            return baseBrief.queryData(jmi.getSql(), getParam(jmi));
+        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
+            return baseBrief.queryData(jmi.getSql(), jmi.getParam());
         });
     }
 
     public int queryStream(BaseSQLStatement sqlStatement, Consumer<T> consumer) {
-        return doProxy(sqlStatement, (jmi) -> {
-            return baseBrief.queryStream(jmi.getSql(), getParam(jmi), consumer);
+        return doProxy(new JqlMetaInfo(sqlStatement, consumer), (jmi) -> {
+            return baseBrief.queryStream(jmi.getSql(), jmi.getParam(), jmi.getConsumer());
         });
     }
 
 
     public List<Object> nativeData(BaseSQLStatement sqlStatement, SQLType sqlType) {
-        return doProxy(sqlStatement,
-                (jmi) -> baseBrief.nativeData(jmi.getSql(), getParam(jmi), sqlType));
+        return doProxy(new JqlMetaInfo(sqlStatement,sqlType),
+                (jmi) -> baseBrief.nativeData(jmi.getSql(), jmi.getParam(), jmi.getSqlType()));
     }
 
     public void nativeData(BaseSQLStatement sqlStatement, SQLType sqlType, Consumer<T> consumer) {
-        doProxy(sqlStatement,
+        doProxy(new JqlMetaInfo(sqlStatement, sqlType, consumer),
                 (jmi) -> {
-                    baseBrief.nativeData(jmi.getSql(), getParam(jmi), sqlType, consumer);
+                    baseBrief.nativeData(jmi.getSql(), jmi.getParam(), jmi.getSqlType(), jmi.getConsumer());
                     return 0;
                 });
-    }
-
-    private static Map<String, Object> getParam(BaseSQLStatement jmi) {
-        List<Map<String, Object>> params = jmi.getParams();
-        Map<String, Object> map = CollectionUtils.isNotEmpty(params) ? params.get(0) : Collections.emptyMap();
-        return map;
     }
 
     public void setBriefContext(BriefContext briefContext) {

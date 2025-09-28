@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
-import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.WhereConditionMark;
@@ -24,13 +23,13 @@ import java.util.LinkedList;
 public class UpdateConditionParse extends AbstractParseCondition {
     public static ConditionTag conditionTag  = ConditionTag.UPDATE;
     @Override
-    public SQLStatement doParse(LinkedList<Condition> conditions) {
+    public CrudSQLStatement doParse(LinkedList<Condition> conditions) {
         return parseUpdate(conditions);
     }
 
-     SQLStatement parseUpdate(LinkedList<Condition> conditions) {
+     CrudSQLStatement parseUpdate(LinkedList<Condition> conditions) {
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-        SQLStatement sqlStatement = parseUpdate2(conditions);
+        CrudSQLStatement sqlStatement = parseUpdate2(conditions);
         moreSQLInfo.addSqlInfo(sqlStatement);
 
         while(( conditions.peek()) != null){
@@ -40,7 +39,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
         return moreSQLInfo;
     }
 
-     SQLStatement parseUpdate2(LinkedList<Condition> conditions) {
+     CrudSQLStatement parseUpdate2(LinkedList<Condition> conditions) {
         Condition condition = conditions.pollFirst();
         String updateTableSql = null;
         Class modelClass = null;
@@ -92,7 +91,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                     break;
                 }
             }
-            return SQLStatement.builder().sql(updateAppender.toString())
+            return CrudSQLStatement.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
                     .status(status)
@@ -113,7 +112,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                     break;
                 }
             }
-            return SQLStatement.builder().sql(updateAppender.toString())
+            return CrudSQLStatement.builder().sql(updateAppender.toString())
                     .params(Arrays.asList(upateParam))
                     .aClass(modelClass)
                     .status(status)

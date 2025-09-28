@@ -451,15 +451,15 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public List<M> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
-        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
         MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        return instance.queryMultipleData(sqlStatement);
+        return instance.queryData(sqlStatement);
     }
 
     @Override
     public int stream(Consumer<M> consumer) {
-        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) this.conditions.peekFirst());
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
         BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
-        return instance.queryStream(sqlStatement.getSql(), sqlStatement.getParams().get(0), consumer);
+        return instance.queryStream(sqlStatement, consumer);
     }
 }

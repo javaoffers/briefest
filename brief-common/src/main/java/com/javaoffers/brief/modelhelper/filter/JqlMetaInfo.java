@@ -22,8 +22,6 @@ public class JqlMetaInfo {
 
     private TableInfo tableInfo;
 
-    private BaseSQLStatement sqlStatement;
-
     public String getSql() {
         return sql;
     }
@@ -52,22 +50,9 @@ public class JqlMetaInfo {
         return tableInfo;
     }
 
-    public JqlMetaInfo(String sql, List<Map<String, Object>> params, Class modelClass) {
-        this.sql = sql;
-        this.params = params;
-        this.modelClass = modelClass;
-        this.tableInfo = TableHelper.getTableInfo(modelClass);
-    }
-
-    public JqlMetaInfo(String sql, Class modelClass) {
-        this.sql = sql;
-        this.modelClass = modelClass;
-    }
-
     public JqlMetaInfo(BaseSQLStatement sqlStatement, Class modelClass) {
         this.sql = sqlStatement.getSql();
         this.modelClass = modelClass;
-        this.sqlStatement = sqlStatement;
         this.tableInfo = TableHelper.getTableInfo(modelClass);
         this.params = sqlStatement.getParams();
     }

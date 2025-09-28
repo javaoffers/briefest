@@ -35,13 +35,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
     public BaseBriefImpl() {
     }
 
-    public static <T, ID> BaseBrief getInstance(HeadCondition headCondition) {
-        BaseBriefImpl baseBrief = new BaseBriefImpl(headCondition.getDataSource(), headCondition.getModelClass());
-        baseBrief.limit = headCondition.getLimitWordCondition();
-        return new BaseBriefImplProxy(baseBrief, headCondition.getModelClass());
-    }
-
-    private BaseBriefImpl(DataSource dataSource, Class modelClass) {
+    protected BaseBriefImpl(DataSource dataSource, Class modelClass) {
         this.jdbcExecutor = smartBriefContext.getJdbcExecutorFactory().createJdbcExecutor(dataSource, modelClass);
         this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
     }
@@ -125,13 +119,6 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         querySql.setStreaming(consumer);
         this.jdbcExecutor.queryList(querySql);
     }
-
-    @Override
-    public List<T> queryMultipleData(MoreSQLInfo  moreSQLInfo) {
-        //开始支持sharding查询
-        return Collections.emptyList();
-    }
-
 
     /*********************************batch processing*********************************/
     public Integer batchUpdate(String sql, List<Map<String, Object>> paramMap) {

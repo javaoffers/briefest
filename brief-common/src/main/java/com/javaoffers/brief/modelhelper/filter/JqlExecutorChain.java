@@ -1,5 +1,10 @@
 package com.javaoffers.brief.modelhelper.filter;
 
+import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
+import com.javaoffers.brief.modelhelper.utils.TableInfo;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -10,20 +15,26 @@ import java.util.function.Supplier;
  */
 public class JqlExecutorChain<R> {
 
-   private Function<JqlMetaInfo, R> supplier;
+   private Function<BaseSQLStatement, R> supplier;
 
    private List<JqlExecutorFilter> filterList;
 
    private volatile int idx = 0;
 
-   private JqlMetaInfo jqlMetaInfo;
+   private BaseSQLStatement sqlStatement;
 
-   public JqlExecutorChain(Function<JqlMetaInfo, R> supplier,
+   private Class modelClass;
+
+   private TableInfo tableInfo;
+
+   public JqlExecutorChain(Function<BaseSQLStatement, R> supplier,
                            List<JqlExecutorFilter> filterList,
-                           JqlMetaInfo jqlMetaInfo) {
+                           BaseSQLStatement sqlStatement, Class modelClass) {
       this.supplier = supplier;
       this.filterList = filterList;
-      this.jqlMetaInfo = jqlMetaInfo;
+      this.sqlStatement = sqlStatement;
+      this.modelClass = modelClass;
+      this.tableInfo = TableHelper.getTableInfo(modelClass);
    }
 
    public R doChain(){
@@ -35,12 +46,15 @@ public class JqlExecutorChain<R> {
       return (R)filter.filter(this);
    }
 
-   public JqlMetaInfo getJqlMetaInfo(){
-      return this.jqlMetaInfo;
+   public BaseSQLStatement getSqlStatement(){
+      return this.sqlStatement;
    }
 
    private R doFinal(){
-      return supplier.apply(jqlMetaInfo);
+      return supplier.apply(sqlStatement);
    }
 
+   public TableInfo getTableInfo() {
+      return this.tableInfo;
+   }
 }

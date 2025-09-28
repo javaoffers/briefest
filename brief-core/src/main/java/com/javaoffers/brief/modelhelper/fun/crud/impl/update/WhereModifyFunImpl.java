@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.update;
 
 
+import com.javaoffers.brief.modelhelper.core.BaseBriefImplAdapter;
 import com.javaoffers.brief.modelhelper.exception.UpdateFieldsException;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -14,13 +15,12 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.AddPatchMarkConditio
 import com.javaoffers.brief.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
-import com.javaoffers.brief.modelhelper.log.JqlLogger;
 import com.javaoffers.brief.modelhelper.core.BaseBrief;
 import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -334,11 +334,11 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
 
     @Override
     public Integer ex() {
-        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
         MoreSQLInfo moreSqlInfo = StatementParserAdepter.statementParse(conditions);
-        List<SQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
+        List<CrudSQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
-        for(SQLStatement sqlStatement : sqlStatements){
+        for(CrudSQLStatement sqlStatement : sqlStatements){
             String sql = sqlStatement.getSql();
             List<Map<String, Object>> params = sqlStatement.getParams();
             List<Map<String, Object>> paramBatch = sqlbatch.get(sql);
@@ -355,7 +355,8 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
         }
         AtomicInteger count = new AtomicInteger();
         sqlbatch.forEach((sql, params) ->{
-            Integer integer = instance.batchUpdate(sql, params);
+            CrudSQLStatement sqlStatement = CrudSQLStatement.builder().status(true).sql(sql).params(params).build();
+            Integer integer = instance.batchUpdate(sqlStatement);
             count.addAndGet(integer);
         });
 

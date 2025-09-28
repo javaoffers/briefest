@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.pgsql;
 
-import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -25,11 +24,11 @@ import java.util.Set;
 public class PostgreSqlInsertConditionParse extends InsertConditionParse {
 
     @Override
-    public SQLStatement doParse(LinkedList<Condition> conditions) {
+    public CrudSQLStatement doParse(LinkedList<Condition> conditions) {
         return parseInsert(conditions);
     }
 
-    private SQLStatement parseInsert(LinkedList<Condition> conditions) {
+    private CrudSQLStatement parseInsert(LinkedList<Condition> conditions) {
         InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition) conditions.pollFirst();
 
         String insertIntoTableSql = insertIntoTableCondition.getSql(); //insert into table
@@ -113,15 +112,15 @@ public class PostgreSqlInsertConditionParse extends InsertConditionParse {
 
         Assert.isTrue(moreSql.size() == paramsList.size(), " data asymmetry ");
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-        HashMap<String, SQLStatement> batch = new HashMap<>();
+        HashMap<String, CrudSQLStatement> batch = new HashMap<>();
         for (int i = 0; i < moreSql.size(); i++) {
             String sql = insertIntoTableSql + moreSql.get(i);
             Map<String, Object> sqlParam = paramsList.get(i);
-            SQLStatement sqlStatement = batch.get(sql);
+            CrudSQLStatement sqlStatement = batch.get(sql);
             if (sqlStatement == null) {
                 ArrayList parems = new ArrayList<>();
                 parems.add(sqlParam);
-                sqlStatement = SQLStatement.builder()
+                sqlStatement = CrudSQLStatement.builder()
                         .aClass(insertIntoTableCondition.getModelClass())
                         .params(parems)
                         .sql(sql)

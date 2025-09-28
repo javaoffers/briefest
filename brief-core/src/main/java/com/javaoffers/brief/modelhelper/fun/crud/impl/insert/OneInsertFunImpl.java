@@ -2,20 +2,18 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
 import com.javaoffers.brief.modelhelper.core.BaseBrief;
 import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImplAdapter;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ExecutOneFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
-import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.fun.crud.insert.OneInsertFun;
-import com.javaoffers.brief.modelhelper.log.JqlLogger;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.List;
@@ -28,9 +26,9 @@ public class OneInsertFunImpl<M> implements OneInsertFun<M, GetterFun<M, Object>
 
     @Override
     public Id ex() {
-        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
-        SQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions).getSqlStatements().get(0);
-        List<Id> list = instance.batchInsert(sqlStatement.getSql(), sqlStatement.getParams());
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
+        CrudSQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions).getSqlStatements().get(0);
+        List<Id> list = instance.batchInsert(sqlStatement);
         if(CollectionUtils.isEmpty(list)){
             return Id.EMPTY_ID;
         }

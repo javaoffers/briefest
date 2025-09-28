@@ -2,10 +2,9 @@ package com.javaoffers.brief.modelhelper.core.parse;
 
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
-import com.javaoffers.brief.modelhelper.parser.StatementParser;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.LinkedList;
@@ -28,6 +27,6 @@ public abstract class AbstractParseCondition implements ParseCondition{
         return moreSQLInfo;
     }
 
-    abstract SQLStatement doParse(LinkedList<Condition> conditions);
+    abstract CrudSQLStatement doParse(LinkedList<Condition> conditions);
 }
 

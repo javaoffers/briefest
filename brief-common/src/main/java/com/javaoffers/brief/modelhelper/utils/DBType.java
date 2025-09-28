@@ -74,8 +74,8 @@ public enum DBType {
         }
 
         @Override
-        public Object processingTranslation(JqlMetaInfo jqlMetaInfo, String key, Object value) {
-            Object object = super.processingTranslation(jqlMetaInfo, key, value);
+        public Object processingTranslation( String key, Object value) {
+            Object object = super.processingTranslation( key, value);
             if (object instanceof java.util.Date) {
                 return DateFormatUtils.format((java.util.Date) object,"yyyy-MM-dd HH:mm:ss");
             }
@@ -96,8 +96,8 @@ public enum DBType {
         }
 
         @Override
-        public Object processingTranslation(JqlMetaInfo jqlMetaInfo, String key, Object value) {
-            Object object = super.processingTranslation(jqlMetaInfo, key, value);
+        public Object processingTranslation( String key, Object value) {
+            Object object = super.processingTranslation( key, value);
             if (object instanceof java.util.Date) {
                 return DateFormatUtils.format((java.util.Date) object,"yyyy-MM-dd HH:mm:ss");
             }
@@ -119,7 +119,7 @@ public enum DBType {
     ;
 
     //processingTranslation for save db
-    public Object processingTranslation(JqlMetaInfo jqlMetaInfo, String key, Object value){
+    public Object processingTranslation( String key, Object value){
         if (value instanceof Id) {
             value = ((Id) value).value();
         } else if (value instanceof Enum) {

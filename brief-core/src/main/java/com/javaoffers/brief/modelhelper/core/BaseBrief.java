@@ -42,11 +42,6 @@ public interface BaseBrief<T>{
 
 	public void nativeData(String sql, Map<String,Object> map, SQLType sqlType, Consumer<T> consumer);
 
-	/**
-	 * 用于sharding
-	 */
-	public List<T> queryMultipleData(MoreSQLInfo  moreSQLInfo);
-
 	/*****************************************************************************/ 
 	public Integer batchUpdate(String sql,List<Map<String,Object>> paramMap);
 

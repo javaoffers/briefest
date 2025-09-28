@@ -2,7 +2,9 @@ package com.javaoffers.brief.modelhelper.fun.general.impl;
 
 import com.javaoffers.brief.modelhelper.core.BaseBrief;
 import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImplAdapter;
 import com.javaoffers.brief.modelhelper.core.CrudMapperMethodThreadLocal;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.fun.ExecutFun;
 import com.javaoffers.brief.modelhelper.fun.ExecutOneFun;
@@ -71,8 +73,8 @@ public class NativeFunImpl<T> implements ExecutFun<String> {
             return Lists.newArrayList();
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
-        BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        List<Object> list =  instance.nativeData(sqlText,paramMap, this.sqlType);
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance(headCondition);
+        List<Object> list =  instance.nativeData(getCrudSQLStatement(), this.sqlType);
         return list.stream().map(el->{
             if(el instanceof List){
                 List ls = (List)el;
@@ -82,13 +84,21 @@ public class NativeFunImpl<T> implements ExecutFun<String> {
         }).collect(Collectors.toList());
     }
 
+    private CrudSQLStatement getCrudSQLStatement() {
+        CrudSQLStatement sqlStatement = CrudSQLStatement.builder()
+                .status(true)
+                .params(Lists.newArrayList(paramMap))
+                .sql(sqlText).build();
+        return sqlStatement;
+    }
+
     public void exDml() {
         if(StringUtils.isBlank(this.sqlText)){
             return ;
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
-        BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        instance.nativeData(sqlText, paramMap, SQLType.DML, consumer);
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance(headCondition);
+        instance.nativeData(getCrudSQLStatement(), SQLType.DML, consumer);
     }
 
     public List<T> exView(){
@@ -96,7 +106,7 @@ public class NativeFunImpl<T> implements ExecutFun<String> {
             return Lists.newArrayList();
         }
         HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
-        BaseBrief instance = BaseBriefImpl.getInstance(headCondition);
-        return instance.queryData(sqlText,paramMap);
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance(headCondition);
+        return instance.queryData(getCrudSQLStatement());
     }
 }

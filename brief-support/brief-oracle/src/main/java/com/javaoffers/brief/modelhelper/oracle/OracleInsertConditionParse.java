@@ -1,8 +1,7 @@
 package com.javaoffers.brief.modelhelper.oracle;
 
-import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -10,14 +9,12 @@ import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertIntoCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
-import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,11 +27,11 @@ public class OracleInsertConditionParse extends InsertConditionParse {
     public static ConditionTag conditionTag = ConditionTag.INSERT_INTO;
 
     @Override
-    public SQLStatement doParse(LinkedList<Condition> conditions) {
+    public CrudSQLStatement doParse(LinkedList<Condition> conditions) {
         return parseInsert(conditions);
     }
 
-    private SQLStatement parseInsert(LinkedList<Condition> conditions) {
+    private CrudSQLStatement parseInsert(LinkedList<Condition> conditions) {
         InsertIntoCondition insertIntoTableCondition = (InsertIntoCondition) conditions.pollFirst();
 
         String insertIntoTableSql = insertIntoTableCondition.getSql(); //insert into table
@@ -132,15 +129,15 @@ public class OracleInsertConditionParse extends InsertConditionParse {
 
         Assert.isTrue(moreSql.size() == paramsList.size(), " data asymmetry ");
         MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
-        HashMap<String, SQLStatement> batch = new HashMap<>();
+        HashMap<String, CrudSQLStatement> batch = new HashMap<>();
         for (int i = 0; i < moreSql.size(); i++) {
             String sql = insertIntoTableSql + moreSql.get(i);
             Map<String, Object> sqlParam = paramsList.get(i);
-            SQLStatement sqlStatement = batch.get(sql);
+            CrudSQLStatement sqlStatement = batch.get(sql);
             if (sqlStatement == null) {
                 ArrayList parems = new ArrayList<>();
                 parems.add(sqlParam);
-                sqlStatement = SQLStatement.builder()
+                sqlStatement = CrudSQLStatement.builder()
                         .aClass(insertIntoTableCondition.getModelClass())
                         .params(parems)
                         .sql(sql)

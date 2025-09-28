@@ -2,23 +2,19 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
 import com.javaoffers.brief.modelhelper.core.BaseBrief;
 import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
+import com.javaoffers.brief.modelhelper.core.BaseBriefImplAdapter;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
 import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
-import com.javaoffers.brief.modelhelper.core.SQLStatement;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ExecutMoreFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.OnDuplicateKeyUpdateMark;
-import com.javaoffers.brief.modelhelper.fun.condition.mark.ReplaceIntoMark;
 import com.javaoffers.brief.modelhelper.fun.crud.insert.MoreInsertFun;
-import com.javaoffers.brief.modelhelper.log.JqlLogger;
-import com.javaoffers.brief.modelhelper.utils.DBType;
-import com.javaoffers.brief.modelhelper.utils.TableHelper;
-import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -38,12 +34,12 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
     public List<Id> exs() {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
-        BaseBrief instance = BaseBriefImpl.getInstance((HeadCondition) conditions.peekFirst());
-        MoreSQLInfo sqlInfos = (MoreSQLInfo) StatementParserAdepter.statementParse(conditions);
-        List<SQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
+        MoreSQLInfo sqlInfos = StatementParserAdepter.statementParse(conditions);
+        List<CrudSQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
         List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {
-            list.addAll(instance.batchInsert(sqlInfo.getSql(), sqlInfo.getParams()));
+            list.addAll(instance.batchInsert(sqlInfo));
         });
         return list;
     }

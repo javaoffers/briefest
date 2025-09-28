@@ -10,7 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MoreSQLInfo extends SQLStatement {
+public class MoreSQLInfo extends CrudSQLStatement {
 
     /**
      * 用于sharding
@@ -20,13 +20,13 @@ public class MoreSQLInfo extends SQLStatement {
     /**
      * 解析后的sql片段
      */
-    private List<SQLStatement> sqlStatements = new LinkedList<>();
+    private List<CrudSQLStatement> sqlStatements = new LinkedList<>();
 
     public MoreSQLInfo() {
         super();
     }
 
-    public void addSqlInfo(SQLStatement sqlStatement){
+    public void addSqlInfo(CrudSQLStatement sqlStatement){
         if(sqlStatement !=null && sqlStatement.isStatus()){
             if(sqlStatement instanceof MoreSQLInfo){
                 MoreSQLInfo moreSQLInfo = (MoreSQLInfo) sqlStatement;
@@ -38,15 +38,15 @@ public class MoreSQLInfo extends SQLStatement {
         }
     }
 
-    public void addAllSqlInfo(Collection<SQLStatement> sqlStatements){
+    public void addAllSqlInfo(Collection<CrudSQLStatement> sqlStatements){
         if(!CollectionUtils.isEmpty(sqlStatements)){
-            for(SQLStatement sqlStatement : sqlStatements){
+            for(CrudSQLStatement sqlStatement : sqlStatements){
                 this.addSqlInfo(sqlStatement);
             }
         }
     }
 
-    public List<SQLStatement> getSqlStatements(){
+    public List<CrudSQLStatement> getSqlStatements(){
         return sqlStatements;
     }
 
@@ -62,7 +62,7 @@ public class MoreSQLInfo extends SQLStatement {
     public String getSql() {
         StringBuilder sqlAppender = new StringBuilder(headCondition.isSharding()?" ":"");
 
-        for (SQLStatement sqlStatement : sqlStatements) {
+        for (CrudSQLStatement sqlStatement : sqlStatements) {
             if(sqlAppender.length()>0){
                 sqlAppender.append("\n");
             }
@@ -75,7 +75,7 @@ public class MoreSQLInfo extends SQLStatement {
     @Override
     public List<Map<String, Object>> getParams() {
         List<Map<String, Object>> params = new ArrayList<>();
-        for (SQLStatement sqlStatement : sqlStatements) {
+        for (CrudSQLStatement sqlStatement : sqlStatements) {
             params.addAll(sqlStatement.getParams());
         }
         return params;

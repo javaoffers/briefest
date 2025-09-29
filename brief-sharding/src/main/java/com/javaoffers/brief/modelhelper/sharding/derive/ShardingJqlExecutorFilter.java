@@ -1,10 +1,14 @@
 package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * desc.
@@ -14,19 +18,23 @@ import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 public class ShardingJqlExecutorFilter implements JqlExecutorFilter {
     @Override
     public Object filter(JqlExecutorChain jqlExecutorChain) {
-        JqlMetaInfo jqlMetaInfo = jqlExecutorChain.getSqlStatement();
+        JqlMetaInfo jqlMetaInfo = jqlExecutorChain.getJqlMetaInfo();
         BaseSQLStatement sqlStatement = jqlMetaInfo.getSqlStatement();
-        if(sqlStatement instanceof MoreSQLInfo){
-            MoreSQLInfo moreSQLInfo = (MoreSQLInfo) sqlStatement;
+        if(sqlStatement instanceof SmartSQLInfo){
+            SmartSQLInfo moreSQLInfo = (SmartSQLInfo) sqlStatement;
             if(moreSQLInfo.getHeadCondition().isSharding()){
-                //sharding 下，修改 consumer
-                jqlMetaInfo.setConsumer(obj->{
 
-                });
             }
         }
+
+        //非sharding业务
         Object object = jqlExecutorChain.doChain();
 
         return object;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return Integer.MAX_VALUE;
     }
 }

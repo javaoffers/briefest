@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.sqlserver;
 
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.parse.InsertConditionParse;
 import com.javaoffers.brief.modelhelper.fun.Condition;
@@ -124,7 +124,7 @@ public class SqlServerInsertConditionParse extends InsertConditionParse {
                 insertIntoTableSql.replaceAll(ConditionTag.INSERT_INTO.getTag(), ConditionTag.MERGE_INTO.getTag()) : insertIntoTableSql;
 
         Assert.isTrue(moreSql.size() == paramsList.size(), " data asymmetry ");
-        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+        SmartSQLInfo moreSQLInfo = new SmartSQLInfo();
         HashMap<String, CrudSQLStatement> batch = new HashMap<>();
         for (int i = 0; i < moreSql.size(); i++) {
             String sql = insertIntoTableSql + moreSql.get(i);

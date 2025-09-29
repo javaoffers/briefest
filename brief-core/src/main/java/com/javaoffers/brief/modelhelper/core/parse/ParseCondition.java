@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.WhereConditionMark;
@@ -17,7 +17,7 @@ import java.util.LinkedList;
  */
 public interface ParseCondition {
 
-    MoreSQLInfo parse(LinkedConditions<Condition> conditions);
+    SmartSQLInfo parse(LinkedConditions<Condition> conditions);
 
 
     //解析Where 语句

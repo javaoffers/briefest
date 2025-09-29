@@ -1,12 +1,10 @@
 package com.javaoffers.brief.modelhelper.fun.crud.impl.insert;
 
-import com.javaoffers.brief.modelhelper.core.BaseBrief;
-import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.BaseBriefImplAdapter;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ExecutMoreFun;
@@ -35,7 +33,7 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //Parse SQL select and execute.
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
-        MoreSQLInfo sqlInfos = StatementParserAdepter.statementParse(conditions);
+        SmartSQLInfo sqlInfos = StatementParserAdepter.statementParse(conditions);
         List<CrudSQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
         List<Id> list = new ArrayList<>();
         sqlInfosList.forEach(sqlInfo -> {

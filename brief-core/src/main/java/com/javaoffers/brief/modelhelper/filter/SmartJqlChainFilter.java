@@ -22,7 +22,7 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
     @Override
     public Object filter(JqlExecutorChain chain) {
         long cost = 0;
-        JqlMetaInfo jqlMetaInfo = chain.getSqlStatement();
+        JqlMetaInfo jqlMetaInfo = chain.getJqlMetaInfo();
         TableInfo tableInfo = chain.getTableInfo();
         DBType dbType = tableInfo.getDbType();
         List<Map<String, Object>> params = jqlMetaInfo.getParams();
@@ -47,4 +47,8 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
     }
 
 
+    @Override
+    public int compareTo(Object o) {
+        return Integer.MIN_VALUE;
+    }
 }

@@ -24,24 +24,31 @@ public class JqlMetaInfo<T> {
 
     SQLType sqlType;
 
-    public JqlMetaInfo(BaseSQLStatement sqlStatement) {
+    Operate operate;
+
+
+    public JqlMetaInfo(BaseSQLStatement sqlStatement,Operate operate) {
         this.sqlStatement = sqlStatement;
+        this.operate = operate;
     }
 
-    public JqlMetaInfo(BaseSQLStatement sqlStatement, Consumer<T> consumer) {
+    public JqlMetaInfo(BaseSQLStatement sqlStatement, Consumer<T> consumer,Operate operate) {
         this.sqlStatement = sqlStatement;
         this.consumer = consumer;
+        this.operate = operate;
     }
 
-    public JqlMetaInfo(BaseSQLStatement sqlStatement, SQLType sqlType) {
+    public JqlMetaInfo(BaseSQLStatement sqlStatement, SQLType sqlType,Operate operate) {
         this.sqlStatement = sqlStatement;
         this.sqlType = sqlType;
+        this.operate = operate;
     }
 
-    public JqlMetaInfo(BaseSQLStatement sqlStatement, SQLType sqlType, Consumer<T> consumer) {
+    public JqlMetaInfo(BaseSQLStatement sqlStatement, SQLType sqlType, Consumer<T> consumer,Operate operate) {
         this.sqlStatement = sqlStatement;
         this.consumer = consumer;
         this.sqlType = sqlType;
+        this.operate = operate;
     }
 
     public  Map<String, Object> getParam() {
@@ -81,4 +88,18 @@ public class JqlMetaInfo<T> {
     public void setSqlType(SQLType sqlType) {
         this.sqlType = sqlType;
     }
+
+    public Operate getOperate() {
+        return operate;
+    }
+
+    public enum Operate{
+        QUERY,
+        STREAM,
+        INSERT,
+        UPDATE,
+        DELETE,
+        NATIVE,
+    }
+
 }

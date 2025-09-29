@@ -20,7 +20,7 @@ public class PostgreSqlLimitWordCondition extends LimitWordCondition {
             String startIndexTag = getNextTag();
             String lenTag = getNextTag();
             this.getParams().put(startIndexTag, super.startIndex);
-            this.getParams().put(lenTag, super.len);
+            this.getParams().put(lenTag, super.pageSize);
             this.sql = getTag().getTag() +" #{"+lenTag+"} offset #{"+startIndexTag+"}";
         }
         return sql;

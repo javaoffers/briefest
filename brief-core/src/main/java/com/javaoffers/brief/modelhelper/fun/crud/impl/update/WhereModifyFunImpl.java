@@ -15,11 +15,9 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.AddPatchMarkConditio
 import com.javaoffers.brief.modelhelper.fun.crud.WhereModifyFun;
 import com.javaoffers.brief.modelhelper.fun.crud.impl.WhereSelectFunImpl;
 import com.javaoffers.brief.modelhelper.fun.crud.update.SmartUpdateFun;
-import com.javaoffers.brief.modelhelper.core.BaseBrief;
-import com.javaoffers.brief.modelhelper.core.BaseBriefImpl;
 import com.javaoffers.brief.modelhelper.core.StatementParserAdepter;
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 
 import java.util.*;
@@ -335,7 +333,7 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     @Override
     public Integer ex() {
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
-        MoreSQLInfo moreSqlInfo = StatementParserAdepter.statementParse(conditions);
+        SmartSQLInfo moreSqlInfo = StatementParserAdepter.statementParse(conditions);
         List<CrudSQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
         HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
         for(CrudSQLStatement sqlStatement : sqlStatements){

@@ -25,16 +25,15 @@ public class BaseBriefImplAdapter<T, ID> implements BriefContextAware {
 
     private BaseBrief baseBrief;
 
-    private LimitWordCondition limit;
-
     private Class modelClass;
+
+    public BaseBriefImplAdapter() {}
 
     public static <T, ID> BaseBriefImplAdapter getInstance(HeadCondition headCondition) {
 
         BaseBriefImpl baseBrief = new BaseBriefImpl(headCondition.getDataSource(), headCondition.getModelClass());
         BaseBriefImplAdapter adapter = new BaseBriefImplAdapter(baseBrief);
         adapter.modelClass = headCondition.getModelClass();
-        adapter.limit = headCondition.getLimitWordCondition();
         return adapter;
     }
 
@@ -50,50 +49,35 @@ public class BaseBriefImplAdapter<T, ID> implements BriefContextAware {
     }
 
     public List<Id> batchInsert(BaseSQLStatement sqlStatement) {
-        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
+        return doProxy(new JqlMetaInfo(sqlStatement, JqlMetaInfo.Operate.INSERT), (jmi) -> {
             List<Map<String, Object>> params = jmi.getParams();
             return baseBrief.batchInsert(jmi.getSql(), params);
         });
     }
 
     public Integer batchUpdate(BaseSQLStatement sqlStatement) {
-        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> baseBrief.batchUpdate(jmi.getSql(), jmi.getParams()));
+        return doProxy(new JqlMetaInfo(sqlStatement, JqlMetaInfo.Operate.UPDATE),
+                (jmi) -> baseBrief.batchUpdate(jmi.getSql(), jmi.getParams()));
     }
-
-
-    public int deleteData(BaseSQLStatement sqlStatement) {
-        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
-            return baseBrief.deleteData(jmi.getSql(), jmi.getParam());
-        });
-    }
-
-    public int updateData(BaseSQLStatement sqlStatement) {
-        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
-            return baseBrief.updateData(jmi.getSql(), jmi.getParam());
-        });
-    }
-
 
     public List<T> queryData(BaseSQLStatement sqlStatement) {
-        return doProxy(new JqlMetaInfo(sqlStatement), (jmi) -> {
-            return baseBrief.queryData(jmi.getSql(), jmi.getParam());
-        });
+        return doProxy(new JqlMetaInfo(sqlStatement, JqlMetaInfo.Operate.QUERY),
+                (jmi) -> baseBrief.queryData(jmi.getSql(), jmi.getParam()));
     }
 
     public int queryStream(BaseSQLStatement sqlStatement, Consumer<T> consumer) {
-        return doProxy(new JqlMetaInfo(sqlStatement, consumer), (jmi) -> {
+        return doProxy(new JqlMetaInfo(sqlStatement, consumer, JqlMetaInfo.Operate.STREAM), (jmi) -> {
             return baseBrief.queryStream(jmi.getSql(), jmi.getParam(), jmi.getConsumer());
         });
     }
 
-
     public List<Object> nativeData(BaseSQLStatement sqlStatement, SQLType sqlType) {
-        return doProxy(new JqlMetaInfo(sqlStatement,sqlType),
+        return doProxy(new JqlMetaInfo(sqlStatement,sqlType, JqlMetaInfo.Operate.NATIVE),
                 (jmi) -> baseBrief.nativeData(jmi.getSql(), jmi.getParam(), jmi.getSqlType()));
     }
 
     public void nativeData(BaseSQLStatement sqlStatement, SQLType sqlType, Consumer<T> consumer) {
-        doProxy(new JqlMetaInfo(sqlStatement, sqlType, consumer),
+        doProxy(new JqlMetaInfo(sqlStatement, sqlType, consumer, JqlMetaInfo.Operate.NATIVE),
                 (jmi) -> {
                     baseBrief.nativeData(jmi.getSql(), jmi.getParam(), jmi.getSqlType(), jmi.getConsumer());
                     return 0;
@@ -104,7 +88,4 @@ public class BaseBriefImplAdapter<T, ID> implements BriefContextAware {
         smartBriefContext = (SmartBriefContext) briefContext;
     }
 
-    public BaseBrief getOrgBaseBrief() {
-        return this.baseBrief;
-    }
 }

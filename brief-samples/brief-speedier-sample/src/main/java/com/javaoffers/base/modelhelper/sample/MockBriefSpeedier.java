@@ -5,12 +5,15 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorFactory;
 import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorMetadata;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.speedier.SpeedierBriefContext;
+import com.javaoffers.thrid.jsqlparser.expression.Function;
 import org.mockito.Mockito;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.util.List;
+import java.util.function.Consumer;
 
 public class MockBriefSpeedier {
     public static BriefSpeedier mockBriefSpeedier(String jdbc) throws Exception {
@@ -40,7 +43,7 @@ public class MockBriefSpeedier {
         return speedier;
     }
 
-    public static BriefSpeedier mockShardingBriefSpeedier(String jdbc, Class modelClass) throws Exception {
+    public static BriefSpeedier mockShardingBriefSpeedier(String jdbc, Class modelClass, Consumer<MockBriefJdbcExecutor> consumer) throws Exception {
         DataSource dataSource = Mockito.mock(DataSource.class);
         Connection connection = Mockito.mock(Connection.class);
         DatabaseMetaData databaseMetaData = Mockito.mock(DatabaseMetaData.class);
@@ -57,9 +60,11 @@ public class MockBriefSpeedier {
         briefContextField.setAccessible(true);
         SpeedierBriefContext speedierBriefContext = (SpeedierBriefContext)briefContextField.get(speedier);
 
-
         MockBriefJdbcExecutor mockBriefJdbcExecutor = Mockito.mock(MockBriefJdbcExecutor.class);
         Mockito.when(mockBriefJdbcExecutor.getMetadata()).thenReturn(new JdbcExecutorMetadata(dataSource, modelClass));
+        if(consumer != null){
+            consumer.accept(mockBriefJdbcExecutor);
+        }
 
         MockBriefJdbcExecutorFactory mockBriefJdbcExecutorFactory = Mockito.spy(new MockBriefJdbcExecutorFactory());
         Mockito.when(mockBriefJdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass))

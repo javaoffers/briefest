@@ -7,7 +7,5 @@ public interface Limit {
 
     public int startIndex();
 
-    public int len();
-
     public String cleanLimit(String sql);
 }

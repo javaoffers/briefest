@@ -13,30 +13,16 @@ import java.util.function.Consumer;
  * @Auther: create by cmj on 2022/05/22 02:49
  */
 public interface BaseBrief<T>{
-	
-    /*****************************************************************************/
-	public int saveData(String sql);
 
 	public int saveData(String sql,Map<String,Object> map);
-	
-	public int deleteData(String sql);
 
 	public int deleteData(String sql,Map<String,Object> map);
-	
-	public int updateData(String sql);
 
 	public int updateData(String sql,Map<String,Object> map);
-
-	/*****************************************************************************/
-	default public int querySize(){return 0;}
-
-	public List<T> queryData(String sql);
 
 	public List<T> queryData(String sql,Map<String,Object> map);
 
 	public int queryStream(String sql, Map<String,Object> map, Consumer<T> consumer);
-
-	public List<Object> nativeData(String sql, SQLType sqlType);
 
 	public List<Object> nativeData(String sql,Map<String,Object> map, SQLType sqlType);
 

@@ -1,7 +1,7 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
 import com.javaoffers.brief.modelhelper.core.LinkedConditions;
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
@@ -13,8 +13,8 @@ import java.util.List;
 
 public abstract class AbstractParseCondition implements ParseCondition{
 
-    public MoreSQLInfo parse(LinkedConditions<Condition> conditions){
-        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+    public SmartSQLInfo parse(LinkedConditions<Condition> conditions){
+        SmartSQLInfo moreSQLInfo = new SmartSQLInfo();
         moreSQLInfo.addSqlInfo(doParse(conditions));
         List<? extends ConditionContext> peerConditionContexts = conditions.getPeerConditionContexts();
         if(CollectionUtils.isNotEmpty(peerConditionContexts)){

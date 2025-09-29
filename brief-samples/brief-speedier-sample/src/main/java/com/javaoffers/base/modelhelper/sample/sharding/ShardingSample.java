@@ -2,12 +2,17 @@ package com.javaoffers.base.modelhelper.sample.sharding;
 
 import com.javaoffers.base.modelhelper.sample.MockBriefSpeedier;
 import com.javaoffers.base.modelhelper.sample.speedier.BriefSpeedierSample;
+import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
+import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
+import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +23,20 @@ public class ShardingSample {
 
     static {
         try {
-            speedier = MockBriefSpeedier.mockShardingBriefSpeedier(jdbc, ShardingUser.class);
+            speedier = MockBriefSpeedier.mockShardingBriefSpeedier(jdbc, ShardingUser.class,mockBriefJdbcExecutor -> {
+                ArrayList<ShardingUser> list = Lists.newArrayList();
+                for(int i=0;i<100;i++){
+                    ShardingUser shardingUser = new ShardingUser();
+                    shardingUser.setId(i+1L);
+                    shardingUser.setName("name:"+i);
+                    shardingUser.setBirthday(DateUtils.addDays(new Date(), -1 * (int)(Math.random() * 100)));
+                    list.add(shardingUser);
+                }
+                Mockito.when(mockBriefJdbcExecutor.queryList(Mockito.any())).thenReturn(list);
+
+                List list1 = mockBriefJdbcExecutor.queryList(null);
+                System.out.printf("list1.size() = %d\n", list1.size());
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -79,6 +97,7 @@ public class ShardingSample {
 
     @Test
     public void testLimitPage(){
+
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
                 .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())
                 .orderA(ShardingUser::getBirthday)
@@ -88,6 +107,13 @@ public class ShardingSample {
 
         exs = userBriefMapper.select().colAll().where()
                 .in(ShardingUser::getBirthday,new Date())
+                .orderA(ShardingUser::getBirthday)
+                .limitPage(1,10)
+                .exs();
+        System.out.println(exs.size());
+
+        exs = userBriefMapper.select().colAll().where()
+                .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())
                 .orderA(ShardingUser::getBirthday)
                 .limitPage(1,10)
                 .exs();

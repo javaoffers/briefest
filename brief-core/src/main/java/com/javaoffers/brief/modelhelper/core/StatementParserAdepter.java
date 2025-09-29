@@ -2,7 +2,6 @@ package com.javaoffers.brief.modelhelper.core;
 
 import com.javaoffers.brief.modelhelper.context.BriefContext;
 import com.javaoffers.brief.modelhelper.context.BriefContextAware;
-import com.javaoffers.brief.modelhelper.context.BriefContextPostProcessor;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.utils.DBType;
@@ -18,11 +17,11 @@ public class StatementParserAdepter implements BriefContextAware {
 
     private static volatile BriefContext briefContext;
 
-    public static MoreSQLInfo statementParse(LinkedList<Condition> conditions) {
+    public static SmartSQLInfo statementParse(LinkedList<Condition> conditions) {
         HeadCondition headCondition = (HeadCondition)conditions.pollFirst();
         Condition conditionTag = conditions.peekFirst();
         DBType dbType = TableHelper.getTableInfo(headCondition.getModelClass()).getDbType();
-        MoreSQLInfo sqlStatement = (MoreSQLInfo) briefContext.getStatementParser(dbType).parse(conditions);
+        SmartSQLInfo sqlStatement = (SmartSQLInfo) briefContext.getStatementParser(dbType).parse(conditions);
         //for reuse select(), delete()...
         conditions.add(headCondition.clone());
         conditions.add(conditionTag);

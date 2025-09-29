@@ -20,7 +20,7 @@ public class SqlServerLimitWordCondition extends LimitWordCondition {
             String startIndexTag = getNextTag();
             String lenTag = getNextTag();
             this.getParams().put(startIndexTag, super.startIndex);
-            this.getParams().put(lenTag, super.len);
+            this.getParams().put(lenTag, super.pageSize);
             // A 是表的别名
             this.sql = " OFFSET  #{" + startIndexTag + "} ROWS FETCH NEXT #{" + lenTag + "} ROWS ONLY";
         }

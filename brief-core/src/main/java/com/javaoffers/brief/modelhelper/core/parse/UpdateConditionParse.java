@@ -1,6 +1,6 @@
 package com.javaoffers.brief.modelhelper.core.parse;
 
-import com.javaoffers.brief.modelhelper.core.MoreSQLInfo;
+import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
@@ -28,7 +28,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
     }
 
      CrudSQLStatement parseUpdate(LinkedList<Condition> conditions) {
-        MoreSQLInfo moreSQLInfo = new MoreSQLInfo();
+        SmartSQLInfo moreSQLInfo = new SmartSQLInfo();
         CrudSQLStatement sqlStatement = parseUpdate2(conditions);
         moreSQLInfo.addSqlInfo(sqlStatement);
 

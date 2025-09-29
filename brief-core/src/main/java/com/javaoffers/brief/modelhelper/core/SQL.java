@@ -24,7 +24,6 @@ public class SQL implements  BaseSQLInfo{
 	SQLType sqlType;
 	DBType dbType;
 	Consumer consumer;
-	private Limit limit;
 	public SQL(DBType dbType, String sql , List<Object[]> argsParam) {
 		this.argsParam = argsParam;
 		this.sql = sql;
@@ -96,13 +95,5 @@ public class SQL implements  BaseSQLInfo{
 		clone.setParamMap(paramMap);
 
 		return clone;
-	}
-
-	@Override
-	public Limit limit() {
-		return this.limit;
-	}
-	public void limit(Limit limit) {
-		this.limit = limit;
 	}
 }

@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * brief context . 用于初始化化brief启动前的必要信息. 是brief的上下文，代表brief的应用.
@@ -42,7 +43,8 @@ public abstract class SmartBriefContext implements BriefContext{
 
     //JqlExecutorFilter
     private static final List<JqlExecutorFilter> jqlExecutorFilters =
-            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class)));
+            Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class))
+                    .stream().sorted().collect(Collectors.toList()));
 
     //DeriveProcess
     private static final List<DeriveInfoLoader> deriveProcessList =

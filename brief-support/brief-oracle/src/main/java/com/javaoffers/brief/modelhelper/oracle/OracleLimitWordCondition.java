@@ -36,7 +36,7 @@ public class OracleLimitWordCondition extends LimitWordCondition {
         if(this.sql == null) {
             String startIndexTag = getNextTag();
             String endPositionTag = getNextTag();
-            int endPosition = super.len + super.startIndex;
+            int endPosition = super.pageSize + super.startIndex;
             this.getParams().put(endPositionTag, endPosition);
             this.getParams().put(startIndexTag, super.startIndex);
             // A 是表的别名

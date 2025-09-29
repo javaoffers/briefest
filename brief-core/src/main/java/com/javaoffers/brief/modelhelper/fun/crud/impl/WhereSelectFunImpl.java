@@ -19,9 +19,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
-import com.javaoffers.brief.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereSelectFun;
-import com.javaoffers.brief.modelhelper.log.JqlLogger;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
 import java.util.Arrays;
@@ -452,7 +450,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
         //conditions.stream().forEach(condition -> System.out.println(condition.toString()));
         //解析SQL select 并执行。
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
-        MoreSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        SmartSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
         return instance.queryData(sqlStatement);
     }
 

@@ -10,26 +10,29 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class MoreSQLInfo extends CrudSQLStatement {
+/**
+ * 多功能SQl片段
+ */
+public class SmartSQLInfo extends CrudSQLStatement {
 
     /**
      * 用于sharding
      */
-    HeadCondition headCondition;
+    private HeadCondition headCondition;
 
     /**
      * 解析后的sql片段
      */
-    private List<CrudSQLStatement> sqlStatements = new LinkedList<>();
+    private List<CrudSQLStatement> sqlStatements = new ArrayList<>();
 
-    public MoreSQLInfo() {
+    public SmartSQLInfo() {
         super();
     }
 
     public void addSqlInfo(CrudSQLStatement sqlStatement){
         if(sqlStatement !=null && sqlStatement.isStatus()){
-            if(sqlStatement instanceof MoreSQLInfo){
-                MoreSQLInfo moreSQLInfo = (MoreSQLInfo) sqlStatement;
+            if(sqlStatement instanceof SmartSQLInfo){
+                SmartSQLInfo moreSQLInfo = (SmartSQLInfo) sqlStatement;
                 addAllSqlInfo(moreSQLInfo.getSqlStatements());
             }else{
                 sqlStatements.add(sqlStatement);

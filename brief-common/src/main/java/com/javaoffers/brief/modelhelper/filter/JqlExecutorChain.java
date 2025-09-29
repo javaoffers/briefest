@@ -23,8 +23,6 @@ public class JqlExecutorChain<R> {
 
    private JqlMetaInfo jqlMetaInfo;
 
-   private Class modelClass;
-
    private TableInfo tableInfo;
 
    public JqlExecutorChain(Function<JqlMetaInfo, R> supplier,
@@ -33,7 +31,6 @@ public class JqlExecutorChain<R> {
       this.supplier = supplier;
       this.filterList = filterList;
       this.jqlMetaInfo = jqlMetaInfo;
-      this.modelClass = modelClass;
       this.tableInfo = TableHelper.getTableInfo(modelClass);
    }
 
@@ -46,7 +43,7 @@ public class JqlExecutorChain<R> {
       return (R)filter.filter(this);
    }
 
-   public JqlMetaInfo getSqlStatement(){
+   public JqlMetaInfo getJqlMetaInfo(){
       return this.jqlMetaInfo;
    }
 

@@ -30,19 +30,11 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
 
     private DBType dbType;
 
-    private Limit limit;
-
-    public BaseBriefImpl() {
-    }
+    public BaseBriefImpl() {}
 
     protected BaseBriefImpl(DataSource dataSource, Class modelClass) {
         this.jdbcExecutor = smartBriefContext.getJdbcExecutorFactory().createJdbcExecutor(dataSource, modelClass);
         this.dbType = TableHelper.getTableInfo(modelClass).getDbType();
-    }
-
-    /****************************crud****************************/
-    public int saveData(String sql) {
-        return saveData(sql, Collections.EMPTY_MAP);
     }
 
     @Override
@@ -51,18 +43,10 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         return this.jdbcExecutor.save(sql_).toInt();
     }
 
-    public int deleteData(String sql) {
-        return deleteData(sql, Collections.EMPTY_MAP);
-    }
-
     @Override
     public int deleteData(String sql, Map<String, Object> map) {
         SQL sql_ = SQLParse.getSQL(this.dbType, sql, map);
         return this.jdbcExecutor.modify(sql_);
-    }
-
-    public int updateData(String sql) {
-        return updateData(sql, Collections.EMPTY_MAP);
     }
 
     @Override
@@ -71,17 +55,11 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         return this.jdbcExecutor.modify(sql_);
     }
 
-    /*********************************Support Model*********************************/
-    public List<T> queryData(String sql) {
-        return this.queryData(sql, new HashMap<>());
-    }
-
     @Override
     public List<T> queryData(String sql, Map<String, Object> paramMap) {
         List<Map<String, Object>> paramMapList = new ArrayList<>();
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
-        querySql.limit(this.limit);
         return this.jdbcExecutor.queryList(querySql);
     }
 
@@ -91,13 +69,7 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         querySql.setStreaming(consumer);
-        querySql.limit(this.limit);
         return this.jdbcExecutor.queryStream(querySql);
-    }
-
-    @Override
-    public List<Object> nativeData(String sql, SQLType sqlType) {
-        return nativeData(sql, new HashMap<>(), sqlType);
     }
 
     @Override
@@ -106,7 +78,6 @@ public class BaseBriefImpl<T, ID> implements BaseBrief<T>, BriefContextAware {
         paramMapList.add(paramMap);
         SQL querySql = SQLParse.parseSqlParams(this.dbType, sql, paramMapList);
         querySql.setSqlType(sqlType);
-        querySql.limit(this.limit);
         return (List) this.jdbcExecutor.queryList(querySql);
     }
 

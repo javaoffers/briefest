@@ -4,6 +4,7 @@ import com.javaoffers.base.modelhelper.sample.MockBriefSpeedier;
 import com.javaoffers.base.modelhelper.sample.speedier.BriefSpeedierSample;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
+import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.utils.Lists;
@@ -27,15 +28,12 @@ public class ShardingSample {
                 ArrayList<ShardingUser> list = Lists.newArrayList();
                 for(int i=0;i<100;i++){
                     ShardingUser shardingUser = new ShardingUser();
-                    shardingUser.setId(i+1L);
+                    shardingUser.setId((long)(Math.random() * 1000));
                     shardingUser.setName("name:"+i);
                     shardingUser.setBirthday(DateUtils.addDays(new Date(), -1 * (int)(Math.random() * 100)));
                     list.add(shardingUser);
                 }
                 Mockito.when(mockBriefJdbcExecutor.queryList(Mockito.any())).thenReturn(list);
-
-                List list1 = mockBriefJdbcExecutor.queryList(null);
-                System.out.printf("list1.size() = %d\n", list1.size());
             });
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +99,7 @@ public class ShardingSample {
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
                 .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())
                 .orderA(ShardingUser::getBirthday)
-                .limitPage(1,10)
+                .limitPage(2,10)
                 .exs();
         System.out.println(exs.size());
 
@@ -112,11 +110,30 @@ public class ShardingSample {
                 .exs();
         System.out.println(exs.size());
 
-        exs = userBriefMapper.select().colAll().where()
-                .between(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31), new Date())
-                .orderA(ShardingUser::getBirthday)
-                .limitPage(1,10)
-                .exs();
-        System.out.println(exs.size());
     }
+
+    @Test
+    public void testShardingSave(){
+        ShardingUser shardingUser = new ShardingUser();
+        shardingUser.setId(1L);
+        shardingUser.setName("name:"+1);
+        shardingUser.setBirthday(new Date());
+        userBriefMapper.insert().colAll(shardingUser).ex();
+    }
+
+    @Test
+    public void testShardingSaveBatch(){
+        ShardingUser shardingUser = new ShardingUser();
+        ArrayList<ShardingUser> list = Lists.newArrayList();
+        for(int i=0;i<100;i++){
+            shardingUser = new ShardingUser();
+            shardingUser.setId(i+1L);
+            shardingUser.setName("name:"+1);
+            shardingUser.setBirthday(DateUtils.addDays(new Date(), ((int)(Math.random() * 1000)) * -1));
+            list.add(shardingUser);
+        }
+        List<Id> exs = userBriefMapper.insert().colAll(list).exs();
+    }
+
+
 }

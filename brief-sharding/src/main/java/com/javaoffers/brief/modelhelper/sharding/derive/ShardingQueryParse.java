@@ -98,8 +98,17 @@ public class ShardingQueryParse {
 
     //分页
     private static List limit(LimitWordCondition limitWordCondition, PriorityQueue<Object> list) {
-        int startIndex = limitWordCondition.startIndex();
+
+        if(limitWordCondition == null){
+            ArrayList<Object> result = new ArrayList<>(list.size());
+            for (int i = 0; !list.isEmpty(); i++) {
+                Object poll = list.poll();
+                result.add(poll);
+            }
+            return result;
+        }
         ArrayList<Object> result = new ArrayList<>();
+        int startIndex = limitWordCondition.startIndex();
         if(list.size()>startIndex){
             for (int i = 0; !list.isEmpty(); i++) {
                 Object poll = list.poll();
@@ -118,6 +127,9 @@ public class ShardingQueryParse {
      */
     private static void merge(LimitWordCondition limitWordCondition, PriorityQueue<Object> list, List results) {
         list.addAll(results);
+        if(limitWordCondition == null){
+            return;
+        }
         results.clear();//help gc
         int totalSize = limitWordCondition.pageNum() * limitWordCondition.pageSize();
         if (list.size() > totalSize) {

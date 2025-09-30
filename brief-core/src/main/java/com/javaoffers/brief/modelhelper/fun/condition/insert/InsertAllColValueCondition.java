@@ -122,6 +122,7 @@ public class InsertAllColValueCondition implements InsertCondition {
 
     //解析参数
     public void parseParams() {
+        this.param.clear();
         Map<String, List<Field>> colAllAndFieldOnly = TableHelper.getOriginalColAllAndFieldOnly(this.modelClass);
         colAllAndFieldOnly.forEach((colName, fields) -> {
             try {

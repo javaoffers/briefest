@@ -70,25 +70,19 @@ public class LinkedConditions<T extends Condition> extends LinkedList<T> impleme
             return true;
         }
 
-        //sharding order和limit
-        if(isOrgContext && condition instanceof OrderWordCondition){
-            HeadCondition headCondition = (HeadCondition)this.peekFirst();
-            if(headCondition.isSharding()){
-                headCondition.addOrderWordCondition((OrderWordCondition)condition);
-            }
-        } else if(condition instanceof LimitWordCondition){
-            HeadCondition headCondition = (HeadCondition)this.peekFirst();
-            if(headCondition.isSharding()){
-                headCondition.setLimitWordCondition((LimitWordCondition)condition);
-            }
-        }
-
         //处理condition拦截器
         if(isOrgContext) {
+            //获取拦截器
             List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
-            conditionInterceptor.forEach(biConsumer -> {
-                biConsumer.process(this, condition);
-            });
+            boolean addState = true;
+            for (ConditionInterceptor biConsumer : conditionInterceptor) {
+                addState = addState && biConsumer.process(this, condition);
+            }
+            //skip add.
+            //Mainly for batch insertion in sharded mode
+            if(!addState){
+                return true;
+            }
         }
 
         //处理派生的condition, 派生的不支持拦截器，派生的应该在对应的org拦截器中处理

@@ -26,7 +26,6 @@ public class LimitWordCondition<V> extends WhereOnCondition<V> implements Ignore
     @Override
     public void setHeadCondition(HeadCondition headCondition) {
         super.setHeadCondition(headCondition);
-        headCondition.setLimitWordCondition(this);
     }
 
     @Override

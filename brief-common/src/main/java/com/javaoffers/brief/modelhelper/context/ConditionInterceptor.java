@@ -11,5 +11,13 @@ import java.util.LinkedList;
  * @author cao ming jie create by 2025/4/30
  */
 public interface ConditionInterceptor extends Interceptor{
-     void process(ConditionContext conditions, Condition condition);
+
+     /**
+      * condition 拦截器
+      * @param conditions conditions
+      * @param condition 当前准备add 的condition
+      * @return true mean that the condition will be added 2 the conditions ,
+      *         false will be not added 2 the conditions
+      */
+     boolean process(ConditionContext conditions, Condition condition);
 }

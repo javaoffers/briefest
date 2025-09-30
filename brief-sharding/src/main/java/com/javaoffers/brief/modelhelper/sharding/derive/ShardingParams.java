@@ -4,6 +4,7 @@ import com.javaoffers.brief.modelhelper.fun.CategoryTag;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.BetweenCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.utils.Lists;
@@ -50,6 +51,10 @@ public class ShardingParams<T> {
         }else if (this.condition instanceof ColValueCondition){
             ColValueCondition colValueCondition = (ColValueCondition) condition;
             this.valueList.add((T) colValueCondition.getValue());
+        } else if(this.condition instanceof InsertAllColValueCondition){
+            InsertAllColValueCondition colValueCondition = (InsertAllColValueCondition) condition;
+            colValueCondition.parseParams();
+            valueList.add((T) condition.getParams().get(this.columnName));
         }
 
     }

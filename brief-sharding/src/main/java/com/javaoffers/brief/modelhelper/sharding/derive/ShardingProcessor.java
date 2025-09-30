@@ -11,10 +11,21 @@ import com.javaoffers.brief.modelhelper.sharding.context.ShardingStrategyContext
  */
 public interface ShardingProcessor {
     /**
-     * shardingStrategyContext
+     * process WhereCondition.
+     * @param context
      */
-    public void processWhere(ShardingStrategyContext shardingStrategyContext);
+    public void processWhere(ShardingStrategyContext context);
 
-    public void processInsert(ShardingStrategyContext shardingStrategyContext);
+    /**
+     * process ColValueCondition.
+     * @param context
+     */
+    public void processInsert(ShardingStrategyContext context);
+
+    /**
+     * process InsertAllColValueCondition
+     * @param context
+     */
+    public void processInsertALL(ShardingStrategyContext context, Condition condition);
 
 }

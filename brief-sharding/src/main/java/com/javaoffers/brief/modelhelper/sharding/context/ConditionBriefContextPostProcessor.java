@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingDeriveInfo;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategyMark;
@@ -29,6 +30,7 @@ import java.util.List;
  * @author cao ming jie create by 2025/5/1
  */
 public class ConditionBriefContextPostProcessor implements BriefContextPostProcessor {
+
     @Override
     public void postProcess(BriefContext briefContext) {
         List<ConditionInterceptor> conditionInterceptor = briefContext.getConditionInterceptor();
@@ -40,11 +42,24 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
         ShardingTableProcessor shardingTableProcessor = new ShardingTableProcessor();
 
         @Override
-        public void process(ConditionContext conditionContext, Condition condition) {
+        public boolean process(ConditionContext conditionContext, Condition condition) {
 
             List<? extends Condition> conditions = conditionContext.getConditions();
             if(conditions.isEmpty()){
-                return;
+                return true;
+            }
+
+            //sharding order和limit
+            if(condition instanceof OrderWordCondition){
+                HeadCondition headCondition = (HeadCondition)conditionContext.getConditions().get(0);
+                if(headCondition.isSharding()){
+                    headCondition.addOrderWordCondition((OrderWordCondition)condition);
+                }
+            } else if(condition instanceof LimitWordCondition){
+                HeadCondition headCondition = (HeadCondition)conditionContext.getConditions().get(0);
+                if(headCondition.isSharding()){
+                    headCondition.setLimitWordCondition((LimitWordCondition)condition);
+                }
             }
 
             //处理limit条件
@@ -56,7 +71,7 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
 
             //派生的context不支持sharding
             if(!conditionContext.isOrgContext() || condition instanceof IgnoreAndOrWordCondition){
-                return;
+                return true;
             }
 
             //处理查询派生condition, 处理 select/delete/update
@@ -66,14 +81,14 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
                 DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);
                 if(deriveColName == null){
-                    return;
+                    return true;
                 }
                 ShardingDeriveInfo shardingDeriveInfo = (ShardingDeriveInfo) deriveColName;
                 String colName = shardingDeriveInfo.getColName();
                 String colNameWithWhere = whereCondition.getColName();
                 int c = colNameWithWhere.indexOf(".") + 1;
                 if(!colName.equalsIgnoreCase(colNameWithWhere.substring(c, colNameWithWhere.length()))){
-                    return;
+                    return true;
                 }
                 ShardingStrategyContext context = new ShardingStrategyContext();
                 context.setConditionContext(conditionContext);
@@ -88,12 +103,12 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 TableInfo tableInfo = sqlColInfo.getTableInfo();
                 DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);
                 if(deriveColName == null){
-                    return;
+                    return true;
                 }
                 ShardingDeriveInfo shardingDeriveInfo = (ShardingDeriveInfo) deriveColName;
                 String colName = shardingDeriveInfo.getColName();
                 if(!colName.equalsIgnoreCase(colValueCondition.getColName())){
-                    return;
+                    return true;
                 }
                 ShardingStrategyContext context = new ShardingStrategyContext();
                 context.setConditionContext(conditionContext);
@@ -110,13 +125,13 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 ModelInfo modelInfo = insertAllColValueCondition.getModelInfo();
                 DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);
                 if(deriveColName == null){
-                    return;
+                    return true;
                 }
                 String colName = deriveColName.getColName();
                 ModelFieldInfoPosition oneCol = modelInfo.getOneCol(colName);
                 Object getterValue = oneCol.getModelFieldInfo().getGetter().getter(model);
                 if(getterValue == null){
-                    return;
+                    return true;
                 }
                 ShardingDeriveInfo shardingDeriveInfo = (ShardingDeriveInfo) deriveColName;
                 ShardingStrategyContext context = new ShardingStrategyContext();
@@ -125,9 +140,12 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 context.setShardingTableStrategy(shardingDeriveInfo.getShardingTableStrategy());
                 context.setOrgTableName(tableInfo.getTableName());
                 context.setColName(colName);
-                shardingTableProcessor.processInsert(context);
-
+                shardingTableProcessor.processInsertALL(context, condition);
+                return false;
             }
+
+            return true;
         }
+
     }
 }

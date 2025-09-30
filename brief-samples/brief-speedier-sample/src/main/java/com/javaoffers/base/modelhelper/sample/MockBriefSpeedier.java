@@ -67,12 +67,12 @@ public class MockBriefSpeedier {
         }
 
         MockBriefJdbcExecutorFactory mockBriefJdbcExecutorFactory = Mockito.spy(new MockBriefJdbcExecutorFactory());
-        Mockito.when(mockBriefJdbcExecutorFactory.createJdbcExecutor(dataSource, modelClass))
+        Mockito.when(mockBriefJdbcExecutorFactory.createJdbcExecutor(Mockito.any(DataSource.class),Mockito.any() ))
                 .thenReturn(mockBriefJdbcExecutor);
 
 
         SpeedierBriefContext spy = Mockito.spy(speedierBriefContext);
-        Mockito.when(spy.getJdbcExecutorFactory()).thenReturn(new MockBriefJdbcExecutorFactory());
+        Mockito.when(spy.getJdbcExecutorFactory()).thenReturn(mockBriefJdbcExecutorFactory);
         briefContextField.set(speedier,spy);
 
         JdbcExecutorFactory jdbcExecutorFactory = spy.getJdbcExecutorFactory();

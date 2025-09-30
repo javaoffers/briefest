@@ -6,9 +6,11 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 多功能SQl片段
@@ -21,9 +23,11 @@ public class SmartSQLInfo extends CrudSQLStatement {
     private HeadCondition headCondition;
 
     /**
-     * 解析后的sql片段
+     * Parsed SQL snippet.
+     * key: native sql.
+     * value: Sql Statement
      */
-    private List<CrudSQLStatement> sqlStatements = new ArrayList<>();
+    private Map<String, CrudSQLStatement> sqlStatements = new HashMap<>();
 
     public SmartSQLInfo() {
         super();
@@ -35,9 +39,14 @@ public class SmartSQLInfo extends CrudSQLStatement {
                 SmartSQLInfo moreSQLInfo = (SmartSQLInfo) sqlStatement;
                 addAllSqlInfo(moreSQLInfo.getSqlStatements());
             }else{
-                sqlStatements.add(sqlStatement);
+                //same sql, merge statement
+                CrudSQLStatement sqlStatementOld = sqlStatements.get(sqlStatement.getSql());
+                if(sqlStatementOld == null){
+                    sqlStatements.put(sqlStatement.getSql(), sqlStatement);
+                    return;
+                }
+                sqlStatementOld.getParams().addAll(sqlStatement.getParams());
             }
-
         }
     }
 
@@ -50,7 +59,7 @@ public class SmartSQLInfo extends CrudSQLStatement {
     }
 
     public List<CrudSQLStatement> getSqlStatements(){
-        return sqlStatements;
+        return new ArrayList<>(sqlStatements.values());
     }
 
     public HeadCondition getHeadCondition() {
@@ -65,7 +74,7 @@ public class SmartSQLInfo extends CrudSQLStatement {
     public String getSql() {
         StringBuilder sqlAppender = new StringBuilder(headCondition.isSharding()?" ":"");
 
-        for (CrudSQLStatement sqlStatement : sqlStatements) {
+        for (CrudSQLStatement sqlStatement : sqlStatements.values()) {
             if(sqlAppender.length()>0){
                 sqlAppender.append("\n");
             }
@@ -78,7 +87,7 @@ public class SmartSQLInfo extends CrudSQLStatement {
     @Override
     public List<Map<String, Object>> getParams() {
         List<Map<String, Object>> params = new ArrayList<>();
-        for (CrudSQLStatement sqlStatement : sqlStatements) {
+        for (CrudSQLStatement sqlStatement : sqlStatements.values()) {
             params.addAll(sqlStatement.getParams());
         }
         return params;

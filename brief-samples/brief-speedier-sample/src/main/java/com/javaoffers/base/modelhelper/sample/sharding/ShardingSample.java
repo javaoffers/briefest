@@ -129,11 +129,49 @@ public class ShardingSample {
             shardingUser = new ShardingUser();
             shardingUser.setId(i+1L);
             shardingUser.setName("name:"+1);
-            shardingUser.setBirthday(DateUtils.addDays(new Date(), ((int)(Math.random() * 1000)) * -1));
+            shardingUser.setBirthday(DateUtils.addDays(new Date(), random()));
             list.add(shardingUser);
         }
         List<Id> exs = userBriefMapper.insert().colAll(list).exs();
     }
 
+    @Test
+    public  void testShardingSaveCol(){
+        this.userBriefMapper.insert()
+                .col(ShardingUser::getName,"name:"+1)
+                .col(ShardingUser::getBirthday,DateUtils.addDays(new Date(),-1))
+                .ex();
+        ;
+    }
+
+    @Test
+    public void testShardingDelete(){
+        this.userBriefMapper.delete()
+                .where()
+                .eq(ShardingUser::getBirthday, DateUtils.addDays(new Date(),random()))
+                .ex();
+        this.userBriefMapper.delete()
+                .where()
+                .in(ShardingUser::getBirthday, DateUtils.addDays(new Date(),random()),DateUtils.addDays(new Date(),random()))
+                .ex();
+    }
+
+    @Test
+    public void testShardingUpdate(){
+        ShardingUser shardingUser = new ShardingUser();
+        for(int i=0;i<10;i++){
+            shardingUser = new ShardingUser();
+            shardingUser.setId(i+1L);
+            shardingUser.setName("name:"+1);
+            shardingUser.setBirthday(DateUtils.addDays(new Date(), random()));
+            this.userBriefMapper.update().updateNull().colAll(shardingUser)
+                    .where().in(ShardingUser::getBirthday,shardingUser.getBirthday()).ex();
+
+        }
+    }
+
+    public static int random(){
+       return  ((int)((Math.random() * 1000)) * -1);
+    }
 
 }

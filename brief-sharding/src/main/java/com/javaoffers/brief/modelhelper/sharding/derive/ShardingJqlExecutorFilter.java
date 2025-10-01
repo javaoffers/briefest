@@ -28,14 +28,14 @@ public class ShardingJqlExecutorFilter implements JqlExecutorFilter {
             }
         }
 
-        //非sharding业务
+        //非sharding query 业务
         Object object = jqlExecutorChain.doChain();
 
         return object;
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(JqlExecutorFilter o) {
         return Integer.MAX_VALUE;
     }
 }

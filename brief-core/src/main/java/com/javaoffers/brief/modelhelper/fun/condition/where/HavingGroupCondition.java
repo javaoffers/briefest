@@ -74,21 +74,4 @@ public  class HavingGroupCondition<V> extends WhereOnCondition {
         this.value = value;
     }
 
-    public HavingGroupCondition(AggTag aggTag, GetterFun[] colNames, V value, ConditionTag tag) {
-        Assert.isTrue(tag.getCategoryTag() == CategoryTag.WHERE_ON);
-        StringBuilder cls = new StringBuilder();
-        int i =0;
-        for(GetterFun colName : colNames){
-            if(i != 0){
-                cls.append(",");
-            }
-            i = i+1;
-            cls.append(TableHelper.getColNameNotAs(colName));
-        }
-        this.colName = cls.toString();
-        this.tag = tag;
-        this.aggTag = aggTag;
-        this.value = value;
-    }
-
 }

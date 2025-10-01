@@ -23,4 +23,6 @@ public interface WhereCondition extends Condition {
 
     public String getColName();
 
+    public void setColName(String colName);
+
 }

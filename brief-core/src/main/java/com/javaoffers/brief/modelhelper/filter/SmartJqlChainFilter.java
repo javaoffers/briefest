@@ -46,9 +46,8 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
         return o;
     }
 
-
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(JqlExecutorFilter o) {
         return Integer.MIN_VALUE;
     }
 }

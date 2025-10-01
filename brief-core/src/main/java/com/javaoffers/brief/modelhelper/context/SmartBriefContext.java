@@ -44,7 +44,7 @@ public abstract class SmartBriefContext implements BriefContext{
     //JqlExecutorFilter
     private static final List<JqlExecutorFilter> jqlExecutorFilters =
             Collections.unmodifiableList(new ArrayList<>(ReflectionUtils.getChildInstance(JqlExecutorFilter.class))
-                    .stream().sorted().collect(Collectors.toList()));
+                    .stream().sorted(JqlExecutorFilter::compareTo).collect(Collectors.toList()));
 
     //DeriveProcess
     private static final List<DeriveInfoLoader> deriveProcessList =

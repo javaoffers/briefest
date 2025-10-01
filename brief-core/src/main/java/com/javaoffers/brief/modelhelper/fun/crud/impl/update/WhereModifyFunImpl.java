@@ -334,31 +334,32 @@ public class WhereModifyFunImpl<M,V>  implements WhereModifyFun<M,V> {
     public Integer ex() {
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
         SmartSQLInfo moreSqlInfo = StatementParserAdepter.statementParse(conditions);
-        List<CrudSQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
-        HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
-        for(CrudSQLStatement sqlStatement : sqlStatements){
-            String sql = sqlStatement.getSql();
-            List<Map<String, Object>> params = sqlStatement.getParams();
-            List<Map<String, Object>> paramBatch = sqlbatch.get(sql);
-            if(paramBatch == null){
-                paramBatch = new LinkedList<Map<String, Object>>();
-                sqlbatch.put(sql, paramBatch);
-            }
-            paramBatch.addAll(params);
-        }
-        if(sqlbatch.size() == 0){
-            //Even npdate Null must be at least one update field
-            throw new UpdateFieldsException("Update fields must be specified." +
-                    "Even npdate Null must be at least one update field");
-        }
-        AtomicInteger count = new AtomicInteger();
-        sqlbatch.forEach((sql, params) ->{
-            CrudSQLStatement sqlStatement = CrudSQLStatement.builder().status(true).sql(sql).params(params).build();
-            Integer integer = instance.batchUpdate(sqlStatement);
-            count.addAndGet(integer);
-        });
-
-        return count.get();
+        return instance.batchUpdate(moreSqlInfo);
+//        List<CrudSQLStatement> sqlStatements = moreSqlInfo.getSqlStatements();
+//        HashMap<String, List<Map<String, Object>>> sqlbatch = new HashMap<>();
+//        for(CrudSQLStatement sqlStatement : sqlStatements){
+//            String sql = sqlStatement.getSql();
+//            List<Map<String, Object>> params = sqlStatement.getParams();
+//            List<Map<String, Object>> paramBatch = sqlbatch.get(sql);
+//            if(paramBatch == null){
+//                paramBatch = new LinkedList<Map<String, Object>>();
+//                sqlbatch.put(sql, paramBatch);
+//            }
+//            paramBatch.addAll(params);
+//        }
+//        if(sqlbatch.size() == 0){
+//            //Even npdate Null must be at least one update field
+//            throw new UpdateFieldsException("Update fields must be specified." +
+//                    "Even npdate Null must be at least one update field");
+//        }
+//        AtomicInteger count = new AtomicInteger();
+//        sqlbatch.forEach((sql, params) ->{
+//            CrudSQLStatement sqlStatement = CrudSQLStatement.builder().status(true).sql(sql).params(params).build();
+//            Integer integer = instance.batchUpdate(sqlStatement);
+//            count.addAndGet(integer);
+//        });
+//
+//        return count.get();
     }
 
     @Override

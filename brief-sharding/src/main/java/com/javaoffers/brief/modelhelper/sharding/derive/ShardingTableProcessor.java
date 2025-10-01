@@ -52,6 +52,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                     break;
                 }
                 result.shardingCondition.shardingTableName(shardingTable + " " + orgTableName);
+                result.headCondition.setSharding(true);
                 break;
             default:
                 ArrayList<String> shardingTableList = new ArrayList<String>(shardingTableStrategy.shardingRange(shardingParams));
@@ -65,18 +66,8 @@ public final class ShardingTableProcessor implements ShardingProcessor {
 
                 //peer sharding
                 List<ConditionContext> peerConditionContexts = (List<ConditionContext>) orgConditionContext.getPeerConditionContexts();
-//                List<ConditionContext> allNewPeerConditionContexts = Lists.newArrayList();
-//                for (ConditionContext peerConditionContext : peerConditionContexts) {
-//                    Collection<ConditionContext> newPeerShardingList2 = shardingConditionForWhere(shardingTableList,
-//                            result.shardingConditionIdx, peerConditionContext, shardingParams.getTableName());
-//                    allNewPeerConditionContexts.addAll(newPeerShardingList2);
-//                }
-
                 peerConditionContexts.addAll(newPeerShardingList);
-//                peerConditionContexts.addAll(allNewPeerConditionContexts);
-                if(CollectionUtils.isNotEmpty(orgConditionContext.getPeerConditionContexts())){
-                    result.headCondition.setSharding(true);
-                }
+                result.headCondition.setSharding(true);
                 break;
         }
     }
@@ -97,6 +88,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         Assert.isTrue(shardingTable != null, "sharding table name is null");
         Result result = getResult(orgConditionContext, orgTableName);
         result.shardingCondition.shardingTableName(shardingTable);
+        result.headCondition.setSharding(true);
     }
 
     private static Result getResult(ConditionContext orgConditionContext, String orgTableName) {
@@ -218,6 +210,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
         Assert.isTrue(shardingTable != null, "sharding table name is null");
         Result result = getResultForInsertAll(orgConditionContext, orgTableName, insertAllColValueCondition);
         result.shardingCondition.shardingTableName(shardingTable);
+        result.headCondition.setSharding(true);
     }
 
     private static class Result {

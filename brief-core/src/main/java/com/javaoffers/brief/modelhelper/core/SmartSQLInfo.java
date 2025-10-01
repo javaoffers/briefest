@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class SmartSQLInfo extends CrudSQLStatement {
 
     /**
-     * 用于sharding
+     * 用于sharding. native sql 将不会存在此对象.
      */
     private HeadCondition headCondition;
 

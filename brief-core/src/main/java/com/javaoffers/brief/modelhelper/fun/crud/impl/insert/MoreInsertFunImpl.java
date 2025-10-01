@@ -34,12 +34,12 @@ public class MoreInsertFunImpl<M> implements MoreInsertFun<M, GetterFun<M, Objec
         //Parse SQL select and execute.
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
         SmartSQLInfo sqlInfos = StatementParserAdepter.statementParse(conditions);
-        List<CrudSQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
-        List<Id> list = new ArrayList<>();
-        sqlInfosList.forEach(sqlInfo -> {
-            list.addAll(instance.batchInsert(sqlInfo));
-        });
-        return list;
+//        List<CrudSQLStatement> sqlInfosList = sqlInfos.getSqlStatements();
+//        List<Id> list = new ArrayList<>();
+//        sqlInfosList.forEach(sqlInfo -> {
+//            list.addAll(instance.batchInsert(sqlInfo));
+//        });
+        return instance.batchInsert(sqlInfos);
     }
 
     @Override

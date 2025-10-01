@@ -301,8 +301,8 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     @Override
     public Integer ex() {
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) conditions.peekFirst());
-        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(conditions);
-        Integer count = instance.batchUpdate(sqlStatement);
+        SmartSQLInfo smartSQLInfo = StatementParserAdepter.statementParse(conditions);
+        Integer count = instance.batchUpdate(smartSQLInfo);
         return count;
     }
 }

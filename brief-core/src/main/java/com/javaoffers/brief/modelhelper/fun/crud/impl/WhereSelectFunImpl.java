@@ -457,7 +457,7 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     public int stream(Consumer<M> consumer) {
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
-        BaseSQLStatement sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        SmartSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
         return instance.queryStream(sqlStatement, consumer);
     }
 }

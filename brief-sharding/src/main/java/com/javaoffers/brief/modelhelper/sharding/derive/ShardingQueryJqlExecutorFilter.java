@@ -1,21 +1,18 @@
 package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLStatement;
-import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorFilter;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
-
-import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * desc.
  *
  * @author cao ming jie create by 2025/9/28
  */
-public class ShardingJqlExecutorFilter implements JqlExecutorFilter {
+public class ShardingQueryJqlExecutorFilter implements JqlExecutorFilter {
+
     @Override
     public Object filter(JqlExecutorChain jqlExecutorChain) {
         JqlMetaInfo jqlMetaInfo = jqlExecutorChain.getJqlMetaInfo();
@@ -28,14 +25,14 @@ public class ShardingJqlExecutorFilter implements JqlExecutorFilter {
             }
         }
 
-        //非sharding query 业务
+        //非 sharding query 业务
         Object object = jqlExecutorChain.doChain();
 
         return object;
     }
 
     @Override
-    public int compareTo(JqlExecutorFilter o) {
-        return Integer.MAX_VALUE;
+    public int orderId() {
+        return JqlExecutorFilter.MIN_ORDER + 10;
     }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @description: SmartJqlChainFilter
+ * @description: SmartJqlChainFilter. first Filter.
  * <p>
  * Record the slow SQL, Secure Dynamic Updates when call setter methods of model.
  * </p>
@@ -47,7 +47,7 @@ public class SmartJqlChainFilter implements JqlExecutorFilter {
     }
 
     @Override
-    public int compareTo(JqlExecutorFilter o) {
-        return Integer.MIN_VALUE;
+    public int orderId() {
+        return JqlExecutorFilter.MIN_ORDER + 1;
     }
 }

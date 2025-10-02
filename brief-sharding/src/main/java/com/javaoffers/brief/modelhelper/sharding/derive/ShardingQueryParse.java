@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.fun.HeadEnum;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfoPosition;
@@ -57,8 +58,7 @@ public class ShardingQueryParse {
 
     private static Object doQuery(JqlExecutorChain chain, SmartSQLInfo moreSQLInfo) {
         HeadCondition headCondition = moreSQLInfo.getHeadCondition();
-        LimitWordCondition limitWordCondition = headCondition.getLimitWordCondition();
-
+        LimitWordCondition limitWordCondition = (LimitWordCondition)headCondition.getConditionMap().get(HeadEnum.LIMIT);
         List<CrudSQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
         JqlMetaInfo jqlMetaInfo = chain.getJqlMetaInfo();
         TableInfo tableInfo = chain.getTableInfo();

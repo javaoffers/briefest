@@ -7,9 +7,12 @@ import com.javaoffers.brief.modelhelper.context.ConditionInterceptor;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionContext;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
+import com.javaoffers.brief.modelhelper.fun.HeadEnum;
 import com.javaoffers.brief.modelhelper.fun.condition.ColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.insert.InsertAllColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateColValueCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereCondition;
@@ -22,6 +25,7 @@ import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,12 +57,20 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
             if(condition instanceof OrderWordCondition){
                 HeadCondition headCondition = (HeadCondition)conditionContext.getConditions().get(0);
                 if(headCondition.isSharding()){
-                    headCondition.addOrderWordCondition((OrderWordCondition)condition);
+                    //添加order
+                    List<OrderWordCondition> orderWordConditionList = (List<OrderWordCondition>)headCondition.getConditionMap().get(HeadEnum.ORDERS);
+                    if(orderWordConditionList == null){
+                        orderWordConditionList = new ArrayList<>();
+                        headCondition.getConditionMap().put(HeadEnum.ORDERS, orderWordConditionList);
+                    }
+                    orderWordConditionList.add((OrderWordCondition)condition);
                 }
             } else if(condition instanceof LimitWordCondition){
                 HeadCondition headCondition = (HeadCondition)conditionContext.getConditions().get(0);
                 if(headCondition.isSharding()){
-                    headCondition.setLimitWordCondition((LimitWordCondition)condition);
+                    //添加limit
+                    LimitWordCondition limitWordCondition = (LimitWordCondition)condition;
+                    headCondition.getConditionMap().put(HeadEnum.LIMIT, new LimitWordCondition(limitWordCondition.pageNum, limitWordCondition.pageSize));
                 }
             }
 
@@ -74,7 +86,7 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 return true;
             }
 
-            //处理查询派生condition, 处理 select/delete/update
+            //处理查询派生condition, 处理 select/delete/update for where
             if (condition instanceof WhereCondition ) {
                 WhereCondition whereCondition = (WhereCondition) condition;
                 Class modelClass = headCondition.getModelClass();
@@ -97,7 +109,8 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 context.setOrgTableName(tableInfo.getTableName());
                 context.setColName(colName);
                 shardingTableProcessor.processWhere(context);
-            }else if(condition instanceof ColValueCondition){
+            }else if(condition instanceof ColValueCondition && !(condition instanceof UpdateColValueCondition)){
+                //处理insert
                 ColValueCondition colValueCondition = (ColValueCondition) condition;
                 SqlColInfo sqlColInfo = colValueCondition.getSqlColInfo();
                 TableInfo tableInfo = sqlColInfo.getTableInfo();
@@ -119,6 +132,7 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 shardingTableProcessor.processInsert(context);
 
             } else if(condition instanceof InsertAllColValueCondition){
+                //处理insert all
                 InsertAllColValueCondition insertAllColValueCondition = (InsertAllColValueCondition) condition;
                 Object model = insertAllColValueCondition.getModel();
                 TableInfo tableInfo = insertAllColValueCondition.getTableInfo();
@@ -143,7 +157,6 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 shardingTableProcessor.processInsertALL(context, condition);
                 return false;
             }
-
             return true;
         }
 

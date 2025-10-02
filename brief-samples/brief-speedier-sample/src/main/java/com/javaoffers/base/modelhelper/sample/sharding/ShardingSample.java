@@ -170,6 +170,15 @@ public class ShardingSample {
         }
     }
 
+    @Test
+    public void testShardingUpdateCol(){
+        this.userBriefMapper.update().updateNull().col(ShardingUser::getName,"name:"+1)
+                .col(ShardingUser::getBirthday,DateUtils.addDays(new Date(),random()))
+                .where()
+                .eq(ShardingUser::getBirthday, DateUtils.addDays(new Date(),random()))
+                .ex();
+    }
+
     public static int random(){
        return  ((int)((Math.random() * 1000)) * -1);
     }

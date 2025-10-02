@@ -9,6 +9,7 @@ import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,9 +26,11 @@ public class HeadCondition implements Condition {
 
     private Class modelClass;
 
-    private LimitWordCondition limitWordCondition;
+//    private LimitWordCondition limitWordCondition;
 
-    private List<OrderWordCondition> orderWordConditionList;
+//    private List<OrderWordCondition> orderWordConditionList;
+
+    private Map<HeadEnum, Object> conditionMap = new EnumMap<>(HeadEnum.class);
 
     private boolean shardingTable = false;
 
@@ -71,20 +74,25 @@ public class HeadCondition implements Condition {
         return modelClass;
     }
 
-    public LimitWordCondition getLimitWordCondition() {
-        return limitWordCondition;
+//    public LimitWordCondition getLimitWordCondition() {
+//        return limitWordCondition;
+//    }
+//
+//    public void setLimitWordCondition(LimitWordCondition limitWordCondition) {
+//        //copy
+//        this.limitWordCondition = new LimitWordCondition(limitWordCondition.pageNum, limitWordCondition.pageSize);
+//    }
+
+    public Map<HeadEnum, Object> getConditionMap() {
+        return conditionMap;
     }
 
-    public void setLimitWordCondition(LimitWordCondition limitWordCondition) {
-        //copy
-        this.limitWordCondition = new LimitWordCondition(limitWordCondition.pageNum, limitWordCondition.pageSize);
-    }
-    public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
-        if(this.orderWordConditionList == null){
-           this.orderWordConditionList = new ArrayList<OrderWordCondition>();
-        }
-        this.orderWordConditionList.add(orderWordCondition);
-    }
+//    public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
+//        if(this.orderWordConditionList == null){
+//           this.orderWordConditionList = new ArrayList<OrderWordCondition>();
+//        }
+//        this.orderWordConditionList.add(orderWordCondition);
+//    }
 
     public boolean isSharding() {
         return shardingTable;

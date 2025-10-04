@@ -19,7 +19,8 @@ public class ShardingQueryJqlExecutorFilter implements JqlExecutorFilter {
         BaseSQLStatement sqlStatement = jqlMetaInfo.getSqlStatement();
         if(sqlStatement instanceof SmartSQLInfo){
             SmartSQLInfo moreSQLInfo = (SmartSQLInfo) sqlStatement;
-            if(moreSQLInfo.getHeadCondition().isSharding()
+            if(moreSQLInfo.getHeadCondition() != null
+                    && moreSQLInfo.getHeadCondition().isSharding()
                     && jqlMetaInfo.getOperate()== JqlMetaInfo.Operate.QUERY
                     // if size value is one, then as ordinary query
                     && ((SmartSQLInfo) sqlStatement).getSqlStatements().size() > 1

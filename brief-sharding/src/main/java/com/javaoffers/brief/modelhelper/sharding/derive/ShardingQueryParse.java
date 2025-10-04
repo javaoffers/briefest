@@ -88,7 +88,10 @@ public class ShardingQueryParse {
 
         //执行并合并
         for (CrudSQLStatement sqlStatement : sqlStatements) {
-            jqlMetaInfo.setSqlStatement(sqlStatement);
+            SmartSQLInfo smartSQLInfo = new SmartSQLInfo();
+            smartSQLInfo.addSqlInfo(sqlStatement);
+            smartSQLInfo.setHeadCondition(headCondition);
+            jqlMetaInfo.setSqlStatement(smartSQLInfo);
             merge(limitWordCondition, list, (List)chain.doChain());
         }
 

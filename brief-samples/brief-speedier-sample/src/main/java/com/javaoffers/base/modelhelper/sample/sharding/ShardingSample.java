@@ -102,11 +102,11 @@ public class ShardingSample {
                 .limitPage(2,10)
                 .exs();
         System.out.println(exs.size());
-
+        //单条sharding不做逻辑分页分
         exs = userBriefMapper.select().colAll().where()
                 .in(ShardingUser::getBirthday,new Date())
                 .orderA(ShardingUser::getBirthday)
-                .limitPage(1,10)
+                .limitPage(2,10)
                 .exs();
         System.out.println(exs.size());
 
@@ -177,6 +177,23 @@ public class ShardingSample {
                 .where()
                 .eq(ShardingUser::getBirthday, DateUtils.addDays(new Date(),random()))
                 .ex();
+    }
+
+    @Test
+    public void testShardingAll(){
+        testShardingSampleEq();
+        testShardingSampleIn();
+        testShardingSampleIn2();
+        testShardingSampleGt();
+        testShardingSampleIsNotNull();
+        testShardingSampleBetween();
+        testLimitPage();
+        testShardingSave();
+        testShardingSaveBatch();
+        testShardingSaveCol();
+        testShardingDelete();
+        testShardingUpdate();
+        testShardingUpdateCol();
     }
 
     public static int random(){

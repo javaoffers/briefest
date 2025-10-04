@@ -76,7 +76,8 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
 
             //处理limit条件
             HeadCondition headCondition = (HeadCondition)conditions.get(0);
-            if(headCondition.isSharding() && condition instanceof LimitWordCondition) {
+            if(headCondition.isSharding() && condition instanceof LimitWordCondition
+                    && !conditionContext.getPeerConditionContexts().isEmpty()) {
                 LimitWordCondition limitWordCondition = (LimitWordCondition)condition;
                 limitWordCondition.limit(1, limitWordCondition.pageNum * limitWordCondition.pageSize);
             }

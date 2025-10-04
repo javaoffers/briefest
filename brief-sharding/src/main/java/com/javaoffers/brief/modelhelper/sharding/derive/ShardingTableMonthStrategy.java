@@ -1,12 +1,7 @@
-package com.javaoffers.base.modelhelper.sample.sharding;
+package com.javaoffers.brief.modelhelper.sharding.derive;
 
-import com.javaoffers.brief.modelhelper.fun.ConditionTag;
-import com.javaoffers.brief.modelhelper.sharding.derive.ShardingParams;
-import com.javaoffers.brief.modelhelper.sharding.derive.ShardingTableStrategy;
-import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;

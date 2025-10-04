@@ -9,10 +9,10 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.AddPatchMarkConditio
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateAllColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateColValueCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.update.UpdateSetCondition;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.StringUtils;
 import com.javaoffers.brief.modelhelper.utils.Assert;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -92,7 +92,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                 }
             }
             return CrudSQLStatement.builder().sql(updateAppender.toString())
-                    .params(Arrays.asList(upateParam))
+                    .params(Lists.newArrayList(upateParam))
                     .aClass(modelClass)
                     .status(status)
                     .build();
@@ -113,7 +113,7 @@ public class UpdateConditionParse extends AbstractParseCondition {
                 }
             }
             return CrudSQLStatement.builder().sql(updateAppender.toString())
-                    .params(Arrays.asList(upateParam))
+                    .params(Lists.newArrayList(upateParam))
                     .aClass(modelClass)
                     .status(status)
                     .build();

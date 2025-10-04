@@ -56,7 +56,7 @@ public class BriefUtils {
 
         return (T) ByteBuddyUtils
                 .makeObject(crudMapperClass,
-                        Arrays.asList(select,insert,update,delete,general));
+                        Lists.newArrayList(select,insert,update,delete,general));
     }
 
     public static Map<Method,String> getMapperMethod(){

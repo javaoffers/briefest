@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.select.SelectColumnConditi
 import com.javaoffers.brief.modelhelper.fun.condition.select.SelectTableCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -87,7 +88,7 @@ public class SelectConditionParse extends AbstractParseCondition {
 
         return CrudSQLStatement.builder()
                 .aClass(condition.getmClass())
-                .params(Arrays.asList(params))
+                .params(Lists.newArrayList(params))
                 .sql(selectCols.toString())
                 .status(true)
                 .build();

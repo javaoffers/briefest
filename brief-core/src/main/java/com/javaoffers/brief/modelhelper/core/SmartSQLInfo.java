@@ -72,7 +72,7 @@ public class SmartSQLInfo extends CrudSQLStatement {
 
     @Override
     public String getSql() {
-        StringBuilder sqlAppender = new StringBuilder(headCondition.isSharding()?" ":"");
+        StringBuilder sqlAppender = new StringBuilder(headCondition != null && headCondition.isSharding()?" ":"");
 
         for (CrudSQLStatement sqlStatement : sqlStatements.values()) {
             if(sqlAppender.length()>0){

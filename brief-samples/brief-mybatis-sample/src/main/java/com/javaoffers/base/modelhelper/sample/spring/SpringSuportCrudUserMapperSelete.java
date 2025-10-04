@@ -411,7 +411,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         print(ex);
         System.out.println("-------------------------------");
 
-        List<String> ids = Arrays.asList("2", "3", "1");
+        List<String> ids = Lists.newArrayList("2", "3", "1");
         List<User> exs = crudUserMapper.select()
                 .col(User::getId)
                 .colAll()
@@ -594,7 +594,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
         print(exs1);
 
         HashMap<String, Object> params = new HashMap<>();
-        params.put("ids", Arrays.asList(1, 2));
+        params.put("ids", Lists.newArrayList(1, 2));
         exs1 = crudUserMapper.select()
                 .col(AggTag.MAX, User::getName)
                 .innerJoin(UserOrder::new)

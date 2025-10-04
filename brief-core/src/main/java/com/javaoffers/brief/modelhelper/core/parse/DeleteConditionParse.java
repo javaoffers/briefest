@@ -4,8 +4,8 @@ import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
 import com.javaoffers.brief.modelhelper.fun.condition.DeleteFromCondition;
+import com.javaoffers.brief.modelhelper.utils.Lists;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -26,7 +26,7 @@ public class DeleteConditionParse extends AbstractParseCondition {
         HashMap<String, Object> deleteParams = new HashMap<>();
         parseWhereCondition(conditions, deleteParams, deleteAppender);
         CrudSQLStatement sqlStatement = CrudSQLStatement.builder().sql(deleteAppender.toString())
-                .params(Arrays.asList(deleteParams))
+                .params(Lists.newArrayList(deleteParams))
                 .aClass(condition.getModelClass())
                 .status(true)
                 .build();

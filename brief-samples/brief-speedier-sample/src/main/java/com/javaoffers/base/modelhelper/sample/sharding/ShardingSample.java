@@ -1,14 +1,11 @@
 package com.javaoffers.base.modelhelper.sample.sharding;
 
 import com.javaoffers.base.modelhelper.sample.MockBriefSpeedier;
-import com.javaoffers.base.modelhelper.sample.speedier.BriefSpeedierSample;
-import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
-import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
+import com.javaoffers.base.modelhelper.sample.model.ShardingUser;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.speedier.BriefSpeedier;
 import com.javaoffers.brief.modelhelper.utils.Lists;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -24,7 +21,7 @@ public class ShardingSample {
 
     static {
         try {
-            speedier = MockBriefSpeedier.mockShardingBriefSpeedier(jdbc, ShardingUser.class,mockBriefJdbcExecutor -> {
+            speedier = MockBriefSpeedier.mockShardingBriefSpeedier(jdbc, ShardingUser.class, mockBriefJdbcExecutor -> {
                 ArrayList<ShardingUser> list = Lists.newArrayList();
                 for(int i=0;i<100;i++){
                     ShardingUser shardingUser = new ShardingUser();

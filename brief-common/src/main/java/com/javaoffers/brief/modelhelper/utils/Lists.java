@@ -49,7 +49,7 @@ public final class Lists {
 
   // ArrayList
   public static <E> ArrayList<E> newArrayList(E... es) {
-    ArrayList<E> list = new ArrayList<>();
+    ArrayList<E> list = new ArrayList<>(es.length);
     if(es != null){
       for(E e : es){
         if (e != null){

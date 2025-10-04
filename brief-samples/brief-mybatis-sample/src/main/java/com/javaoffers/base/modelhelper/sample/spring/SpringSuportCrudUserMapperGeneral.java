@@ -274,7 +274,13 @@ public class SpringSuportCrudUserMapperGeneral implements InitializingBean {
 
         long moneyCount = this.crudUserMapper.general().count(User::getMoney).longValue();
         print(moneyCount);
+
+        String s = this.crudUserMapper.general().ddlSQL("show tables;");
+        print("=====>"+s);
     }
+
+
+
 
     public void print(Object user) throws JsonProcessingException {
         System.out.println(objectMapper.writeValueAsString(user));

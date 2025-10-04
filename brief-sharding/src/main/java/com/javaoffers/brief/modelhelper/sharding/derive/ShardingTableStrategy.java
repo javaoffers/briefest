@@ -39,6 +39,6 @@ public interface ShardingTableStrategy<T> {
      * @param orgTableName org table name
      */
     default void shardingBefore(ShardingParams<T> shardingParams){
-        //检查表是否存在,如果不存在可以进行新建
+        //Check if the table exists, and if not, you can create a new one
     }
 }

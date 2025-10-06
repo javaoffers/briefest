@@ -400,7 +400,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         HashMap<String, Object> param = new HashMap<>();
         String newColNameTag = getNewColNameTag();
         param.put(newColNameTag, ids);
-        where.condSQL(this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
+        where.condSQL(this.tableName+"."+this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
         List<T> exs = where.exs();
         if (exs != null && exs.size() > 0) {
             return exs;

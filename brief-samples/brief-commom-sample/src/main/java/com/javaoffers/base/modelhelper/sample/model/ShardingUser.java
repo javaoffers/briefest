@@ -1,5 +1,6 @@
 package com.javaoffers.base.modelhelper.sample.model;
 
+import com.javaoffers.base.modelhelper.sample.sharding.ShardingUserTableMonthStrategy;
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 
@@ -9,7 +10,7 @@ import lombok.Data;
 
 import java.util.Date;
 
-@BaseModel("user")
+@BaseModel("sharding_user")
 @Data
 public class ShardingUser {
 
@@ -18,6 +19,6 @@ public class ShardingUser {
 
     private String name;
 
-    @ShardingStrategy(ShardingTableMonthStrategy.class)
+    @ShardingStrategy(ShardingUserTableMonthStrategy.class)
     private Date birthday;
 }

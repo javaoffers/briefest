@@ -16,7 +16,7 @@ import javax.annotation.Resource;
 @MapperScan("com.javaoffers.base.modelhelper.sample.mapper")
 public class SpringSupportCrudUserMapperAllOperation {
     @Resource
-    SpringSuportCrudUserMapperSelete selete;
+    SpringSuportCrudUserMapperSelect selete;
     @Resource
     SpringSuportCrudUserMapperInsert insert;
     @Resource
@@ -30,7 +30,7 @@ public class SpringSupportCrudUserMapperAllOperation {
 
 
     public static void main(String[] args) {
-        SpringSuportCrudUserMapperSelete.status = false;
+        SpringSuportCrudUserMapperSelect.status = false;
         SpringSuportCrudUserMapperInsert.status = false;
         SpringSuportCrudUserMapperUpdate.status = false;
         SpringSuportCrudUserMapperDelete.status = false;

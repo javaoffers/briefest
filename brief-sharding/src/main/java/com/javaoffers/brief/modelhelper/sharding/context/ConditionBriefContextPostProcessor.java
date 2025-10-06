@@ -24,6 +24,7 @@ import com.javaoffers.brief.modelhelper.utils.ModelInfo;
 import com.javaoffers.brief.modelhelper.utils.SqlColInfo;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,10 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 ShardingDeriveInfo shardingDeriveInfo = (ShardingDeriveInfo) deriveColName;
                 String colName = shardingDeriveInfo.getColName();
                 String colNameWithWhere = whereCondition.getColName();
+                //native condition sql
+                if(colNameWithWhere == null){
+                    return true;
+                }
                 int c = colNameWithWhere.indexOf(".") + 1;
                 if(!colName.equalsIgnoreCase(colNameWithWhere.substring(c, colNameWithWhere.length()))){
                     return true;

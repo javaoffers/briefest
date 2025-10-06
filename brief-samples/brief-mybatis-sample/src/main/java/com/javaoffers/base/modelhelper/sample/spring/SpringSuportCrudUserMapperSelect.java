@@ -2,10 +2,12 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
+import com.javaoffers.base.modelhelper.sample.mapper.ShardingUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.base.modelhelper.sample.model.UserTeacher;
+import com.javaoffers.base.modelhelper.sample.sharding.ShardingUserTableMonthStrategy;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
@@ -14,12 +16,12 @@ import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
+import javax.sql.DataSource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +34,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootApplication
 @RequestMapping
 @MapperScan("com.javaoffers.base.modelhelper.sample.mapper")
-public class SpringSuportCrudUserMapperSelete implements InitializingBean {
+public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
     ObjectMapper objectMapper = new ObjectMapper();
 
@@ -42,7 +44,7 @@ public class SpringSuportCrudUserMapperSelete implements InitializingBean {
     BriefUserMapper crudUserMapper;
 
     public static void main(String[] args) {
-        SpringApplication.run(SpringSuportCrudUserMapperSelete.class, args);
+        SpringApplication.run(SpringSuportCrudUserMapperSelect.class, args);
 
     }
 

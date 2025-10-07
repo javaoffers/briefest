@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static com.javaoffers.base.modelhelper.sample.spring.SpringSuportCrudUserMapperSelect.print;
+
 /**
  * desc.
  *
@@ -57,7 +59,23 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
 
     private void testAll() {
 //        testShardingInsertBatch();
-        testShardingInsert();
+//        testShardingInsert();
+        testShardingQuery();
+    }
+
+    private void testShardingQuery() {
+        ArrayList<Date> list = Lists.newArrayList();
+        for (int i = 0; i < 10; i++) {
+            list.add(DateUtils.addDays(new Date(), random()));
+        }
+        List<ShardingUser> exs = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, list)
+                .exs();
+        print(exs);
+
+
     }
 
     public void testShardingInsert(){

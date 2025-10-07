@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 @MapperScan("com.javaoffers.base.modelhelper.sample.mapper")
 public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
-    ObjectMapper objectMapper = new ObjectMapper();
+    static ObjectMapper objectMapper = new ObjectMapper();
 
     public static boolean status = true;
 
@@ -748,12 +748,11 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
     }
 
-    public void print(Object user) {
+    public static void print(Object user) {
         try {
             System.out.println(objectMapper.writeValueAsString(user));
         }catch (Exception e){
             e.printStackTrace();
         }
-
     }
 }

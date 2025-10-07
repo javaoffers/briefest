@@ -34,11 +34,17 @@ public interface ShardingTableStrategy<T> {
     };
 
     /**
-     * 在sharding table 前执行。比如是否需要新建表.
-     * @param condition where condition
-     * @param orgTableName org table name
+     * 在sharding table 前执行。.
      */
     default void shardingBefore(ShardingParams<T> shardingParams){
+        //check sharding params
+    }
+
+    /**
+     * sharding table 完成之后执行.
+     * @param shardingTables sharding tables
+     */
+    default void shardingAfter(List<String> shardingTables){
         //Check if the table exists, and if not, you can create a new one
     }
 }

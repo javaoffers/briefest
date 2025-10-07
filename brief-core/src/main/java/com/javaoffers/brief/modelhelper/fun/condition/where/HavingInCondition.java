@@ -103,4 +103,9 @@ public class HavingInCondition<V> extends WhereOnCondition {
         this.tag = tag;
         this.aggTag = aggTag;
     }
+
+    @Override
+    public List<V> getValue() {
+        return value;
+    }
 }

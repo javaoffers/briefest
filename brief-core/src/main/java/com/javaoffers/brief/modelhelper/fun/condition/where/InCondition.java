@@ -104,4 +104,9 @@ public  class InCondition<V> extends WhereOnCondition {
                 ", tag=" + tag +
                 '}';
     }
+
+    @Override
+    public List<V> getValue() {
+        return value;
+    }
 }

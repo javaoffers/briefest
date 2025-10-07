@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
@@ -52,14 +53,16 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                     break;
                 }
                 result.shardingCondition.shardingTableName(shardingTable + " " + orgTableName);
+                shardingTableStrategy.shardingAfter(Lists.newArrayList(shardingTable));
                 result.headCondition.setSharding(true);
                 break;
             default:
-                ArrayList<String> shardingTableList = new ArrayList<String>(shardingTableStrategy.shardingRange(shardingParams));
-                if(CollectionUtils.isEmpty(shardingTableList)){
+                Set<String> shardingTables = shardingTableStrategy.shardingRange(shardingParams);
+                if(CollectionUtils.isEmpty(shardingTables)){
                     break;
                 }
-
+                ArrayList<String> shardingTableList = new ArrayList<String>(shardingTables);
+                shardingTableStrategy.shardingAfter(shardingTableList);
                 //org sharding with make peer sharding
                 Collection<ConditionContext> newPeerShardingList = shardingConditionForWhere(shardingTableList,
                         result.shardingConditionIdx, orgConditionContext, shardingParams.getTableName());
@@ -85,6 +88,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                 new ShardingParams<Object>(condition, orgTableName, colName);
         shardingTableStrategy.shardingBefore(objectShardingParams);
         String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
+        shardingTableStrategy.shardingAfter(Lists.newArrayList(shardingTable));
         Assert.isTrue(shardingTable != null, "sharding table name is null");
         Result result = getResult(orgConditionContext, orgTableName);
         result.shardingCondition.shardingTableName(shardingTable);
@@ -207,6 +211,7 @@ public final class ShardingTableProcessor implements ShardingProcessor {
                 new ShardingParams<Object>(condition, orgTableName, colName);
         shardingTableStrategy.shardingBefore(objectShardingParams);
         String shardingTable = shardingTableStrategy.shardingExactly(objectShardingParams);
+        shardingTableStrategy.shardingAfter(Lists.newArrayList(shardingTable));
         Assert.isTrue(shardingTable != null, "sharding table name is null");
         Result result = getResultForInsertAll(orgConditionContext, orgTableName, insertAllColValueCondition);
         result.shardingCondition.shardingTableName(shardingTable);

@@ -27,11 +27,10 @@ public class ShardingUserTableMonthStrategy extends ShardingTableMonthStrategy {
     volatile static Connection connection;
 
     @Override
-    public void shardingBefore(ShardingParams<Date> shardingParams) {
+    public void shardingAfter(List<String> shardingTables) {
         if (connection != null) {
             try {
-                Set<String> tables = shardingRange(shardingParams);
-                for (String tableName : tables) {
+                for (String tableName : shardingTables) {
                     connection.createStatement().execute(String.format(sql, tableName));
                 }
             }catch (Exception e) {

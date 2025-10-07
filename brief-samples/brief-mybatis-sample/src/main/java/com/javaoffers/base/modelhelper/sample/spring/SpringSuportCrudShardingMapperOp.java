@@ -71,7 +71,7 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
         List<ShardingUser> exs = this.shardingUserMapper.select()
                 .colAll()
                 .where()
-                .in(ShardingUser::getBirthday, list)
+                .in(ShardingUser::getBirthdayMonth, list)
                 .exs();
         print(exs);
 

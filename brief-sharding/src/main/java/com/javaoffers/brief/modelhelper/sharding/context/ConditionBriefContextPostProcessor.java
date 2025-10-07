@@ -104,10 +104,13 @@ public class ConditionBriefContextPostProcessor implements BriefContextPostProce
                 if(colNameWithWhere == null){
                     return true;
                 }
-                int c = colNameWithWhere.indexOf(".") + 1;
-                if(!colName.equalsIgnoreCase(colNameWithWhere.substring(c, colNameWithWhere.length()))){
-                    return true;
+                if(!colName.equals(colNameWithWhere)){
+                    int c = colNameWithWhere.indexOf(".") + 1;
+                    if(!colName.equalsIgnoreCase(colNameWithWhere.substring(c, colNameWithWhere.length()))){
+                        return true;
+                    }
                 }
+
                 ShardingStrategyContext context = new ShardingStrategyContext();
                 context.setConditionContext(conditionContext);
                 context.setCondition(whereCondition);

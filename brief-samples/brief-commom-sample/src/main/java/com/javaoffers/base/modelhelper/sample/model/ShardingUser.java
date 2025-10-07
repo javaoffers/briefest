@@ -4,6 +4,8 @@ import com.javaoffers.base.modelhelper.sample.sharding.ShardingUserTableMonthStr
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import com.javaoffers.brief.modelhelper.anno.BaseUnique;
 
+import com.javaoffers.brief.modelhelper.anno.ColName;
+import com.javaoffers.brief.modelhelper.anno.fun.params.Left;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingStrategy;
 import com.javaoffers.brief.modelhelper.sharding.derive.ShardingTableMonthStrategy;
 import lombok.Data;
@@ -21,4 +23,9 @@ public class ShardingUser {
 
     @ShardingStrategy(ShardingUserTableMonthStrategy.class)
     private Date birthday;
+
+    @ShardingStrategy(ShardingUserTableMonthStrategy.class)
+    @ColName("birthday")
+    @Left(10)
+    private Date birthdayMonth;
 }

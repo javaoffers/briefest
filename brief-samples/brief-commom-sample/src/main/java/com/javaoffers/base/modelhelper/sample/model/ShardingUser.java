@@ -24,8 +24,4 @@ public class ShardingUser {
     @ShardingStrategy(ShardingUserTableMonthStrategy.class)
     private Date birthday;
 
-    @ShardingStrategy(ShardingUserTableMonthStrategy.class)
-    @ColName("birthday")
-    @Left(10)
-    private Date birthdayMonth;
 }

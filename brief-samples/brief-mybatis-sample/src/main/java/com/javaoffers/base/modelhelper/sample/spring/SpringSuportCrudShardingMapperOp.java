@@ -5,6 +5,7 @@ import com.javaoffers.base.modelhelper.sample.model.ShardingUser;
 import com.javaoffers.base.modelhelper.sample.sharding.ShardingUserTableMonthStrategy;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.utils.Lists;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.apache.commons.lang3.time.DateUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.text.ParseException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -57,25 +61,48 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
         }
     }
 
-    private void testAll() {
-//        testShardingInsertBatch();
-//        testShardingInsert();
-        testShardingQuery();
+    private void testAll() throws Exception {
+        List<Date> dates = testShardingInsertBatch();
+        testShardingInsert();
+        testShardingQuery(dates);
+        testShardingDelete(dates);
     }
 
-    private void testShardingQuery() {
-        ArrayList<Date> list = Lists.newArrayList();
-        for (int i = 0; i < 10; i++) {
-            list.add(DateUtils.addDays(new Date(), random()));
-        }
+    private void testShardingDelete(List<Date> dates) throws Exception {
+        Integer ex = this.shardingUserMapper
+                .delete()
+                .where()
+                .in(ShardingUser::getBirthday, dates)
+                .ex();
+        print(ex);
+    }
+
+    private void testShardingQuery(List<Date> list) throws Exception {
         List<ShardingUser> exs = this.shardingUserMapper.select()
                 .colAll()
                 .where()
-                .in(ShardingUser::getBirthdayMonth, list)
+                .in(ShardingUser::getBirthday, list)
                 .exs();
         print(exs);
 
 
+        List<ShardingUser> userList = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, list)
+                .limitPage(1, 5)
+                .exs();
+        print(userList);
+
+        ArrayList<Date> dates = new ArrayList<>();
+        dates.add(list.get(0));
+        userList = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, dates)
+                .limitPage(1, 5)
+                .exs();
+        print(userList);
     }
 
     public void testShardingInsert(){
@@ -106,16 +133,22 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
                 .ex();
     }
 
-    public void testShardingInsertBatch(){
+    public List<Date> testShardingInsertBatch(){
         ShardingUser shardingUser = new ShardingUser();
         ArrayList<ShardingUser> list = Lists.newArrayList();
+        List<Date> dates = Lists.newArrayList();
         for(int i=0;i<10;i++){
             shardingUser = new ShardingUser();
             shardingUser.setName("name:"+1);
-            shardingUser.setBirthday(DateUtils.addDays(new Date(), random()));
+            Date date = DateUtils.addDays(new Date(), random());
+            date.setTime((date.getTime() / 1000) * 1000); // 清除毫秒
+            dates.add(date);
+            shardingUser.setBirthday(date);
             list.add(shardingUser);
         }
         List<Id> exs = shardingUserMapper.insert().colAll(list).exs();
+        print(exs);
+        return dates;
     }
 
     public static int random(){

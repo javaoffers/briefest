@@ -72,7 +72,7 @@ public class ShardingSample {
     public void testShardingSampleGt(){
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
                 .gtEq(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31))
-//                .ltEq(ShardingUser::getBirthday,  new Date()) //重复分片会自动报错
+                .ltEq(ShardingUser::getBirthday,  new Date()) //重复分片会自动报错
                 .exs();
         System.out.println(exs.size());
     }

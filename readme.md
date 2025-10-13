@@ -1106,7 +1106,7 @@ for(int i=0;i<10;i++){
     shardingUser = new ShardingUser();
     shardingUser.setName("name:"+1);
     Date date = DateUtils.addDays(new Date(), random());
-    date.setTime((date.getTime() / 1000) * 1000); // 清除毫秒
+    date.setTime((date.getTime() / 1000) * 1000); // clear milliseconds
     dates.add(date);
     shardingUser.setBirthday(date);
     list.add(shardingUser);

@@ -90,6 +90,7 @@ Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enh
   - Support json field.
   - Support automatic generation of unique keys
   - Big data streaming 
+  - Support sharding table
 
   
 - Project of actual combat, which has been used internally. The effect is very good.

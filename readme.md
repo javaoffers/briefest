@@ -1048,7 +1048,7 @@ Support field desensitization. Only need a model class with @ Email can Blur ann
 Support for sharding table strategy
 </p>
 
-```
+```java
 
   <!--brief-sharding maven-->
    <dependency>
@@ -1060,7 +1060,7 @@ Support for sharding table strategy
 ```
 
 ##### Define a sharding strategy
-```
+```java
 public class ShardingTableMonthStrategy implements ShardingTableStrategy<Date> {
 
     @Override

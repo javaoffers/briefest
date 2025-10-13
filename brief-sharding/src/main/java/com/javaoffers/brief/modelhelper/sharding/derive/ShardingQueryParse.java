@@ -8,6 +8,7 @@ import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.HeadEnum;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfo;
 import com.javaoffers.brief.modelhelper.utils.ModelFieldInfoPosition;
 import com.javaoffers.brief.modelhelper.utils.ModelInfo;
@@ -16,6 +17,7 @@ import com.javaoffers.brief.modelhelper.utils.TableInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.function.Consumer;
 
@@ -56,7 +58,10 @@ public class ShardingQueryParse {
 
     private static List doQuery(JqlExecutorChain chain, SmartSQLInfo moreSQLInfo) {
         HeadCondition headCondition = moreSQLInfo.getHeadCondition();
-        LimitWordCondition limitWordCondition = (LimitWordCondition)headCondition.getConditionMap().get(HeadEnum.LIMIT);
+        Map<HeadEnum, Object> conditionMap = headCondition.getConditionMap();
+        LimitWordCondition limitWordCondition = (LimitWordCondition)conditionMap.get(HeadEnum.LIMIT);
+        List<OrderWordCondition> orderWordConditionList = (List<OrderWordCondition>)conditionMap.get(HeadEnum.ORDERS);
+        //TODO parse order
         List<CrudSQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
         JqlMetaInfo jqlMetaInfo = chain.getJqlMetaInfo();
         TableInfo tableInfo = chain.getTableInfo();
@@ -64,6 +69,9 @@ public class ShardingQueryParse {
         List<ModelFieldInfoPosition> uniqueCol = modelInfo.getUniqueCol(new ArrayList<>(tableInfo.getPrimaryColNames().keySet()));
         //这里先按照主键排序，后续再支持order by
         PriorityQueue<Object> list = new PriorityQueue<>((a,b)->{
+            if(orderWordConditionList != null && orderWordConditionList.size()>0){
+
+            }
             for (int i = 0; i < uniqueCol.size(); i++) {
                 ModelFieldInfo modelFieldInfo = uniqueCol.get(i).getModelFieldInfo();
                 Object primaryKeyA = modelFieldInfo.getGetter().getter(a);

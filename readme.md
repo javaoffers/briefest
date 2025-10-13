@@ -1112,14 +1112,14 @@ for(int i=0;i<10;i++){
     list.add(shardingUser);
 }
 List<Id> exs = shardingUserMapper.insert().colAll(list).exs();
-
-// sql print 
+```
+```sql
 insert into sharding_user_2025_08 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
 insert into sharding_user_2025_10 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
 insert into sharding_user_2025_09 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
 insert into sharding_user_2025_07 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
-        
 ```
+
 
 ###### query sharding
 
@@ -1130,13 +1130,15 @@ List<ShardingUser> exs = this.shardingUserMapper.select()
                 .in(ShardingUser::getBirthday, list)
                 .exs();
         print(exs);
-//sql print
+```
+```sql
 select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_08 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
 select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_10 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
 select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_07 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
 select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_09 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
-        
+ 
 ```
+
 <p>
 Update and delete are the same as above.
 </p>

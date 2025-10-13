@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.crud.LeftHavingPendingFun;
 import com.javaoffers.brief.modelhelper.fun.crud.OrderFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -94,11 +95,13 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     @Override
     @SafeVarargs
     public final THIS orderA(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return (THIS) this;
     }
 
@@ -114,11 +117,13 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
     @Override
     @SafeVarargs
     public final  THIS orderD(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return (THIS) this;
     }
 
@@ -133,11 +138,13 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     @SafeVarargs
     public final  THIS orderA(C2... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return (THIS) this;
     }
 
@@ -151,11 +158,13 @@ public class LeftHavingPendingFunImpl<M, M2, C extends GetterFun<M,?>, C2 extend
 
     @SafeVarargs
     public final  THIS orderD(C2... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return (THIS) this;
     }
 

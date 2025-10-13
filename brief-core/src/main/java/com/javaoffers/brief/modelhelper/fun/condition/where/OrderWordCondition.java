@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.fun.condition.where;
 
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.IgnoreAndOrWordCondition;
 
@@ -20,8 +21,11 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
 
     private String sql;
 
-    public OrderWordCondition(ConditionTag tag, List<String> cs, boolean ascOrDesc) {
+    private List<GetterFun> getterFuns; // order fun
+
+    public OrderWordCondition(ConditionTag tag, List<GetterFun> getterFuns, List<String> cs, boolean ascOrDesc) {
         this.tag = tag;
+        this.getterFuns = getterFuns;
         this.cs = cs;
         this.ascOrDesc = ascOrDesc;
         this.cleanAndOrTag();

@@ -21,6 +21,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -766,11 +767,13 @@ public class LeftHavingFunImpl<M, M2,
     @Override
     @SafeVarargs
     public final  R orderA(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, true));
         return (R) this;
     }
 
@@ -786,11 +789,13 @@ public class LeftHavingFunImpl<M, M2,
     @Override
     @SafeVarargs
     public final  R orderD(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, false));
         return (R) this;
     }
 
@@ -804,11 +809,13 @@ public class LeftHavingFunImpl<M, M2,
     }
     @SafeVarargs
     public final  R orderA(C2... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, true));
         return (R) this;
     }
     @SafeVarargs
@@ -821,11 +828,13 @@ public class LeftHavingFunImpl<M, M2,
 
     @SafeVarargs
     public final  R orderD(C2... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, false));
         return (R) this;
     }
 

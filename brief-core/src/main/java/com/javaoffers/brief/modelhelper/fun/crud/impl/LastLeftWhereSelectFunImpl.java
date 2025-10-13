@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.GroupByWordCondition
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,11 +49,13 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
 
     @SafeVarargs
     public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderA(GGGetterFun<M3, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, true));
         return this;
     }
 
@@ -66,11 +69,13 @@ public class LastLeftWhereSelectFunImpl<M, M2, M3, V> extends LeftWhereSelectFun
 
     @SafeVarargs
     public final LastLeftWhereSelectFunImpl<M, M2, M3, V> orderD(GGGetterFun<M3, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, false));
         return this;
     }
 

@@ -11,6 +11,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.LeftGroupByWordCondi
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,11 +84,13 @@ public class LastLeftHavingPendingFunImpl<
     }
     @SafeVarargs
     public final LastLeftHavingPendingFunImpl<M, M2, M3, C, C2, C3, V, V2> orderD(C3... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos, false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos, false));
         return this;
     }
     @SafeVarargs

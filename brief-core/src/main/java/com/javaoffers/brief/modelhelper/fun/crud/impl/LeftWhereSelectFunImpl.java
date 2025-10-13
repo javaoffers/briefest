@@ -107,11 +107,13 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     @Override
     @SafeVarargs
     public final  R orderA(GetterFun<M, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return (R) this;
     }
 
@@ -127,11 +129,13 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
     @Override
     @SafeVarargs
     public final  R orderD(GetterFun<M, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return (R) this;
     }
 
@@ -146,11 +150,13 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
 
     @SafeVarargs
     public final  R orderA(GGetterFun<M2, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return (R) this;
     }
 
@@ -164,11 +170,13 @@ public class LeftWhereSelectFunImpl<M, M2, V , R extends LeftWhereSelectFunImpl<
 
     @SafeVarargs
     public final  R orderD(GGetterFun<M2, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return (R) this;
     }
 

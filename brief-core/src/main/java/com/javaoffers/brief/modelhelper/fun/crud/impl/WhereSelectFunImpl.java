@@ -3,6 +3,7 @@ package com.javaoffers.brief.modelhelper.fun.crud.impl;
 import com.javaoffers.brief.modelhelper.core.*;
 import com.javaoffers.brief.modelhelper.fun.Condition;
 import com.javaoffers.brief.modelhelper.fun.ConditionTag;
+import com.javaoffers.brief.modelhelper.fun.GGetterFun;
 import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.mark.WhereConditionMark;
@@ -22,6 +23,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.WhereOnCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.WhereSelectFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -408,11 +410,13 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     @SafeVarargs
     public final WhereSelectFunImpl<M, V> orderA(GetterFun<M, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return this;
     }
 
@@ -428,11 +432,13 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     @Override
     @SafeVarargs
     public final WhereSelectFunImpl<M, V> orderD(GetterFun<M, V>... getterFuns) {
+        List<GetterFun> cf = new ArrayList<>(getterFuns.length);
         List<String> clos = Arrays.stream(getterFuns).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return this;
     }
 

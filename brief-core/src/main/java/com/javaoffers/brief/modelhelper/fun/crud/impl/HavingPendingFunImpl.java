@@ -10,6 +10,7 @@ import com.javaoffers.brief.modelhelper.fun.crud.HavingFun;
 import com.javaoffers.brief.modelhelper.fun.crud.HavingPendingFun;
 import com.javaoffers.brief.modelhelper.utils.TableHelper;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,11 +73,13 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
 
     @Override
     public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,true));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,true));
         return this;
     }
 
@@ -90,11 +93,13 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
 
     @Override
     public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(C... cs) {
+        List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
+            cf.add(getterFun);
             return cloName;
         }).collect(Collectors.toList());
-        conditions.add(new OrderWordCondition(ConditionTag.ORDER, clos,false));
+        conditions.add(new OrderWordCondition(ConditionTag.ORDER, cf, clos,false));
         return this;
     }
 

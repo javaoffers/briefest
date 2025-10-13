@@ -46,17 +46,15 @@ public class ShardingQueryParse {
     }
 
     private static Object doStream(JqlExecutorChain chain, SmartSQLInfo moreSQLInfo) {
-        List<CrudSQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
         JqlMetaInfo jqlMetaInfo = chain.getJqlMetaInfo();
-        int num = 0;
-        for (CrudSQLStatement sqlStatement : sqlStatements) {
-            jqlMetaInfo.setSqlStatement(sqlStatement);
-            num += (int)chain.doChain();
-        }
-        return num;
+        Consumer consumer = jqlMetaInfo.getConsumer();
+        jqlMetaInfo.setConsumer(null);
+        List list = doQuery(chain, moreSQLInfo);
+        list.forEach(consumer);
+        return list.size();
     }
 
-    private static Object doQuery(JqlExecutorChain chain, SmartSQLInfo moreSQLInfo) {
+    private static List doQuery(JqlExecutorChain chain, SmartSQLInfo moreSQLInfo) {
         HeadCondition headCondition = moreSQLInfo.getHeadCondition();
         LimitWordCondition limitWordCondition = (LimitWordCondition)headCondition.getConditionMap().get(HeadEnum.LIMIT);
         List<CrudSQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();

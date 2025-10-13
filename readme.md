@@ -1098,7 +1098,7 @@ public class ShardingUser {
 ##### SHARDING TABLE TEST
 
 ###### insert sharding 
-```
+```java
 ShardingUser shardingUser = new ShardingUser();
 ArrayList<ShardingUser> list = Lists.newArrayList();
 List<Date> dates = Lists.newArrayList();
@@ -1123,7 +1123,7 @@ insert into sharding_user_2025_07 ( `name`, `birthday` )  values  ( #{name}, #{b
 
 ###### query sharding
 
-```
+```java
 List<ShardingUser> exs = this.shardingUserMapper.select()
                 .colAll()
                 .where()

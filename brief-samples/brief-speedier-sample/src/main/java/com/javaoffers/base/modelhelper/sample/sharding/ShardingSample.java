@@ -68,11 +68,14 @@ public class ShardingSample {
         System.out.println(exs.size());
     }
 
+    /**
+     * gt and lt can be between xx and xx
+     */
     @Test
     public void testShardingSampleGt(){
         List<ShardingUser> exs = userBriefMapper.select().colAll().where()
                 .gtEq(ShardingUser::getBirthday,  DateUtils.addDays(new Date(), -31))
-                .ltEq(ShardingUser::getBirthday,  new Date()) //重复分片会自动报错
+//                .ltEq(ShardingUser::getBirthday,  new Date()) //重复分片会自动报错
                 .exs();
         System.out.println(exs.size());
     }

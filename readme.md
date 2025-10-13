@@ -1043,7 +1043,7 @@ Support field desensitization. Only need a model class with @ Email can Blur ann
    @EmailBlur
    private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
 ```
-#### HIGH sharding
+## HIGH sharding
 <p>
 Support for sharding table strategy
 </p>
@@ -1059,7 +1059,7 @@ Support for sharding table strategy
 
 ```
 
-##### Define a sharding strategy
+### Define a sharding strategy
 ```java
 public class ShardingTableMonthStrategy implements ShardingTableStrategy<Date> {
 

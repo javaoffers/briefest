@@ -1043,6 +1043,104 @@ Support field desensitization. Only need a model class with @ Email can Blur ann
    @EmailBlur
    private String email; // 12345678@outlook.com encrypted data is 12***678@outlook.com
 ```
+#### HIGH sharding
+<p>
+Support for sharding table strategy
+</p>
+
+```
+
+  <!--brief-sharding maven-->
+   <dependency>
+       <groupId>com.javaoffers</groupId>
+       <artifactId>brief-sharding</artifactId>
+       <version>${brief.version}</version>
+   </dependency>
+
+```
+
+##### Define a sharding strategy
+```
+public class ShardingTableMonthStrategy implements ShardingTableStrategy<Date> {
+
+    @Override
+    public String shardingExactly(ShardingParams<Date> shardingParams) {
+        Date valueOne = shardingParams.getValueOne();
+        return shardingParams.getTableName()+"_"+DateFormatUtils.format(valueOne, "yyyy_MM");
+    }
+
+    @Override
+    public Set<String> shardingRange(ShardingParams<Date> shardingParams) {
+        Set<String> sets = new LinkedHashSet<String>();
+        List<Date> valueList = shardingParams.getValueList();
+        for (int i = 0; i < valueList.size(); i++) {
+            String st = shardingParams.getTableName()+"_"+DateFormatUtils.format(valueList.get(i), "yyyy_MM");
+            sets.add(st);
+        }
+        return sets;
+    }
+}
+
+@BaseModel("sharding_user")
+@Data
+public class ShardingUser {
+
+    @BaseUnique
+    private Long id;
+
+    private String name;
+
+    @ShardingStrategy(ShardingTableMonthStrategy.class)
+    private Date birthday;
+
+}
+```
+##### SHARDING TABLE TEST
+
+###### insert sharding 
+```
+ShardingUser shardingUser = new ShardingUser();
+ArrayList<ShardingUser> list = Lists.newArrayList();
+List<Date> dates = Lists.newArrayList();
+for(int i=0;i<10;i++){
+    shardingUser = new ShardingUser();
+    shardingUser.setName("name:"+1);
+    Date date = DateUtils.addDays(new Date(), random());
+    date.setTime((date.getTime() / 1000) * 1000); // 清除毫秒
+    dates.add(date);
+    shardingUser.setBirthday(date);
+    list.add(shardingUser);
+}
+List<Id> exs = shardingUserMapper.insert().colAll(list).exs();
+
+// sql print 
+insert into sharding_user_2025_08 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
+insert into sharding_user_2025_10 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
+insert into sharding_user_2025_09 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
+insert into sharding_user_2025_07 ( `name`, `birthday` )  values  ( #{name}, #{birthday} ) 
+        
+```
+
+###### query sharding
+
+```
+List<ShardingUser> exs = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, list)
+                .exs();
+        print(exs);
+//sql print
+select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_08 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
+select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_10 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
+select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_07 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
+select sharding_user.id as sharding_user__id, sharding_user.name as sharding_user__name, sharding_user.birthday as sharding_user__birthday  from  sharding_user_2025_09 sharding_user   where  1=1  and sharding_user.birthday in  (#{0},#{1},#{2},#{3},#{4},#{5},#{6},#{7},#{8},#{9}) 
+        
+```
+<p>
+Update and delete are the same as above.
+</p>
+
 
 #### Code contributions are welcome
 <p>

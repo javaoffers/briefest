@@ -52,4 +52,12 @@ public class OrderWordCondition extends WhereOnCondition<String> implements Igno
         this.tag = ConditionTag.COMMA;
     }
 
+    public List<GetterFun> getGetterFunList() {
+        return getterFuns;
+    }
+
+    public boolean asc() {
+        return ascOrDesc;
+    }
+
 }

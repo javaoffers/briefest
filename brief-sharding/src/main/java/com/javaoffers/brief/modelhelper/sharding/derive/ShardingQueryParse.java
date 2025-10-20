@@ -5,6 +5,7 @@ import com.javaoffers.brief.modelhelper.core.CrudSQLStatement;
 import com.javaoffers.brief.modelhelper.core.SmartSQLInfo;
 import com.javaoffers.brief.modelhelper.filter.JqlExecutorChain;
 import com.javaoffers.brief.modelhelper.filter.JqlMetaInfo;
+import com.javaoffers.brief.modelhelper.fun.GetterFun;
 import com.javaoffers.brief.modelhelper.fun.HeadCondition;
 import com.javaoffers.brief.modelhelper.fun.HeadEnum;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
@@ -62,6 +63,7 @@ public class ShardingQueryParse {
         LimitWordCondition limitWordCondition = (LimitWordCondition)conditionMap.get(HeadEnum.LIMIT);
         List<OrderWordCondition> orderWordConditionList = (List<OrderWordCondition>)conditionMap.get(HeadEnum.ORDERS);
         //TODO parse order
+        List<ShardingOrder> shardingOrderList = parseShardingOrder(orderWordConditionList);
         List<CrudSQLStatement> sqlStatements = moreSQLInfo.getSqlStatements();
         JqlMetaInfo jqlMetaInfo = chain.getJqlMetaInfo();
         TableInfo tableInfo = chain.getTableInfo();
@@ -69,9 +71,15 @@ public class ShardingQueryParse {
         List<ModelFieldInfoPosition> uniqueCol = modelInfo.getUniqueCol(new ArrayList<>(tableInfo.getPrimaryColNames().keySet()));
         //这里先按照主键排序，后续再支持order by
         PriorityQueue<Object> list = new PriorityQueue<>((a,b)->{
-            if(orderWordConditionList != null && orderWordConditionList.size()>0){
 
+            //排序.
+            for (ShardingOrder shardingOrder : shardingOrderList) {
+                int c = 0;
+                if((c=shardingOrder.compareTo(a,b)) != 0){
+                    return c;
+                }
             }
+
             for (int i = 0; i < uniqueCol.size(); i++) {
                 ModelFieldInfo modelFieldInfo = uniqueCol.get(i).getModelFieldInfo();
                 Object primaryKeyA = modelFieldInfo.getGetter().getter(a);
@@ -103,6 +111,21 @@ public class ShardingQueryParse {
 
         //分页
         return limit(limitWordCondition, list);
+    }
+
+    private static List<ShardingOrder> parseShardingOrder(List<OrderWordCondition> orderWordConditionList) {
+        List<ShardingOrder> shardingOrderList = new ArrayList<>();
+        if(orderWordConditionList == null){
+            return shardingOrderList;
+        }
+        for (OrderWordCondition orderWordCondition : orderWordConditionList) {
+            List<GetterFun> getterFunList = orderWordCondition.getGetterFunList();
+            for (GetterFun getterFun : getterFunList) {
+                ShardingOrder shardingOrder = new ShardingOrder(orderWordCondition.asc(), getterFun);
+                shardingOrderList.add(shardingOrder);
+            }
+        }
+        return shardingOrderList;
     }
 
     //分页

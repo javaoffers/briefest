@@ -94,6 +94,24 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
                 .exs();
         print(userList);
 
+        userList = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, list)
+                .orderD(ShardingUser::getBirthday)
+                .limitPage(1, 5)
+                .exs();
+        print(userList);
+
+        userList = this.shardingUserMapper.select()
+                .colAll()
+                .where()
+                .in(ShardingUser::getBirthday, list)
+                .orderD(ShardingUser::getBirthday, ShardingUser::getName)
+                .limitPage(1, 5)
+                .exs();
+        print(userList);
+
         ArrayList<Date> dates = new ArrayList<>();
         dates.add(list.get(0));
         userList = this.shardingUserMapper.select()
@@ -103,13 +121,14 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
                 .limitPage(1, 5)
                 .exs();
         print(userList);
+
     }
 
     public void testShardingInsert(){
         ShardingUser shardingUser = new ShardingUser();
         Date date = DateUtils.addDays(new Date(), random());
         date.setTime((date.getTime() / 1000) * 1000); // 清除毫秒
-        shardingUser.setName("name:"+1);
+        shardingUser.setName("name:"+Math.random() * 1000);
         shardingUser.setBirthday(date);
         Id save = this.shardingUserMapper.general().save(shardingUser);
         testUpdate(date);
@@ -139,7 +158,7 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
         List<Date> dates = Lists.newArrayList();
         for(int i=0;i<10;i++){
             shardingUser = new ShardingUser();
-            shardingUser.setName("name:"+1);
+            shardingUser.setName("name:"+i);
             Date date = DateUtils.addDays(new Date(), random());
             date.setTime((date.getTime() / 1000) * 1000); // 清除毫秒
             dates.add(date);

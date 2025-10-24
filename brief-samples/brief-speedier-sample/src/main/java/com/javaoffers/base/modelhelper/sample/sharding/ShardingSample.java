@@ -180,6 +180,13 @@ public class ShardingSample {
     }
 
     @Test
+    public void testShardingGen(){
+        ShardingUser user = new ShardingUser();
+        user.setBirthday(DateUtils.addDays(new Date(),random()));
+        List<ShardingUser> query = this.userBriefMapper.general().query(user);
+    }
+
+    @Test
     public void testShardingAll(){
         testShardingSampleEq();
         testShardingSampleIn();

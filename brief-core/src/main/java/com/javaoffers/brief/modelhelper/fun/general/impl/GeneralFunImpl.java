@@ -567,6 +567,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
                 HashMap<String, Object> param = new HashMap<>();
                 String newColNameTag = getNewColNameTag();
                 param.putIfAbsent(newColNameTag, colValue);
+
                 where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
             });
         }

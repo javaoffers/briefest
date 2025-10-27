@@ -65,7 +65,19 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
         List<Date> dates = testShardingInsertBatch();
         testShardingInsert();
         testShardingQuery(dates);
+        testGeneral(dates);
         testShardingDelete(dates);
+    }
+
+    private void testGeneral(List<Date> dates){
+        ShardingUser user = new ShardingUser();
+        user.setBirthday(new Date());
+        List<ShardingUser> query = this.shardingUserMapper.general().query(user);
+        print(query);
+
+        user.setBirthday(dates.get(0));
+        query = this.shardingUserMapper.general().query(user);
+        print(query);
     }
 
     private void testShardingDelete(List<Date> dates) throws Exception {

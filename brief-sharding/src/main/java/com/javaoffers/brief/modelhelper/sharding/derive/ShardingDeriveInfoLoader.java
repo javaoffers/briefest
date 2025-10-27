@@ -1,8 +1,8 @@
 package com.javaoffers.brief.modelhelper.sharding.derive;
 
 import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.ShardingStrategyMark;
 import com.javaoffers.brief.modelhelper.context.DeriveInfoLoader;
-import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.sharding.exception.ShardingConfigException;
 import com.javaoffers.brief.modelhelper.utils.TableInfo;
 

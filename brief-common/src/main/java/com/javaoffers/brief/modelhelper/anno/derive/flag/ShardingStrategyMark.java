@@ -1,6 +1,4 @@
-package com.javaoffers.brief.modelhelper.sharding.derive;
-
-import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveMark;
+package com.javaoffers.brief.modelhelper.anno.derive.flag;
 
 /**
  * desc.

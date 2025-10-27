@@ -572,6 +572,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private void parseWhereById(WhereModifyFun where, AtomicBoolean status, T model) {
         Map<Getter, Object> coNameAndColValue = ColNameAndColValueUtils.parseUniqueCoGetterAndUniqueColValue(model, mClass);
+
         if(MapUtils.isNotEmpty(coNameAndColValue)){
             status.set(true);
             coNameAndColValue.forEach((getter, uniqueColValue)->{

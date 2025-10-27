@@ -1,5 +1,7 @@
 package com.javaoffers.brief.modelhelper.utils;
 
+import com.javaoffers.brief.modelhelper.anno.derive.flag.DeriveInfo;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.ShardingStrategyMark;
 import com.javaoffers.brief.modelhelper.exception.GetColValueException;
 
 import java.lang.reflect.Field;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -64,7 +67,14 @@ public class ColNameAndColValueUtils {
         ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
-        ArrayList<String> colName = new ArrayList<>(primaryColNames.keySet());
+        Set<String> colNames = new HashSet<>(primaryColNames.keySet());
+        //parse sharding
+        //tip:  value of sharding col name that should not be modified. Will as where condtion
+        DeriveInfo deriveColName = tableInfo.getDeriveColName(ShardingStrategyMark.SHARDING_TABLE_STRATEGY);
+        if(deriveColName != null){
+            colNames.add(deriveColName.getColName());
+        }
+        ArrayList<String> colName = new ArrayList<>(colNames);
         List<ModelFieldInfoPosition> onesCol = modelInfo.getOnesCol(colName);
         onesCol.forEach(modelFieldInfoPosition -> {
             Getter getter = modelFieldInfoPosition.getModelFieldInfo().getGetter();

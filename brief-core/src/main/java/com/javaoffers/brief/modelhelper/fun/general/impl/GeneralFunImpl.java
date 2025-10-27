@@ -560,29 +560,22 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private AtomicBoolean parseWhere(T model, WhereFun where) {
         AtomicBoolean status = new AtomicBoolean(false);
-        Map<String, Object> colNameAndColValue = ColNameAndColValueUtils.parseColNameAndColValue(model, this.mClass);
+        Map<Getter, Object> colNameAndColValue = ColNameAndColValueUtils.parseColGetterAndColValue(model, this.mClass);
         if(MapUtils.isNotEmpty(colNameAndColValue)){
             status.set(true);
-            colNameAndColValue.forEach((colName, colValue)->{
-                HashMap<String, Object> param = new HashMap<>();
-                String newColNameTag = getNewColNameTag();
-                param.putIfAbsent(newColNameTag, colValue);
-
-                where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param);
+            colNameAndColValue.forEach((getter, colValue)->{
+                where.in(getter, colValue);
             });
         }
         return status;
     }
 
-    private void parseWhereById(WhereModifyFun<T, V> where, AtomicBoolean status, T model) {
-        Map<String, Object> coNameAndColValue = ColNameAndColValueUtils.parseUniqueCoNameAndUniqueColValue(model, mClass);
+    private void parseWhereById(WhereModifyFun where, AtomicBoolean status, T model) {
+        Map<Getter, Object> coNameAndColValue = ColNameAndColValueUtils.parseUniqueCoGetterAndUniqueColValue(model, mClass);
         if(MapUtils.isNotEmpty(coNameAndColValue)){
             status.set(true);
-            coNameAndColValue.forEach((uniqueColName, uniqueColValue)->{
-                Map<String, Object> param = new HashMap<>();
-                String newColNameTag = getNewColNameTag();
-                param.put(newColNameTag, uniqueColValue);
-                where.condSQL(uniqueColName + " in ( #{" + newColNameTag + "} ) ", param);
+            coNameAndColValue.forEach((getter, uniqueColValue)->{
+                where.in(getter, uniqueColValue);
             });
         }
     }

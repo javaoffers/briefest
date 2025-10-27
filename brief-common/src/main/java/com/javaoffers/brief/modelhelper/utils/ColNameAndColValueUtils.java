@@ -3,7 +3,9 @@ package com.javaoffers.brief.modelhelper.utils;
 import com.javaoffers.brief.modelhelper.exception.GetColValueException;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -19,6 +21,7 @@ public class ColNameAndColValueUtils {
      * @param modelClass The real model class
      * @return key: colName of uniqueKey, value : value of colName
      */
+    @Deprecated
     public static <T> Map<String, Object> parseUniqueCoNameAndUniqueColValue(T model, Class modelClass) {
         //key: colName, value: colValue
         HashMap<String, Object> colNameAndColValues = new HashMap<>();
@@ -49,6 +52,30 @@ public class ColNameAndColValueUtils {
         return colNameAndColValues;
     }
 
+    /**
+     *  replace parseColNameAndColValue
+     * @param model
+     * @param modelClass
+     * @return
+     * @param <T>
+     */
+    public static <T> Map<Getter, Object> parseUniqueCoGetterAndUniqueColValue(T model, Class modelClass) {
+        HashMap<Getter, Object> result = new HashMap<>();
+        ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
+        TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
+        Map<String, ColumnInfo> primaryColNames = tableInfo.getPrimaryColNames();
+        ArrayList<String> colName = new ArrayList<>(primaryColNames.keySet());
+        List<ModelFieldInfoPosition> onesCol = modelInfo.getOnesCol(colName);
+        onesCol.forEach(modelFieldInfoPosition -> {
+            Getter getter = modelFieldInfoPosition.getModelFieldInfo().getGetter();
+            Object getterValue = getter.getter(model);
+            if (getterValue!=null) {
+                result.put(getter, getterValue);
+            }
+        });
+        return result;
+    }
+
 
     /**
      * parse ColName and ColValue for model. fill where condition
@@ -56,6 +83,7 @@ public class ColNameAndColValueUtils {
      * @param modelClass The real model class
      * @return  ColName and ColValue
      */
+    @Deprecated
     public static <T> Map<String, Object> parseColNameAndColValue(T model, Class modelClass) {
         TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
         Map<String, List<Field>> colNameOfModelField = tableInfo.getColNameAndFieldOfModel();
@@ -81,5 +109,31 @@ public class ColNameAndColValueUtils {
             });
         }
         return colNameAndColValues;
+    }
+
+    /**
+     * replace parseColNameAndColValue
+     * @param model
+     * @param modelClass
+     * @return
+     * @param <T>
+     */
+    public static <T> Map<Getter, Object> parseColGetterAndColValue(T model, Class modelClass) {
+        HashMap<Getter, Object> result = new HashMap<>();
+        ModelInfo modelInfo = TableHelper.getModelInfo(modelClass);
+        TableInfo tableInfo = TableHelper.getTableInfo(modelClass);
+        Map<String, String> fieldNameColNameOfModel = tableInfo.getFieldNameColNameOfModel();
+        HashSet<String> colNames = new HashSet<>();
+        colNames.addAll(fieldNameColNameOfModel.keySet());
+        ArrayList<String> colNameList = new ArrayList<>(colNames);
+        List<ModelFieldInfoPosition> onesCol = modelInfo.getOnesCol(colNameList);
+        onesCol.forEach(modelFieldInfoPosition -> {
+            Getter getter = modelFieldInfoPosition.getModelFieldInfo().getGetter();
+            Object getterValue = getter.getter(model);
+            if (getterValue != null) {
+                result.put(getter, getterValue);
+            }
+        });
+        return result;
     }
 }

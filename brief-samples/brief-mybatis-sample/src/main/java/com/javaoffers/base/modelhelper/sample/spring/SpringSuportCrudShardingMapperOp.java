@@ -22,6 +22,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.javaoffers.base.modelhelper.sample.spring.SpringSuportCrudUserMapperSelect.print;
@@ -86,6 +88,11 @@ public class SpringSuportCrudShardingMapperOp implements InitializingBean {
 
         ShardingUser user1 = this.shardingUserMapper.general().query(user).get(0);
         print(user1);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put("birthday", user1.getBirthday());
+        List<ShardingUser> shardingUsers = this.shardingUserMapper.general().queryByParam(params);
+        print(shardingUsers);
 
     }
 

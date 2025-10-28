@@ -168,6 +168,14 @@ public class ModelInfo<T> {
 
     }
 
+    public ModelFieldInfoPosition peekOneCol(String colName) {
+        ModelFieldInfo modelFieldInfo = onesColNameMap.get(colName);
+        if (modelFieldInfo != null && !modelFieldInfo.isModelClass()) {
+            return new ModelFieldInfoPosition(0, modelFieldInfo);
+        }
+        return null;
+    }
+
     public List<ModelFieldInfo> getArrays(List<String> colNames) {
         return arraysModels.stream().filter(
                 filter(colNames)

@@ -64,7 +64,11 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private Field primaryField;
 
+    private Getter primaryGetter;
+
     private TableInfo tableInfo;
+
+    private ModelInfo<T> modelInfo;
 
     public GeneralFunImpl(Class<T> mClass, SelectFunImpl<T> selectFun,
                           InsertFunImpl<T> insertFun, UpdateFunImpl<T, C, V> updateFun,
@@ -74,8 +78,9 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.insertFun = insertFun;
         this.updateFun = updateFun;
         this.deleteFun = deleteFun;
-        this.tableName = TableHelper.getTableName(mClass);
         this.tableInfo = TableHelper.getTableInfo(mClass);
+        this.tableName = this.tableInfo.getTableName();
+
         this.nativeFun = nativeFun;
         Collection<Field> fields = this.tableInfo.getFieldNameAndField().values();
         for(Field field : fields) {
@@ -91,6 +96,10 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
         this.primaryColNmae = primaryColNames.keySet().iterator().next();
         this.primaryField = this.tableInfo.getColNameAndFieldOfModel().get(this.primaryColNmae).get(0);
+        this.modelInfo = TableHelper.getModelInfo(mClass);
+        ArrayList<String> uniqColNames = new ArrayList<>();
+        uniqColNames.addAll(primaryColNames.keySet());
+        this.primaryGetter = modelInfo.getUniqueCol(uniqColNames).get(0).getModelFieldInfo().getGetter();
     }
 
     @Override
@@ -238,11 +247,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return 0;
         }
         DeleteWhereFun<T, GetterFun<T, Object>, Object> where = deleteFun.where();
-        Map<String, Object> param = new HashMap<>();
-        String newColNameTag = getNewColNameTag();
-        param.putIfAbsent(newColNameTag, ids);
-        where.condSQL(this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
-
+        where.in(primaryGetter, ids);
         return where.ex();
     }
 
@@ -397,10 +402,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return Collections.EMPTY_LIST;
         }
         WhereSelectFun<T, Object> where = this.selectFun.colAll().where();
-        HashMap<String, Object> param = new HashMap<>();
-        String newColNameTag = getNewColNameTag();
-        param.put(newColNameTag, ids);
-        where.condSQL(this.tableName+"."+this.primaryColNmae + " in ( #{" + newColNameTag + "} ) ", param);
+        where.in(primaryGetter, ids);
         List<T> exs = where.exs();
         if (exs != null && exs.size() > 0) {
             return exs;
@@ -529,10 +531,16 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             WhereSelectFun<T, Object> where = selectFun.colAll().where();
             AtomicBoolean status = new AtomicBoolean(false);
             param.forEach((colName, value) -> {
-                Map<String, Object> param_ = new HashMap<>();
-                String newColNameTag = getNewColNameTag();
-                param_.put(newColNameTag, value);
-                where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param_);
+                ModelFieldInfoPosition oneCol = this.modelInfo.peekOneCol(colName);
+                if(oneCol!=null) {
+                    ModelFieldInfo modelFieldInfo = oneCol.getModelFieldInfo();
+                    where.in(modelFieldInfo.getGetter(), value);
+                }else{
+                    Map<String, Object> param_ = new HashMap<>();
+                    String newColNameTag = getNewColNameTag();
+                    param_.put(newColNameTag, value);
+                    where.condSQL(colName + " in ( #{" + newColNameTag + "} ) ", param_);
+                }
                 status.set(true);
             });
             if (status.get()) {
@@ -685,11 +693,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
                 } else {
                     modifyCount = modifyCount + i1;
                 }
-
-
             }
         }
-
         return modifyCount;
     }
 

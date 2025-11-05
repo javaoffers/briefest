@@ -16,6 +16,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.NativeSQLCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
@@ -99,6 +100,34 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     public WhereSelectFunImpl<M, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
         if(condition){
             condSQL(sql, params);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> lastSQL(String sql) {
+        conditions.add(new NativeSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> lastSQL(boolean condition, String sql) {
+        if(condition){
+            lastSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> lastSQL(String sql, Map<String, Object> params) {
+        conditions.add(new NativeSQLCondition(sql,params));
+        return this;
+    }
+
+    @Override
+    public WhereSelectFun<M, V> lastSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            lastSQL(sql, params);
         }
         return this;
     }

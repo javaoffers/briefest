@@ -13,6 +13,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.InCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.NativeSQLCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.LastOnFun;
@@ -121,6 +122,34 @@ public class LastOnFunImpl<M1,M2, M3, C2 extends GetterFun<M2, Object> & Seriali
     public LastOnFun<M1, M2, M3, C2, C3, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
         if(condition){
             condSQL(sql, params);
+        }
+        return this;
+    }
+
+    @Override
+    public LastOnFun<M1, M2, M3, C2, C3, V> lastSQL(String sql) {
+        conditions.add(new NativeSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public LastOnFun<M1, M2, M3, C2, C3, V> lastSQL(boolean condition, String sql) {
+        if(condition){
+            lastSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public LastOnFun<M1, M2, M3, C2, C3, V> lastSQL(String sql, Map<String, Object> params) {
+        conditions.add(new NativeSQLCondition(sql,params));
+        return this;
+    }
+
+    @Override
+    public LastOnFun<M1, M2, M3, C2, C3, V> lastSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            lastSQL(sql, params);
         }
         return this;
     }

@@ -16,6 +16,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.on.OnColumnFunCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.on.OnValueFunCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.NativeSQLCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
 import com.javaoffers.brief.modelhelper.fun.crud.LastJoinFun;
@@ -137,6 +138,34 @@ public class OnFunImpl<M1, M2, V> implements OnFun<M1,M2,V,OnFunImpl<M1, M2, V>>
     public OnFunImpl<M1, M2, V> condSQL(boolean condition, String sql, Map<String, Object> params) {
         if(condition){
             condSQL(sql, params);
+        }
+        return this;
+    }
+
+    @Override
+    public OnFunImpl<M1, M2, V> lastSQL(String sql) {
+        conditions.add(new NativeSQLCondition(sql));
+        return this;
+    }
+
+    @Override
+    public OnFunImpl<M1, M2, V> lastSQL(boolean condition, String sql) {
+        if(condition){
+            lastSQL(sql);
+        }
+        return this;
+    }
+
+    @Override
+    public OnFunImpl<M1, M2, V> lastSQL(String sql, Map<String, Object> params) {
+        conditions.add(new NativeSQLCondition(sql,params));
+        return this;
+    }
+
+    @Override
+    public OnFunImpl<M1, M2, V> lastSQL(boolean condition, String sql, Map<String, Object> params) {
+        if(condition){
+            lastSQL(sql, params);
         }
         return this;
     }

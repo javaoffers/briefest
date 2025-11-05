@@ -65,6 +65,38 @@ public interface WhereFun<M,C, V, R >   {
      */
     public R condSQL(boolean condition, String sql, Map<String, Object> params);
 
+
+    /**
+     * The condition defaults to and splicing, which can write native SQL statements.
+     *
+     * @param sql sql
+     * @return  r
+     */
+    public R lastSQL(String sql);
+
+    /**
+     * It is usually used in the last paragraph of SQL, such as select xxx wher xx for update
+     *
+     * @param sql
+     * @return r
+     */
+    public R lastSQL(boolean condition, String sql);
+
+
+    /**
+     * It is usually used in the last paragraph of SQL, such as select xxx wher xx for update
+     * @param sql sql
+     * @return  r
+     */
+    public R lastSQL(String sql, Map<String, Object> params);
+
+    /**
+     * It is usually used in the last paragraph of SQL, such as select xxx wher xx for update
+     * @param sql
+     * @return r
+     */
+    public R lastSQL(boolean condition, String sql, Map<String, Object> params);
+
     /**
      * add equivalence =
      * @param col

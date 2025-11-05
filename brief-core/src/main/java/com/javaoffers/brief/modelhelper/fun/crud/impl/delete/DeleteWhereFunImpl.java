@@ -69,6 +69,30 @@ public class DeleteWhereFunImpl<M,C extends GetterFun<M, V>,V> implements Delete
     }
 
     @Override
+    public DeleteWhereFun<M, C, V> lastSQL(String sql) {
+        this.whereFun.lastSQL(sql);
+        return this;
+    }
+
+    @Override
+    public DeleteWhereFun<M, C, V> lastSQL(boolean condition, String sql) {
+        this.whereFun.lastSQL(condition,sql);
+        return this;
+    }
+
+    @Override
+    public DeleteWhereFun<M, C, V> lastSQL(String sql, Map<String, Object> params) {
+        this.whereFun.lastSQL(sql,params);
+        return this;
+    }
+
+    @Override
+    public DeleteWhereFun<M, C, V> lastSQL(boolean condition, String sql, Map<String, Object> params) {
+        this.whereFun.lastSQL(condition,sql,params);
+        return this;
+    }
+
+    @Override
     public DeleteWhereFunImpl<M, C, V> eq(C col, V value) {
         this.whereFun.eq(col, value);
         return this;

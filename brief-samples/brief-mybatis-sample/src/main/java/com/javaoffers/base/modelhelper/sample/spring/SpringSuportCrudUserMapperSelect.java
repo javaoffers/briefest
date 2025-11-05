@@ -59,7 +59,7 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
     public void testAll() {
         List<User> exs = this.crudUserMapper.select().col(User::getId).where().limitPage(1, 1).exs();
-
+        nativeSql();
         inEmptyList();
         List<User> query = this.crudUserMapper.general().query(1, 1);
         User id_as_countId = this.crudUserMapper.select().col("id as countId").where().limitPage(1, 1).ex();
@@ -78,6 +78,11 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
         selectCount();
 
         print("total count : "+ count);
+    }
+
+    private void nativeSql(){
+        User forUpdate = this.crudUserMapper.select().colAll().where().limitPage(1, 1).lastSQL("for update").ex();
+        LOGUtils.printLog(forUpdate.toString());
     }
 
     private void inEmptyList(){

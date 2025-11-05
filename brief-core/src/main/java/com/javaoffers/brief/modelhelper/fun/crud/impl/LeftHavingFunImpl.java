@@ -15,6 +15,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.IsNullOrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LFCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LikeCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.LimitWordCondition;
+import com.javaoffers.brief.modelhelper.fun.condition.where.NativeSQLCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.OrderWordCondition;
 import com.javaoffers.brief.modelhelper.fun.condition.where.RFWordCondition;
@@ -105,6 +106,34 @@ public class LeftHavingFunImpl<M, M2,
     public R condSQL(boolean condition, String sql, Map<String, Object> params) {
         if (condition) {
             condSQL(sql);
+        }
+        return (R) this;
+    }
+
+    @Override
+    public R lastSQL(String sql) {
+        conditions.add(new NativeSQLCondition(sql));
+        return (R) this;
+    }
+
+    @Override
+    public R lastSQL(boolean condition, String sql) {
+        if (condition) {
+            lastSQL(sql);
+        }
+        return (R) this;
+    }
+
+    @Override
+    public R lastSQL(String sql, Map<String, Object> params) {
+        conditions.add(new NativeSQLCondition(sql,params));
+        return (R) this;
+    }
+
+    @Override
+    public R lastSQL(boolean condition, String sql, Map<String, Object> params) {
+        if (condition) {
+            lastSQL(sql);
         }
         return (R) this;
     }

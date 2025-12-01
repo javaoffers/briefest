@@ -89,7 +89,11 @@ public class LambdaCreateUtils {
 
     // 辅助方法：生成getter方法名
     private static String getGetterName(Field field) {
-        String prefix = field.getType() == boolean.class ? "is" : "get";
+        boolean isBool = field.getType() == boolean.class;
+        if( isBool && field.getName().startsWith("is")){
+            return field.getName();
+        }
+        String prefix = isBool ? "is" : "get";
         String fieldName = field.getName();
         return prefix + Character.toUpperCase(fieldName.charAt(0)) + fieldName.substring(1);
     }

@@ -75,7 +75,7 @@ public class InsertConditionParse extends AbstractParseCondition {
                     Object value = valueList.get(i);
                     ModelFieldInfo modelFieldInfo = oneCol.getModelFieldInfo();
                     Class fieldGenericClass = modelFieldInfo.getFieldGenericClass();
-                    Object acValue = ConvertRegisterSelectorDelegate.convert.converterObject(fieldGenericClass, value);
+                    Object acValue = value != null ? ConvertRegisterSelectorDelegate.convert.converterObject(fieldGenericClass, value) : value;
                     modelFieldInfo.getSetter().setter(modelObject, acValue);
                 }
                 insertAllColValueCondition = new InsertAllColValueCondition(tableInfo.getModelClass(), modelObject);

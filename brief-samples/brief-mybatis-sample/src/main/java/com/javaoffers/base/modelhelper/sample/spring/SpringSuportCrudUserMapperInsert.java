@@ -53,10 +53,18 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         testInsert();
         testEnum();
         testG();
+        testInsertNullCol();
         if(status){
             System.exit(0);
         }
 
+    }
+
+    public void testInsertNullCol(){
+        this.crudUserMapper.insert()
+                .col(User::getName,"cmj")
+                .col(User::getWork, null)
+                .ex();
     }
 
     public void testGkeyForInsert()  {

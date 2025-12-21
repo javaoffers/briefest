@@ -5,7 +5,10 @@ import java.lang.annotation.*;
 /**
  * Specify the database field name. Or a fragment of a raw query statement
  * Used on the attributes of the model class, this annotation can be used to
- * specify when the attribute name and field name are different
+ * specify when the attribute name and field name are different.
+ * Note: If native database fields are declared in the Model class and their names match the values in this field,
+ * it is considered a native field. Otherwise, it is treated as a dynamic field by default
+ *
  * @Description: Aliases are used for CrudMapper
  * @Auther: create by cmj on 2022/5/3 00:16
  */

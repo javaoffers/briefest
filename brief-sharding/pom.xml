@@ -4,12 +4,12 @@
     <parent>
         <groupId>com.javaoffers</groupId>
         <artifactId>brief</artifactId>
-        <version>3.6.10</version>
+        <version>3.6.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>brief-sharding</artifactId>
     <name>brief-sharding</name>
-    <version>3.6.10</version>
+    <version>3.6.11-SNAPSHOT</version>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -19,13 +19,13 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-common</artifactId>
-            <version>3.6.10</version>
+            <version>3.6.11-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.10</version>
+            <version>3.6.11-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

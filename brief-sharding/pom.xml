@@ -9,6 +9,7 @@
 
     <artifactId>brief-sharding</artifactId>
     <name>brief-sharding</name>
+    <version>3.6.11-SNAPSHOT</version>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -28,4 +29,13 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.3</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

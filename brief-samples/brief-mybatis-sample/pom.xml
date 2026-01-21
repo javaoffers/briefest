@@ -117,9 +117,4 @@
         </plugins>
     </build>
 
-
-    <scm>
-        <tag>vy</tag>
-    </scm>
-
 </project>

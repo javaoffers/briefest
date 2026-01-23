@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 来自八股的朋友们记得点击一下star
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 八股社区
 
 # Brief
 <p>

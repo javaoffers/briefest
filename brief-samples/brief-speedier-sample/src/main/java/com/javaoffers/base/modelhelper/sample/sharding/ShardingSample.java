@@ -180,6 +180,20 @@ public class ShardingSample {
     }
 
     @Test
+    public void testShardingUpdateBatch(){
+        List<ShardingUser> list = Lists.newArrayList();
+        for(int i=0;i<10;i++){
+            ShardingUser shardingUser = new ShardingUser();
+            shardingUser.setId(i+1L);
+            shardingUser.setName("name:"+1);
+            shardingUser.setBirthday(DateUtils.addDays(new Date(), random()));
+            list.add(shardingUser);
+
+        }
+        this.userBriefMapper.general().modifyBatchById(list);
+    }
+
+    @Test
     public void testShardingGen(){
         ShardingUser user = new ShardingUser();
         user.setBirthday(DateUtils.addDays(new Date(),random()));

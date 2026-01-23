@@ -608,7 +608,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
     }
 
     private int renovateBatchById(Collection<T> models, boolean updateNull) {
-        if (models == null || models.size() == 0) {
+        if (models == null || models.isEmpty()) {
             return 0;
         }
         models = models.stream().filter(Objects::nonNull).collect(Collectors.toList());

@@ -22,7 +22,7 @@
 
   ```java
     <properties>
-         <brief.version>3.6.9</brief.version>
+         <brief.version>3.6.10</brief.version>
     </properties>
    <!--brief轻量级不依赖任何框架-->
      <dependency>

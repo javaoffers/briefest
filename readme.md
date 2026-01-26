@@ -94,7 +94,7 @@ Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enh
 
   
 - Project of actual combat, which has been used internally. The effect is very good.
-![](note-doc/img/img.png)
+![](note-doc/img/img2.png)
 
 ### Based on using    
 #### Query operation

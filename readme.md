@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 八股社区
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> BaGuCommunity
 
 # Brief
 <p>

@@ -11,6 +11,7 @@ import com.javaoffers.base.modelhelper.sample.sharding.ShardingUserTableMonthStr
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.core.ConvertRegisterSelectorDelegate;
 import com.javaoffers.brief.modelhelper.fun.AggTag;
+import com.javaoffers.brief.modelhelper.utils.GsonUtils;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -25,6 +26,7 @@ import javax.sql.DataSource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -76,7 +78,7 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
         testGroupBy();
         Number count = this.crudUserMapper.general().count();
         selectCount();
-
+        testMap();
         print("total count : "+ count);
     }
 
@@ -753,9 +755,24 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
     }
 
+    public void testMap(){
+        List<Map<String, Object>> maps = crudUserMapper.select().colAll().where().maps();
+        print(maps);
+        List<Map<String, Object>> list = crudUserMapper.select()
+                .colAll()
+                .innerJoin(UserOrder::new)
+                .colAll()
+                .on()
+                .oeq(User::getId, UserOrder::getUserId)
+                .where()
+                .maps();
+        print(list);
+
+    }
+
     public static void print(Object user) {
         try {
-            System.out.println(objectMapper.writeValueAsString(user));
+            System.out.println(GsonUtils.gson.toJson(user));
         }catch (Exception e){
             e.printStackTrace();
         }

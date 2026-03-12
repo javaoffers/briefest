@@ -3,8 +3,8 @@ package com.javaoffers.brief.modelhelper.jdbc;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
 
-import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description:
@@ -59,6 +59,13 @@ public interface JdbcExecutor<T> {
      * @param sql
      */
     int queryStream(BaseSQLInfo sql);
+
+    /**
+     * Query data and return raw map list
+     * @param sql
+     * @return
+     */
+    List<Map<String, Object>> queryMapList(BaseSQLInfo sql);
 
     /**
      * 获取元数据.

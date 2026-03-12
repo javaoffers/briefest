@@ -490,6 +490,22 @@ public class WhereSelectFunImpl<M, V> implements WhereSelectFun<M, V> {
     }
 
     @Override
+    public List<Map<String, Object>> maps() {
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
+        SmartSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);
+        return instance.queryMapData(sqlStatement);
+    }
+
+    @Override
+    public Map<String, Object> map() {
+        List<Map<String, Object>> maps = maps();
+        if (maps != null && maps.size() > 0) {
+            return maps.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public int stream(Consumer<M> consumer) {
         BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance((HeadCondition) this.conditions.peekFirst());
         SmartSQLInfo sqlStatement = StatementParserAdepter.statementParse(this.conditions);

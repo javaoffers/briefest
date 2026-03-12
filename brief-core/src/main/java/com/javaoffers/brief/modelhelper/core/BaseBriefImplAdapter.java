@@ -65,6 +65,11 @@ public class BaseBriefImplAdapter<T, ID> implements BriefContextAware {
                 (jmi) -> baseBrief.queryData(jmi.getSql(), jmi.getParam()));
     }
 
+    public List<Map<String, Object>> queryMapData(BaseSQLStatement sqlStatement) {
+        return doProxy(new JqlMetaInfo(sqlStatement, JqlMetaInfo.Operate.QUERY),
+                (jmi) -> baseBrief.queryMapData(jmi.getSql(), jmi.getParam()));
+    }
+
     public int queryStream(BaseSQLStatement sqlStatement, Consumer<T> consumer) {
         return doProxy(new JqlMetaInfo(sqlStatement, consumer, JqlMetaInfo.Operate.STREAM), (jmi) -> {
             return baseBrief.queryStream(jmi.getSql(), jmi.getParam(), jmi.getConsumer());

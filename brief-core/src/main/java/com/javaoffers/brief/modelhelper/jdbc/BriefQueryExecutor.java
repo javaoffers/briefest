@@ -11,8 +11,12 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
@@ -121,6 +125,44 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                 default:
                     throw new ParseResultSetException("sql type does not exist");
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SqlParseException(e.getMessage());
+        } finally {
+            close(connection, oldAutoCommitStatus, ps, rs);
+        }
+    }
+
+    public List<Map<String, Object>> queryMapList(BaseSQLInfo sql) {
+        boolean oldAutoCommitStatus = false;
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            connection = getConnection();
+            oldAutoCommitStatus = connection.getAutoCommit();
+            ps = connection.prepareStatement(sql.getSql());
+            List<Object[]> argsParam = sql.getArgsParam();
+            if (argsParam != null && argsParam.size() == 1) {
+                Object[] ov = argsParam.get(0);
+                for (int i = 0; i < ov.length; ) {
+                    Object o = ov[i];
+                    ps.setObject(++i, o);
+                }
+            }
+            rs = ps.executeQuery();
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            List<Map<String, Object>> result = new ArrayList<>();
+            while (rs.next()) {
+                Map<String, Object> row = new LinkedHashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnLabel = metaData.getColumnLabel(i);
+                    row.put(columnLabel, rs.getObject(i));
+                }
+                result.add(row);
+            }
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             throw new SqlParseException(e.getMessage());

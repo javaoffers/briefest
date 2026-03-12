@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -103,5 +104,13 @@ public class LastLeftHavingPendingFunImpl<
 
     public List<M> exs() {
         return whereSelectFun.exs();
+    }
+
+    public List<Map<String, Object>> maps() {
+        return whereSelectFun.maps();
+    }
+
+    public Map<String, Object> map() {
+        return whereSelectFun.map();
     }
 }

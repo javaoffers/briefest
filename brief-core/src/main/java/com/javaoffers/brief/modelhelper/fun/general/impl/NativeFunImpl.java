@@ -104,6 +104,25 @@ public class NativeFunImpl<T> implements ExecutFun<String> {
         instance.nativeData(getSmartSQLInfo(), SQLType.DML, consumer);
     }
 
+    @Override
+    public List<Map<String, Object>> maps() {
+        if(StringUtils.isBlank(this.sqlText)){
+            return Lists.newArrayList();
+        }
+        HeadCondition headCondition = new HeadCondition(this.dataSource, this.modelClass);
+        BaseBriefImplAdapter instance = BaseBriefImplAdapter.getInstance(headCondition);
+        return instance.queryMapData(getSmartSQLInfo());
+    }
+
+    @Override
+    public Map<String, Object> map() {
+        List<Map<String, Object>> maps = maps();
+        if (maps != null && maps.size() > 0) {
+            return maps.get(0);
+        }
+        return null;
+    }
+
     public List<T> exView(){
         if(StringUtils.isBlank(this.sqlText)){
             return Lists.newArrayList();

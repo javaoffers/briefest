@@ -7,6 +7,7 @@ import com.javaoffers.brief.modelhelper.jdbc.JdbcExecutorMetadata;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class MockBriefJdbcExecutor implements JdbcExecutor {
 
@@ -37,6 +38,11 @@ public class MockBriefJdbcExecutor implements JdbcExecutor {
 
     @Override
     public List queryList(BaseSQLInfo sql) {
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<Map<String, Object>> queryMapList(BaseSQLInfo sql) {
         return Collections.emptyList();
     }
 

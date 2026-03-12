@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -69,6 +70,16 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     @Override
     public List<M> exs() {
         return whereSelectFun.exs();
+    }
+
+    @Override
+    public List<Map<String, Object>> maps() {
+        return whereSelectFun.maps();
+    }
+
+    @Override
+    public Map<String, Object> map() {
+        return whereSelectFun.map();
     }
 
     @Override

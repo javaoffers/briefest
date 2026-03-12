@@ -760,7 +760,8 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
         print(maps);
         List<Map<String, Object>> list = crudUserMapper.select()
                 .colAll()
-                .innerJoin(UserOrder::new)
+                .col("'cmj' as cmjName")
+                .leftJoin(UserOrder::new)
                 .colAll()
                 .on()
                 .oeq(User::getId, UserOrder::getUserId)

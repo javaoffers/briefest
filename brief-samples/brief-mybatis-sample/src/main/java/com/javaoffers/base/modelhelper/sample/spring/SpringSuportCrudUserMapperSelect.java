@@ -2,6 +2,7 @@ package com.javaoffers.base.modelhelper.sample.spring;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
+import com.javaoffers.base.modelhelper.sample.mapper.BriefUserOrderMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.ShardingUserMapper;
 import com.javaoffers.base.modelhelper.sample.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.model.User;
@@ -45,6 +46,9 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
     @Resource
     BriefUserMapper crudUserMapper;
 
+    @Resource
+    BriefUserOrderMapper crudUserOrderMapper;
+
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperSelect.class, args);
 
@@ -60,6 +64,7 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
 
 
     public void testAll() {
+        intQuery();
         List<User> exs = this.crudUserMapper.select().col(User::getId).where().limitPage(1, 1).exs();
         nativeSql();
         inEmptyList();
@@ -80,6 +85,11 @@ public class SpringSuportCrudUserMapperSelect implements InitializingBean {
         selectCount();
         testMap();
         print("total count : "+ count);
+    }
+
+    public void intQuery(){
+        UserOrder ex = crudUserOrderMapper.select().col(UserOrder::getOrderId).where().limitPage(1, 1).ex();
+        LOGUtils.printLog(ex);
     }
 
     private void nativeSql(){

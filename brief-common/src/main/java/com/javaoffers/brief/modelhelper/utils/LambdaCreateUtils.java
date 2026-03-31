@@ -77,14 +77,14 @@ public class LambdaCreateUtils {
                 lookup,
                 "getter",
                 MethodType.methodType(Getter.class),
-                MethodType.methodType(field.getType().isPrimitive() ? field.getType() : Object.class, Object.class),
+                MethodType.methodType(Object.class, Object.class),
                 getter,
                 getter.type(),
                 LambdaMetafactory.FLAG_SERIALIZABLE,
                 1, //指示生成的Lambda对象应该是可序列化的。
                 Serializable.class
         );
-        return (Getter<C, V>) site.getTarget().invoke();
+        return (Getter<C, V>) site.getTarget().invokeExact();
     }
 
     // 辅助方法：生成getter方法名

@@ -62,14 +62,29 @@ public class LambdaCreateUtils {
     public static <C, V> Getter<C, V> createGetter(
              Field field) throws Throwable {
         // 创建一个实际的方法来访问字段，然后使用方法引用
-        MethodHandle getter;
         String getterName = getGetterName(field);
         try {
             // 为字段生成一个getter方法
             Method getterMethod = field.getDeclaringClass().getMethod(getterName);
-            getter = lookup.unreflect(getterMethod);
-        } catch (NoSuchMethodException e) {
+            return createGetter(getterMethod);
+        } catch (Exception e) {
             throw new NoSuchMethodException(getterName);
+        }
+    }
+
+
+    /**
+     * getter方法
+     */
+    public static <C, V> Getter<C, V> createGetter(
+            Method getterMethod) throws Throwable {
+        // 创建一个实际的方法来访问字段，然后使用方法引用
+        MethodHandle getter;
+        try {
+            // 为字段生成一个getter方法
+            getter = lookup.unreflect(getterMethod);
+        } catch (Exception e) {
+            throw new NoSuchMethodException(getterMethod.getName());
         }
 
         // 然后使用这个方法的MethodHandle创建lambda

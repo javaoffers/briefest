@@ -81,8 +81,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         this.updateFun = updateFun;
         this.deleteFun = deleteFun;
         this.tableInfo = TableHelper.getTableInfo(mClass);
+        this.modelInfo = TableHelper.getModelInfo(mClass);
         this.tableName = this.tableInfo.getTableName();
-
         this.nativeFun = nativeFun;
         Collection<Field> fields = this.tableInfo.getFieldNameAndField().values();
         for(Field field : fields) {
@@ -97,12 +97,37 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
             return;
         }
         this.primaryColNmae = primaryColNames.keySet().iterator().next();
-        this.primaryField = this.tableInfo.getColNameAndFieldOfModel().get(this.primaryColNmae).get(0);
-        this.modelInfo = TableHelper.getModelInfo(mClass);
+        Map<String, List<Field>> originalColNameOfModelField = this.tableInfo.getOriginalColNameOfModelField();
+        List<Field> primaryFields = originalColNameOfModelField.get(this.primaryColNmae);
+        //优先取名称相同的
+        for (Field field : primaryFields) {
+            if(field.getName().equals(this.primaryColNmae)){
+                this.primaryField = field;
+                break;
+            }
+        }
+        //default
+        if(this.primaryField == null){
+            this.primaryField = primaryFields.get(0);
+        }
+
+        //优先取名称相同的
         ArrayList<String> uniqColNames = new ArrayList<>();
-        uniqColNames.addAll(primaryColNames.keySet());
-        this.primaryGetter = modelInfo.getUniqueCol(uniqColNames).get(0).getModelFieldInfo().getGetter();
-        this.primarySetter = modelInfo.getUniqueCol(uniqColNames).get(0).getModelFieldInfo().getSetter();
+        uniqColNames.add(this.primaryField.getName());
+        List<ModelFieldInfoPosition> onesColWithOneModel = modelInfo.getOnesColWithOneModel(uniqColNames);
+        for (ModelFieldInfoPosition modelFieldInfoPosition : onesColWithOneModel) {
+            if(modelFieldInfoPosition.getModelFieldInfo().getFieldName().equals(this.primaryField.getName())){
+                this.primaryGetter = modelFieldInfoPosition.getModelFieldInfo().getGetter();
+                this.primarySetter = modelFieldInfoPosition.getModelFieldInfo().getSetter();
+                break;
+            }
+        }
+        //default
+        if(this.primaryGetter == null){
+            this.primaryGetter = onesColWithOneModel.get(0).getModelFieldInfo().getGetter();
+            this.primarySetter = onesColWithOneModel.get(0).getModelFieldInfo().getSetter();
+        }
+
     }
 
     @Override

@@ -4,11 +4,7 @@ import com.javaoffers.brief.modelhelper.exception.FindColException;
 import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -20,9 +16,9 @@ import java.util.stream.Collectors;
 public class ModelInfo<T> {
     Class<T> modelClass;
     Newc<T> constructor;
-    Map<String, ModelFieldInfo> onesColNameMap = new HashMap<>();
+    Map<String, ModelFieldInfo> onesColNameMap = new LinkedHashMap<>();
     List<ModelFieldInfo> onesModels= new ArrayList<ModelFieldInfo>();
-    Map<String, ModelFieldInfo> uniqueColNameMap = new HashMap<>();
+    Map<String, ModelFieldInfo> uniqueColNameMap = new LinkedHashMap<>();
     List<ModelFieldInfo> uniqueModels = new ArrayList<ModelFieldInfo>();
     List<ModelFieldInfo> arraysModels = new ArrayList<ModelFieldInfo>();
     List<ModelFieldInfo> listModels = new ArrayList<ModelFieldInfo>();

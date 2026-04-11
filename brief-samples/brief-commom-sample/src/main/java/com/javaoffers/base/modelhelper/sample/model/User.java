@@ -73,7 +73,7 @@ public class User {
     private Long countId;
 
     @ColName("id")
-    private Id IdImpl;
+    private Id idImpl;
 
     @BaseUnique
     private Long id;

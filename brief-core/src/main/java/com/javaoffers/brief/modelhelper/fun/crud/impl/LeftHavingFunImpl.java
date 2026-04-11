@@ -881,6 +881,16 @@ public class LeftHavingFunImpl<M, M2,
     }
 
     @Override
+    public List<Map<String, Object>> maps() {
+        return whereSelectFun.maps();
+    }
+
+    @Override
+    public Map<String, Object> map() {
+        return whereSelectFun.map();
+    }
+
+    @Override
     public int stream(Consumer<M> consumer) {
         return whereSelectFun.stream(consumer);
     }

@@ -581,6 +581,16 @@ public class HavingFunImpl<M, C extends GetterFun, V> implements HavingFun<M, C,
     }
 
     @Override
+    public List<Map<String, Object>> maps() {
+        return whereSelectFun.maps();
+    }
+
+    @Override
+    public Map<String, Object> map() {
+        return whereSelectFun.map();
+    }
+
+    @Override
     @SafeVarargs
     public final HavingFunImpl<M, C, V> orderA(C... cs) {
         List<GetterFun> cf = new ArrayList<>(cs.length);

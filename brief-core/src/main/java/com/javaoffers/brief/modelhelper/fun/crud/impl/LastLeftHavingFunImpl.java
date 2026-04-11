@@ -10,6 +10,7 @@ import com.javaoffers.brief.modelhelper.fun.condition.where.OrCondition;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -247,5 +248,11 @@ extends LeftHavingFunImpl<M,M2,C,C2,V,V, R>
     }
     public List<M> exs() {
         return leftHavingFun.exs();
+    }
+    public List<Map<String, Object>> maps() {
+        return leftHavingFun.maps();
+    }
+    public Map<String, Object> map() {
+        return leftHavingFun.map();
     }
 }

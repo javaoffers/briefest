@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.core.SQL;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @description: 执行jdbc操作
@@ -53,6 +54,11 @@ public class BriefJdbcExecutor<T> implements JdbcExecutor<T> {
     @Override
     public List<T> queryList(BaseSQLInfo sql) {
         return new BriefQueryExecutor<T>(dataSource, modelClass).queryList(sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryMapList(BaseSQLInfo sql) {
+        return new BriefQueryExecutor<T>(dataSource, modelClass).queryMapList(sql);
     }
 
     @Override

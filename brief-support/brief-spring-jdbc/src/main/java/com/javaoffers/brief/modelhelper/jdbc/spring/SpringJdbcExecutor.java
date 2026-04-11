@@ -6,6 +6,7 @@ import com.javaoffers.brief.modelhelper.jdbc.*;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author mingJie
@@ -51,6 +52,11 @@ public class SpringJdbcExecutor<T> implements JdbcExecutor<T> {
     @Override
     public List<T> queryList(BaseSQLInfo sql) {
         return new SpringQueryExecutor<T>(dataSource, modelClass).queryList(sql);
+    }
+
+    @Override
+    public List<Map<String, Object>> queryMapList(BaseSQLInfo sql) {
+        return new SpringQueryExecutor<T>(dataSource, modelClass).queryMapList(sql);
     }
 
     @Override

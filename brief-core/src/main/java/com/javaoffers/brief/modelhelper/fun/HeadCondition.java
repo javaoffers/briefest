@@ -26,10 +26,6 @@ public class HeadCondition implements Condition {
 
     private Class modelClass;
 
-//    private LimitWordCondition limitWordCondition;
-
-//    private List<OrderWordCondition> orderWordConditionList;
-
     private Map<HeadEnum, Object> conditionMap = new EnumMap<>(HeadEnum.class);
 
     private boolean shardingTable = false;
@@ -74,25 +70,9 @@ public class HeadCondition implements Condition {
         return modelClass;
     }
 
-//    public LimitWordCondition getLimitWordCondition() {
-//        return limitWordCondition;
-//    }
-//
-//    public void setLimitWordCondition(LimitWordCondition limitWordCondition) {
-//        //copy
-//        this.limitWordCondition = new LimitWordCondition(limitWordCondition.pageNum, limitWordCondition.pageSize);
-//    }
-
     public Map<HeadEnum, Object> getConditionMap() {
         return conditionMap;
     }
-
-//    public void addOrderWordCondition(OrderWordCondition orderWordCondition) {
-//        if(this.orderWordConditionList == null){
-//           this.orderWordConditionList = new ArrayList<OrderWordCondition>();
-//        }
-//        this.orderWordConditionList.add(orderWordCondition);
-//    }
 
     public boolean isSharding() {
         return shardingTable;

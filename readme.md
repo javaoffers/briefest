@@ -1,5 +1,5 @@
 
-<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> 八股社区
+<a href="https://github.com/javaoffers/briefest/blob/develop/readmeCN.md">中文</a> BaGuCommunity
 
 # Brief
 <p>
@@ -94,7 +94,7 @@ Then you only need to introduce <code>brief-mybatis</code> to mybatis can be enh
 
   
 - Project of actual combat, which has been used internally. The effect is very good.
-![](note-doc/img/2220967059897.png)
+![](note-doc/img/img2.png)
 
 ### Based on using    
 #### Query operation

@@ -145,10 +145,8 @@ public class ModelFieldInfo {
                     Class<UniqueKeyGenerate> gkeyClass = keyGenerate.getGkeyClass();
                     uniqueKeyGenerate = gkeyClass.newInstance();
                 }
-
                 this.isAtoGkey = this.uniqueKeyGenerate != null;
             }
-
         }catch (Throwable e){
             e.printStackTrace();
             throw new ParseModelException(e.getMessage());

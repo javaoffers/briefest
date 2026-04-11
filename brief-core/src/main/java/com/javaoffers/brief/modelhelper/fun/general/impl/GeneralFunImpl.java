@@ -66,6 +66,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
 
     private Getter primaryGetter;
 
+    private Setter primarySetter;
+
     private TableInfo tableInfo;
 
     private ModelInfo<T> modelInfo;
@@ -100,6 +102,7 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         ArrayList<String> uniqColNames = new ArrayList<>();
         uniqColNames.addAll(primaryColNames.keySet());
         this.primaryGetter = modelInfo.getUniqueCol(uniqColNames).get(0).getModelFieldInfo().getGetter();
+        this.primarySetter = modelInfo.getUniqueCol(uniqColNames).get(0).getModelFieldInfo().getSetter();
     }
 
     @Override
@@ -109,6 +112,8 @@ public class GeneralFunImpl<T, C extends GetterFun<T, Object>, V> implements Gen
         }
         Id ex = insertFun.colAll(model).ex();
         if (ex != null) {
+            Object idv = convert.converterObject(primaryField.getType(), ex);
+            primarySetter.setter(model, idv);
             return ex;
         }
         return Id.EMPTY_ID;

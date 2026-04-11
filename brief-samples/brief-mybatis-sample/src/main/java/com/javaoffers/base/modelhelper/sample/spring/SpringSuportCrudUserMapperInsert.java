@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.javaoffers.base.modelhelper.sample.constant.Month;
 import com.javaoffers.base.modelhelper.sample.constant.Sex;
 import com.javaoffers.base.modelhelper.sample.constant.Work;
+import com.javaoffers.base.modelhelper.sample.mapper.BriefTeacherMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserMapper;
 import com.javaoffers.base.modelhelper.sample.mapper.BriefUserOrderMapper;
+import com.javaoffers.base.modelhelper.sample.model.Teacher;
 import com.javaoffers.base.modelhelper.sample.model.User;
 import com.javaoffers.base.modelhelper.sample.model.UserOrder;
 import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
+import com.javaoffers.brief.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.utils.Lists;
 import org.apache.commons.lang3.time.DateFormatUtils;
@@ -39,6 +42,9 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
     @Resource
     BriefUserOrderMapper crudUserOrderMapper;
 
+    @Resource
+    BriefTeacherMapper briefTeacherMapper;
+
     public static void main(String[] args) {
         SpringApplication.run(SpringSuportCrudUserMapperInsert.class, args);
 
@@ -46,6 +52,7 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        testInsertArrayField();
         testGkeyForInsert();
         transactionInsert();
         testInsertUpdate();
@@ -58,6 +65,15 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
             System.exit(0);
         }
 
+    }
+
+    public void testInsertArrayField(){
+        Teacher teacher = new Teacher();
+        teacher.setPhoto(new byte[1]);
+        teacher.setName("老师");
+        teacher.setStatus(RowStatus.ABSENT);
+        briefTeacherMapper.general().save(teacher);
+        print(teacher);
     }
 
     public void testInsertNullCol(){

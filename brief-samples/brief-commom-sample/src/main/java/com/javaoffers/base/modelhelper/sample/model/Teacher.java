@@ -10,8 +10,9 @@ import lombok.Data;
  *   `id` int(11) NOT NULL AUTO_INCREMENT,
  *   `name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
  *   `status` int(2) DEFAULT NULL,
+ *   `photo` mediumblob,
  *   PRIMARY KEY (`id`)
- * ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+ * ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
  * @author mingJie
  */
 @Data
@@ -21,4 +22,5 @@ public class Teacher {
     private Integer id;
     private String name;
     private RowStatus status;
+    private byte[] photo;
 }

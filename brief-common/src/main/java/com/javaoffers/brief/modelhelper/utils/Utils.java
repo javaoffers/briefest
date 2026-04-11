@@ -246,7 +246,8 @@ public class Utils {
         if (type2.isArray()) {
             String typeName = fd.getGenericType().getTypeName();
             //If the typeName is a primitive type, an error will be reported here
-            type2 = Class.forName(typeName.substring(0, typeName.length() - 2));
+//            type2 = Class.forName(typeName.substring(0, typeName.length() - 2));
+            return fd.getType().getComponentType();
         } else if (List.class.isAssignableFrom(type2)) {
             type2 = getGenericityClassOfCollect(fd);
         } else if (Set.class.isAssignableFrom(type2)) {

@@ -15,6 +15,7 @@ import com.javaoffers.base.modelhelper.sample.utils.LOGUtils;
 import com.javaoffers.brief.modelhelper.anno.derive.flag.RowStatus;
 import com.javaoffers.brief.modelhelper.core.Id;
 import com.javaoffers.brief.modelhelper.utils.Lists;
+import com.javaoffers.brief.modelhelper.utils.TableHelper;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.InitializingBean;
@@ -72,8 +73,10 @@ public class SpringSuportCrudUserMapperInsert implements InitializingBean {
         teacher.setPhoto(new byte[1]);
         teacher.setName("老师");
         teacher.setStatus(RowStatus.ABSENT);
-        briefTeacherMapper.general().save(teacher);
+        Id save = briefTeacherMapper.general().save(teacher);
+        Teacher teacher1 = briefTeacherMapper.general().queryById(save);
         print(teacher);
+        print(teacher1);
     }
 
     public void testInsertNullCol(){

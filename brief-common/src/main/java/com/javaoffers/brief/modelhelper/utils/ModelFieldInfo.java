@@ -244,6 +244,10 @@ public class ModelFieldInfo {
         }
     }
 
+    public Class getFieldType() {
+        return fieldType;
+    }
+
     public boolean isAtoGkey() {
         return isAtoGkey;
     }

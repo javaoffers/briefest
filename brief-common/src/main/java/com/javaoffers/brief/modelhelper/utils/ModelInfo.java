@@ -35,7 +35,7 @@ public class ModelInfo<T> {
 
         Field[] colFs = Utils.getFields(modelClass).toArray(new Field[]{});
         for (Field fd : colFs) {
-            if (fd.getType().isArray()) {
+            if (fd.getType().isArray() && !fd.getType().getComponentType().isPrimitive()) {
                 arrays.add(new ModelFieldInfo(fd, this.modelClass));
             } else if (List.class.isAssignableFrom(fd.getType())) {
                 list.add(new ModelFieldInfo(fd, this.modelClass));

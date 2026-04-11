@@ -167,7 +167,7 @@ public class RealtimeSmartModelParse implements RealtimeModelParse {
         Class<?> fieldClass = o.getClass();
         ConvertProxy convertProxy = one.getConvertProxy(fieldClass);
         if (convertProxy == null) {
-            convertProxy = convert.choseConverter(one.getFieldGenericClass(), o, one.getField());
+            convertProxy = convert.choseConverter(one.getFieldType(), o, one.getField());
             one.setConvertProxy(fieldClass, convertProxy);
         }
 

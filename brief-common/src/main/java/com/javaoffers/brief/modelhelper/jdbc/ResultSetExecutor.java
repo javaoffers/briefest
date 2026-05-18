@@ -14,5 +14,14 @@ public interface ResultSetExecutor {
 
     Object getColValueByColPosition(int position);
 
+    /**
+     *Get an alias, usually the property name of the Model class
+     * @param position  p
+     * @return name
+     */
+    String getAliasColName(int position);
+
+    int getCols();
+
     public boolean nextRow();
 }

@@ -1,6 +1,7 @@
 package com.javaoffers.brief.modelhelper.jdbc;
 
 import com.javaoffers.brief.modelhelper.core.BaseSQLInfo;
+import com.javaoffers.brief.modelhelper.exception.BriefException;
 import com.javaoffers.brief.modelhelper.exception.ParseResultSetException;
 import com.javaoffers.brief.modelhelper.exception.SqlParseException;
 import com.javaoffers.brief.modelhelper.parse.ModelParseUtils;
@@ -151,14 +152,17 @@ public class BriefQueryExecutor<T> implements QueryExecutor<T> {
                 }
             }
             rs = ps.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
+            BriefResultSetExecutor resultSetExecutor = new BriefResultSetExecutor(rs);
             List<Map<String, Object>> result = new ArrayList<>();
-            while (rs.next()) {
+            while (resultSetExecutor.nextRow()) {
                 Map<String, Object> row = new LinkedHashMap<>();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnLabel = metaData.getColumnLabel(i);
-                    row.put(columnLabel, rs.getObject(i));
+                for (int i = 1; i <= resultSetExecutor.getCols(); i++) {
+                    String columnLabel = resultSetExecutor.getAliasColName(i);
+                    Object value = resultSetExecutor.getColValueByColPosition(i);
+                    Object oldV = row.put(columnLabel, value);
+                    if(oldV!=null && !oldV.equals(value)){
+                        throw new BriefException("The same field name exists when converting map . key name is "+columnLabel);
+                    }
                 }
                 result.add(row);
             }

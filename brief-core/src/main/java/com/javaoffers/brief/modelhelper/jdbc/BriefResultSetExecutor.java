@@ -25,6 +25,10 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
 
     private Map<String, Boolean> colNameBool = new HashMap<>();
 
+    private Map<Integer, String> positionMapAliasName = new HashMap<>();
+
+    private int cols = 0;
+
     private ResultSet resultSet;
 
     public BriefResultSetExecutor(ResultSet resultSet) {
@@ -36,8 +40,15 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
             for(int i=0; i < columnCount;){
                 String columnLabel = metaData.getColumnLabel(++i);
                 colNames.add(columnLabel);
+                String[] cl = columnLabel.split("__");
+                if(cl.length >= 2){
+                    positionMapAliasName.put(i,cl[1]);
+                }else{
+                    positionMapAliasName.put(i, columnLabel);
+                }
                 colNameBool.put(columnLabel, true);
             }
+            this.cols = colNames.size();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -72,6 +83,16 @@ public class BriefResultSetExecutor implements ResultSetExecutor {
             logger.warn("colName:{} result is null",position);
         }
         return null;
+    }
+
+    @Override
+    public String getAliasColName(int position) {
+        return positionMapAliasName.get(position);
+    }
+
+    @Override
+    public int getCols() {
+        return this.cols;
     }
 
     public boolean nextRow(){

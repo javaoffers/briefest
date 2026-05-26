@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @Description:
+ * @Description: HavingPendingFunImpl
  * @Auther: create by cmj on 2022/6/5 19:42
  */
 public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPendingFun<M,C, V, HavingFunImpl<M,C,V>> {
@@ -50,7 +50,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(String... c) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> groupBy(String... c) {
         conditions.add(new LeftGroupByWordCondition(c,ConditionTag.GROUP_BY));
         return this;
     }
@@ -83,7 +84,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(C... cs) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(C... cs) {
         List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
@@ -95,7 +97,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(boolean condition, C... cs) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderA(boolean condition, C... cs) {
         if(condition){
             orderA(cs);
         }
@@ -103,7 +106,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(C... cs) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(C... cs) {
         List<GetterFun> cf = new ArrayList<>(cs.length);
         List<String> clos = Arrays.stream(cs).map(getterFun -> {
             String cloName = TableHelper.getColNameAndAliasName(getterFun).getLeft();
@@ -115,7 +119,8 @@ public class HavingPendingFunImpl<M,C extends GetterFun, V> implements HavingPen
     }
 
     @Override
-    public HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(boolean condition, C... cs) {
+    @SafeVarargs
+    public final HavingPendingFun<M, C, V, HavingFunImpl<M, C, V>> orderD(boolean condition, C... cs) {
         if(condition){
             orderD(cs);
         }

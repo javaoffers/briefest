@@ -3,7 +3,7 @@
     <parent>
         <artifactId>brief-samples</artifactId>
         <groupId>com.javaoffers</groupId>
-        <version>3.6.11</version>
+        <version>3.6.12-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>brief-commom-sample</artifactId>
@@ -12,7 +12,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-core</artifactId>
-            <version>3.6.11</version>
+            <version>3.6.12-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -67,7 +67,7 @@
         <dependency>
             <groupId>com.javaoffers</groupId>
             <artifactId>brief-sharding</artifactId>
-            <version>3.6.11</version>
+            <version>3.6.12-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

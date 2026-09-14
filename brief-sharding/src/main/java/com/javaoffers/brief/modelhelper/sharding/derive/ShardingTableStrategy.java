@@ -14,8 +14,6 @@ import java.util.Set;
 public interface ShardingTableStrategy<T> {
     /**
      * 分表策略：通常用于精确匹配：{@link com.javaoffers.brief.modelhelper.fun.ConditionTag#EQ}
-     * @param condition where condition
-     * @param orgTableName org table name
      * @return  table name, not null
      */
     default String shardingExactly(ShardingParams<T> shardingParams){
@@ -25,8 +23,6 @@ public interface ShardingTableStrategy<T> {
     /**
      * 分表策略：通常用于范围匹配：{@link com.javaoffers.brief.modelhelper.fun.ConditionTag },
      * 不包含EQ,都会走这里.
-     * @param condition where condition
-     * @param orgTableName org table name
      * @return list table names . not empty
      */
     default Set<String> shardingRange(ShardingParams<T> shardingParams){

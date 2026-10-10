@@ -1,6 +1,9 @@
 <p align="center">
-  <h1 align="center">Brief</h1>
-  <p align="center">A high-performance, zero-configuration ORM framework that lets you write SQL in fluent Java.</p>
+  <img src="note-doc/img/logo.svg" alt="Brief" width="300">
+</p>
+
+<p align="center">
+  <strong>A high-performance, zero-configuration ORM framework that lets you write SQL in fluent Java.</strong>
 </p>
 
 <p align="center">
@@ -42,7 +45,7 @@ Brief is not a wrapper over MyBatis or JPA. It is an independent persistence eng
 
 - **JQL fluent API** — Compose SELECT / INSERT / UPDATE / DELETE as typed Java streams. The return type of each step narrows the next available calls, so the IDE effectively writes the query for you.
 - **Zero-configuration multi-table joins** — Left/inner/right joins with automatic one-to-one, one-to-many, and many-to-many mapping. No result maps, no `association`/`collection` XML.
-- **SQL functions as annotations** — 50+ MySQL functions (`LEFT`, `CONCAT`, `IFNULL`, `CASE WHEN`, `DATE_FORMAT`, `GROUP_CONCAT`, …) expressed as field-level annotations. Compose them by stacking; Brief renders the SQL.
+- **SQL functions as annotations** — 50+ MySQL functions (`LEFT`, `CONCAT`, `IFNULL`, `CASE WHEN`, `DATE_FORMAT`, `GROUP_CONCAT`, …) plus a full JSON function set (`JSON_EXTRACT`, `JSON_UNQUOTE`, `JSON_CONTAINS`, `JSON_OBJECT`, …) expressed as field-level annotations. Compose them by stacking; Brief renders the SQL.
 - **Automatic type conversion** — 30+ built-in converters between `Date`, `LocalDateTime`, enums, numbers, `String`, JSON, and more.
 - **Batch execution auto-detection** — Inserts and updates are automatically promoted to JDBC batch execution when beneficial.
 - **Logical delete & optimistic locking** — Declared as marker fields (`IsDel`, `Version`), enforced transparently.
@@ -341,6 +344,48 @@ private String wealthLevel;
     separator = "-")
 // GROUP_CONCAT(DISTINCT name ORDER BY age DESC SEPARATOR '-')
 private String concatenated;
+```
+
+### JSON functions
+
+Brief ships a dedicated set of annotations for MySQL JSON functions, so you can query and construct JSON documents entirely from annotations — no raw SQL needed. String-literal arguments (paths, candidates) must include their own quotes, consistent with every other function annotation.
+
+```java
+// --- Extraction (read a value out of a JSON column) ---
+
+@ColName("extra_info") @JsonExtract("'$.nickName'")
+// JSON_EXTRACT(extra_info, '$.nickName')
+
+@ColName("extra_info") @JsonExtract("'$.nickName'") @JsonUnquote
+// JSON_UNQUOTE(JSON_EXTRACT(extra_info, '$.nickName'))  ← the common "get a clean string" pattern
+
+@ColName("extra_info") @JsonExtract({"'$.nickName'", "'$.age'"})
+// JSON_EXTRACT(extra_info, '$.nickName', '$.age')
+
+// --- Inspection (metadata about a JSON document) ---
+
+@ColName("extra_info") @JsonLength              // JSON_LENGTH(extra_info)
+@ColName("extra_info") @JsonLength("'$.tags'")  // JSON_LENGTH(extra_info, '$.tags')
+@ColName("extra_info") @JsonKeys                // JSON_KEYS(extra_info)
+@ColName("extra_info") @JsonType                // JSON_TYPE(extra_info)  → "OBJECT", "ARRAY", …
+@ColName("extra_info") @JsonValid               // JSON_VALID(extra_info) → 1 or 0
+@ColName("extra_info") @JsonDepth               // JSON_DEPTH(extra_info)
+@ColName("name") @JsonQuote                    // JSON_QUOTE(name)
+
+// --- Containment (useful in WHERE clauses) ---
+
+@ColName("tags") @JsonContains("'java'")
+// JSON_CONTAINS(tags, 'java')
+@ColName("extra_info") @JsonContains("{\"k\":\"v\"}", path = "'$.meta'")
+// JSON_CONTAINS(extra_info, '{"k":"v"}', '$.meta')
+
+// --- Construction (build a JSON value) ---
+
+@ColName("name") @JsonObject(value = {"'name'"}, position = 1)
+// JSON_OBJECT('name', name)
+
+@ColName("tags") @JsonArray(value = {"'prefix'"}, position = 1)
+// JSON_ARRAY('prefix', tags)
 ```
 
 ---

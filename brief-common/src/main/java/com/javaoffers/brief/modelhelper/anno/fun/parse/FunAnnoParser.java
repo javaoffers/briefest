@@ -20,6 +20,17 @@ import com.javaoffers.brief.modelhelper.anno.fun.params.IfNotNull;
 import com.javaoffers.brief.modelhelper.anno.fun.params.IfNull;
 import com.javaoffers.brief.modelhelper.anno.fun.params.Left;
 import com.javaoffers.brief.modelhelper.anno.fun.params.Right;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonArray;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonContains;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonDepth;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonExtract;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonKeys;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonLength;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonObject;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonQuote;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonType;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonUnquote;
+import com.javaoffers.brief.modelhelper.anno.fun.params.json.JsonValid;
 import com.javaoffers.brief.modelhelper.anno.fun.params.math.Abs;
 import com.javaoffers.brief.modelhelper.anno.fun.params.math.Ceil;
 import com.javaoffers.brief.modelhelper.anno.fun.params.math.Floor;
@@ -110,6 +121,7 @@ public class FunAnnoParser {
             parseParamVarchar(appender, anno)||
             parseParamTime(appender, anno)||
             parseParamMath(appender, anno)||
+            parseParamJson(appender, anno)||
             parseNoneParamTime(appender, anno)||
             parseNoneParamMath(appender, anno) || isFunSql;
 
@@ -419,6 +431,77 @@ public class FunAnnoParser {
         else if(anno instanceof Upper){
             Upper upper = (Upper) anno;
             appender.appender(upper.TAG);
+            status = true;
+        }
+        return status;
+    }
+
+    private static boolean parseParamJson(Appender appender, Annotation anno) {
+        boolean status = false;
+        if(anno instanceof JsonExtract){
+            JsonExtract jsonExtract = (JsonExtract) anno;
+            appender.appender(jsonExtract.TAG, (Object[]) jsonExtract.value());
+            status = true;
+        }
+        else if(anno instanceof JsonUnquote){
+            appender.appender(JsonUnquote.TAG);
+            status = true;
+        }
+        else if(anno instanceof JsonQuote){
+            appender.appender(JsonQuote.TAG);
+            status = true;
+        }
+        else if(anno instanceof JsonLength){
+            JsonLength jsonLength = (JsonLength) anno;
+            String path = jsonLength.value();
+            if(StringUtils.isNotBlank(path)){
+                appender.appender(jsonLength.TAG, path);
+            }else{
+                appender.appender(jsonLength.TAG);
+            }
+            status = true;
+        }
+        else if(anno instanceof JsonKeys){
+            JsonKeys jsonKeys = (JsonKeys) anno;
+            String path = jsonKeys.value();
+            if(StringUtils.isNotBlank(path)){
+                appender.appender(jsonKeys.TAG, path);
+            }else{
+                appender.appender(jsonKeys.TAG);
+            }
+            status = true;
+        }
+        else if(anno instanceof JsonType){
+            appender.appender(JsonType.TAG);
+            status = true;
+        }
+        else if(anno instanceof JsonValid){
+            appender.appender(JsonValid.TAG);
+            status = true;
+        }
+        else if(anno instanceof JsonDepth){
+            appender.appender(JsonDepth.TAG);
+            status = true;
+        }
+        else if(anno instanceof JsonContains){
+            JsonContains jsonContains = (JsonContains) anno;
+            String candidate = jsonContains.value();
+            String path = jsonContains.path();
+            if(StringUtils.isNotBlank(path)){
+                appender.appender(jsonContains.TAG, candidate, path);
+            }else{
+                appender.appender(jsonContains.TAG, candidate);
+            }
+            status = true;
+        }
+        else if(anno instanceof JsonObject){
+            JsonObject jsonObject = (JsonObject) anno;
+            appender.appenderPosition(jsonObject.TAG, jsonObject.position(), jsonObject.value());
+            status = true;
+        }
+        else if(anno instanceof JsonArray){
+            JsonArray jsonArray = (JsonArray) anno;
+            appender.appenderPosition(jsonArray.TAG, jsonArray.position(), jsonArray.value());
             status = true;
         }
         return status;

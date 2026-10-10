@@ -1,6 +1,9 @@
 <p align="center">
-  <h1 align="center">Brief</h1>
-  <p align="center">高性能、零配置的 ORM 框架——用流畅的 Java 写 SQL</p>
+  <img src="note-doc/img/logo.svg" alt="Brief" width="300">
+</p>
+
+<p align="center">
+  <strong>高性能、零配置的 ORM 框架——用流畅的 Java 写 SQL</strong>
 </p>
 
 <p align="center">
@@ -44,7 +47,7 @@ Brief 不是 MyBatis 或 JPA 的封装层，而是一套独立的持久层引擎
 
 - **JQL 链式 API**——用类型化的 Java Stream 组装 SELECT / INSERT / UPDATE / DELETE。每一步的返回类型会收窄下一步可用的方法，IDE 等于在帮你写查询。
 - **零配置多表关联**——支持 left/inner/right join，自动完成一对一、一对多、多对多映射，无需 resultMap、无需 XML 配置。
-- **SQL 函数注解化**——50+ 个 MySQL 函数（`LEFT`、`CONCAT`、`IFNULL`、`CASE WHEN`、`DATE_FORMAT`、`GROUP_CONCAT`……）以字段级注解表达，堆叠即嵌套，Brief 负责渲染 SQL。
+- **SQL 函数注解化**——50+ 个 MySQL 函数（`LEFT`、`CONCAT`、`IFNULL`、`CASE WHEN`、`DATE_FORMAT`、`GROUP_CONCAT`……）外加一整套 JSON 函数（`JSON_EXTRACT`、`JSON_UNQUOTE`、`JSON_CONTAINS`、`JSON_OBJECT`……）以字段级注解表达，堆叠即嵌套，Brief 负责渲染 SQL。
 - **自动类型转换**——内置 30+ 种转换器，覆盖 `Date`、`LocalDateTime`、枚举、数字、字符串、JSON 之间的互转。
 - **批处理自动识别**——插入和更新在条件满足时自动提升为 JDBC 批处理执行。
 - **逻辑删除与乐观锁**——以标记字段（`IsDel`、`Version`）声明，框架透明执行。
@@ -354,6 +357,48 @@ private String wealthLevel;
     separator = "-")
 // GROUP_CONCAT(DISTINCT name ORDER BY age DESC SEPARATOR '-')
 private String concatenated;
+```
+
+### JSON 函数
+
+Brief 提供了一组 MySQL JSON 函数注解，让你可以完全用注解查询和构造 JSON 文档——无需手写原生 SQL。字符串字面量参数（路径、候选值）需自带引号，与其他函数注解保持一致。
+
+```java
+// --- 提取（从 JSON 列中读出值）---
+
+@ColName("extra_info") @JsonExtract("'$.nickName'")
+// JSON_EXTRACT(extra_info, '$.nickName')
+
+@ColName("extra_info") @JsonExtract("'$.nickName'") @JsonUnquote
+// JSON_UNQUOTE(JSON_EXTRACT(extra_info, '$.nickName'))  ← 常见的"取干净字符串"组合
+
+@ColName("extra_info") @JsonExtract({"'$.nickName'", "'$.age'"})
+// JSON_EXTRACT(extra_info, '$.nickName', '$.age')
+
+// --- 检视（JSON 文档的元信息）---
+
+@ColName("extra_info") @JsonLength              // JSON_LENGTH(extra_info)
+@ColName("extra_info") @JsonLength("'$.tags'")  // JSON_LENGTH(extra_info, '$.tags')
+@ColName("extra_info") @JsonKeys                // JSON_KEYS(extra_info)
+@ColName("extra_info") @JsonType                // JSON_TYPE(extra_info)  → "OBJECT"、"ARRAY"…
+@ColName("extra_info") @JsonValid               // JSON_VALID(extra_info) → 1 或 0
+@ColName("extra_info") @JsonDepth               // JSON_DEPTH(extra_info)
+@ColName("name") @JsonQuote                    // JSON_QUOTE(name)
+
+// --- 包含判断（常用于 WHERE 条件）---
+
+@ColName("tags") @JsonContains("'java'")
+// JSON_CONTAINS(tags, 'java')
+@ColName("extra_info") @JsonContains("{\"k\":\"v\"}", path = "'$.meta'")
+// JSON_CONTAINS(extra_info, '{"k":"v"}', '$.meta')
+
+// --- 构造（生成 JSON 值）---
+
+@ColName("name") @JsonObject(value = {"'name'"}, position = 1)
+// JSON_OBJECT('name', name)
+
+@ColName("tags") @JsonArray(value = {"'prefix'"}, position = 1)
+// JSON_ARRAY('prefix', tags)
 ```
 
 ---

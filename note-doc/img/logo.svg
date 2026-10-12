@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 72" width="300" height="72" role="img" aria-label="Brief">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6366f1"/>
+      <stop offset="1" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+
+  <!-- badge -->
+  <rect x="6" y="10" width="52" height="52" rx="14" fill="url(#g)"/>
+
+  <!-- lightning bolt -->
+  <path d="M40 16 L24 38 L33 38 L30 56 L46 34 L37 34 Z" fill="#ffffff"/>
+
+  <!-- wordmark -->
+  <text x="68" y="48" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif"
+        font-size="34" font-weight="700" fill="#0f172a" letter-spacing="-1">Brief</text>
+</svg>

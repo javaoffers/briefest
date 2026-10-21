@@ -9,7 +9,7 @@ import flex.entity.FlexAccount;
 import plus.PlusInitializer;
 import plus.entity.PlusAccount;
 
-import static flex.entity.table.Tables.FLEX_ACCOUNT;
+//import static flex.entity.table.Tables.FLEX_ACCOUNT;
 
 public class TestStarter {
 
@@ -24,17 +24,17 @@ public class TestStarter {
 
         //预热
         testBriefSelectOne();
-        testFlexSelectOne();
+//        testFlexSelectOne();
         testPlusSelectOneWithLambda();
         testPlusSelectOne();
 
         testBriefPaginate();
-        testFlexPaginate();
+//        testFlexPaginate();
         testPlusPaginate();
 
 
         testBriefUpdate();
-        testFlexUpdate();
+//        testFlexUpdate();
         testPlusUpdate();
 
         long timeMillis;
@@ -48,7 +48,7 @@ public class TestStarter {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();
-            testFlexSelectOne();
+//            testFlexSelectOne();
             System.out.println(">>>>>>>testFlexSelectOne:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
@@ -72,7 +72,7 @@ public class TestStarter {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();
-            testFlexSelectTop10();
+//            testFlexSelectTop10();
             System.out.println(">>>>>>>testFlexSelectTop10:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
@@ -97,7 +97,7 @@ public class TestStarter {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();
-            testFlexSelectTop10000();
+//            testFlexSelectTop10000();
             System.out.println(">>>>>>>testFlexSelectTop10000:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
@@ -122,7 +122,7 @@ public class TestStarter {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();
-            testFlexPaginate();
+//            testFlexPaginate();
             System.out.println(">>>>>>>testFlexPaginate:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
@@ -143,7 +143,7 @@ public class TestStarter {
             System.out.println("---------------");
 
             timeMillis = System.currentTimeMillis();
-            testFlexUpdate();
+//            testFlexUpdate();
             System.out.println(">>>>>>>testFlexUpdate:" + (System.currentTimeMillis() - timeMillis));
 
             timeMillis = System.currentTimeMillis();
@@ -157,11 +157,11 @@ public class TestStarter {
     }
 
 
-    public static void testFlexSelectOne() {
-        for (int i = 0; i < queryCount; i++) {
-            FlexInitializer.selectOne();
-        }
-    }
+//    public static void testFlexSelectOne() {
+//        for (int i = 0; i < queryCount; i++) {
+//            FlexInitializer.selectOne();
+//        }
+//    }
     public static void testBriefSelectOne() {
         for (int i = 0; i < queryCount; i++) {
             BriefInitializer.selectOne();
@@ -181,11 +181,11 @@ public class TestStarter {
     }
 
 
-    public static void testFlexSelectTop10() {
-        for (int i = 0; i < queryCount; i++) {
-            FlexInitializer.selectTop10();
-        }
-    }
+//    public static void testFlexSelectTop10() {
+//        for (int i = 0; i < queryCount; i++) {
+//            FlexInitializer.selectTop10();
+//        }
+//    }
 
     public static void testPlusSelectTop10WithLambda() {
         for (int i = 0; i < queryCount; i++) {
@@ -205,11 +205,11 @@ public class TestStarter {
         }
     }
 
-    public static void testFlexSelectTop10000() {
-        for (int i = 0; i < queryCount; i++) {
-            FlexInitializer.selectTop10000();
-        }
-    }
+//    public static void testFlexSelectTop10000() {
+//        for (int i = 0; i < queryCount; i++) {
+//            FlexInitializer.selectTop10000();
+//        }
+//    }
 
     public static void testPlusSelectTop10000WithLambda() {
         for (int i = 0; i < queryCount; i++) {
@@ -235,14 +235,14 @@ public class TestStarter {
         }
     }
 
-
-    public static void testFlexPaginate() {
-        for (int i = 1; i <= queryCount; i++) {
-            QueryWrapper queryWrapper = new QueryWrapper()
-                    .where(FLEX_ACCOUNT.ID.ge(100));
-            FlexInitializer.paginate(1, 10, queryWrapper);
-        }
-    }
+//
+//    public static void testFlexPaginate() {
+//        for (int i = 1; i <= queryCount; i++) {
+//            QueryWrapper queryWrapper = new QueryWrapper()
+//                    .where(FLEX_ACCOUNT.ID.ge(100));
+//            FlexInitializer.paginate(1, 10, queryWrapper);
+//        }
+//    }
 
     public static void testBriefPaginate() {
         for (int i = 1; i <= queryCount; i++) {
@@ -260,21 +260,21 @@ public class TestStarter {
     }
 
 
-    public static void testFlexUpdate() {
-        for (long i = 0; i < queryCount; i++) {
-            FlexAccount flexAccount = new FlexAccount();
-            flexAccount.setUserName("testInsert" + i);
-            flexAccount.setNickname("testInsert" + i);
-
-            QueryWrapper queryWrapper = QueryWrapper.create()
-                    .where(FLEX_ACCOUNT.ID.ge(9200))
-                    .and(FLEX_ACCOUNT.ID.le(9300))
-                    .and(FLEX_ACCOUNT.USER_NAME.like("admin"))
-                    .and(FLEX_ACCOUNT.NICKNAME.like("admin"));
-
-            FlexInitializer.update(flexAccount, queryWrapper);
-        }
-    }
+//    public static void testFlexUpdate() {
+//        for (long i = 0; i < queryCount; i++) {
+//            FlexAccount flexAccount = new FlexAccount();
+//            flexAccount.setUserName("testInsert" + i);
+//            flexAccount.setNickname("testInsert" + i);
+//
+//            QueryWrapper queryWrapper = QueryWrapper.create()
+//                    .where(FLEX_ACCOUNT.ID.ge(9200))
+//                    .and(FLEX_ACCOUNT.ID.le(9300))
+//                    .and(FLEX_ACCOUNT.USER_NAME.like("admin"))
+//                    .and(FLEX_ACCOUNT.NICKNAME.like("admin"));
+//
+//            FlexInitializer.update(flexAccount, queryWrapper);
+//        }
+//    }
 
     public static void testBriefUpdate() {
         SmartUpdateFun update = null;

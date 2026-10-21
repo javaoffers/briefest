@@ -24,7 +24,6 @@ import org.junit.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +39,6 @@ public class FunAnnoParserSample {
     @ColName("name")
     @Left(10)
     @Concat( {"age"})
-    @Resource
     private String colName2; //CONCAT(LEFT(name,10),age)
 
 

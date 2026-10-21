@@ -95,9 +95,7 @@ public class LambdaCreateUtils {
                 MethodType.methodType(Object.class, Object.class),
                 getter,
                 getter.type(),
-                LambdaMetafactory.FLAG_SERIALIZABLE,
-                1, //指示生成的Lambda对象应该是可序列化的。
-                Serializable.class
+                LambdaMetafactory.FLAG_SERIALIZABLE
         );
         return (Getter<C, V>) site.getTarget().invokeExact();
     }

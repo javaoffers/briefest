@@ -17,7 +17,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import java.lang.reflect.ParameterizedType;
 
 import javax.sql.DataSource;
 import java.io.Serializable;
@@ -77,7 +77,7 @@ public class CrudMapperProxy<T> implements InvocationHandler, Serializable, Brie
                 return;
             }
             Type[] types = clazz.getGenericInterfaces();
-            ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl)types[0];
+            ParameterizedType parameterizedTypes = (ParameterizedType)types[0];
             Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
             this.modelClass = modelclass;
             this.briefMapperJql = briefContext.getBriefMapper(clazz);

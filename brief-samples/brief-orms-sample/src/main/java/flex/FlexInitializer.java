@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-import static flex.entity.table.Tables.FLEX_ACCOUNT;
+//import static flex.entity.table.Tables.FLEX_ACCOUNT;
 
 public class FlexInitializer {
 
@@ -36,37 +36,37 @@ public class FlexInitializer {
     }
 
 
-    public static FlexAccount selectOne() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100)
-                    .or(FLEX_ACCOUNT.USER_NAME.eq("admin" + ThreadLocalRandom.current().nextInt(10000))));
-            return mapper.selectOneByQuery(queryWrapper);
-        }
-    }
+//    public static FlexAccount selectOne() {
+//        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+//            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100)
+//                    .or(FLEX_ACCOUNT.USER_NAME.eq("admin" + ThreadLocalRandom.current().nextInt(10000))));
+//            return mapper.selectOneByQuery(queryWrapper);
+//        }
+//    }
 
 
-    public static List<FlexAccount> selectTop10() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100).or(FLEX_ACCOUNT.USER_NAME
-                            .eq("admin" + ThreadLocalRandom.current().nextInt(10000))))
-                    .limit(10);
-            return mapper.selectListByQuery(queryWrapper);
-        }
-    }
-    public static List<FlexAccount> selectTop10000() {
-        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
-            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100).or(FLEX_ACCOUNT.USER_NAME
-                            .eq("admin" + ThreadLocalRandom.current().nextInt(10000))))
-                    .limit(10000);
-            return mapper.selectListByQuery(queryWrapper);
-        }
-    }
+//    public static List<FlexAccount> selectTop10() {
+//        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+//            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100).or(FLEX_ACCOUNT.USER_NAME
+//                            .eq("admin" + ThreadLocalRandom.current().nextInt(10000))))
+//                    .limit(10);
+//            return mapper.selectListByQuery(queryWrapper);
+//        }
+//    }
+//    public static List<FlexAccount> selectTop10000() {
+//        try (SqlSession sqlSession = sqlSessionFactory.openSession()) {
+//            FlexAccountMapper mapper = sqlSession.getMapper(FlexAccountMapper.class);
+//            QueryWrapper queryWrapper = new QueryWrapper();
+//            queryWrapper.where(FLEX_ACCOUNT.ID.ge(100).or(FLEX_ACCOUNT.USER_NAME
+//                            .eq("admin" + ThreadLocalRandom.current().nextInt(10000))))
+//                    .limit(10000);
+//            return mapper.selectListByQuery(queryWrapper);
+//        }
+//    }
 
     public static Page<FlexAccount> paginate(int page, int pageSize, QueryWrapper queryWrapper) {
         try (SqlSession sqlSession = sqlSessionFactory.openSession()) {

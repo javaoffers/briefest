@@ -2,7 +2,7 @@ package com.javaoffers.brief.modelhelper.aggent;
 
 import com.javaoffers.brief.modelhelper.anno.BaseModel;
 import org.apache.commons.lang3.tuple.Pair;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
+import java.lang.reflect.ParameterizedType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -47,8 +47,8 @@ public class MapperProxyAggentProcess {
     }
 
     private static Pair<Boolean, Class> checkIsModel(Type genericReturnType) {
-        if(genericReturnType instanceof ParameterizedTypeImpl){
-            ParameterizedTypeImpl ptz = (ParameterizedTypeImpl) genericReturnType;
+        if(genericReturnType instanceof ParameterizedType){
+            ParameterizedType ptz = (ParameterizedType) genericReturnType;
             Type[] actualTypeArguments = ptz.getActualTypeArguments();
             if(actualTypeArguments!=null&&actualTypeArguments.length>0){
                 Type actualTypeArgument = actualTypeArguments[0];

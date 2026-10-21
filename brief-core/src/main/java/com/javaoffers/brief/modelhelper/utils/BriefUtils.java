@@ -23,14 +23,12 @@ public class BriefUtils {
         Stream.of(
                 BriefMapper.class.getDeclaredMethods()
         ).flatMap(Stream::of).forEach(method -> {
-            method.setAccessible(true);
             isMapperMethod.put(method,method.getName());
         });
 
         Stream.of(
                 Object.class.getDeclaredMethods()
         ).flatMap(Stream::of).forEach(method -> {
-            method.setAccessible(true);
             isObjectMethod.put(method,method.getName());
         });
     }

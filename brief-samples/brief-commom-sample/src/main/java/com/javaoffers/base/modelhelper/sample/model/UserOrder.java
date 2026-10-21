@@ -12,7 +12,6 @@ import lombok.Data;
  * @Auther: create by cmj on 2021/12/13 13:03
  */
 @BaseModel
-@Data
 @Builder
 @AllArgsConstructor
 public class UserOrder {
@@ -83,5 +82,13 @@ public class UserOrder {
 
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
+    }
+
+    public Long getOrderMark() {
+        return orderMark;
+    }
+
+    public void setOrderMark(Long orderMark) {
+        this.orderMark = orderMark;
     }
 }

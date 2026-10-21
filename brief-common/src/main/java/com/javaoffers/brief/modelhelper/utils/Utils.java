@@ -7,7 +7,6 @@ import com.javaoffers.brief.modelhelper.exception.ParseModelException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -77,20 +76,18 @@ public class Utils {
     }
 
     private static <E> Set<Field> getFields(Class<E> clazz, boolean isParentClass) {
-        if (clazz == null || clazz.isPrimitive() || clazz.isInterface()) {
+        if (clazz == null || clazz.isPrimitive() || clazz.isInterface() || clazz.getClassLoader() == null || clazz == Object.class) {
             return Collections.EMPTY_SET;
         }
         Set<Field> result = SOFT_CACHE_CLASS_FIELDS.get(clazz);
         if (result == null) {
             Set<Field> list = new LinkedHashSet<>();
-            if (!clazz.getName().equals("java.lang.Object")) {
-                Field[] fields = clazz.getDeclaredFields();
-                for (Field f : fields) {
-                    f.setAccessible(true);
-                    list.add(f);
-                }
-                list.addAll(getFields(clazz.getSuperclass(), true));
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field f : fields) {
+                f.setAccessible(true);
+                list.add(f);
             }
+            list.addAll(getFields(clazz.getSuperclass(), true));
             result = list;
             //Avoid caching the fields data corresponding to the parent class
             if(!isParentClass){
@@ -265,7 +262,7 @@ public class Utils {
     public static Type getModelClass(Class briefMapperClass){
         Assert.isTrue(briefMapperClass.isInterface(), briefMapperClass.getName() + " must be a Interface");
         Type[] types = briefMapperClass.getGenericInterfaces();
-        ParameterizedTypeImpl parameterizedTypes = (ParameterizedTypeImpl) types[0];
+        ParameterizedType parameterizedTypes = (ParameterizedType) types[0];
         Type modelclass = parameterizedTypes.getActualTypeArguments()[0];
         return modelclass;
     }

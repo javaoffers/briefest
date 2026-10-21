@@ -6,7 +6,6 @@ import com.javaoffers.brief.modelhelper.mapper.BriefMapper;
 import com.javaoffers.brief.modelhelper.mapper.SmartMapperProxy;
 import com.javaoffers.brief.modelhelper.speedier.transaction.SpeedierTransactionManagement;
 import com.javaoffers.brief.modelhelper.utils.JdkProxyUtils;
-import sun.reflect.generics.reflectiveObjects.ParameterizedTypeImpl;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Type;

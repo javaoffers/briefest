@@ -55,6 +55,8 @@
     <mybatis.version>3.5.11</mybatis.version>
     <mybatis.spring.version>2.0.7</mybatis.spring.version>
     <!--大版本跟着mybatisThe big version follows mybatis-->
+    <lombok.version>1.18.48</lombok.version>
+    <maven.compiler.plugin.version>3.16.0</maven.compiler.plugin.version>
   </properties>
 
 
@@ -183,6 +185,27 @@
 
   <build>
     <plugins>
+      <!--
+        JDK 26 起 javac 不再从 classpath 自动发现注解处理器，必须用 annotationProcessorPaths
+        显式声明，否则 Lombok 的 @Data 等不会生成代码（表现为方法引用报 "找不到 getId()"）。
+      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+          <source>${maven.compiler.source}</source>
+          <target>${maven.compiler.target}</target>
+          <encoding>UTF-8</encoding>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
       <!--            <plugin>-->
       <!--              <artifactId>maven-compiler-plugin</artifactId>-->
       <!--              <configuration>-->
